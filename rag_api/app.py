@@ -158,17 +158,28 @@ def register_user():
             "error": str(e),
         }), 500
 
-@app.route('/api/figures/<path:filename>', methods=['GET'])
-def serve_figure(filename):
-    """API endpoint để phục vụ hình ảnh"""
-    # Tìm thư mục chứa hình ảnh
-    for item in os.listdir('data'):
-        figure_dir = os.path.join('data', item, 'figures')
+@app.route('/api/figures/<path:bai_number>/<path:filename>', methods=['GET'])
+def serve_figure(bai_number, filename):
+    """API endpoint để phục vụ hình ảnh theo số bài"""
+    try:
+        # Xác định đường dẫn tới file hình dựa vào số bài
+        figure_dir = os.path.join('data', f'bai{bai_number}', 'figures')
+        
+        # Kiểm tra xem thư mục có tồn tại không
         if os.path.exists(figure_dir) and os.path.isdir(figure_dir):
             if os.path.exists(os.path.join(figure_dir, filename)):
                 return send_from_directory(figure_dir, filename)
-    
-    return jsonify({"error": "Không tìm thấy hình ảnh"}), 404
+        
+        # Nếu không tìm thấy, thử tìm trong tất cả các thư mục bài
+        for i in range(1, 5):  # Giả sử có 4 bài
+            alt_figure_dir = os.path.join('data', f'bai{i}', 'figures')
+            if os.path.exists(os.path.join(alt_figure_dir, filename)):
+                return send_from_directory(alt_figure_dir, filename)
+                
+        return jsonify({"error": "Không tìm thấy hình ảnh"}), 404
+    except Exception as e:
+        print(f"Lỗi khi tải hình ảnh: {str(e)}")
+        return jsonify({"error": f"Lỗi máy chủ: {str(e)}"}), 500
 
 @app.route('/api/metadata', methods=['GET'])
 def get_metadata():

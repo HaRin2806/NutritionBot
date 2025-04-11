@@ -97,12 +97,13 @@ class RAGPipeline:
             # Tạo prompt cho Gemini bằng cách kết hợp system prompt và user prompt
             age_text = f"{age} tuổi" if age is not None else "chưa xác định"
             combined_prompt = f"{SYSTEM_PROMPT}\n\n{HUMAN_PROMPT_TEMPLATE.format(query=query, age=age_text, contexts=formatted_contexts)}"
-            
+            print("Combined Prompt:", combined_prompt)  # Debugging line
             # Gọi Gemini API
             response = self.generation_model.generate_content(
                 combined_prompt
             )
-            
+            print("Gemini Response:", response)  # Debugging line
+            print("="*20)
             # Định dạng kết quả trả về
             return {
                 "answer": response.text,

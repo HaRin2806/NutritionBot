@@ -22,6 +22,85 @@ import './ChatPage.css'; // Tạo file CSS riêng cho styling nâng cao
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
+// Component mới để hiển thị hình ảnh với trạng thái loading
+const RenderImage = ({ src, alt }) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  
+  // Xử lý đường dẫn hình ảnh
+  let imgSrc = src;
+  
+  // Trích xuất thông tin từ đường dẫn Markdown
+  // Ví dụ: ../figures/bai1_hinh1.jpg hoặc bai1/figures/bai1_hinh1.jpg
+  if (imgSrc.includes('figures')) {
+    // Trích xuất bài số và tên file
+    const regex = /(?:\.\.\/figures\/|bai(\d+)\/figures\/)([^\/]+\.(jpg|png|gif|jpeg))/i;
+    const match = imgSrc.match(regex);
+    
+    if (match) {
+      const fileName = match[2]; // Tên file hình ảnh
+      let baiNumber = match[1]; // Số bài (nếu có)
+      
+      // Nếu không lấy được số bài từ đường dẫn, thử lấy từ tên file
+      if (!baiNumber) {
+        const baiMatch = fileName.match(/^bai(\d+)_/);
+        if (baiMatch) {
+          baiNumber = baiMatch[1];
+        } else {
+          baiNumber = '1'; // Mặc định là bài 1 nếu không tìm thấy
+        }
+      }
+      
+      // Tạo đường dẫn API đúng
+      imgSrc = `${API_BASE_URL}/figures/${baiNumber}/${fileName}`;
+    } else {
+      // Nếu không khớp với mẫu regex, thử phương pháp đơn giản hơn
+      const parts = imgSrc.split('/');
+      const fileName = parts[parts.length - 1];
+      
+      // Thử xác định số bài từ tên file
+      const baiMatch = fileName.match(/^bai(\d+)_/);
+      const baiNumber = baiMatch ? baiMatch[1] : '1';
+      
+      imgSrc = `${API_BASE_URL}/figures/${baiNumber}/${fileName}`;
+    }
+  } else if (!imgSrc.startsWith('http')) {
+    // Nếu là đường dẫn khác không bắt đầu bằng http
+    imgSrc = imgSrc.startsWith('/') 
+      ? `${API_BASE_URL}${imgSrc}` 
+      : `${API_BASE_URL}/figures/1/${imgSrc}`; // Mặc định bài 1 nếu không có thông tin
+  }
+  
+  console.log("Image source after processing:", imgSrc); // Để debug
+  
+  return (
+    <div className="my-4">
+      {loading && (
+        <div className="flex items-center justify-center h-24 bg-gray-100 rounded-lg animate-pulse">
+          <span className="text-gray-500">Đang tải hình ảnh...</span>
+        </div>
+      )}
+      {error && (
+        <div className="flex items-center justify-center h-24 bg-red-50 rounded-lg">
+          <span className="text-red-500">Không thể tải hình ảnh</span>
+        </div>
+      )}
+      <img 
+        src={imgSrc} 
+        alt={alt || "Hình ảnh"} 
+        className={`max-w-full rounded-lg border border-gray-200 shadow-sm ${loading ? 'hidden' : 'block'}`}
+        onLoad={() => setLoading(false)}
+        onError={(e) => {
+          console.error("Image loading error:", e);
+          setLoading(false);
+          setError(true);
+        }}
+      />
+      {alt && !error && <p className="text-center text-sm text-gray-600 mt-1">{alt}</p>}
+    </div>
+  );
+};
+
 const UserInfo = ({ userAge, setUserAge }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [age, setAge] = useState(userAge || '');
@@ -271,25 +350,11 @@ const ChatPage = () => {
 
   // Custom renderer cho markdown
   const MarkdownComponents = {
+    // Component xử lý hình ảnh
     img({ node, ...props }) {
-      // Xử lý ảnh từ server
-      const imgSrc = props.src.startsWith('http') 
-        ? props.src 
-        : props.src.startsWith('/') 
-          ? `${API_BASE_URL}${props.src}` 
-          : `${API_BASE_URL}/figures/${props.src}`;
-      
-      return (
-        <div className="my-4">
-          <img 
-            src={imgSrc} 
-            alt={props.alt || "Hình ảnh"} 
-            className="max-w-full rounded-lg border border-gray-200 shadow-sm" 
-          />
-          {props.alt && <p className="text-center text-sm text-gray-600 mt-1">{props.alt}</p>}
-        </div>
-      );
+      return <RenderImage src={props.src} alt={props.alt} />;
     },
+    
     table({ node, ...props }) {
       return (
         <div className="overflow-x-auto my-4">
