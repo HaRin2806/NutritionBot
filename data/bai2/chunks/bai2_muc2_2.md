@@ -1,0 +1,7 @@
+# 2. Tầm quan trọng của đánh giá nhân trắc học dinh dưỡng của học sinh (tiếp)
+
+- **Theo dõi sự tăng trưởng và tiến bộ**: Đánh giá nhân trắc dinh dưỡng được thực hiện định kỳ theo quy định đối với học sinh. Nó cho phép theo dõi tình trạng dinh dưỡng và biểu đồ tăng trưởng của trẻ em. Điều này giúp xác định bất kỳ sai lệch nào so với biểu đồ tăng trưởng dự kiến và cho phép can thiệp và hỗ trợ kịp thời nếu cần.
+
+- **Xác định xu hướng dinh dưỡng và lập kế hoạch can thiệp**: Dữ liệu đánh giá nhân trắc dinh dưỡng có thể được phân tích chung để xác định xu hướng về tình trạng dinh dưỡng của học sinh, chẳng hạn như tỉ lệ suy dinh dưỡng, thừa cân/béo phì hoặc thiếu hụt chất dinh dưỡng cụ thể. Thông tin này sau đó có thể được sử dụng để lập kế hoạch can thiệp có mục tiêu, phát triển các chương trình giáo dục dinh dưỡng và thực hiện các chính sách nhằm cải thiện sức khỏe dinh dưỡng tổng thể của học sinh.
+
+Tóm lại, đánh giá nhân trắc dinh dưỡng của học sinh đóng một vai trò quan trọng trong việc đánh giá tình trạng dinh dưỡng của các em, hướng dẫn các biện pháp can thiệp, theo dõi sự tăng trưởng và tiến bộ cũng như cung cấp thông tin cho các chiến lược y tế học đường. Bằng cách xác định sớm các vấn đề dinh dưỡng, các biện pháp can thiệp thích hợp có thể được thực hiện để đảm bảo sức khỏe cho học sinh.

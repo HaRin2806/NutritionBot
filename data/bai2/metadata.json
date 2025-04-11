@@ -1,0 +1,196 @@
+{
+    "bai_info": {
+      "id": "bai2",
+      "title": "Đánh giá tình trạng dinh dưỡng cho lứa tuổi học sinh bằng phương pháp nhân trắc học",
+      "pages": "49-58",
+      "overview": "Hướng dẫn đánh giá tình trạng dinh dưỡng của học sinh qua phương pháp nhân trắc học, bao gồm kỹ thuật cân đo, tính toán các chỉ số theo WHO, và nhận định kết quả cho các lứa tuổi từ 0-19 tuổi."
+    },
+    "chunks": [
+      {
+        "id": "bai2_muc1_2_1",
+        "title": "Khái niệm và tầm quan trọng của nhân trắc học dinh dưỡng",
+        "content_type": "text",
+        "age_range": [1, 19],
+        "pages": "49-50",
+        "related_chunks": ["bai2_muc2_2"],
+        "summary": "Giới thiệu khái niệm nhân trắc học dinh dưỡng và vai trò quan trọng của nó trong đánh giá tình trạng dinh dưỡng và sức khỏe của học sinh.",
+        "word_count": 330,
+        "token_count": 450,
+        "contains_table": false,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc2_2",
+        "title": "Tầm quan trọng của đánh giá nhân trắc học dinh dưỡng (tiếp)",
+        "content_type": "text",
+        "age_range": [1, 19],
+        "pages": "50-51",
+        "related_chunks": ["bai2_muc1_2_1", "bai2_muc3_1"],
+        "summary": "Vai trò của đánh giá nhân trắc học trong theo dõi sự tăng trưởng và xác định xu hướng dinh dưỡng để lập kế hoạch can thiệp cho học sinh.",
+        "word_count": 225,
+        "token_count": 330,
+        "contains_table": false,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc3_1",
+        "title": "Kỹ thuật cân và đo chiều cao",
+        "content_type": "text",
+        "age_range": [1, 19],
+        "pages": "51-52",
+        "related_chunks": ["bai2_muc3_2"],
+        "summary": "Hướng dẫn chi tiết về kỹ thuật cân và đo chiều cao chính xác cho học sinh.",
+        "word_count": 320,
+        "token_count": 450,
+        "contains_table": false,
+        "contains_figure": true
+      },
+      {
+        "id": "bai2_muc3_2",
+        "title": "Kỹ thuật tính tuổi",
+        "content_type": "text",
+        "age_range": [0, 5],
+        "pages": "52-53",
+        "related_chunks": ["bai2_muc3_1", "bai2_muc4_1"],
+        "summary": "Phương pháp tính tuổi theo tháng và theo năm cho trẻ dưới 5 tuổi.",
+        "word_count": 250,
+        "token_count": 350,
+        "contains_table": false,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc4_1",
+        "title": "Phương pháp đánh giá tình trạng dinh dưỡng cho trẻ dưới 5 tuổi - Phần 1",
+        "content_type": "text",
+        "age_range": [0, 5],
+        "pages": "53-54",
+        "related_chunks": ["bai2_muc4_2", "bai2_muc3_2"],
+        "summary": "Giới thiệu phương pháp đánh giá của WHO và cách tính chỉ số Z-score, tập trung vào chỉ tiêu cân nặng theo tuổi.",
+        "word_count": 300,
+        "token_count": 450,
+        "contains_table": true,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc4_2",
+        "title": "Phương pháp đánh giá tình trạng dinh dưỡng cho trẻ dưới 5 tuổi - Phần 2",
+        "content_type": "text",
+        "age_range": [0, 5],
+        "pages": "54",
+        "related_chunks": ["bai2_muc4_1", "bai2_muc4_3"],
+        "summary": "Đánh giá tình trạng dinh dưỡng dựa trên chỉ tiêu chiều cao theo tuổi và cân nặng theo chiều cao.",
+        "word_count": 260,
+        "token_count": 370,
+        "contains_table": true,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc4_3",
+        "title": "Phương pháp đánh giá tình trạng dinh dưỡng cho trẻ dưới 5 tuổi - Phần 3",
+        "content_type": "text",
+        "age_range": [0, 5],
+        "pages": "54-55",
+        "related_chunks": ["bai2_muc4_2", "bai2_muc4_4"],
+        "summary": "Giới thiệu phần mềm WHO anthro và hướng dẫn sử dụng biểu đồ tăng trưởng trẻ em.",
+        "word_count": 340,
+        "token_count": 480,
+        "contains_table": false,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc4_4",
+        "title": "Hướng dẫn chấm biểu đồ tăng trưởng và nhận định kết quả",
+        "content_type": "text",
+        "age_range": [0, 5],
+        "pages": "55-57",
+        "related_chunks": ["bai2_muc4_3", "bai2_muc5_1"],
+        "summary": "Cách điền thông tin vào biểu đồ tăng trưởng, chấm biểu đồ và nhận định kết quả tình trạng dinh dưỡng của trẻ.",
+        "word_count": 340,
+        "token_count": 550,
+        "contains_table": false,
+        "contains_figure": false
+      },
+      {
+        "id": "bai2_muc5_1",
+        "title": "Phương pháp đánh giá tình trạng dinh dưỡng lứa tuổi 5-19 tuổi",
+        "content_type": "text",
+        "age_range": [5, 19],
+        "pages": "57-58",
+        "related_chunks": ["bai2_muc4_4"],
+        "summary": "Phương pháp đánh giá tình trạng dinh dưỡng cho trẻ 5-19 tuổi dựa trên BMI theo tuổi và giới, sử dụng phần mềm WHO anthro plus.",
+        "word_count": 300,
+        "token_count": 420,
+        "contains_table": true,
+        "contains_figure": false
+      }
+    ],
+    "tables": [
+      {
+        "id": "bai2_bang1",
+        "title": "Phân loại tình trạng dinh dưỡng theo Z-score cân nặng/tuổi",
+        "content_type": "table",
+        "age_range": [0, 5],
+        "pages": "53",
+        "related_chunks": ["bai2_muc4_1"],
+        "table_columns": ["Chỉ số Z-score", "Đánh giá"],
+        "summary": "Bảng phân loại tình trạng dinh dưỡng dựa trên chỉ số Z-score cân nặng theo tuổi cho trẻ dưới 5 tuổi",
+        "word_count": 35,
+        "token_count": 50
+      },
+      {
+        "id": "bai2_bang2",
+        "title": "Phân loại tình trạng dinh dưỡng theo Z-score chiều cao/tuổi",
+        "content_type": "table",
+        "age_range": [0, 5],
+        "pages": "54",
+        "related_chunks": ["bai2_muc4_2"],
+        "table_columns": ["Chỉ số Z-score", "Đánh giá"],
+        "summary": "Bảng phân loại tình trạng dinh dưỡng dựa trên chỉ số Z-score chiều cao theo tuổi cho trẻ dưới 5 tuổi",
+        "word_count": 30,
+        "token_count": 45
+      },
+      {
+        "id": "bai2_bang3",
+        "title": "Phân loại tình trạng dinh dưỡng theo Z-score cân nặng/chiều cao",
+        "content_type": "table",
+        "age_range": [0, 5],
+        "pages": "54",
+        "related_chunks": ["bai2_muc4_2"],
+        "table_columns": ["Chỉ số Z-score", "Đánh giá"],
+        "summary": "Bảng phân loại tình trạng dinh dưỡng dựa trên chỉ số Z-score cân nặng theo chiều cao cho trẻ dưới 5 tuổi",
+        "word_count": 45,
+        "token_count": 65
+      },
+      {
+        "id": "bai2_bang4",
+        "title": "Phân loại tình trạng dinh dưỡng theo Z-score BMI/tuổi cho trẻ 5-19 tuổi",
+        "content_type": "table",
+        "age_range": [5, 19],
+        "pages": "58",
+        "related_chunks": ["bai2_muc5_1"],
+        "table_columns": ["Chỉ số Z-score", "Đánh giá"],
+        "summary": "Bảng phân loại tình trạng dinh dưỡng dựa trên chỉ số Z-score BMI theo tuổi cho trẻ 5-19 tuổi",
+        "word_count": 40,
+        "token_count": 60
+      }
+    ],
+    "figures": [
+      {
+        "id": "bai2_hinh5",
+        "title": "Kỹ thuật đo chiều cao",
+        "content_type": "figure",
+        "age_range": [1, 19],
+        "pages": "52",
+        "related_chunks": ["bai2_muc3_1"],
+        "summary": "Minh họa kỹ thuật đo chiều cao đúng cách cho học sinh"
+      }
+    ],
+    "metadata_version": "1.0",
+    "total_items": {
+      "chunks": 9,
+      "tables": 4,
+      "figures": 1
+    },
+    "document_source": "Bộ Giáo dục và Đào tạo",
+    "last_updated": "2024-04-08"
+  }

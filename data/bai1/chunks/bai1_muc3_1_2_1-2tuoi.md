@@ -1,0 +1,7 @@
+### 3.1.2. Các vấn đề dinh dưỡng thường gặp
+- Kén chọn thực phẩm: Trẻ ở độ tuổi này có thể trở nên kén chọn thực phẩm và từ chối ăn một số loại thực phẩm, đặc biệt là các loại rau quả. Điều này có thể gây thiếu hụt dưỡng chất quan trọng trong chế độ ăn uống của trẻ.
+- Suy dinh dưỡng và thiếu vi chất dinh dưỡng: Do tính kén chọn và thay đổi khẩu vị, đồng thời đây là giai đoạn trẻ bắt đầu cai sữa, đi nhà trẻ do vậy trẻ tiếp xúc nhiều hơn với các mầm bệnh, nên trẻ hay ốm nhiều hơn giai đoạn trước. Trẻ từ 1 đến 2 tuổi có nguy cơ thiếu dinh dưỡng, đặc biệt là thiếu canxi, sắt, vitamin D, DHA (omega-3), và các dưỡng chất quan trọng khác.
+- Thừa cân hoặc béo phì: Một số trẻ ở độ tuổi này có thể có nguy cơ thừa cân hoặc béo phì nếu trẻ tiêu thụ quá nhiều calo so với nhu cầu phát triển và hoạt động hàng ngày.
+- Tiêu hóa không tốt: Hệ tiêu hóa của trẻ đang trong giai đoạn phát triển và có thể dễ bị ảnh hưởng bởi thực phẩm không hợp lý, gây ra tình trạng tiêu chảy hoặc táo bón.
+- Tiếp xúc với thực phẩm không an toàn: Trẻ từ 1 - 2 tuổi đang khám phá thế giới xung quanh và có thể tiếp xúc với các thực phẩm không an toàn, gây ngộ độc.
+- Dị ứng thực phẩm: Giai đoạn này trẻ khám phá nhiều thực phẩm mới, do vậy nguy cơ bị dị ứng thực phẩm cũng tăng lên.

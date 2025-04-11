@@ -1,0 +1,2 @@
+## 1.1. Giới thiệu chung về dinh dưỡng và chu kỳ vòng đời
+Dinh dưỡng là quá trình cung cấp và sử dụng các chất dinh dưỡng cần thiết cho sự sống và phát triển của cơ thể. Các chất dinh dưỡng bao gồm các thành phần hữu cơ như protein, lipid, carbohydrate, vitamin và các thành phần vô cơ như khoáng chất và nước. Các chất dinh dưỡng có vai trò quan trọng trong việc duy trì các chức năng sinh lý, tạo năng lượng, bảo vệ sức khỏe và phòng ngừa bệnh tật. 

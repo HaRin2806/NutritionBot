@@ -1,0 +1,1130 @@
+{
+    "bai_info": {
+        "id": "bai1",
+        "title": "Dinh dưỡng theo lứa tuổi học sinh",
+        "pages": "7-47",
+        "overview": "Bài này trình bày về tầm quan trọng của dinh dưỡng, đơn vị chuyển đổi thực phẩm, và nhu cầu dinh dưỡng theo từng lứa tuổi học sinh từ 1-19 tuổi."
+    },
+    "chunks": [
+        {
+            "id": "bai1_muc1_1_1",
+            "title": "Giới thiệu chung về dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "7",
+            "related_chunks": [
+                "bai1_muc1_1_2",
+                "bai1_muc1_2_1"
+            ],
+            "summary": "Định nghĩa dinh dưỡng và vai trò của các chất dinh dưỡng trong việc duy trì các chức năng sinh lý",
+            "word_count": 150,
+            "token_count": 200,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc1_1_2",
+            "title": "Chu kỳ vòng đời",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "7-8",
+            "related_chunks": [
+                "bai1_muc1_1_1",
+                "bai1_muc1_2_1"
+            ],
+            "summary": "Định nghĩa chu kỳ vòng đời và các giai đoạn chính trong đời người",
+            "word_count": 100,
+            "token_count": 150,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc1_2_1",
+            "title": "Tầm quan trọng của dinh dưỡng đối với trẻ 1-2 tuổi",
+            "content_type": "text",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "8",
+            "related_chunks": [
+                "bai1_muc1_1_2",
+                "bai1_muc1_2_2",
+                "bai1_muc3_1_1_1-2tuoi"
+            ],
+            "summary": "Tầm quan trọng của dinh dưỡng đối với sự phát triển thể chất và nhận thức của trẻ 1-2 tuổi",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc1_2_2",
+            "title": "Tầm quan trọng của dinh dưỡng đối với trẻ 3-5 tuổi",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "8-9",
+            "related_chunks": [
+                "bai1_muc1_2_1",
+                "bai1_muc1_2_3",
+                "bai1_muc3_2_1_3-5tuoi"
+            ],
+            "summary": "Tầm quan trọng của dinh dưỡng đối với sự phát triển thể lực và hoạt động của trẻ 3-5 tuổi",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc1_2_3",
+            "title": "Tầm quan trọng của dinh dưỡng đối với trẻ 6-11 tuổi",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "9",
+            "related_chunks": [
+                "bai1_muc1_2_2",
+                "bai1_muc1_2_4",
+                "bai1_muc3_3_1_6-11tuoi"
+            ],
+            "summary": "Tầm quan trọng của dinh dưỡng đối với sự thay răng, phòng tránh bệnh lý răng miệng và phát triển ở trẻ 6-11 tuổi",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc1_2_4",
+            "title": "Tầm quan trọng của dinh dưỡng đối với trẻ 12-19 tuổi",
+            "content_type": "text",
+            "age_range": [
+                12,
+                19
+            ],
+            "pages": "9-10",
+            "related_chunks": [
+                "bai1_muc1_2_3",
+                "bai1_muc3_4_1_12-14tuoi",
+                "bai1_muc3_5_1_15-19tuoi"
+            ],
+            "summary": "Tầm quan trọng của dinh dưỡng đối với giai đoạn dậy thì, phát triển hormone và thể chất ở trẻ 12-19 tuổi",
+            "word_count": 300,
+            "token_count": 400,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc2_1",
+            "title": "Đơn vị chuyển đổi thực phẩm và cách tính đơn vị ăn ngũ cốc, khoai củ",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "10-11",
+            "related_chunks": [
+                "bai1_muc2_2"
+            ],
+            "summary": "Giới thiệu về hệ thống chuyển đổi thực phẩm và cách tính một đơn vị ăn ngũ cốc, khoai củ và sản phẩm chế biến",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc2_2",
+            "title": "Cách tính đơn vị ăn rau lá, rau củ quả và trái cây",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "11-12",
+            "related_chunks": [
+                "bai1_muc2_1",
+                "bai1_muc2_3"
+            ],
+            "summary": "Cách tính một đơn vị ăn rau lá, rau củ quả và trái cây/quả chín với các ví dụ cụ thể",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc2_3",
+            "title": "Cách tính đơn vị ăn thịt, thủy sản, trứng và hạt giàu đạm",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "12-13",
+            "related_chunks": [
+                "bai1_muc2_2",
+                "bai1_muc2_4"
+            ],
+            "summary": "Cách tính một đơn vị ăn thịt, thủy sản, trứng và các hạt giàu đạm với các ví dụ cụ thể",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc2_4",
+            "title": "Cách tính đơn vị ăn sữa, dầu/mỡ, đường, muối và nước",
+            "content_type": "text",
+            "age_range": [
+                1,
+                19
+            ],
+            "pages": "13-14",
+            "related_chunks": [
+                "bai1_muc2_3"
+            ],
+            "summary": "Cách tính một đơn vị ăn sữa, chế phẩm sữa, dầu/mỡ, đường, muối và nước",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_1_1_1-2tuoi",
+            "title": "Trẻ từ 1-2 tuổi: Đặc điểm cơ thể",
+            "content_type": "text",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "14-15",
+            "related_chunks": [
+                "bai1_muc1_2_1",
+                "bai1_muc3_1_2_1-2tuoi"
+            ],
+            "summary": "Đặc điểm sinh lý chủ yếu và sự phát triển tâm thần, vận động của trẻ 1-2 tuổi",
+            "word_count": 350,
+            "token_count": 500,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_1_2_1-2tuoi",
+            "title": "Trẻ từ 1-2 tuổi: Các vấn đề dinh dưỡng thường gặp",
+            "content_type": "text",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "15-16",
+            "related_chunks": [
+                "bai1_muc3_1_1_1-2tuoi",
+                "bai1_muc3_1_3_1-2tuoi"
+            ],
+            "summary": "Các vấn đề dinh dưỡng thường gặp ở trẻ 1-2 tuổi như kén chọn thực phẩm, suy dinh dưỡng, thừa cân, tiêu hóa không tốt",
+            "word_count": 300,
+            "token_count": 450,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_1_3_1-2tuoi",
+            "title": "Trẻ từ 1-2 tuổi: Nhu cầu năng lượng và các chất dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "16-17",
+            "related_chunks": [
+                "bai1_muc3_1_2_1-2tuoi",
+                "bai1_muc3_1_4_1-2tuoi",
+                "bai1_bang1_1-2tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về năng lượng và các chất dinh dưỡng cho trẻ 1-2 tuổi, bao gồm nhu cầu nước",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_1_4_1-2tuoi",
+            "title": "Trẻ từ 1-2 tuổi: Hướng dẫn, tư vấn chế độ ăn",
+            "content_type": "text",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "17-19",
+            "related_chunks": [
+                "bai1_muc3_1_3_1-2tuoi",
+                "bai1_bang1_1-2tuoi"
+            ],
+            "summary": "Nguyên tắc dinh dưỡng và lựa chọn thực phẩm phù hợp cho trẻ 1-2 tuổi",
+            "word_count": 400,
+            "token_count": 550,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_2_1_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Đặc điểm cơ thể",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "19-20",
+            "related_chunks": [
+                "bai1_muc1_2_2",
+                "bai1_muc3_2_2_3-5tuoi"
+            ],
+            "summary": "Đặc điểm sinh lý chủ yếu và sự phát triển tâm thần, vận động của trẻ 3-5 tuổi",
+            "word_count": 300,
+            "token_count": 450,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_2_2_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Các vấn đề dinh dưỡng thường gặp",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "20-21",
+            "related_chunks": [
+                "bai1_muc3_2_1_3-5tuoi",
+                "bai1_muc3_2_3_3-5tuoi"
+            ],
+            "summary": "Các vấn đề dinh dưỡng thường gặp ở trẻ 3-5 tuổi như suy dinh dưỡng thấp còi, thiếu vi chất, sâu răng",
+            "word_count": 350,
+            "token_count": 500,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_2_3_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Nhu cầu năng lượng và các chất dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "21-23",
+            "related_chunks": [
+                "bai1_muc3_2_2_3-5tuoi",
+                "bai1_muc3_2_4_1_3-5tuoi",
+                "bai1_bang2_3-5tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về năng lượng và các chất dinh dưỡng cho trẻ 3-5 tuổi, bao gồm nhu cầu nước",
+            "word_count": 300,
+            "token_count": 450,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_2_4_1_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Nguyên tắc dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "23",
+            "related_chunks": [
+                "bai1_muc3_2_3_3-5tuoi",
+                "bai1_muc3_2_4_2_3-5tuoi",
+                "bai1_hinh1_3-5tuoi"
+            ],
+            "summary": "Nguyên tắc dinh dưỡng cho trẻ 3-5 tuổi và giới thiệu tháp dinh dưỡng",
+            "word_count": 170,
+            "token_count": 250,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc3_2_4_2_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Hướng dẫn lựa chọn thực phẩm tầng 1-2",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "23-24",
+            "related_chunks": [
+                "bai1_muc3_2_4_1_3-5tuoi",
+                "bai1_muc3_2_4_3_3-5tuoi",
+                "bai1_hinh1_3-5tuoi"
+            ],
+            "summary": "Hướng dẫn lựa chọn thực phẩm cho tầng 1 (ngũ cốc, khoai củ) và tầng 2 (rau lá, trái cây) của tháp dinh dưỡng cho trẻ 3-5 tuổi",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc3_2_4_3_3-5tuoi",
+            "title": "Trẻ từ 3-5 tuổi: Hướng dẫn lựa chọn thực phẩm tầng 3-6",
+            "content_type": "text",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "24-25",
+            "related_chunks": [
+                "bai1_muc3_2_4_2_3-5tuoi",
+                "bai1_hinh1_3-5tuoi"
+            ],
+            "summary": "Hướng dẫn lựa chọn thực phẩm cho tầng 3-6 của tháp dinh dưỡng (thịt, sữa, dầu mỡ, đường, muối và nước) cho trẻ 3-5 tuổi",
+            "word_count": 280,
+            "token_count": 400,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_1_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Đặc điểm cơ thể",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "25-26",
+            "related_chunks": [
+                "bai1_muc1_2_3",
+                "bai1_muc3_3_2_6-11tuoi"
+            ],
+            "summary": "Đặc điểm sinh lý chủ yếu và sự phát triển tâm thần, vận động của trẻ 6-11 tuổi",
+            "word_count": 300,
+            "token_count": 450,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_2_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Các vấn đề dinh dưỡng thường gặp",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "26-27",
+            "related_chunks": [
+                "bai1_muc3_3_1_6-11tuoi",
+                "bai1_muc3_3_3_1_6-11tuoi"
+            ],
+            "summary": "Các vấn đề dinh dưỡng thường gặp ở trẻ 6-11 tuổi như suy dinh dưỡng, thiếu vi chất, thừa cân và béo phì",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_3_1_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Nhu cầu năng lượng",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "27-28",
+            "related_chunks": [
+                "bai1_muc3_3_2_6-11tuoi",
+                "bai1_muc3_3_3_2_6-11tuoi",
+                "bai1_bang3_6-11tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về năng lượng theo mức hoạt động thể lực cho trẻ 6-11 tuổi",
+            "word_count": 200,
+            "token_count": 300,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_3_2_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Nhu cầu các chất dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "28-30",
+            "related_chunks": [
+                "bai1_muc3_3_3_1_6-11tuoi",
+                "bai1_muc3_3_4_1_6-11tuoi",
+                "bai1_bang4_6-11tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về protein, lipid, carbohydrate, vitamin và khoáng chất cho trẻ 6-11 tuổi",
+            "word_count": 350,
+            "token_count": 500,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_4_1_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Nguyên tắc dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "31",
+            "related_chunks": [
+                "bai1_muc3_3_3_2_6-11tuoi",
+                "bai1_muc3_3_4_2_6-11tuoi",
+                "bai1_hinh2_6-11tuoi"
+            ],
+            "summary": "Nguyên tắc dinh dưỡng cho trẻ 6-11 tuổi và giới thiệu tháp dinh dưỡng",
+            "word_count": 150,
+            "token_count": 200,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc3_3_4_2_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Hướng dẫn lựa chọn thực phẩm tầng 1-2",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "31-32",
+            "related_chunks": [
+                "bai1_muc3_3_4_1_6-11tuoi",
+                "bai1_muc3_3_4_3_6-11tuoi",
+                "bai1_hinh2_6-11tuoi"
+            ],
+            "summary": "Hướng dẫn lựa chọn thực phẩm cho tầng 1 (ngũ cốc, khoai củ) và tầng 2 (rau lá, trái cây) của tháp dinh dưỡng cho trẻ 6-11 tuổi",
+            "word_count": 250,
+            "token_count": 350,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_3_4_3_6-11tuoi",
+            "title": "Trẻ từ 6-11 tuổi: Hướng dẫn lựa chọn thực phẩm tầng 3-6",
+            "content_type": "text",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "32-33",
+            "related_chunks": [
+                "bai1_muc3_3_4_2_6-11tuoi",
+                "bai1_hinh2_6-11tuoi"
+            ],
+            "summary": "Hướng dẫn lựa chọn thực phẩm cho tầng 3-6 của tháp dinh dưỡng (thịt, sữa, dầu mỡ, đường, muối và nước) cho trẻ 6-11 tuổi",
+            "word_count": 300,
+            "token_count": 400,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_4_1_12-14tuoi",
+            "title": "Trẻ từ 12-14 tuổi: Đặc điểm cơ thể",
+            "content_type": "text",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "34-35",
+            "related_chunks": [
+                "bai1_muc1_2_4",
+                "bai1_muc3_4_2_12-14tuoi"
+            ],
+            "summary": "Đặc điểm sinh lý chủ yếu và sự phát triển tâm thần, vận động của trẻ 12-14 tuổi",
+            "word_count": 270,
+            "token_count": 400,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_4_2_12-14tuoi",
+            "title": "Trẻ từ 12-14 tuổi: Các vấn đề dinh dưỡng thường gặp",
+            "content_type": "text",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "35-36",
+            "related_chunks": [
+                "bai1_muc3_4_1_12-14tuoi",
+                "bai1_muc3_4_3_1_12-14tuoi"
+            ],
+            "summary": "Các vấn đề dinh dưỡng thường gặp ở trẻ 12-14 tuổi như chế độ ăn không cân đối, thiếu sắt, canxi, chất xơ",
+            "word_count": 350,
+            "token_count": 500,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_4_3_1_12-14tuoi",
+            "title": "Trẻ từ 12-14 tuổi: Nhu cầu năng lượng",
+            "content_type": "text",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "36",
+            "related_chunks": [
+                "bai1_muc3_4_2_12-14tuoi",
+                "bai1_muc3_4_3_2_12-14tuoi",
+                "bai1_bang5_12-14tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về năng lượng theo mức hoạt động thể lực cho trẻ 12-14 tuổi",
+            "word_count": 150,
+            "token_count": 200,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_4_3_2_12-14tuoi",
+            "title": "Trẻ từ 12-14 tuổi: Nhu cầu các chất dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "36-38",
+            "related_chunks": [
+                "bai1_muc3_4_3_1_12-14tuoi",
+                "bai1_muc3_4_4_12-14tuoi",
+                "bai1_bang6_12-14tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về protein, lipid, carbohydrate, vitamin và khoáng chất cho trẻ 12-14 tuổi",
+            "word_count": 300,
+            "token_count": 400,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_4_4_12-14tuoi",
+            "title": "Trẻ từ 12-14 tuổi: Hướng dẫn, tư vấn chế độ ăn",
+            "content_type": "text",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "38-40",
+            "related_chunks": [
+                "bai1_muc3_4_3_2_12-14tuoi",
+                "bai1_hinh3_12-14tuoi"
+            ],
+            "summary": "Nguyên tắc dinh dưỡng và lựa chọn thực phẩm theo tháp dinh dưỡng cho trẻ 12-14 tuổi",
+            "word_count": 400,
+            "token_count": 550,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc3_5_1_15-19tuoi",
+            "title": "Trẻ từ 15-19 tuổi: Đặc điểm cơ thể",
+            "content_type": "text",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "40-41",
+            "related_chunks": [
+                "bai1_muc1_2_4",
+                "bai1_muc3_5_2_15-19tuoi"
+            ],
+            "summary": "Đặc điểm sinh lý chủ yếu và sự phát triển tâm thần, vận động của trẻ 15-19 tuổi",
+            "word_count": 320,
+            "token_count": 450,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_5_2_15-19tuoi",
+            "title": "Trẻ từ 15-19 tuổi: Các vấn đề dinh dưỡng thường gặp",
+            "content_type": "text",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "41-42",
+            "related_chunks": [
+                "bai1_muc3_5_1_15-19tuoi",
+                "bai1_muc3_5_3_1_15-19tuoi"
+            ],
+            "summary": "Các vấn đề dinh dưỡng thường gặp ở trẻ 15-19 tuổi như thiếu chất dinh dưỡng, thừa cân và béo phì",
+            "word_count": 380,
+            "token_count": 520,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_5_3_1_15-19tuoi",
+            "title": "Trẻ từ 15-19 tuổi: Nhu cầu năng lượng",
+            "content_type": "text",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "42-43",
+            "related_chunks": [
+                "bai1_muc3_5_2_15-19tuoi",
+                "bai1_muc3_5_3_2_15-19tuoi",
+                "bai1_bang7_15-19tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về năng lượng theo mức hoạt động thể lực cho trẻ 15-19 tuổi",
+            "word_count": 180,
+            "token_count": 250,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_5_3_2_15-19tuoi",
+            "title": "Trẻ từ 15-19 tuổi: Nhu cầu các chất dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "43-44",
+            "related_chunks": [
+                "bai1_muc3_5_3_1_15-19tuoi",
+                "bai1_muc3_5_4_15-19tuoi",
+                "bai1_bang8_15-19tuoi"
+            ],
+            "summary": "Nhu cầu khuyến nghị về protein, lipid, carbohydrate, vitamin và khoáng chất cho trẻ 15-19 tuổi",
+            "word_count": 320,
+            "token_count": 450,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai1_muc3_5_4_15-19tuoi",
+            "title": "Trẻ từ 15-19 tuổi: Hướng dẫn, tư vấn chế độ ăn",
+            "content_type": "text",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "44-46",
+            "related_chunks": [
+                "bai1_muc3_5_3_2_15-19tuoi",
+                "bai1_hinh4_15-19tuoi"
+            ],
+            "summary": "Nguyên tắc dinh dưỡng và lựa chọn thực phẩm theo tháp dinh dưỡng cho trẻ 15-19 tuổi",
+            "word_count": 400,
+            "token_count": 550,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai1_muc3_6_1",
+            "title": "Tổng hợp nhu cầu dinh dưỡng của các nhóm tuổi theo tháp dinh dưỡng",
+            "content_type": "text",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "46-47",
+            "related_chunks": [
+                "bai1_bang9_tonghop",
+                "bai1_hinh1_3-5tuoi",
+                "bai1_hinh2_6-11tuoi",
+                "bai1_hinh3_12-14tuoi",
+                "bai1_hinh4_15-19tuoi"
+            ],
+            "summary": "Bảng tổng hợp nhu cầu dinh dưỡng của các nhóm tuổi 3-5, 6-11, 12-14, 15-19 theo các tầng của tháp dinh dưỡng",
+            "word_count": 280,
+            "token_count": 400,
+            "contains_table": true,
+            "contains_figure": false
+        }
+    ],
+    "tables": [
+        {
+            "id": "bai1_bang1_1-2tuoi",
+            "title": "Nhu cầu khuyến nghị năng lượng và các chất dinh dưỡng cho trẻ 1-2 tuổi",
+            "content_type": "table",
+            "age_range": [
+                1,
+                2
+            ],
+            "pages": "16-17",
+            "related_chunks": [
+                "bai1_muc3_1_3_1-2tuoi",
+                "bai1_muc3_1_4_1-2tuoi"
+            ],
+            "table_columns": [
+                "STT",
+                "Năng lượng và các chất dinh dưỡng",
+                "Nam",
+                "Nữ"
+            ],
+            "summary": "Bảng thể hiện nhu cầu năng lượng và dinh dưỡng chi tiết cho trẻ 1-2 tuổi theo giới tính",
+            "word_count": 200,
+            "token_count": 300
+        },
+        {
+            "id": "bai1_bang2_3-5tuoi",
+            "title": "Nhu cầu khuyến nghị năng lượng và các chất dinh dưỡng cho trẻ 3-5 tuổi",
+            "content_type": "table",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "21-22",
+            "related_chunks": [
+                "bai1_muc3_2_3_3-5tuoi",
+                "bai1_muc3_2_4_1_3-5tuoi"
+            ],
+            "table_columns": [
+                "STT",
+                "Năng lượng và các chất dinh dưỡng",
+                "Nam",
+                "Nữ"
+            ],
+            "summary": "Bảng thể hiện nhu cầu năng lượng và dinh dưỡng chi tiết cho trẻ 3-5 tuổi theo giới tính",
+            "word_count": 200,
+            "token_count": 300
+        },
+        {
+            "id": "bai1_bang3_6-11tuoi",
+            "title": "Nhu cầu khuyến nghị năng lượng cho trẻ 6-11 tuổi",
+            "content_type": "table",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "27",
+            "related_chunks": [
+                "bai1_muc3_3_3_1_6-11tuoi"
+            ],
+            "table_columns": [
+                "Nhóm tuổi",
+                "Nhu cầu năng lượng của nam (HĐTL nhẹ/trung bình/nặng)",
+                "Nhu cầu năng lượng của nữ (HĐTL nhẹ/trung bình/nặng)"
+            ],
+            "summary": "Bảng thể hiện nhu cầu năng lượng cho trẻ 6-11 tuổi theo nhóm tuổi, giới tính và mức độ hoạt động thể lực",
+            "word_count": 150,
+            "token_count": 220
+        },
+        {
+            "id": "bai1_bang4_6-11tuoi",
+            "title": "Nhu cầu khuyến nghị các chất dinh dưỡng cho trẻ 6-11 tuổi",
+            "content_type": "table",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "28-30",
+            "related_chunks": [
+                "bai1_muc3_3_3_2_6-11tuoi"
+            ],
+            "table_columns": [
+                "STT",
+                "Các chất dinh dưỡng",
+                "Độ tuổi",
+                "Nam",
+                "Nữ"
+            ],
+            "summary": "Bảng thể hiện nhu cầu các chất dinh dưỡng cho trẻ 6-11 tuổi phân chia theo độ tuổi 6-7, 8-9, 10-11 và theo giới tính",
+            "word_count": 350,
+            "token_count": 500
+        },
+        {
+            "id": "bai1_bang5_12-14tuoi",
+            "title": "Nhu cầu khuyến nghị năng lượng cho trẻ 12-14 tuổi",
+            "content_type": "table",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "36",
+            "related_chunks": [
+                "bai1_muc3_4_3_1_12-14tuoi"
+            ],
+            "table_columns": [
+                "Nhóm tuổi",
+                "Nhu cầu năng lượng của nam (HĐTL nhẹ/trung bình/nặng)",
+                "Nhu cầu năng lượng của nữ (HĐTL nhẹ/trung bình/nặng)"
+            ],
+            "summary": "Bảng thể hiện nhu cầu năng lượng cho trẻ 12-14 tuổi theo giới tính và mức độ hoạt động thể lực",
+            "word_count": 120,
+            "token_count": 180
+        },
+        {
+            "id": "bai1_bang6_12-14tuoi",
+            "title": "Nhu cầu khuyến nghị các chất dinh dưỡng cho trẻ 12-14 tuổi",
+            "content_type": "table",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "36-38",
+            "related_chunks": [
+                "bai1_muc3_4_3_2_12-14tuoi"
+            ],
+            "table_columns": [
+                "STT",
+                "Các chất dinh dưỡng",
+                "Nam",
+                "Nữ"
+            ],
+            "summary": "Bảng thể hiện nhu cầu các chất dinh dưỡng chính cho trẻ 12-14 tuổi theo giới tính, bao gồm protein, lipid, carbohydrate, canxi, sắt và các vitamin",
+            "word_count": 300,
+            "token_count": 420
+        },
+        {
+            "id": "bai1_bang7_15-19tuoi",
+            "title": "Nhu cầu khuyến nghị năng lượng cho trẻ 15-19 tuổi",
+            "content_type": "table",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "42-43",
+            "related_chunks": [
+                "bai1_muc3_5_3_1_15-19tuoi"
+            ],
+            "table_columns": [
+                "Nhóm tuổi",
+                "Nhu cầu năng lượng của nam (HĐTL nhẹ/trung bình/nặng)",
+                "Nhu cầu năng lượng của nữ (HĐTL nhẹ/trung bình/nặng)"
+            ],
+            "summary": "Bảng thể hiện nhu cầu năng lượng cho trẻ 15-19 tuổi theo giới tính và mức độ hoạt động thể lực",
+            "word_count": 120,
+            "token_count": 180
+        },
+        {
+            "id": "bai1_bang8_15-19tuoi",
+            "title": "Nhu cầu khuyến nghị các chất dinh dưỡng cho trẻ 15-19 tuổi",
+            "content_type": "table",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "43-44",
+            "related_chunks": [
+                "bai1_muc3_5_3_2_15-19tuoi"
+            ],
+            "table_columns": [
+                "STT",
+                "Các chất dinh dưỡng",
+                "Nam",
+                "Nữ"
+            ],
+            "summary": "Bảng thể hiện nhu cầu các chất dinh dưỡng chính cho trẻ 15-19 tuổi theo giới tính, bao gồm protein, lipid, carbohydrate, canxi, sắt và các vitamin",
+            "word_count": 300,
+            "token_count": 420
+        },
+        {
+            "id": "bai1_bang9_tonghop",
+            "title": "Tổng hợp nhu cầu dinh dưỡng của các nhóm tuổi theo tháp dinh dưỡng",
+            "content_type": "table",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "46-47",
+            "related_chunks": [
+                "bai1_muc3_6_1"
+            ],
+            "table_columns": [
+                "Tầng của tháp dinh dưỡng",
+                "Trẻ 3-5 tuổi",
+                "Trẻ 6-11 tuổi",
+                "Trẻ 12-14 tuổi",
+                "Trẻ 15-19 tuổi"
+            ],
+            "summary": "Bảng tổng hợp so sánh nhu cầu dinh dưỡng theo đơn vị ăn cho các nhóm tuổi khác nhau theo từng tầng của tháp dinh dưỡng",
+            "word_count": 350,
+            "token_count": 500
+        }
+    ],
+    "figures": [
+        {
+            "id": "bai1_hinh1",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_1"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh2",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_2"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh3",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_2"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh4",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_3"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh5",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_4"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh6",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_4"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh7",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_4"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh8",
+            "title": "Hình minh họa",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc2_4"
+            ],
+            "summary": "Hình minh họa"
+        },
+        {
+            "id": "bai1_hinh9",
+            "title": "Tháp dinh dưỡng cho trẻ từ 3-5 tuổi",
+            "content_type": "figure",
+            "age_range": [
+                3,
+                5
+            ],
+            "pages": "23",
+            "related_chunks": [
+                "bai1_muc3_2_4_1_3-5tuoi",
+                "bai1_muc3_2_4_2_3-5tuoi",
+                "bai1_muc3_2_4_3_3-5tuoi"
+            ],
+            "summary": "Tháp dinh dưỡng minh họa các nhóm thực phẩm và khẩu phần khuyến nghị cho trẻ 3-5 tuổi"
+        },
+        {
+            "id": "bai1_hinh10",
+            "title": "Tháp dinh dưỡng cho trẻ từ 6-11 tuổi",
+            "content_type": "figure",
+            "age_range": [
+                6,
+                11
+            ],
+            "pages": "31",
+            "related_chunks": [
+                "bai1_muc3_3_4_1_6-11tuoi",
+                "bai1_muc3_3_4_2_6-11tuoi",
+                "bai1_muc3_3_4_3_6-11tuoi"
+            ],
+            "summary": "Tháp dinh dưỡng minh họa các nhóm thực phẩm và khẩu phần khuyến nghị cho trẻ 6-11 tuổi"
+        },
+        {
+            "id": "bai1_hinh11",
+            "title": "Tháp dinh dưỡng cho trẻ từ 12-14 tuổi",
+            "content_type": "figure",
+            "age_range": [
+                12,
+                14
+            ],
+            "pages": "38",
+            "related_chunks": [
+                "bai1_muc3_4_4_12-14tuoi"
+            ],
+            "summary": "Tháp dinh dưỡng minh họa các nhóm thực phẩm và khẩu phần khuyến nghị cho trẻ 12-14 tuổi"
+        },
+        {
+            "id": "bai1_hinh12",
+            "title": "Tháp dinh dưỡng cho trẻ từ 15-19 tuổi",
+            "content_type": "figure",
+            "age_range": [
+                15,
+                19
+            ],
+            "pages": "45",
+            "related_chunks": [
+                "bai1_muc3_5_4_15-19tuoi"
+            ],
+            "summary": "Tháp dinh dưỡng minh họa các nhóm thực phẩm và khẩu phần khuyến nghị cho trẻ 15-19 tuổi"
+        }
+    ],
+    "total_items": {
+        "chunks": 38,
+        "tables": 9,
+        "figures": 12
+    },
+    "document_source": "Bộ Giáo dục và Đào tạo"
+}

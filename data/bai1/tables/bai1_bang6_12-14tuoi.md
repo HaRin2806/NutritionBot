@@ -1,0 +1,12 @@
+| STT | Các chất dinh dưỡng                           | Nam                                                                 | Nữ                                                                 |
+|-----|-----------------------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------|
+| 1   | Protein: 13 - 20% năng lượng khẩu phần        | 1,37g/kg/ngày hoặc 65g/ngày. <br>Trong đó tỉ lệ protein động vật/tổng số ≥ 35% | 1,3g/kg/ngày hoặc 60g/ngày. <br>Trong đó tỉ lệ protein động vật/tổng số ≥ 35% |
+| 2   | Lipid: 20 - 30% năng lượng khẩu phần          | 56 - 83g/ngày                                                       | 51 - 77g/ngày                                                       |
+| 3   | Carbohydrate: 55 - 65% năng lượng khẩu phần   | 300 - 340g/ngày                                                     | 280 - 300g/ngày                                                     |
+| 4   | Canxi                                          | 1000mg/ngày                                                         | 1000mg/ngày                                                         |
+| 5   | Sắt                                            | Hấp thu 10%: 15,3mg/ngày <br>Hấp thu 15%: 10,2mg/ngày                | Hấp thu 10%: 14mg/ngày <br>Hấp thu 15%: 9,3mg/ngày                  |
+|     | 12-14 tuổi (có kinh nguyệt)                   | —                                                                    | Hấp thu 10%: 32,6mg/ngày <br>Hấp thu 15%: 21,8mg/ngày               |
+| 6   | Kẽm                                            | Hấp thu kém: 18mg/ngày <br>Hấp thu vừa: 9mg/ngày <br>Hấp thu tốt: 6,4mg/ngày | Hấp thu kém: 16mg/ngày <br>Hấp thu vừa: 8mg/ngày <br>Hấp thu tốt: 4,8mg/ngày |
+| 7   | Vitamin A                                      | 800μg/ngày                                                           | 700μg/ngày                                                           |
+| 8   | Vitamin D                                      | 15μg/ngày                                                            | 15μg/ngày                                                            |
+| 9   | Vitamin C                                      | 95mg/ngày                                                            | 95mg/ngày                                                            |

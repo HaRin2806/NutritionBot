@@ -1,0 +1,10 @@
+flask
+flask-cors
+chromadb
+sentence-transformers
+google-generativeai
+python-dotenv
+numpy
+pandas
+markdown
+pydantic

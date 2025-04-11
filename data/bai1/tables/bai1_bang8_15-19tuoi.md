@@ -1,0 +1,11 @@
+| STT | Các chất dinh dưỡng                           | Nam                                                                 | Nữ                                                                 |
+|-----|-----------------------------------------------|----------------------------------------------------------------------|----------------------------------------------------------------------|
+| 1   | Protein: 13 - 20% năng lượng khẩu phần        | 1,25g/kg/ngày hoặc 74g/ngày. <br>Trong đó tỉ lệ protein động vật/tổng số ≥ 35% | 1,17g/kg/ngày hoặc 63g/ngày. <br>Trong đó tỉ lệ protein động vật/tổng số ≥ 35% |
+| 2   | Lipid: 20 - 30% năng lượng khẩu phần          | 63 - 94g/ngày                                                       | 53 - 79g/ngày                                                       |
+| 3   | Carbohydrate: 55 - 65% năng lượng khẩu phần   | 400 - 440g/ngày                                                     | 330 - 370g/ngày                                                     |
+| 4   | Canxi                                          | 1000mg/ngày                                                         | 1000mg/ngày                                                         |
+| 5   | Sắt                                            | Hấp thu 10%: 17,5mg/ngày <br>Hấp thu 15%: 11,6mg/ngày                | Hấp thu 10%: 29,7mg/ngày <br>Hấp thu 15%: 19,8mg/ngày               |
+| 6   | Kẽm                                            | Hấp thu kém: 20mg/ngày <br>Hấp thu vừa: 10mg/ngày <br>Hấp thu tốt: 6mg/ngày | Hấp thu kém: 16mg/ngày <br>Hấp thu vừa: 8mg/ngày <br>Hấp thu tốt: 4,8mg/ngày |
+| 7   | Vitamin A                                      | 850 - 900μg/ngày                                                    | 650μg/ngày                                                          |
+| 8   | Vitamin D                                      | 15μg/ngày                                                            | 15μg/ngày                                                            |
+| 9   | Vitamin C                                      | 85mg/ngày                                                            | 85mg/ngày                                                            |
