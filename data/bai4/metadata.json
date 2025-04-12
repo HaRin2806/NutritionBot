@@ -1,0 +1,897 @@
+{
+    "bai_info": {
+        "id": "bai4",
+        "title": "An toàn thực phẩm tại trường học",
+        "pages": "91-121",
+        "overview": "Nội dung về vai trò và tầm quan trọng của công tác đảm bảo an toàn thực phẩm trường học, các mối nguy gây ô nhiễm thực phẩm và ngộ độc thực phẩm, cũng như các biện pháp phòng chống ngộ độc thực phẩm tại trường học."
+    },
+    "chunks": [
+        {
+            "id": "bai4_muc1_1",
+            "title": "Tầm quan trọng của thực phẩm và an toàn thực phẩm trong trường học",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "91-92",
+            "related_chunks": [
+                "bai4_muc1_2",
+                "bai4_muc2_1"
+            ],
+            "summary": "Giới thiệu về tầm quan trọng của đảm bảo an toàn thực phẩm trong trường học, ảnh hưởng của thực phẩm đến sức khỏe học sinh",
+            "word_count": 236,
+            "token_count": 375,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai4_muc1_2",
+            "title": "Vai trò của các bên liên quan trong đảm bảo an toàn thực phẩm - Cơ quan quản lý giáo dục",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "93",
+            "related_chunks": [
+                "bai4_muc1_1",
+                "bai4_muc1_2_2"
+            ],
+            "summary": "Trách nhiệm của cơ quan quản lý giáo dục trong việc đảm bảo an toàn thực phẩm tại trường học",
+            "word_count": 203,
+            "token_count": 341,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc1_2_2",
+            "title": "Vai trò của các bên liên quan - Ban Giám hiệu",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "93-94",
+            "related_chunks": [
+                "bai4_muc1_2",
+                "bai4_muc1_2_3"
+            ],
+            "summary": "Trách nhiệm của Ban Giám hiệu trong việc đảm bảo an toàn thực phẩm tại trường học",
+            "word_count": 297,
+            "token_count": 478,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc1_2_3",
+            "title": "Vai trò của các bên liên quan - Y tế trường học và Nhân viên bếp ăn",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "94-95",
+            "related_chunks": [
+                "bai4_muc1_2_2",
+                "bai4_muc1_2_4"
+            ],
+            "summary": "Trách nhiệm của nhân viên y tế trường học và nhân viên bếp ăn trong việc đảm bảo an toàn thực phẩm",
+            "word_count": 236,
+            "token_count": 386,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc1_2_4",
+            "title": "Vai trò của các bên liên quan - Giáo viên, Học sinh và Phụ huynh",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "95",
+            "related_chunks": [
+                "bai4_muc1_2_3",
+                "bai4_muc2_1"
+            ],
+            "summary": "Trách nhiệm của giáo viên, học sinh và phụ huynh trong việc đảm bảo an toàn thực phẩm tại trường học",
+            "word_count": 172,
+            "token_count": 286,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_1",
+            "title": "Các khái niệm liên quan đến ngộ độc thực phẩm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "96",
+            "related_chunks": [
+                "bai4_muc1_2_4",
+                "bai4_muc2_2_1"
+            ],
+            "summary": "Định nghĩa các khái niệm cơ bản liên quan đến an toàn thực phẩm, ngộ độc thực phẩm và bệnh truyền qua thực phẩm",
+            "word_count": 161,
+            "token_count": 256,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_1",
+            "title": "Ngộ độc thực phẩm do tác nhân sinh học - Đường lây nhiễm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "96-97",
+            "related_chunks": [
+                "bai4_muc2_1",
+                "bai4_muc2_2_1_2"
+            ],
+            "summary": "Các con đường lây nhiễm vi sinh vật vào thực phẩm gây ngộ độc thực phẩm",
+            "word_count": 216,
+            "token_count": 366,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai4_muc2_2_1_2",
+            "title": "Ngộ độc thực phẩm do tác nhân sinh học - Các tác nhân",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "98",
+            "related_chunks": [
+                "bai4_muc2_2_1",
+                "bai4_muc2_2_1_3"
+            ],
+            "summary": "Các tác nhân sinh học hay gây ngộ độc thực phẩm: vi khuẩn, vi-rút, ký sinh trùng và nấm mốc",
+            "word_count": 190,
+            "token_count": 320,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_1_3",
+            "title": "Ngộ độc thực phẩm do tác nhân sinh học - Thực phẩm dễ nhiễm và đặc điểm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "98-99",
+            "related_chunks": [
+                "bai4_muc2_2_1_2",
+                "bai4_muc2_2_2"
+            ],
+            "summary": "Các thực phẩm dễ nhiễm tác nhân sinh học và đặc điểm của ngộ độc thực phẩm do sinh vật",
+            "word_count": 169,
+            "token_count": 282,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_2",
+            "title": "Ngộ độc thực phẩm do hóa chất - Đường lây nhiễm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "99",
+            "related_chunks": [
+                "bai4_muc2_2_1_3",
+                "bai4_muc2_2_2_2"
+            ],
+            "summary": "Các con đường hóa chất xâm nhập vào thực phẩm gây ngộ độc",
+            "word_count": 142,
+            "token_count": 242,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_2_2",
+            "title": "Ngộ độc thực phẩm do hóa chất - Tác nhân và thực phẩm dễ nhiễm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "99-100",
+            "related_chunks": [
+                "bai4_muc2_2_2",
+                "bai4_muc2_2_2_3"
+            ],
+            "summary": "Các tác nhân hóa chất gây ngộ độc thực phẩm và các loại thực phẩm dễ nhiễm hóa chất",
+            "word_count": 246,
+            "token_count": 398,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_2_3",
+            "title": "Ngộ độc thực phẩm do hóa chất - Đặc điểm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "100",
+            "related_chunks": [
+                "bai4_muc2_2_2_2",
+                "bai4_muc2_2_3"
+            ],
+            "summary": "Các đặc điểm của ngộ độc thực phẩm do hóa chất",
+            "word_count": 139,
+            "token_count": 226,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_3",
+            "title": "Ngộ độc do thức ăn chứa các chất độc tự nhiên",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "100-101",
+            "related_chunks": [
+                "bai4_muc2_2_2_3",
+                "bai4_muc2_2_3_2"
+            ],
+            "summary": "Con đường dẫn đến ngộ độc, các chất độc tự nhiên và thực phẩm chứa độc tố tự nhiên",
+            "word_count": 189,
+            "token_count": 321,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_3_2",
+            "title": "Ngộ độc do thức ăn chứa các chất độc tự nhiên - Đặc điểm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "101",
+            "related_chunks": [
+                "bai4_muc2_2_3",
+                "bai4_muc2_2_4"
+            ],
+            "summary": "Đặc điểm của ngộ độc thực phẩm do ăn phải thực phẩm có độc tố tự nhiên",
+            "word_count": 133,
+            "token_count": 226,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_4",
+            "title": "Ngộ độc thực phẩm do thức ăn bị biến chất",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "101-102",
+            "related_chunks": [
+                "bai4_muc2_2_3_2",
+                "bai4_muc2_2_4_2"
+            ],
+            "summary": "Con đường ngộ độc và các chất độc gây ngộ độc do thức ăn bị biến chất",
+            "word_count": 159,
+            "token_count": 270,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc2_2_4_2",
+            "title": "Ngộ độc thực phẩm do thức ăn bị biến chất - Đặc điểm và thực phẩm nguy cơ cao",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "102",
+            "related_chunks": [
+                "bai4_muc2_2_4",
+                "bai4_muc3_1"
+            ],
+            "summary": "Các loại thực phẩm dễ gây ngộ độc do biến chất và đặc điểm của loại ngộ độc này",
+            "word_count": 244,
+            "token_count": 396,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc3_1",
+            "title": "Khái niệm và phân loại bếp ăn trong trường học",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "103",
+            "related_chunks": [
+                "bai4_muc2_2_4_2",
+                "bai4_muc3_3"
+            ],
+            "summary": "Định nghĩa về bếp ăn trường học và cách phân loại theo quy mô",
+            "word_count": 93,
+            "token_count": 150,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc3_3",
+            "title": "Mối nguy thực phẩm tại bếp ăn trường học",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "103-105",
+            "related_chunks": [
+                "bai4_muc3_1",
+                "bai4_muc4_1_1"
+            ],
+            "summary": "Các mối nguy thực phẩm và hình thức hoạt động của bếp ăn trường học",
+            "word_count": 266,
+            "token_count": 414,
+            "contains_table": true,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_1",
+            "title": "Điều kiện ATTP - Điều kiện về cơ sở (Phần 1)",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "105-106",
+            "related_chunks": [
+                "bai4_muc3_3",
+                "bai4_muc4_1_1_a_2"
+            ],
+            "summary": "Các yêu cầu về điều kiện an toàn thực phẩm đối với cơ sở vật chất, vị trí bếp ăn trường học",
+            "word_count": 260,
+            "token_count": 419,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_1_a_2",
+            "title": "Điều kiện ATTP - Điều kiện về cơ sở (Phần 2)",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "107",
+            "related_chunks": [
+                "bai4_muc4_1_1",
+                "bai4_muc4_1_1_a_3"
+            ],
+            "summary": "Yêu cầu về thiết kế và bố trí dây chuyền chế biến nấu nướng theo nguyên lý một chiều",
+            "word_count": 91,
+            "token_count": 156,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai4_muc4_1_1_a_3",
+            "title": "Điều kiện ATTP - Điều kiện về cơ sở (Phần 3)",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "107-108",
+            "related_chunks": [
+                "bai4_muc4_1_1_a_2",
+                "bai4_muc4_1_1_b"
+            ],
+            "summary": "Yêu cầu về cấu trúc, hệ thống thông gió, chiếu sáng và các điều kiện vật chất khác của bếp ăn",
+            "word_count": 261,
+            "token_count": 420,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_1_b",
+            "title": "Điều kiện ATTP - Điều kiện về thiết bị và dụng cụ",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "108-109",
+            "related_chunks": [
+                "bai4_muc4_1_1_a_3",
+                "bai4_muc4_1_1_c"
+            ],
+            "summary": "Yêu cầu về thiết bị, dụng cụ chế biến nấu nướng và chế độ rửa dụng cụ, thiết bị",
+            "word_count": 293,
+            "token_count": 451,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_1_c",
+            "title": "Điều kiện ATTP - Điều kiện về con người (Phần 1)",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "109-110",
+            "related_chunks": [
+                "bai4_muc4_1_1_b",
+                "bai4_muc4_1_1_c_2"
+            ],
+            "summary": "Yêu cầu về đào tạo, sức khỏe của người nấu nướng, chế biến thực phẩm",
+            "word_count": 297,
+            "token_count": 482,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_1_c_2",
+            "title": "Điều kiện ATTP - Điều kiện về con người (Phần 2)",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "110",
+            "related_chunks": [
+                "bai4_muc4_1_1_c",
+                "bai4_muc4_1_2"
+            ],
+            "summary": "Yêu cầu vệ sinh cá nhân đối với người trực tiếp tiếp xúc với thực phẩm và quy định về khách tham quan",
+            "word_count": 119,
+            "token_count": 200,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_2",
+            "title": "Kiểm soát nguyên liệu đầu vào",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "110",
+            "related_chunks": [
+                "bai4_muc4_1_1_c_2",
+                "bai4_muc4_1_3"
+            ],
+            "summary": "Các biện pháp kiểm soát nguyên liệu đầu vào để đảm bảo an toàn thực phẩm",
+            "word_count": 153,
+            "token_count": 252,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_3",
+            "title": "Kiểm soát quy trình chế biến, nấu nướng",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "111",
+            "related_chunks": [
+                "bai4_muc4_1_2",
+                "bai4_muc4_1_4"
+            ],
+            "summary": "Quy trình chế biến, nấu nướng theo nguyên tắc một chiều để đảm bảo an toàn thực phẩm",
+            "word_count": 123,
+            "token_count": 210,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_4",
+            "title": "Kiểm soát khâu bảo quản thực phẩm - Kho bảo quản",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "111-112",
+            "related_chunks": [
+                "bai4_muc4_1_3",
+                "bai4_muc4_1_4_2"
+            ],
+            "summary": "Các yêu cầu về kho bảo quản thực phẩm trong trường học",
+            "word_count": 201,
+            "token_count": 345,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_4_2",
+            "title": "Kiểm soát khâu bảo quản thực phẩm - Thực phẩm sống và chín",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "112",
+            "related_chunks": [
+                "bai4_muc4_1_4",
+                "bai4_muc4_1_5"
+            ],
+            "summary": "Yêu cầu về bảo quản thực phẩm sống trước khi nấu và thực phẩm sau khi nấu chín",
+            "word_count": 201,
+            "token_count": 326,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_5",
+            "title": "Kiểm tra khâu vận chuyển thực phẩm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "112-113",
+            "related_chunks": [
+                "bai4_muc4_1_4_2",
+                "bai4_muc4_1_6"
+            ],
+            "summary": "Yêu cầu về phương tiện, chế độ và thời gian vận chuyển thực phẩm",
+            "word_count": 193,
+            "token_count": 323,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_6",
+            "title": "Kiểm soát nơi ăn",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "113",
+            "related_chunks": [
+                "bai4_muc4_1_5",
+                "bai4_muc4_1_7"
+            ],
+            "summary": "Các yêu cầu đối với nơi ăn và người ăn để đảm bảo an toàn thực phẩm",
+            "word_count": 137,
+            "token_count": 222,
+            "contains_table": false,
+            "contains_figure": true
+        },
+        {
+            "id": "bai4_muc4_1_7",
+            "title": "Hướng dẫn kiểm thực ba bước - Bước 1",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "114-115",
+            "related_chunks": [
+                "bai4_muc4_1_6",
+                "bai4_muc4_1_7_2"
+            ],
+            "summary": "Quy trình kiểm tra trước khi chế biến thức ăn (Bước 1 của kiểm thực ba bước)",
+            "word_count": 163,
+            "token_count": 296,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_7_2",
+            "title": "Hướng dẫn kiểm thực ba bước - Bước 2 và 3",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "115",
+            "related_chunks": [
+                "bai4_muc4_1_7",
+                "bai4_muc4_1_8"
+            ],
+            "summary": "Quy trình kiểm tra trong quá trình chế biến thức ăn và trước khi ăn (Bước 2 và 3 của kiểm thực ba bước)",
+            "word_count": 268,
+            "token_count": 435,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_8",
+            "title": "Lưu mẫu thức ăn - Dụng cụ và cách lấy mẫu",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "115-116",
+            "related_chunks": [
+                "bai4_muc4_1_7_2",
+                "bai4_muc4_1_8_c"
+            ],
+            "summary": "Yêu cầu về dụng cụ lưu mẫu thức ăn và cách lấy mẫu thức ăn",
+            "word_count": 195,
+            "token_count": 337,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_8_c",
+            "title": "Lưu mẫu thức ăn - Bảo quản mẫu",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "116-117",
+            "related_chunks": [
+                "bai4_muc4_1_8",
+                "bai4_muc4_1_9"
+            ],
+            "summary": "Yêu cầu về bảo quản mẫu thức ăn lưu",
+            "word_count": 134,
+            "token_count": 237,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_1_9",
+            "title": "Sổ sách ghi chép và kiểm nghiệm nước",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "117",
+            "related_chunks": [
+                "bai4_muc4_1_8_c",
+                "bai4_muc4_2"
+            ],
+            "summary": "Yêu cầu về hệ thống sổ sách ghi chép và kiểm nghiệm nước dành cho ăn uống",
+            "word_count": 144,
+            "token_count": 240,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_2",
+            "title": "ATTP đối với trường học không có bếp ăn - Hợp đồng cung cấp",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "117",
+            "related_chunks": [
+                "bai4_muc4_1_9",
+                "bai4_muc4_2_2"
+            ],
+            "summary": "Yêu cầu về hợp đồng cung cấp dịch vụ suất ăn từ bên ngoài",
+            "word_count": 109,
+            "token_count": 180,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_2_2",
+            "title": "ATTP đối với trường học không có bếp ăn - Khu vực chia thức ăn",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "117-118",
+            "related_chunks": [
+                "bai4_muc4_2",
+                "bai4_muc4_3"
+            ],
+            "summary": "Các yêu cầu đối với khu vực chia thức ăn tại trường học khi đặt suất ăn từ bên ngoài",
+            "word_count": 272,
+            "token_count": 456,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_3",
+            "title": "ATTP đối với căng-tin trường học - Tổng quan và lựa chọn thực phẩm",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "118-119",
+            "related_chunks": [
+                "bai4_muc4_2_2",
+                "bai4_muc4_3_1_b"
+            ],
+            "summary": "Giới thiệu về căng-tin trường học và các điều kiện đảm bảo an toàn thực phẩm về lựa chọn, bảo quản thực phẩm",
+            "word_count": 299,
+            "token_count": 480,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_3_1_b",
+            "title": "ATTP đối với căng-tin trường học - Yêu cầu về nhân lực",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "119",
+            "related_chunks": [
+                "bai4_muc4_3",
+                "bai4_muc4_3_2"
+            ],
+            "summary": "Yêu cầu về tập huấn, sức khỏe và vệ sinh cá nhân cho nhân viên căng-tin",
+            "word_count": 78,
+            "token_count": 139,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc4_3_2",
+            "title": "Khuyến nghị về các loại thực phẩm kinh doanh trong căng-tin",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "119-120",
+            "related_chunks": [
+                "bai4_muc4_3_1_b",
+                "bai4_muc5"
+            ],
+            "summary": "Các khuyến nghị về thực phẩm nên bán, hạn chế bán và không được bán trong căng-tin trường học",
+            "word_count": 201,
+            "token_count": 350,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc5",
+            "title": "Hướng dẫn học sinh lựa chọn thức ăn đường phố",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "120-121",
+            "related_chunks": [
+                "bai4_muc4_3_2",
+                "bai4_muc6"
+            ],
+            "summary": "Các hướng dẫn giúp học sinh lựa chọn thức ăn đường phố xung quanh trường học đảm bảo an toàn vệ sinh",
+            "word_count": 308,
+            "token_count": 502,
+            "contains_table": false,
+            "contains_figure": false
+        },
+        {
+            "id": "bai4_muc6",
+            "title": "Thực hành giám sát điều kiện an toàn thực phẩm bếp ăn trường học",
+            "content_type": "text",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "121",
+            "related_chunks": [
+                "bai4_muc5",
+                "bai4_muc4_1_1"
+            ],
+            "summary": "Hướng dẫn thực hành giám sát các điều kiện an toàn thực phẩm tại bếp ăn trường học",
+            "word_count": 54,
+            "token_count": 97,
+            "contains_table": false,
+            "contains_figure": false
+        }
+    ],
+    "tables": [
+        {
+            "id": "bai4_bang1",
+            "title": "Các mối nguy thực phẩm thường gặp tại bếp ăn trường học",
+            "content_type": "table",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "103-104",
+            "related_chunks": [
+                "bai4_muc3_3"
+            ],
+            "table_columns": [
+                "TT",
+                "Mối nguy",
+                "Nguồn gốc"
+            ],
+            "summary": "Bảng liệt kê các mối nguy và nguồn gốc về vi sinh vật, hóa chất, độc tố tự nhiên và thực phẩm biến chất trong bếp ăn trường học",
+            "word_count": 295,
+            "token_count": 452
+        }
+    ],
+    "figures": [
+        {
+            "id": "bai4_hinh1",
+            "title": "Tầm quan trọng của thực phẩm và an toàn thực phẩm",
+            "content_type": "figure",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "92",
+            "related_chunks": [
+                "bai4_muc1_1"
+            ],
+            "summary": "Sơ đồ minh họa tầm quan trọng của thực phẩm và an toàn thực phẩm đối với sức khỏe, phát triển giống nòi, kinh tế, văn hóa xã hội và an ninh"
+        },
+        {
+            "id": "bai4_hinh2",
+            "title": "Sơ đồ tóm tắt các con đường lây nhiễm tác nhân sinh học vào thực phẩm",
+            "content_type": "figure",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "97",
+            "related_chunks": [
+                "bai4_muc2_2_1"
+            ],
+            "summary": "Sơ đồ minh họa các con đường lây nhiễm tác nhân sinh học từ súc vật bị bệnh, môi trường, quá trình chế biến và bảo quản vào thực phẩm"
+        },
+        {
+            "id": "bai4_hinh3",
+            "title": "Sơ đồ nguyên lý bếp một chiều",
+            "content_type": "figure",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "107",
+            "related_chunks": [
+                "bai4_muc4_1_1_a_2"
+            ],
+            "summary": "Sơ đồ minh họa nguyên lý bếp một chiều từ tiếp nhận nguyên liệu đến bảo quản thức ăn"
+        },
+        {
+            "id": "bai4_hinh4",
+            "title": "Các khâu kiểm soát trọng yếu tại bếp ăn tập thể",
+            "content_type": "figure",
+            "age_range": [
+                6,
+                18
+            ],
+            "pages": "113",
+            "related_chunks": [
+                "bai4_muc4_1_6"
+            ],
+            "summary": "Sơ đồ minh họa toàn bộ các khâu kiểm soát trong quy trình đảm bảo an toàn thực phẩm tại bếp ăn tập thể"
+        }
+    ],
+    "metadata_version": "1.0",
+    "total_items": {
+        "chunks": 42,
+        "tables": 1,
+        "figures": 4
+    },
+    "document_source": "Bộ Giáo dục và Đào tạo",
+    "last_updated": "2024-04-12"
+}

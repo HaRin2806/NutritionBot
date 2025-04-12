@@ -1,485 +1,721 @@
 {
-    "bai_info": {
-      "id": "bai3",
-      "title": "Tổ chức bữa ăn học đường và hoạt động thể lực phù hợp cho học sinh",
-      "pages": "58-90",
-      "overview": "Hướng dẫn tổ chức bữa ăn học đường đảm bảo dinh dưỡng hợp lý và tăng cường hoạt động thể lực theo từng độ tuổi học sinh, bao gồm nguyên tắc xây dựng khẩu phần, thực đơn và các hoạt động thể lực phù hợp."
+  "bai_info": {
+    "id": "bai3",
+    "title": "Tổ chức bữa ăn học đường và hoạt động thể lực phù hợp cho học sinh",
+    "pages": "58-90",
+    "overview": "Hướng dẫn tổ chức bữa ăn học đường đảm bảo dinh dưỡng hợp lý và tăng cường hoạt động thể lực theo từng độ tuổi học sinh, bao gồm nguyên tắc xây dựng khẩu phần, thực đơn và các hoạt động thể lực phù hợp."
+  },
+  "chunks": [
+    {
+      "id": "bai3_muc1_1",
+      "title": "Tầm quan trọng của việc tổ chức bữa ăn học đường cho học sinh",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "58-59",
+      "related_chunks": [
+        "bai3_muc2_1",
+        "bai3_muc2_2"
+      ],
+      "summary": "Giới thiệu về vai trò và lợi ích của việc tổ chức bữa ăn học đường đối với sức khỏe, phát triển thể chất, tinh thần và kết quả học tập của học sinh",
+      "word_count": 395,
+      "token_count": 593,
+      "contains_table": false,
+      "contains_figure": false
     },
-    "chunks": [
-      {
-        "id": "bai3_muc1_1",
-        "title": "Tầm quan trọng của việc tổ chức bữa ăn học đường cho học sinh",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "58-59",
-        "related_chunks": ["bai3_muc2_1", "bai3_muc2_2"],
-        "summary": "Giới thiệu về vai trò và lợi ích của việc tổ chức bữa ăn học đường đối với sức khỏe, phát triển thể chất, tinh thần và kết quả học tập của học sinh",
-        "word_count": 395,
-        "token_count": 593,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc2_1",
-        "title": "Khái niệm về bữa ăn học đường",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "60",
-        "related_chunks": ["bai3_muc1_1", "bai3_muc2_2"],
-        "summary": "Định nghĩa bữa ăn học đường và vai trò của bữa ăn học đường đối với sức khỏe học sinh",
-        "word_count": 208,
-        "token_count": 313,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc2_2",
-        "title": "Quy định về tổ chức bữa ăn học đường",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "60-61",
-        "related_chunks": ["bai3_muc2_1", "bai3_muc3_1_1"],
-        "summary": "Các văn bản pháp luật và quy định của Bộ Giáo dục về tổ chức bữa ăn học đường bao gồm trách nhiệm, đánh giá chất lượng và chi phí",
-        "word_count": 311,
-        "token_count": 468,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_1_1",
-        "title": "Nguyên tắc xây dựng khẩu phần - Thực đơn đa dạng nhiều loại thực phẩm",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "62-63",
-        "related_chunks": ["bai3_muc2_2", "bai3_muc3_1_2"],
-        "summary": "Nguyên tắc về việc xây dựng thực đơn đa dạng với nhiều loại thực phẩm từ 4 nhóm chất dinh dưỡng cơ bản và 8 nhóm thực phẩm",
-        "word_count": 317,
-        "token_count": 477,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_1_2",
-        "title": "Phối hợp nguồn chất đạm, chất béo và sử dụng muối",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "63-64",
-        "related_chunks": ["bai3_muc3_1_1", "bai3_muc3_1_3"],
-        "summary": "Hướng dẫn cân đối nguồn chất đạm động vật và thực vật theo từng độ tuổi, vai trò chất béo và nguyên tắc sử dụng muối i-ốt",
-        "word_count": 229,
-        "token_count": 344,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_1_3",
-        "title": "Sử dụng đường, thực phẩm địa phương và thực phẩm giàu vi chất",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "64-65",
-        "related_chunks": ["bai3_muc3_1_2", "bai3_muc3_1_4"],
-        "summary": "Hướng dẫn sử dụng đường, nguồn thực phẩm địa phương, nước uống và thực phẩm giàu vi chất dinh dưỡng trong bữa ăn học đường",
-        "word_count": 286,
-        "token_count": 431,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_1_4",
-        "title": "Yêu cầu về khẩu phần, thực đơn đối với vùng khó khăn",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "65-66",
-        "related_chunks": ["bai3_muc3_1_3", "bai3_muc3_2_1"],
-        "summary": "Các tiêu chuẩn tối thiểu cho khẩu phần và thực đơn tại các vùng khó khăn, nguồn thực phẩm hạn chế hoặc có mức thu tiền ăn thấp",
-        "word_count": 179,
-        "token_count": 269,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_2_1",
-        "title": "Các bước xây dựng khẩu phần - Lựa chọn mức năng lượng và tỉ lệ dinh dưỡng",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "66-67",
-        "related_chunks": ["bai3_muc3_1_4", "bai3_muc3_2_2"],
-        "summary": "Hướng dẫn lựa chọn mức năng lượng phù hợp theo tình trạng dinh dưỡng của học sinh và cách xây dựng thực đơn cân đối",
-        "word_count": 255,
-        "token_count": 384,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_2_2",
-        "title": "Chọn và tính thực phẩm cần có để đạt khẩu phần dự tính",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "67",
-        "related_chunks": ["bai3_muc3_2_1", "bai3_muc3_2_3"],
-        "summary": "Phương pháp tính toán định lượng thực phẩm cho các bữa ăn học đường dựa trên nhu cầu dinh dưỡng và đặc điểm của từng nhóm học sinh",
-        "word_count": 170,
-        "token_count": 255,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_2_3",
-        "title": "Đánh giá khẩu phần ăn đạt tiêu chuẩn",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "67-68",
-        "related_chunks": ["bai3_muc3_2_2", "bai3_muc3_2_4"],
-        "summary": "Bốn yếu tố cần đảm bảo để đánh giá khẩu phần ăn cân đối, hợp lý đạt tiêu chuẩn về mặt dinh dưỡng và cách cân đối các chất dinh dưỡng",
-        "word_count": 351,
-        "token_count": 527,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_2_4",
-        "title": "Tính toán định lượng thực phẩm và tập cho trẻ ăn đa dạng",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "69-70",
-        "related_chunks": ["bai3_muc3_2_3", "bai3_muc3_2_5", "bai3_bang1"],
-        "summary": "Phương pháp tính toán định lượng thực phẩm đã sơ chế trong từng món ăn và các cách tập cho trẻ ăn đa dạng thực phẩm",
-        "word_count": 355,
-        "token_count": 534,
-        "contains_table": true,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_2_5",
-        "title": "Cách thay thế nguyên liệu",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "70-71",
-        "related_chunks": ["bai3_muc3_2_4", "bai3_muc3_3_1"],
-        "summary": "Hướng dẫn thay thế các loại rau lá, củ quả, khoai củ và quả chín có cùng mức năng lượng dinh dưỡng trong thực đơn",
-        "word_count": 270,
-        "token_count": 406,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_1",
-        "title": "Nguyên tắc tổ chức bữa ăn - Bảo đảm cung cấp đủ năng lượng",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "71-72",
-        "related_chunks": ["bai3_muc3_2_5", "bai3_muc3_3_2", "bai3_bang2"],
-        "summary": "Nhu cầu năng lượng khuyến nghị theo từng độ tuổi học sinh từ mầm non đến trung học phổ thông",
-        "word_count": 40,
-        "token_count": 60,
-        "contains_table": true,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_2",
-        "title": "Bảo đảm tỉ lệ phân bổ năng lượng cho học sinh mầm non và tiểu học",
-        "content_type": "text",
-        "age_range": [1, 11],
-        "pages": "72-74",
-        "related_chunks": ["bai3_muc3_3_1", "bai3_muc3_3_3"],
-        "summary": "Hướng dẫn phân bố năng lượng cho các bữa ăn của trẻ nhà trẻ, mẫu giáo và học sinh tiểu học tại trường học",
-        "word_count": 300,
-        "token_count": 451,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_3",
-        "title": "Phân bổ năng lượng cho học sinh THCS, THPT và nguyên tắc xây dựng thực đơn",
-        "content_type": "text",
-        "age_range": [12, 19],
-        "pages": "74-75",
-        "related_chunks": ["bai3_muc3_3_2", "bai3_muc3_3_4"],
-        "summary": "Hướng dẫn phân bố năng lượng cho các bữa ăn của học sinh THCS, THPT và các nguyên tắc xây dựng thực đơn bữa ăn học đường cân đối, hợp lý",
-        "word_count": 364,
-        "token_count": 547,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_4",
-        "title": "Nguyên tắc xây dựng thực đơn và cách xây dựng thực đơn cho trẻ 18-24 tháng",
-        "content_type": "text",
-        "age_range": [1, 2],
-        "pages": "76",
-        "related_chunks": ["bai3_muc3_3_3", "bai3_muc3_3_5"],
-        "summary": "Nguyên tắc về thực đơn tăng cường vi chất và cách xây dựng thực đơn cụ thể cho nhóm trẻ 18-24 tháng",
-        "word_count": 377,
-        "token_count": 567,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_5",
-        "title": "Xây dựng thực đơn cho trẻ từ 24-36 tháng, 3-5 tuổi và học sinh phổ thông",
-        "content_type": "text",
-        "age_range": [2, 19],
-        "pages": "77-78",
-        "related_chunks": ["bai3_muc3_3_4", "bai3_muc3_3_6"],
-        "summary": "Hướng dẫn xây dựng thực đơn cụ thể cho các nhóm tuổi từ 24-36 tháng, 3-5 tuổi, tiểu học, THCS và THPT",
-        "word_count": 414,
-        "token_count": 623,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_6",
-        "title": "Bảo đảm điều kiện về cơ sở vật chất và nhân sự",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "78-79",
-        "related_chunks": ["bai3_muc3_3_5", "bai3_muc3_3_7"],
-        "summary": "Các điều kiện cần đảm bảo về cơ sở vật chất, trang thiết bị và nhân sự phục vụ tổ chức bữa ăn học đường",
-        "word_count": 230,
-        "token_count": 346,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc3_3_7",
-        "title": "Minh họa xây dựng khẩu phần tại trường học",
-        "content_type": "text",
-        "age_range": [4, 4],
-        "pages": "79-80",
-        "related_chunks": ["bai3_muc3_3_6", "bai3_muc4_1", "bai3_bang3"],
-        "summary": "Ví dụ minh họa cụ thể về cách xây dựng khẩu phần ăn tại trường cho trẻ 48 tháng tuổi",
-        "word_count": 45,
-        "token_count": 68,
-        "contains_table": true,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_1",
-        "title": "Một số khái niệm về hoạt động thể lực",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "81-82",
-        "related_chunks": ["bai3_muc3_3_7", "bai3_muc4_2"],
-        "summary": "Định nghĩa hoạt động thể lực và các yếu tố chính của hoạt động thể lực bao gồm cường độ, thời gian, tần suất và loại hoạt động",
-        "word_count": 233,
-        "token_count": 350,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_2",
-        "title": "Khuyến nghị về mức độ hoạt động thể lực cho trẻ 1-4 tuổi",
-        "content_type": "text",
-        "age_range": [1, 4],
-        "pages": "81-82",
-        "related_chunks": ["bai3_muc4_1", "bai3_muc4_2_2"],
-        "summary": "Khuyến cáo của WHO về mức độ hoạt động thể lực, thời gian xem màn hình và giấc ngủ cho trẻ từ 1-2 tuổi và 3-4 tuổi",
-        "word_count": 306,
-        "token_count": 460,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_2_2",
-        "title": "Khuyến nghị về hoạt động thể lực cho trẻ 5-17 tuổi",
-        "content_type": "text", 
-        "age_range": [5, 17],
-        "pages": "82",
-        "related_chunks": ["bai3_muc4_2", "bai3_muc4_3_1"],
-        "summary": "Khuyến cáo của WHO về mức độ hoạt động thể lực hàng ngày và các loại hoạt động thể lực cho trẻ em và thanh thiếu niên từ 5-17 tuổi",
-        "word_count": 79,
-        "token_count": 119,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_3_1",
-        "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh mầm non và tiểu học",
-        "content_type": "text",
-        "age_range": [1, 11],
-        "pages": "82-83",
-        "related_chunks": ["bai3_muc4_2_2", "bai3_muc4_3_2"],
-        "summary": "Các nguyên tắc cơ bản trong việc tăng cường hoạt động thể lực cho học sinh mầm non và tiểu học, nhấn mạnh vào tính đa dạng và phù hợp với khả năng của trẻ",
-        "word_count": 194,
-        "token_count": 292,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_3_2",
-        "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh THCS và THPT - Phần 1",
-        "content_type": "text",
-        "age_range": [12, 19],
-        "pages": "83-84",
-        "related_chunks": ["bai3_muc4_3_1", "bai3_muc4_3_3"],
-        "summary": "Các nguyên tắc kết hợp phát triển toàn diện, vai trò của giáo viên, lượng vận động và cách tiếp cận cá nhân trong hoạt động thể lực cho học sinh THCS và THPT",
-        "word_count": 301,
-        "token_count": 451,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_3_3",
-        "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh THCS và THPT - Phần 2",
-        "content_type": "text",
-        "age_range": [12, 19],
-        "pages": "84-85",
-        "related_chunks": ["bai3_muc4_3_2", "bai3_muc4_4_1"],
-        "summary": "Các nguyên tắc kết hợp hệ thống với trọng điểm và trực quan, tư duy với thực tiễn trong hoạt động thể lực cho học sinh THCS và THPT",
-        "word_count": 235,
-        "token_count": 352,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_4_1",
-        "title": "Các loại hình hoạt động thể lực và hoạt động cho trẻ mầm non",
-        "content_type": "text",
-        "age_range": [1, 6],
-        "pages": "85-86",
-        "related_chunks": ["bai3_muc4_3_3", "bai3_muc4_4_2"],
-        "summary": "Ba loại hình hoạt động thể lực (aerobic, làm mạnh khối cơ, làm mạnh khối xương) và các hoạt động thể lực phù hợp cho trẻ mầm non",
-        "word_count": 352,
-        "token_count": 528,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_4_2",
-        "title": "Các loại hoạt động thể lực cho học sinh tiểu học",
-        "content_type": "text",
-        "age_range": [6, 11],
-        "pages": "86",
-        "related_chunks": ["bai3_muc4_4_1", "bai3_muc4_4_3"],
-        "summary": "Các bài tập khởi động, vận động và trò chơi phù hợp với học sinh tiểu học để tăng cường sức khỏe, thể lực và phòng bệnh tật",
-        "word_count": 157,
-        "token_count": 235,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_4_3",
-        "title": "Các loại hoạt động thể lực cho học sinh THCS và THPT",
-        "content_type": "text",
-        "age_range": [12, 19],
-        "pages": "86-87",
-        "related_chunks": ["bai3_muc4_4_2", "bai3_muc4_4_4"],
-        "summary": "Các hoạt động thể thao ngoại khóa, câu lạc bộ thể thao và các hình thức tập luyện tăng cường hoạt động thể lực cho học sinh THCS và THPT",
-        "word_count": 278,
-        "token_count": 418,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_4_4",
-        "title": "Lời khuyên tăng cường hoạt động thể lực",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "87-88",
-        "related_chunks": ["bai3_muc4_4_3", "bai3_muc4_5"],
-        "summary": "Các lời khuyên thiết thực và lưu ý để tăng cường hoạt động thể lực hàng ngày cho học sinh ở mọi lứa tuổi",
-        "word_count": 262,
-        "token_count": 393,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_5",
-        "title": "Điều kiện cơ sở vật chất trong trường học để tăng cường hoạt động thể lực",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "88",
-        "related_chunks": ["bai3_muc4_4_4", "bai3_muc4_6"],
-        "summary": "Các yêu cầu về cơ sở vật chất như sân bãi, nhà tập luyện và trang thiết bị cần thiết để tổ chức hoạt động thể lực trong trường học",
-        "word_count": 158,
-        "token_count": 237,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc4_6",
-        "title": "Các điều kiện về nhân lực để tổ chức hoạt động thể lực",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "88",
-        "related_chunks": ["bai3_muc4_5", "bai3_muc5_1"],
-        "summary": "Yêu cầu về đội ngũ giáo viên thể dục, cán bộ hướng dẫn và việc nâng cao năng lực để tổ chức hoạt động thể lực hiệu quả",
-        "word_count": 168,
-        "token_count": 252,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc5_1",
-        "title": "Bài tập thực hành xây dựng kế hoạch tổ chức bữa ăn học đường - Phần 1",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "89-90",
-        "related_chunks": ["bai3_muc4_6", "bai3_muc5_2"],
-        "summary": "Hướng dẫn xây dựng kế hoạch tổ chức bữa ăn học đường kết hợp với tăng cường hoạt động thể lực, bao gồm các bước chuẩn bị về dinh dưỡng, xác định độ tuổi và lập thực đơn",
-        "word_count": 284,
-        "token_count": 428,
-        "contains_table": false,
-        "contains_figure": false
-      },
-      {
-        "id": "bai3_muc5_2",
-        "title": "Bài tập thực hành xây dựng kế hoạch tổ chức bữa ăn học đường - Phần 2",
-        "content_type": "text",
-        "age_range": [1, 19],
-        "pages": "90",
-        "related_chunks": ["bai3_muc5_1"],
-        "summary": "Hướng dẫn tiếp theo về xây dựng kế hoạch hoạt động thể chất, hợp tác với chuyên gia dinh dưỡng, đảm bảo cơ sở vật chất và đánh giá hiệu quả của kế hoạch",
-        "word_count": 210,
-        "token_count": 315,
-        "contains_table": false,
-        "contains_figure": false
-      }
-    ],
-    "tables": [
-      {
-        "id": "bai3_bang1",
-        "title": "Công thức tính lượng nguyên liệu thực phẩm cho một loại",
-        "content_type": "table",
-        "age_range": [1, 19],
-        "pages": "69",
-        "related_chunks": ["bai3_muc3_2_4"],
-        "table_columns": ["Tổng số trẻ nhà trẻ", "Lượng nguyên liệu của trẻ nhà trẻ", "Tổng số trẻ mẫu giáo", "Lượng nguyên liệu của trẻ mẫu giáo", "Tổng khối lượng đã sơ chế của một loại thực phẩm nguyên liệu"],
-        "summary": "Công thức tính tổng lượng thực phẩm đã sơ chế cho từng nguyên liệu của thực đơn nhà trẻ và mẫu giáo",
-        "word_count": 77,
-        "token_count": 116
-      },
-      {
-        "id": "bai3_bang2",
-        "title": "Nhu cầu năng lượng khuyến nghị theo độ tuổi",
-        "content_type": "table",
-        "age_range": [1, 19],
-        "pages": "71-72",
-        "related_chunks": ["bai3_muc3_3_1"],
-        "table_columns": ["Nhóm tuổi", "Nhu cầu năng lượng/ngày/trẻ (kcal)", "Năng lượng khuyến nghị tại trường học", "Bữa trưa", "Bữa phụ", "Chất đạm", "Chất béo", "Chất bột đường"],
-        "summary": "Bảng thể hiện nhu cầu năng lượng khuyến nghị theo từng nhóm tuổi và tỉ lệ phân bố cho các bữa ăn tại trường, cùng với cơ cấu các chất sinh năng lượng",
-        "word_count": 189,
-        "token_count": 284
-      },
-      {
-        "id": "bai3_bang3",
-        "title": "Ví dụ xây dựng khẩu phần bữa ăn cho trẻ 48 tháng",
-        "content_type": "table",
-        "age_range": [4, 4],
-        "pages": "79-80",
-        "related_chunks": ["bai3_muc3_3_7"],
-        "table_columns": ["Bước", "Nhu cầu hàng ngày", "Năng lượng tại trường học", "Bữa trưa", "Bữa phụ chiều"],
-        "summary": "Ví dụ minh họa các bước xây dựng khẩu phần ăn tại trường cho một bé trai 48 tháng, cân nặng 15kg, chiều cao 105cm, từ tính toán nhu cầu năng lượng đến lượng thực phẩm cụ thể",
-        "word_count": 287,
-        "token_count": 431
-      }
-    ],
-    "metadata_version": "1.0",
-    "total_items": {
-      "chunks": 33,
-      "tables": 3,
-      "figures": 0
+    {
+      "id": "bai3_muc2_1",
+      "title": "Khái niệm về bữa ăn học đường",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "60",
+      "related_chunks": [
+        "bai3_muc1_1",
+        "bai3_muc2_2"
+      ],
+      "summary": "Định nghĩa bữa ăn học đường và vai trò của bữa ăn học đường đối với sức khỏe học sinh",
+      "word_count": 208,
+      "token_count": 313,
+      "contains_table": false,
+      "contains_figure": false
     },
-    "document_source": "Bộ Giáo dục và Đào tạo",
-    "last_updated": "2024-04-09"
-  }
+    {
+      "id": "bai3_muc2_2",
+      "title": "Quy định về tổ chức bữa ăn học đường",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "60-61",
+      "related_chunks": [
+        "bai3_muc2_1",
+        "bai3_muc3_1_1"
+      ],
+      "summary": "Các văn bản pháp luật và quy định của Bộ Giáo dục về tổ chức bữa ăn học đường bao gồm trách nhiệm, đánh giá chất lượng và chi phí",
+      "word_count": 311,
+      "token_count": 468,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_1_1",
+      "title": "Nguyên tắc xây dựng khẩu phần - Thực đơn đa dạng nhiều loại thực phẩm",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "62-63",
+      "related_chunks": [
+        "bai3_muc2_2",
+        "bai3_muc3_1_2"
+      ],
+      "summary": "Nguyên tắc về việc xây dựng thực đơn đa dạng với nhiều loại thực phẩm từ 4 nhóm chất dinh dưỡng cơ bản và 8 nhóm thực phẩm",
+      "word_count": 317,
+      "token_count": 477,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_1_2",
+      "title": "Phối hợp nguồn chất đạm, chất béo và sử dụng muối",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "63-64",
+      "related_chunks": [
+        "bai3_muc3_1_1",
+        "bai3_muc3_1_3"
+      ],
+      "summary": "Hướng dẫn cân đối nguồn chất đạm động vật và thực vật theo từng độ tuổi, vai trò chất béo và nguyên tắc sử dụng muối i-ốt",
+      "word_count": 229,
+      "token_count": 344,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_1_3",
+      "title": "Sử dụng đường, thực phẩm địa phương và thực phẩm giàu vi chất",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "64-65",
+      "related_chunks": [
+        "bai3_muc3_1_2",
+        "bai3_muc3_1_4"
+      ],
+      "summary": "Hướng dẫn sử dụng đường, nguồn thực phẩm địa phương, nước uống và thực phẩm giàu vi chất dinh dưỡng trong bữa ăn học đường",
+      "word_count": 286,
+      "token_count": 431,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_1_4",
+      "title": "Yêu cầu về khẩu phần, thực đơn đối với vùng khó khăn",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "65-66",
+      "related_chunks": [
+        "bai3_muc3_1_3",
+        "bai3_muc3_2_1"
+      ],
+      "summary": "Các tiêu chuẩn tối thiểu cho khẩu phần và thực đơn tại các vùng khó khăn, nguồn thực phẩm hạn chế hoặc có mức thu tiền ăn thấp",
+      "word_count": 179,
+      "token_count": 269,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_2_1",
+      "title": "Các bước xây dựng khẩu phần - Lựa chọn mức năng lượng và tỉ lệ dinh dưỡng",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "66-67",
+      "related_chunks": [
+        "bai3_muc3_1_4",
+        "bai3_muc3_2_2"
+      ],
+      "summary": "Hướng dẫn lựa chọn mức năng lượng phù hợp theo tình trạng dinh dưỡng của học sinh và cách xây dựng thực đơn cân đối",
+      "word_count": 255,
+      "token_count": 384,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_2_2",
+      "title": "Chọn và tính thực phẩm cần có để đạt khẩu phần dự tính",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "67",
+      "related_chunks": [
+        "bai3_muc3_2_1",
+        "bai3_muc3_2_3"
+      ],
+      "summary": "Phương pháp tính toán định lượng thực phẩm cho các bữa ăn học đường dựa trên nhu cầu dinh dưỡng và đặc điểm của từng nhóm học sinh",
+      "word_count": 170,
+      "token_count": 255,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_2_3",
+      "title": "Đánh giá khẩu phần ăn đạt tiêu chuẩn",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "67-68",
+      "related_chunks": [
+        "bai3_muc3_2_2",
+        "bai3_muc3_2_4"
+      ],
+      "summary": "Bốn yếu tố cần đảm bảo để đánh giá khẩu phần ăn cân đối, hợp lý đạt tiêu chuẩn về mặt dinh dưỡng và cách cân đối các chất dinh dưỡng",
+      "word_count": 351,
+      "token_count": 527,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_2_4",
+      "title": "Tính toán định lượng thực phẩm và tập cho trẻ ăn đa dạng",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "69-70",
+      "related_chunks": [
+        "bai3_muc3_2_3",
+        "bai3_muc3_2_5",
+        "bai3_bang1"
+      ],
+      "summary": "Phương pháp tính toán định lượng thực phẩm đã sơ chế trong từng món ăn và các cách tập cho trẻ ăn đa dạng thực phẩm",
+      "word_count": 355,
+      "token_count": 534,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_2_5",
+      "title": "Cách thay thế nguyên liệu",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "70-71",
+      "related_chunks": [
+        "bai3_muc3_2_4",
+        "bai3_muc3_3_1"
+      ],
+      "summary": "Hướng dẫn thay thế các loại rau lá, củ quả, khoai củ và quả chín có cùng mức năng lượng dinh dưỡng trong thực đơn",
+      "word_count": 270,
+      "token_count": 406,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_1",
+      "title": "Nguyên tắc tổ chức bữa ăn - Bảo đảm cung cấp đủ năng lượng",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "71-72",
+      "related_chunks": [
+        "bai3_muc3_2_5",
+        "bai3_muc3_3_2",
+        "bai3_bang2"
+      ],
+      "summary": "Nhu cầu năng lượng khuyến nghị theo từng độ tuổi học sinh từ mầm non đến trung học phổ thông",
+      "word_count": 40,
+      "token_count": 60,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_2",
+      "title": "Bảo đảm tỉ lệ phân bổ năng lượng cho học sinh mầm non và tiểu học",
+      "content_type": "text",
+      "age_range": [
+        1,
+        11
+      ],
+      "pages": "72-74",
+      "related_chunks": [
+        "bai3_muc3_3_1",
+        "bai3_muc3_3_3"
+      ],
+      "summary": "Hướng dẫn phân bố năng lượng cho các bữa ăn của trẻ nhà trẻ, mẫu giáo và học sinh tiểu học tại trường học",
+      "word_count": 300,
+      "token_count": 451,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_3",
+      "title": "Phân bổ năng lượng cho học sinh THCS, THPT và nguyên tắc xây dựng thực đơn",
+      "content_type": "text",
+      "age_range": [
+        12,
+        19
+      ],
+      "pages": "74-75",
+      "related_chunks": [
+        "bai3_muc3_3_2",
+        "bai3_muc3_3_4"
+      ],
+      "summary": "Hướng dẫn phân bố năng lượng cho các bữa ăn của học sinh THCS, THPT và các nguyên tắc xây dựng thực đơn bữa ăn học đường cân đối, hợp lý",
+      "word_count": 364,
+      "token_count": 547,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_4",
+      "title": "Nguyên tắc xây dựng thực đơn và cách xây dựng thực đơn cho trẻ 18-24 tháng",
+      "content_type": "text",
+      "age_range": [
+        1,
+        2
+      ],
+      "pages": "76",
+      "related_chunks": [
+        "bai3_muc3_3_3",
+        "bai3_muc3_3_5"
+      ],
+      "summary": "Nguyên tắc về thực đơn tăng cường vi chất và cách xây dựng thực đơn cụ thể cho nhóm trẻ 18-24 tháng",
+      "word_count": 377,
+      "token_count": 567,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_5",
+      "title": "Xây dựng thực đơn cho trẻ từ 24-36 tháng, 3-5 tuổi và học sinh phổ thông",
+      "content_type": "text",
+      "age_range": [
+        2,
+        19
+      ],
+      "pages": "77-78",
+      "related_chunks": [
+        "bai3_muc3_3_4",
+        "bai3_muc3_3_6"
+      ],
+      "summary": "Hướng dẫn xây dựng thực đơn cụ thể cho các nhóm tuổi từ 24-36 tháng, 3-5 tuổi, tiểu học, THCS và THPT",
+      "word_count": 414,
+      "token_count": 623,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_6",
+      "title": "Bảo đảm điều kiện về cơ sở vật chất và nhân sự",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "78-79",
+      "related_chunks": [
+        "bai3_muc3_3_5",
+        "bai3_muc3_3_7"
+      ],
+      "summary": "Các điều kiện cần đảm bảo về cơ sở vật chất, trang thiết bị và nhân sự phục vụ tổ chức bữa ăn học đường",
+      "word_count": 230,
+      "token_count": 346,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc3_3_7",
+      "title": "Minh họa xây dựng khẩu phần tại trường học",
+      "content_type": "text",
+      "age_range": [
+        4,
+        4
+      ],
+      "pages": "79-80",
+      "related_chunks": [
+        "bai3_muc3_3_6",
+        "bai3_muc4_1",
+        "bai3_bang3"
+      ],
+      "summary": "Ví dụ minh họa cụ thể về cách xây dựng khẩu phần ăn tại trường cho trẻ 48 tháng tuổi",
+      "word_count": 45,
+      "token_count": 68,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_1",
+      "title": "Một số khái niệm về hoạt động thể lực",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "81-82",
+      "related_chunks": [
+        "bai3_muc3_3_7",
+        "bai3_muc4_2"
+      ],
+      "summary": "Định nghĩa hoạt động thể lực và các yếu tố chính của hoạt động thể lực bao gồm cường độ, thời gian, tần suất và loại hoạt động",
+      "word_count": 233,
+      "token_count": 350,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_2",
+      "title": "Khuyến nghị về mức độ hoạt động thể lực cho trẻ 1-4 tuổi",
+      "content_type": "text",
+      "age_range": [
+        1,
+        4
+      ],
+      "pages": "81-82",
+      "related_chunks": [
+        "bai3_muc4_1",
+        "bai3_muc4_2_2"
+      ],
+      "summary": "Khuyến cáo của WHO về mức độ hoạt động thể lực, thời gian xem màn hình và giấc ngủ cho trẻ từ 1-2 tuổi và 3-4 tuổi",
+      "word_count": 306,
+      "token_count": 460,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_2_2",
+      "title": "Khuyến nghị về hoạt động thể lực cho trẻ 5-17 tuổi",
+      "content_type": "text",
+      "age_range": [
+        5,
+        17
+      ],
+      "pages": "82",
+      "related_chunks": [
+        "bai3_muc4_2",
+        "bai3_muc4_3_1"
+      ],
+      "summary": "Khuyến cáo của WHO về mức độ hoạt động thể lực hàng ngày và các loại hoạt động thể lực cho trẻ em và thanh thiếu niên từ 5-17 tuổi",
+      "word_count": 79,
+      "token_count": 119,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_3_1",
+      "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh mầm non và tiểu học",
+      "content_type": "text",
+      "age_range": [
+        1,
+        11
+      ],
+      "pages": "82-83",
+      "related_chunks": [
+        "bai3_muc4_2_2",
+        "bai3_muc4_3_2"
+      ],
+      "summary": "Các nguyên tắc cơ bản trong việc tăng cường hoạt động thể lực cho học sinh mầm non và tiểu học, nhấn mạnh vào tính đa dạng và phù hợp với khả năng của trẻ",
+      "word_count": 194,
+      "token_count": 292,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_3_2",
+      "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh THCS và THPT - Phần 1",
+      "content_type": "text",
+      "age_range": [
+        12,
+        19
+      ],
+      "pages": "83-84",
+      "related_chunks": [
+        "bai3_muc4_3_1",
+        "bai3_muc4_3_3"
+      ],
+      "summary": "Các nguyên tắc kết hợp phát triển toàn diện, vai trò của giáo viên, lượng vận động và cách tiếp cận cá nhân trong hoạt động thể lực cho học sinh THCS và THPT",
+      "word_count": 301,
+      "token_count": 451,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_3_3",
+      "title": "Nguyên tắc tăng cường hoạt động thể lực cho học sinh THCS và THPT - Phần 2",
+      "content_type": "text",
+      "age_range": [
+        12,
+        19
+      ],
+      "pages": "84-85",
+      "related_chunks": [
+        "bai3_muc4_3_2",
+        "bai3_muc4_4_1"
+      ],
+      "summary": "Các nguyên tắc kết hợp hệ thống với trọng điểm và trực quan, tư duy với thực tiễn trong hoạt động thể lực cho học sinh THCS và THPT",
+      "word_count": 235,
+      "token_count": 352,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_4_1",
+      "title": "Các loại hình hoạt động thể lực và hoạt động cho trẻ mầm non",
+      "content_type": "text",
+      "age_range": [
+        1,
+        6
+      ],
+      "pages": "85-86",
+      "related_chunks": [
+        "bai3_muc4_3_3",
+        "bai3_muc4_4_2"
+      ],
+      "summary": "Ba loại hình hoạt động thể lực (aerobic, làm mạnh khối cơ, làm mạnh khối xương) và các hoạt động thể lực phù hợp cho trẻ mầm non",
+      "word_count": 352,
+      "token_count": 528,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_4_2",
+      "title": "Các loại hoạt động thể lực cho học sinh tiểu học",
+      "content_type": "text",
+      "age_range": [
+        6,
+        11
+      ],
+      "pages": "86",
+      "related_chunks": [
+        "bai3_muc4_4_1",
+        "bai3_muc4_4_3"
+      ],
+      "summary": "Các bài tập khởi động, vận động và trò chơi phù hợp với học sinh tiểu học để tăng cường sức khỏe, thể lực và phòng bệnh tật",
+      "word_count": 157,
+      "token_count": 235,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_4_3",
+      "title": "Các loại hoạt động thể lực cho học sinh THCS và THPT",
+      "content_type": "text",
+      "age_range": [
+        12,
+        19
+      ],
+      "pages": "86-87",
+      "related_chunks": [
+        "bai3_muc4_4_2",
+        "bai3_muc4_4_4"
+      ],
+      "summary": "Các hoạt động thể thao ngoại khóa, câu lạc bộ thể thao và các hình thức tập luyện tăng cường hoạt động thể lực cho học sinh THCS và THPT",
+      "word_count": 278,
+      "token_count": 418,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_4_4",
+      "title": "Lời khuyên tăng cường hoạt động thể lực",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "87-88",
+      "related_chunks": [
+        "bai3_muc4_4_3",
+        "bai3_muc4_5"
+      ],
+      "summary": "Các lời khuyên thiết thực và lưu ý để tăng cường hoạt động thể lực hàng ngày cho học sinh ở mọi lứa tuổi",
+      "word_count": 262,
+      "token_count": 393,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_5",
+      "title": "Điều kiện cơ sở vật chất trong trường học để tăng cường hoạt động thể lực",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "88",
+      "related_chunks": [
+        "bai3_muc4_4_4",
+        "bai3_muc4_6"
+      ],
+      "summary": "Các yêu cầu về cơ sở vật chất như sân bãi, nhà tập luyện và trang thiết bị cần thiết để tổ chức hoạt động thể lực trong trường học",
+      "word_count": 158,
+      "token_count": 237,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc4_6",
+      "title": "Các điều kiện về nhân lực để tổ chức hoạt động thể lực",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "88",
+      "related_chunks": [
+        "bai3_muc4_5",
+        "bai3_muc5_1"
+      ],
+      "summary": "Yêu cầu về đội ngũ giáo viên thể dục, cán bộ hướng dẫn và việc nâng cao năng lực để tổ chức hoạt động thể lực hiệu quả",
+      "word_count": 168,
+      "token_count": 252,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc5_1",
+      "title": "Bài tập thực hành xây dựng kế hoạch tổ chức bữa ăn học đường - Phần 1",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "89-90",
+      "related_chunks": [
+        "bai3_muc4_6",
+        "bai3_muc5_2"
+      ],
+      "summary": "Hướng dẫn xây dựng kế hoạch tổ chức bữa ăn học đường kết hợp với tăng cường hoạt động thể lực, bao gồm các bước chuẩn bị về dinh dưỡng, xác định độ tuổi và lập thực đơn",
+      "word_count": 284,
+      "token_count": 428,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "bai3_muc5_2",
+      "title": "Bài tập thực hành xây dựng kế hoạch tổ chức bữa ăn học đường - Phần 2",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "90",
+      "related_chunks": [
+        "bai3_muc5_1"
+      ],
+      "summary": "Hướng dẫn tiếp theo về xây dựng kế hoạch hoạt động thể chất, hợp tác với chuyên gia dinh dưỡng, đảm bảo cơ sở vật chất và đánh giá hiệu quả của kế hoạch",
+      "word_count": 210,
+      "token_count": 315,
+      "contains_table": false,
+      "contains_figure": false
+    }
+  ],
+  "tables": [
+    {
+      "id": "bai3_bang1",
+      "title": "Công thức tính lượng nguyên liệu thực phẩm cho một loại",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "69",
+      "related_chunks": [
+        "bai3_muc3_2_4"
+      ],
+      "table_columns": [
+        "Tổng số trẻ nhà trẻ",
+        "Lượng nguyên liệu của trẻ nhà trẻ",
+        "Tổng số trẻ mẫu giáo",
+        "Lượng nguyên liệu của trẻ mẫu giáo",
+        "Tổng khối lượng đã sơ chế của một loại thực phẩm nguyên liệu"
+      ],
+      "summary": "Công thức tính tổng lượng thực phẩm đã sơ chế cho từng nguyên liệu của thực đơn nhà trẻ và mẫu giáo",
+      "word_count": 77,
+      "token_count": 116
+    },
+    {
+      "id": "bai3_bang2",
+      "title": "Nhu cầu năng lượng khuyến nghị theo độ tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "71-72",
+      "related_chunks": [
+        "bai3_muc3_3_1"
+      ],
+      "table_columns": [
+        "Nhóm tuổi",
+        "Nhu cầu năng lượng/ngày/trẻ (kcal)",
+        "Năng lượng khuyến nghị tại trường học",
+        "Bữa trưa",
+        "Bữa phụ",
+        "Chất đạm",
+        "Chất béo",
+        "Chất bột đường"
+      ],
+      "summary": "Bảng thể hiện nhu cầu năng lượng khuyến nghị theo từng nhóm tuổi và tỉ lệ phân bố cho các bữa ăn tại trường, cùng với cơ cấu các chất sinh năng lượng",
+      "word_count": 189,
+      "token_count": 284
+    },
+    {
+      "id": "bai3_bang3",
+      "title": "Ví dụ xây dựng khẩu phần bữa ăn cho trẻ 48 tháng",
+      "content_type": "table",
+      "age_range": [
+        4,
+        4
+      ],
+      "pages": "79-80",
+      "related_chunks": [
+        "bai3_muc3_3_7"
+      ],
+      "table_columns": [
+        "Bước",
+        "Nhu cầu hàng ngày",
+        "Năng lượng tại trường học",
+        "Bữa trưa",
+        "Bữa phụ chiều"
+      ],
+      "summary": "Ví dụ minh họa các bước xây dựng khẩu phần ăn tại trường cho một bé trai 48 tháng, cân nặng 15kg, chiều cao 105cm, từ tính toán nhu cầu năng lượng đến lượng thực phẩm cụ thể",
+      "word_count": 287,
+      "token_count": 431
+    }
+  ],
+  "metadata_version": "1.0",
+  "total_items": {
+    "chunks": 33,
+    "tables": 3,
+    "figures": 0
+  },
+  "document_source": "Bộ Giáo dục và Đào tạo",
+  "last_updated": "2024-04-09"
+}

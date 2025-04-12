@@ -30,60 +30,34 @@ const RenderImage = ({ src, alt }) => {
   // Xử lý đường dẫn hình ảnh
   let imgSrc = src;
   
-  // Trích xuất thông tin từ đường dẫn Markdown
-  // Ví dụ: ../figures/bai1_hinh1.jpg hoặc bai1/figures/bai1_hinh1.jpg
-  if (imgSrc.includes('figures')) {
-    // Trích xuất bài số và tên file
-    const regex = /(?:\.\.\/figures\/|bai(\d+)\/figures\/)([^\/]+\.(jpg|png|gif|jpeg))/i;
-    const match = imgSrc.match(regex);
+  if (src) {
+    // Lấy tên file từ đường dẫn
+    const fileName = src.split('/').pop();
     
-    if (match) {
-      const fileName = match[2]; // Tên file hình ảnh
-      let baiNumber = match[1]; // Số bài (nếu có)
-      
-      // Nếu không lấy được số bài từ đường dẫn, thử lấy từ tên file
-      if (!baiNumber) {
-        const baiMatch = fileName.match(/^bai(\d+)_/);
-        if (baiMatch) {
-          baiNumber = baiMatch[1];
-        } else {
-          baiNumber = '1'; // Mặc định là bài 1 nếu không tìm thấy
-        }
-      }
-      
-      // Tạo đường dẫn API đúng
-      imgSrc = `${API_BASE_URL}/figures/${baiNumber}/${fileName}`;
-    } else {
-      // Nếu không khớp với mẫu regex, thử phương pháp đơn giản hơn
-      const parts = imgSrc.split('/');
-      const fileName = parts[parts.length - 1];
-      
-      // Thử xác định số bài từ tên file
-      const baiMatch = fileName.match(/^bai(\d+)_/);
-      const baiNumber = baiMatch ? baiMatch[1] : '1';
-      
-      imgSrc = `${API_BASE_URL}/figures/${baiNumber}/${fileName}`;
+    // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
+    let baiId = 'bai1'; // Mặc định là bai1
+    const baiMatch = fileName.match(/^(bai\d+)_/);
+    if (baiMatch) {
+      baiId = baiMatch[1];
     }
-  } else if (!imgSrc.startsWith('http')) {
-    // Nếu là đường dẫn khác không bắt đầu bằng http
-    imgSrc = imgSrc.startsWith('/') 
-      ? `${API_BASE_URL}${imgSrc}` 
-      : `${API_BASE_URL}/figures/1/${imgSrc}`; // Mặc định bài 1 nếu không có thông tin
+    
+    // Tạo URL API chính xác
+    imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
+    
+    console.log("Image source after processing:", imgSrc);
   }
   
-  console.log("Image source after processing:", imgSrc); // Để debug
-  
   return (
-    <div className="my-4">
+    <span className="block my-4">
       {loading && (
-        <div className="flex items-center justify-center h-24 bg-gray-100 rounded-lg animate-pulse">
+        <span className="flex items-center justify-center h-24 bg-gray-100 rounded-lg animate-pulse">
           <span className="text-gray-500">Đang tải hình ảnh...</span>
-        </div>
+        </span>
       )}
       {error && (
-        <div className="flex items-center justify-center h-24 bg-red-50 rounded-lg">
+        <span className="flex items-center justify-center h-24 bg-red-50 rounded-lg">
           <span className="text-red-500">Không thể tải hình ảnh</span>
-        </div>
+        </span>
       )}
       <img 
         src={imgSrc} 
@@ -96,8 +70,8 @@ const RenderImage = ({ src, alt }) => {
           setError(true);
         }}
       />
-      {alt && !error && <p className="text-center text-sm text-gray-600 mt-1">{alt}</p>}
-    </div>
+      {alt && !error && <span className="block text-center text-sm text-gray-600 mt-1">{alt}</span>}
+    </span>
   );
 };
 
@@ -350,12 +324,29 @@ const ChatPage = () => {
 
   // Custom renderer cho markdown
   const MarkdownComponents = {
-    // Component xử lý hình ảnh
-    img({ node, ...props }) {
+    // Xử lý image để tránh lỗi nested DOM
+    img: ({ node, ...props }) => {
       return <RenderImage src={props.src} alt={props.alt} />;
     },
     
-    table({ node, ...props }) {
+    // Override p để ngăn các thành phần không hợp lệ bên trong
+    p: ({ node, children, ...props }) => {
+      // Kiểm tra nếu children có chứa RenderImage
+      const hasSpecialChild = React.Children.toArray(children).some(
+        child => React.isValidElement(child) && 
+        (child.type === RenderImage || child.props?.src)
+      );
+      
+      // Nếu có special child, chỉ render children
+      if (hasSpecialChild) {
+        return <>{children}</>;
+      }
+      
+      // Nếu không, render như paragraph bình thường
+      return <p {...props}>{children}</p>;
+    },
+    
+    table: ({ node, ...props }) => {
       return (
         <div className="overflow-x-auto my-4">
           <table className="min-w-full border-collapse border border-gray-300 rounded-lg">
@@ -364,16 +355,16 @@ const ChatPage = () => {
         </div>
       );
     },
-    thead({ node, ...props }) {
+    thead: ({ node, ...props }) => {
       return <thead className="bg-mint-50">{props.children}</thead>;
     },
-    th({ node, ...props }) {
+    th: ({ node, ...props }) => {
       return <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">{props.children}</th>;
     },
-    td({ node, ...props }) {
+    td: ({ node, ...props }) => {
       return <td className="border border-gray-300 px-4 py-2 text-gray-700">{props.children}</td>;
     },
-    code({ node, inline, className, children, ...props }) {
+    code: ({ node, inline, className, children, ...props }) => {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <SyntaxHighlighter
@@ -391,14 +382,14 @@ const ChatPage = () => {
         </code>
       );
     },
-    blockquote({ node, ...props }) {
+    blockquote: ({ node, ...props }) => {
       return (
         <blockquote className="border-l-4 border-mint-500 pl-4 italic text-gray-700 my-4">
           {props.children}
         </blockquote>
       );
     },
-    li({ node, ...props }) {
+    li: ({ node, ...props }) => {
       return <li className="mb-1">{props.children}</li>;
     }
   };
@@ -511,11 +502,12 @@ const ChatPage = () => {
                     ) : (
                       <div className="markdown-content">
                         <ReactMarkdown
-                          children={message.content}
                           remarkPlugins={[remarkGfm]}
                           rehypePlugins={[rehypeRaw]}
                           components={MarkdownComponents}
-                        />
+                        >
+                          {message.content}
+                        </ReactMarkdown>
                         {message.sources && message.sources.length > 0 && (
                           <SourceReference sources={message.sources} />
                         )}

@@ -1,0 +1,11 @@
+***Ban Giám hiệu*** 
+- Tổ chức quán triệt và chỉ đạo thực hiện đầy đủ, nghiêm túc các các nội dung về đảm bảo an toàn vệ sinh thực phẩm trong trường học.
+- Xây dựng kế hoạch, cơ chế phối hợp chặt chẽ giữa nhà trường, gia đình và chính quyền địa phương chuẩn bị các phương án sẵn sàng để kịp thời ứng phó, xử lý các tình huống phát sinh khi có ngộ độc thực phẩm xảy ra tại trường học.
+- Tổ chức kiểm tra, giám sát về công tác bảo đảm an toàn thực phẩm tại nhà trường.
+- Thường xuyên rà soát, đánh giá các yếu tố nguy cơ gây mất an toàn vệ sinh thực phẩm trong nhà trường để khắc phục hoặc báo cáo, kiến nghị các cơ quan có thẩm quyền khắc phục kịp thời.
+- Thiết lập kênh tiếp nhận thông tin và hệ thống ghi chép, theo dõi, giám sát diễn biến tình hình an toàn vệ sinh thực phẩm của nhà trường.
+- Chỉ đạo công tác thông tin, tuyên truyền, giáo dục nâng cao nhận thức, trách nhiệm, kiến thức về an toàn thực phẩm, phòng, chống ngộ độc thực phẩm cho giáo viên, nhân viên, học sinh và cha mẹ học sinh. Phối hợp chặt chẽ giữa nhà trường và gia đình để giáo dục, hướng dẫn về bảo đảm an toàn thực phẩm trong trường học.
+- Phối hợp với cơ sở y tế tại địa phương trong việc tập huấn, bồi dưỡng chuyên môn về an toàn thực phẩm hàng năm cho nhân viên bếp ăn của nhà trường.
+- Rà soát và đề xuất cải tạo, xây mới, sửa chữa cơ sở vật chất, mua sắm trang thiết bị, đồ dùng phục vụ công tác tổ chức bữa ăn học đường bảo đảm an toàn vệ sinh thực phẩm.
+- Chịu trách nhiệm trước cơ quan quản lý cấp trên và trước pháp luật nếu thiếu trách nhiệm, để xảy ra ngộ độc thực phẩm tại trường học.
+- Phối hợp chặt chẽ với ngành y tế và các ban, ngành liên quan tại địa phương thực hiện tốt, có hiệu quả công tác bảo đảm an toàn thực phẩm, công tác truyền thông về an toàn thực phẩm trong trường học.

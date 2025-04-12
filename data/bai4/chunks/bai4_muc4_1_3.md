@@ -1,0 +1,3 @@
+### 4.1.3. Kiểm soát quy trình chế biến, nấu nướng
+
+Đảm bảo quy trình chế biến, nấu nướng theo nguyên tắc một chiều: nguyên liệu xuất kho, sau khi sơ chế (nhặt, rửa, thái...) chuyển vào bếp (nguyên liệu sạch), chế biến nấu nướng, xong chuyển thức ăn chín sang phòng chia, phân phối thức ăn và cuối cùng ra phòng ăn hoặc vận chuyển đến nơi khác để ăn. Cần chú ý: nguyên liệu sạch không để lẫn nguyên liệu bẩn, các nguyên liệu khác nhau (thịt, cá, rau...) cũng không được để lẫn với nhau, vì chế độ nấu nướng khác nhau. Thức ăn chín không được để lẫn với thức ăn sống. Đi theo đó là các dụng cụ, thiết bị, con người cũng phải tách biệt khác nhau.
