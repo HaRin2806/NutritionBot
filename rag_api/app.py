@@ -170,7 +170,7 @@ def serve_figure(bai_id, filename):
         if os.path.exists(figure_dir) and os.path.isdir(figure_dir):
             if os.path.exists(os.path.join(figure_dir, filename)):
                 return send_from_directory(figure_dir, filename)
-        
+        print("Đường dẫn hình ảnh:", os.path.join(figure_dir, filename))
         # Nếu không tìm thấy, log lỗi
         logger.error(f"Không tìm thấy hình ảnh: {os.path.join(figure_dir, filename)}")
         return jsonify({"error": "Không tìm thấy hình ảnh"}), 404

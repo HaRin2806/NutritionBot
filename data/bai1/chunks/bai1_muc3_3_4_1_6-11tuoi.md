@@ -7,5 +7,4 @@
 #### » Lựa chọn thực phẩm
 Sử dụng số lượng và định lượng thực phẩm theo tháp dinh dưỡng cho trẻ 6 - 11 tuổi.
 
-![Hình 1: Tháp dinh dưỡng cho trẻ từ 6-11 tuổi](../figures/bai1_hinh10.png)
-#### Hình 2: Tháp dinh dưỡng cho trẻ từ 6 - 11 tuổi
+![Hình 10: Tháp dinh dưỡng cho trẻ từ 6-11 tuổi](../figures/bai1_hinh10.png)
