@@ -1,20 +1,28 @@
 from typing import Dict, List, Any, Optional
 import google.generativeai as genai
+import logging
 from config import GEMINI_API_KEY, SYSTEM_PROMPT, HUMAN_PROMPT_TEMPLATE, TOP_K_RESULTS, TEMPERATURE, MAX_OUTPUT_TOKENS
 from data_processor import DataProcessor
 from embedding_model import EmbeddingModel
+
+# Cấu hình logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Cấu hình Gemini API
 genai.configure(api_key=GEMINI_API_KEY)
 
 class RAGPipeline:
     def __init__(self, data_processor: DataProcessor = None, embedding_model: EmbeddingModel = None):
-        """Khởi tạo RAG Pipeline"""
+        """
+        Khởi tạo RAG Pipeline
+        
+        Args:
+            data_processor: Đối tượng xử lý dữ liệu
+            embedding_model: Đối tượng mô hình embedding
+        """
         self.data_processor = data_processor or DataProcessor()
         self.embedding_model = embedding_model or EmbeddingModel()
-        
-        # Không cần embedding tự động ở đây vì đã được thực hiện trong app.py
-        # self._check_and_index_chunks()
         
         # Khởi tạo mô hình Gemini
         self.generation_model = genai.GenerativeModel(
@@ -25,14 +33,29 @@ class RAGPipeline:
                 "top_p": 0.95,
             }
         )
+        logger.info("Đã khởi tạo RAG Pipeline")
     
     def process_query(self, query: str, age: int = None, top_k: int = TOP_K_RESULTS) -> Dict[str, Any]:
-        """Xử lý câu hỏi và trả về kết quả"""
+        """
+        Xử lý câu hỏi và trả về kết quả
+        
+        Args:
+            query: Câu hỏi của người dùng
+            age: Độ tuổi của người dùng
+            top_k: Số lượng kết quả tối đa
+            
+        Returns:
+            Kết quả xử lý RAG bao gồm câu trả lời và thông tin bổ sung
+        """
         try:
+            logger.info(f"Xử lý câu hỏi: '{query}', độ tuổi: {age}")
+            
             # Tiền xử lý truy vấn
             processed_query = self.data_processor.preprocess_query(query)
+            logger.info(f"Câu hỏi sau khi xử lý: '{processed_query}'")
             
             # Tìm kiếm các items liên quan (văn bản, bảng, hình ảnh)
+            # Chỉ embedding câu hỏi người dùng, không phải dữ liệu
             results_by_type = self.embedding_model.search_by_content_types(
                 processed_query, 
                 age=age, 
@@ -52,8 +75,11 @@ class RAGPipeline:
             # Giới hạn số lượng kết quả
             relevant_items = relevant_items[:top_k]
             
+            logger.info(f"Tìm thấy {len(relevant_items)} items liên quan")
+            
             # Nếu không tìm thấy kết quả nào phù hợp
             if not relevant_items:
+                logger.warning("Không tìm thấy thông tin liên quan trong tài liệu")
                 return {
                     "answer": "Tôi không tìm thấy thông tin liên quan đến câu hỏi của bạn trong tài liệu. "
                             "Xin vui lòng hỏi câu hỏi khác về dinh dưỡng và an toàn thực phẩm.",
@@ -97,13 +123,16 @@ class RAGPipeline:
             # Tạo prompt cho Gemini bằng cách kết hợp system prompt và user prompt
             age_text = f"{age} tuổi" if age is not None else "chưa xác định"
             combined_prompt = f"{SYSTEM_PROMPT}\n\n{HUMAN_PROMPT_TEMPLATE.format(query=query, age=age_text, contexts=formatted_contexts)}"
-            # print("Combined Prompt:", combined_prompt)  # Debugging line
+            
+            # Debug log
+            logger.debug(f"Prompt tổng hợp: {combined_prompt[:200]}...")
+            
             # Gọi Gemini API
-            response = self.generation_model.generate_content(
-                combined_prompt
-            )
-            # print("Gemini Response:", response)  # Debugging line
-            # print("="*20)
+            logger.info("Gửi yêu cầu đến Gemini API")
+            response = self.generation_model.generate_content(combined_prompt)
+            
+            logger.info("Đã nhận phản hồi từ Gemini API")
+            
             # Định dạng kết quả trả về
             return {
                 "answer": response.text,
@@ -114,7 +143,7 @@ class RAGPipeline:
             }
             
         except Exception as e:
-            print(f"Lỗi khi xử lý truy vấn: {e}")
+            logger.error(f"Lỗi khi xử lý truy vấn: {str(e)}", exc_info=True)
             return {
                 "answer": "Rất tiếc, đã xảy ra lỗi khi xử lý câu hỏi của bạn. Vui lòng thử lại sau.",
                 "contexts": [],

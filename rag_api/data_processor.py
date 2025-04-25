@@ -1,7 +1,11 @@
 import os
 import json
 import re
+import logging
 from typing import Dict, List, Any, Union, Tuple
+
+# Cấu hình logging
+logger = logging.getLogger(__name__)
 
 class DataProcessor:
     def __init__(self, data_dir: str = "data"):
@@ -10,18 +14,17 @@ class DataProcessor:
         self.chunks = []
         self.tables = []
         self.figures = []
-        self._load_all_data()
+        
+        logger.info(f"Khởi tạo DataProcessor với data_dir: {data_dir}")
+        if not os.path.exists(self.data_dir):
+            logger.error(f"Thư mục data không tồn tại: {self.data_dir}")
+        else:
+            self._load_all_data()
     
     def _load_all_data(self):
         """Tải tất cả dữ liệu từ các thư mục con trong data"""
-        print(f"Thư mục data: {self.data_dir}")
-        print(f"Các items trong thư mục data: {os.listdir(self.data_dir)}")
+        logger.info(f"Đang tải dữ liệu từ thư mục: {self.data_dir}")
         
-        # Kiểm tra thư mục data có tồn tại không
-        if not os.path.exists(self.data_dir):
-            print(f"Thư mục data không tồn tại: {self.data_dir}")
-            return
-
         # Quét qua tất cả thư mục trong data
         for item in os.listdir(self.data_dir):
             folder_path = os.path.join(self.data_dir, item)
@@ -37,7 +40,7 @@ class DataProcessor:
                         with open(metadata_file, 'r', encoding='utf-8') as f:
                             content = f.read()
                             if not content.strip():
-                                print(f"File metadata trống: {metadata_file}")
+                                logger.warning(f"File metadata trống: {metadata_file}")
                                 continue
                             folder_metadata = json.loads(content)
                         
@@ -56,11 +59,11 @@ class DataProcessor:
                         # Tải tất cả chunks, tables và figures
                         self._load_content_from_metadata(folder_path, folder_metadata)
                         
-                        print(f"Đã tải xong thư mục: {item}")
+                        logger.info(f"Đã tải xong thư mục: {item}")
                     except json.JSONDecodeError as e:
-                        print(f"Lỗi đọc file JSON {metadata_file}: {e}")
+                        logger.error(f"Lỗi đọc file JSON {metadata_file}: {e}")
                     except Exception as e:
-                        print(f"Lỗi khi tải metadata từ {metadata_file}: {e}")
+                        logger.error(f"Lỗi khi tải metadata từ {metadata_file}: {e}")
 
     def _load_content_from_metadata(self, folder_path: str, folder_metadata: Dict[str, Any]):
         """Tải nội dung chunks, tables và figures từ metadata"""
@@ -77,9 +80,9 @@ class DataProcessor:
                     content = f.read()
                 chunk_data["content"] = self._extract_content_from_markdown(content)
             else:
-                # Nếu không tìm thấy file, tạo nội dung mẫu
+                # Nếu không tìm thấy file, tạo nội dung mẫu và ghi log ở debug level
                 chunk_data["content"] = f"Nội dung cho {chunk_id} không tìm thấy."
-                print(f"Không tìm thấy file chunk: {chunk_path}")
+                logger.debug(f"Không tìm thấy file chunk: {chunk_path}")
             
             self.chunks.append(chunk_data)
         
@@ -97,7 +100,7 @@ class DataProcessor:
                 table_data["content"] = self._extract_content_from_markdown(content)
             else:
                 table_data["content"] = f"Bảng {table_id} không tìm thấy."
-                print(f"Không tìm thấy file bảng: {table_path}")
+                logger.debug(f"Không tìm thấy file bảng: {table_path}")
             
             self.tables.append(table_data)
         
@@ -105,25 +108,35 @@ class DataProcessor:
         for figure_meta in folder_metadata.get("figures", []):
             figure_id = figure_meta.get("id")
             figure_path = os.path.join(folder_path, "figures", f"{figure_id}.md")
-            
             figure_data = figure_meta.copy()
             
             # Thêm nội dung từ file markdown nếu tồn tại
+            content_loaded = False
             if os.path.exists(figure_path):
                 with open(figure_path, 'r', encoding='utf-8') as f:
                     content = f.read()
                 figure_data["content"] = self._extract_content_from_markdown(content)
-            else:
-                figure_data["content"] = f"Hình {figure_id} không tìm thấy."
-                print(f"Không tìm thấy file hình: {figure_path}")
+                content_loaded = True
             
             # Thêm đường dẫn đến file hình ảnh nếu có
+            image_path = None
             image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg']
             for ext in image_extensions:
-                image_path = os.path.join(folder_path, "figures", f"{figure_id}{ext}")
-                if os.path.exists(image_path):
-                    figure_data["image_path"] = image_path
+                img_path = os.path.join(folder_path, "figures", f"{figure_id}{ext}")
+                if os.path.exists(img_path):
+                    image_path = img_path
                     break
+            
+            if image_path:
+                figure_data["image_path"] = image_path
+                # Tạo nội dung mặc định nếu không có file markdown
+                if not content_loaded:
+                    figure_caption = figure_meta.get("title", f"Hình {figure_id}")
+                    figure_data["content"] = f"![{figure_caption}]({image_path})"
+            elif not content_loaded:
+                # Nếu không có cả file markdown và file hình
+                figure_data["content"] = f"Hình {figure_id} không tìm thấy."
+                logger.debug(f"Không tìm thấy file hình cho {figure_id}")
             
             self.figures.append(figure_data)
         
@@ -152,9 +165,9 @@ class DataProcessor:
                     elif content_type == "figure":
                         self.figures.append(data_file)
                     
-                    print(f"Đã tải dữ liệu: {data_id}, loại: {content_type}")
+                    logger.debug(f"Đã tải dữ liệu: {data_id}, loại: {content_type}")
                 else:
-                    print(f"Không tìm thấy file dữ liệu: {data_path}")
+                    logger.debug(f"Không tìm thấy file dữ liệu: {data_path}")
                     data_file["content"] = f"Dữ liệu {data_id} không tìm thấy."
     
     def _extract_content_from_markdown(self, md_content: str) -> str:
@@ -376,3 +389,34 @@ class DataProcessor:
             "figures": figures_count,
             "total": chunks_count + tables_count + figures_count
         }
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Lấy thống kê về dữ liệu đã tải"""
+        stats = {
+            "total_chunks": len(self.chunks),
+            "total_tables": len(self.tables),
+            "total_figures": len(self.figures),
+            "total_items": len(self.chunks) + len(self.tables) + len(self.figures),
+            "by_lesson": {},
+            "by_age": {}
+        }
+        
+        # Thống kê theo bài
+        for item in os.listdir(self.data_dir):
+            if os.path.isdir(os.path.join(self.data_dir, item)):
+                item_stats = self.count_items_by_prefix(f"{item}_")
+                stats["by_lesson"][item] = item_stats
+        
+        # Thống kê theo độ tuổi
+        age_ranges = {}
+        for chunk in self.chunks + self.tables + self.figures:
+            age_range = chunk.get("age_range", [0, 100])
+            if len(age_range) == 2:
+                range_key = f"{age_range[0]}-{age_range[1]}"
+                if range_key not in age_ranges:
+                    age_ranges[range_key] = 0
+                age_ranges[range_key] += 1
+        
+        stats["by_age"] = age_ranges
+        
+        return stats

@@ -26,45 +26,39 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 * 60  # 1 ngày
 jwt = JWTManager(app)
 
-# Khởi tạo components
+# Đường dẫn đến thư mục dữ liệu
 current_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(current_dir, "..", "data")
 data_dir = os.path.abspath(data_dir)
+logger.info(f"Thư mục dữ liệu: {data_dir}")
 
-data_processor = DataProcessor(data_dir=data_dir)
-embedding_model = EmbeddingModel()
-rag_pipeline = RAGPipeline(data_processor, embedding_model)
+# Khởi tạo components - Tối ưu hóa để không tải lại dữ liệu khi không cần thiết
+# Chỉ tải metadata và không thực hiện embedding tự động
+def get_data_processor():
+    # Sử dụng lazy loading để tải dữ liệu chỉ khi cần
+    return DataProcessor(data_dir=data_dir)
 
-def initialize_index():
-    """Hàm khởi tạo chỉ mục - chỉ chạy một lần khi cần thiết"""
-    try:
-        collection_stats = embedding_model.collection.count()
-        if collection_stats > 0:
-            logger.info(f"Đã tồn tại chỉ mục với {collection_stats} items. Bỏ qua quá trình lập chỉ mục.")
-            return
-        
-        logger.info("Bắt đầu quá trình lập chỉ mục...")
-        
-        # Chuẩn bị dữ liệu cho embedding
-        all_items = data_processor.prepare_for_embedding()
-        
-        # Lập chỉ mục tất cả items
-        embedding_model.index_chunks(all_items)
-        
-        logger.info(f"Đã lập chỉ mục thành công {len(all_items)} items")
-        
-        # Thống kê số lượng theo loại
-        text_chunks = len([item for item in all_items if item.get("content_type") == "text"])
-        tables = len([item for item in all_items if item.get("content_type") == "table"])
-        figures = len([item for item in all_items if item.get("content_type") == "figure"])
-        
-        logger.info(f"Thống kê: {text_chunks} văn bản, {tables} bảng biểu, {figures} hình ảnh")
-        
-    except Exception as e:
-        logger.error(f"Lỗi khi lập chỉ mục ban đầu: {str(e)}")
+def get_embedding_model():
+    # Kết nối đến ChromaDB đã có sẵn các embedding
+    return EmbeddingModel()
 
-# Khởi tạo chỉ mục - chỉ chạy một lần khi server khởi động
-initialize_index()
+def get_rag_pipeline(data_processor=None, embedding_model=None):
+    # Tạo RAG pipeline với các components đã được khởi tạo
+    if not data_processor:
+        data_processor = get_data_processor()
+    if not embedding_model:
+        embedding_model = get_embedding_model()
+    return RAGPipeline(data_processor, embedding_model)
+
+# Khởi tạo các components cần thiết
+embedding_model = get_embedding_model()
+collection_count = embedding_model.count()
+logger.info(f"Đã tìm thấy {collection_count} items đã được embedding trong database.")
+
+# Kiểm tra nếu chưa có dữ liệu nào được embedding
+if collection_count == 0:
+    logger.warning("Chưa có dữ liệu nào được embedding. Vui lòng chạy script embed_data.py trước khi sử dụng API.")
+    logger.info("Ví dụ: python scripts/embed_data.py --data-dir ../data")
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -72,7 +66,8 @@ def health_check():
     return jsonify({
         "status": "healthy",
         "message": "Server đang hoạt động",
-        "time": time.strftime('%Y-%m-%d %H:%M:%S')
+        "time": time.strftime('%Y-%m-%d %H:%M:%S'),
+        "data_items": embedding_model.count()
     })
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -257,6 +252,9 @@ def chat():
         logger.info(f"Nhận câu hỏi: {message}")
         logger.info(f"Độ tuổi người dùng: {age}")
         
+        # Tạo RAG pipeline mới cho mỗi request (để đảm bảo thread-safe)
+        rag_pipeline = get_rag_pipeline(embedding_model=embedding_model)
+        
         # Xử lý câu hỏi qua RAG pipeline
         result = rag_pipeline.process_query(message, age)
         
@@ -282,17 +280,20 @@ def serve_figure(bai_id, filename):
     """API endpoint để phục vụ hình ảnh theo bài"""
     try:
         # Đường dẫn chính xác đến thư mục figures
-        figure_dir = os.path.join(current_dir, '..', 'data', bai_id, 'figures')
+        figure_dir = os.path.join(data_dir, bai_id, 'figures')
         figure_dir = os.path.abspath(figure_dir)
         
         # Kiểm tra xem thư mục có tồn tại không
         if os.path.exists(figure_dir) and os.path.isdir(figure_dir):
-            if os.path.exists(os.path.join(figure_dir, filename)):
-                return send_from_directory(figure_dir, filename)
-        print("Đường dẫn hình ảnh:", os.path.join(figure_dir, filename))
-        # Nếu không tìm thấy, log lỗi
+            for ext in ['', '.png', '.jpg', '.jpeg', '.gif', '.svg']:
+                # Kiểm tra với nhiều phần mở rộng khác nhau
+                file_to_check = os.path.join(figure_dir, filename + ext)
+                if os.path.exists(file_to_check):
+                    return send_from_directory(figure_dir, filename + ext)
+        
         logger.error(f"Không tìm thấy hình ảnh: {os.path.join(figure_dir, filename)}")
         return jsonify({"error": "Không tìm thấy hình ảnh"}), 404
+        
     except Exception as e:
         logger.error(f"Lỗi khi tải hình ảnh: {str(e)}")
         return jsonify({"error": f"Lỗi máy chủ: {str(e)}"}), 500
@@ -301,6 +302,8 @@ def serve_figure(bai_id, filename):
 def get_metadata():
     """API endpoint để lấy thông tin metadata của tài liệu"""
     try:
+        # Tạo data_processor mới để lấy metadata
+        data_processor = get_data_processor()
         metadata = data_processor.get_all_metadata()
         return jsonify({
             "success": True,
@@ -314,5 +317,5 @@ def get_metadata():
         }), 500
 
 if __name__ == '__main__':
-    # Chạy Flask app mà không cần lập chỉ mục lại ở đây
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Chạy Flask app trong mode debug (có thể tắt debug bằng cách đặt debug=False)
+    app.run(host='0.0.0.0', port=5000, debug=False)
