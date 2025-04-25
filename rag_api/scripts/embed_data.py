@@ -100,7 +100,7 @@ def embed_all_data(data_dir, force=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Embedding dữ liệu cho hệ thống Nutribot")
-    parser.add_argument("--data-dir", type=str, default="../data", 
+    parser.add_argument("--data-dir", type=str, default="data", 
                         help="Đường dẫn đến thư mục chứa dữ liệu (mặc định: ../data)")
     parser.add_argument("--force", action="store_true", 
                         help="Xóa và tạo lại chỉ mục nếu đã tồn tại")

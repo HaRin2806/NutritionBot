@@ -3,20 +3,40 @@ import numpy as np
 from typing import List, Dict, Any, Union
 import chromadb
 from chromadb.config import Settings
-import config
 import logging
+import os
+from dotenv import load_dotenv
 
 # Cấu hình logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Tải biến môi trường
+load_dotenv()
+
+# Cấu hình mô hình
+EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "intfloat/multilingual-e5-base")
+CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "chroma_db")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME", "nutrition_data")
+TOP_K_RESULTS = int(os.getenv("TOP_K_RESULTS", "5"))
+
+# Singleton pattern để tránh tải lại model nhiều lần
+_embedding_model_instance = None
+
+def get_embedding_model():
+    """Trả về instance của EmbeddingModel (singleton pattern)"""
+    global _embedding_model_instance
+    if _embedding_model_instance is None:
+        _embedding_model_instance = EmbeddingModel()
+    return _embedding_model_instance
+
 class EmbeddingModel:
-    def __init__(self, model_name: str = config.EMBEDDING_MODEL):
+    def __init__(self, model_name: str = EMBEDDING_MODEL):
         """
         Khởi tạo embedding model và kết nối với ChromaDB.
         
         Args:
-            model_name: Tên mô hình embedding (mặc định từ config)
+            model_name: Tên mô hình embedding (mặc định từ biến môi trường)
         """
         self.model_name = model_name
         self.model = SentenceTransformer(model_name)
@@ -24,19 +44,19 @@ class EmbeddingModel:
         
         # Kết nối với ChromaDB
         self.chroma_client = chromadb.PersistentClient(
-            path=config.CHROMA_PERSIST_DIRECTORY,
+            path=CHROMA_PERSIST_DIRECTORY,
             settings=Settings(anonymized_telemetry=False)
         )
         
         # Kiểm tra collection đã tồn tại chưa
         try:
-            self.collection = self.chroma_client.get_collection(name=config.COLLECTION_NAME)
-            logger.info(f"Đã kết nối với collection: {config.COLLECTION_NAME}, số lượng items: {self.collection.count()}")
+            self.collection = self.chroma_client.get_collection(name=COLLECTION_NAME)
+            logger.info(f"Đã kết nối với collection: {COLLECTION_NAME}, số lượng items: {self.collection.count()}")
         except Exception as e:
             # Nếu chưa tồn tại, tạo mới
-            logger.info(f"Collection {config.COLLECTION_NAME} chưa tồn tại, đang tạo mới...")
-            self.collection = self.chroma_client.create_collection(name=config.COLLECTION_NAME)
-            logger.info(f"Đã tạo collection mới: {config.COLLECTION_NAME}")
+            logger.info(f"Collection {COLLECTION_NAME} chưa tồn tại, đang tạo mới...")
+            self.collection = self.chroma_client.create_collection(name=COLLECTION_NAME)
+            logger.info(f"Đã tạo collection mới: {COLLECTION_NAME}")
     
     def get_embedding(self, text: str) -> List[float]:
         """Tính toán embedding vector cho văn bản"""
@@ -140,7 +160,7 @@ class EmbeddingModel:
             logger.error(f"Lỗi khi đếm số lượng items: {e}")
             return 0
     
-    def search(self, query: str, age: int = None, content_type: str = None, top_k: int = config.TOP_K_RESULTS) -> List[Dict[str, Any]]:
+    def search(self, query: str, age: int = None, content_type: str = None, top_k: int = TOP_K_RESULTS) -> List[Dict[str, Any]]:
         """
         Tìm kiếm chunks liên quan đến truy vấn, độ tuổi và loại nội dung.
         
@@ -249,7 +269,7 @@ class EmbeddingModel:
             logger.error(f"Lỗi khi lấy chunks liên quan: {e}")
             return []
             
-    def search_by_content_types(self, query: str, age: int = None, content_types: List[str] = None, top_k: int = config.TOP_K_RESULTS) -> Dict[str, List[Dict[str, Any]]]:
+    def search_by_content_types(self, query: str, age: int = None, content_types: List[str] = None, top_k: int = TOP_K_RESULTS) -> Dict[str, List[Dict[str, Any]]]:
         """
         Tìm kiếm chunks theo nhiều loại nội dung khác nhau.
         
@@ -277,3 +297,68 @@ class EmbeddingModel:
             results_by_type[content_type] = results
             
         return results_by_type
+    
+    def rerank_results(self, query: str, results: List[Dict[str, Any]], top_k: int = None) -> List[Dict[str, Any]]:
+        """
+        Xếp hạng lại kết quả tìm kiếm dựa trên độ tương đồng với truy vấn.
+        
+        Args:
+            query: Câu truy vấn gốc
+            results: Danh sách kết quả cần xếp hạng lại
+            top_k: Số lượng kết quả tối đa trả về sau khi xếp hạng lại
+            
+        Returns:
+            Danh sách kết quả đã được xếp hạng lại
+        """
+        if not results or not query:
+            return results
+        
+        if top_k is None:
+            top_k = len(results)
+        
+        # Chỉ xếp hạng lại nếu có nhiều hơn 1 kết quả
+        if len(results) <= 1:
+            return results
+        
+        try:
+            # Tạo embedding cho query
+            query_embedding = self.get_embedding(query)
+            
+            # Tính toán điểm tương đồng cho mỗi kết quả
+            for result in results:
+                content = result.get("content", "")
+                
+                # Tạo embedding cho nội dung và tính toán độ tương đồng
+                content_embedding = self.get_embedding(content)
+                
+                # Tính toán cosine similarity
+                similarity = np.dot(query_embedding, content_embedding) / (
+                    np.linalg.norm(query_embedding) * np.linalg.norm(content_embedding)
+                )
+                
+                # Cập nhật điểm tương đồng
+                result["similarity_score"] = float(similarity)
+            
+            # Sắp xếp kết quả theo điểm tương đồng giảm dần
+            results.sort(key=lambda x: x.get("similarity_score", 0), reverse=True)
+            
+            # Giới hạn số lượng kết quả
+            return results[:top_k]
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi xếp hạng lại kết quả: {e}")
+            return results
+    
+    def fine_tune_embedding(self, queries: List[str], relevant_docs: List[List[str]], irrelevant_docs: List[List[str]] = None):
+        """
+        Hiện tại là phương thức giả mạo để chuẩn bị cho việc fine-tune embedding trong tương lai.
+        Sẽ được triển khai đầy đủ khi cần thiết.
+        
+        Args:
+            queries: Danh sách các câu truy vấn huấn luyện
+            relevant_docs: Danh sách các tài liệu liên quan cho mỗi truy vấn
+            irrelevant_docs: Danh sách các tài liệu không liên quan cho mỗi truy vấn
+        """
+        logger.info("Phương thức fine_tune_embedding hiện chưa được triển khai đầy đủ")
+        logger.info(f"Đã nhận {len(queries)} truy vấn huấn luyện")
+        # Phương thức này sẽ được triển khai đầy đủ trong các phiên bản sau
