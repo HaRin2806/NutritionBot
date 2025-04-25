@@ -1,39 +1,74 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import { BiUser, BiLock } from 'react-icons/bi';
+
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false
+  });
   const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
     try {
-      // Giả lập xử lý đăng nhập
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Hiển thị thông báo đăng nhập thành công
-      Swal.fire({
-        icon: 'success',
-        title: 'Đăng nhập thành công!',
-        text: 'Chào mừng bạn đến với Nutribot',
-        confirmButtonText: 'Bắt đầu trò chuyện',
-        confirmButtonColor: '#36B37E',
-        willClose: () => {
-          navigate('/chat');
-        }
+      // Gọi API đăng nhập
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+        email: formData.email,
+        password: formData.password
       });
+      
+      if (response.data.success) {
+        // Lưu token và thông tin người dùng vào localStorage hoặc sessionStorage
+        const storage = formData.rememberMe ? localStorage : sessionStorage;
+        storage.setItem('token', response.data.access_token);
+        storage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Hiển thị thông báo đăng nhập thành công
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng nhập thành công!',
+          text: 'Chào mừng bạn đến với Nutribot',
+          confirmButtonText: 'Bắt đầu trò chuyện',
+          confirmButtonColor: '#36B37E',
+          willClose: () => {
+            navigate('/chat');
+          }
+        });
+      } else {
+        // Xử lý lỗi từ API
+        Swal.fire({
+          icon: 'error',
+          title: 'Đăng nhập thất bại',
+          text: response.data.error || 'Có lỗi xảy ra khi đăng nhập',
+          confirmButtonText: 'Thử lại',
+          confirmButtonColor: '#36B37E'
+        });
+      }
     } catch (error) {
+      console.error("Lỗi đăng nhập:", error);
+      
       // Xử lý lỗi nếu có
       Swal.fire({
         icon: 'error',
         title: 'Đăng nhập thất bại',
-        text: 'Tên đăng nhập hoặc mật khẩu không chính xác.',
+        text: error.response?.data?.error || 'Tên đăng nhập hoặc mật khẩu không chính xác.',
         confirmButtonText: 'Thử lại',
         confirmButtonColor: '#36B37E'
       });
@@ -62,23 +97,23 @@ const LoginPage = () => {
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-              Email hoặc tên đăng nhập
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
             </label>
             <div className="mt-1 relative rounded-md shadow-sm">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <BiUser className="h-5 w-5 text-gray-400" />
               </div>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
                   border-gray-300 focus:border-mint-500 focus:ring-mint-200`}
                 placeholder="email@example.com"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
           </div>
@@ -98,19 +133,21 @@ const LoginPage = () => {
                 required
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
                   border-gray-300 focus:border-mint-500 focus:ring-mint-200`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
             <div className="flex items-center justify-between mt-2">
               <div className="flex items-center">
                 <input
-                  id="remember-me"
-                  name="remember-me"
+                  id="rememberMe"
+                  name="rememberMe"
                   type="checkbox"
                   className="h-4 w-4 text-mint-600 focus:ring-mint-500 border-gray-300 rounded"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
                   Ghi nhớ đăng nhập
                 </label>
               </div>

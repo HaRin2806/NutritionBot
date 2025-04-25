@@ -1,0 +1,485 @@
+{
+  "bai_info": {
+    "id": "phuluc",
+    "title": "Phụ lục biểu bảng, chuẩn phát triển và mẫu biểu",
+    "pages": "126-161",
+    "overview": "Tổng hợp các bảng chuẩn phát triển của trẻ 1-19 tuổi và các mẫu biểu kiểm tra an toàn thực phẩm."
+  },
+  "chunks": [
+    {
+      "id": "phuluc3_mau_bieuban_kiemtra_attp",
+      "title": "Biểu mẫu kiểm tra về an toàn thực phẩm bếp ăn tập thể",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "156-158",
+      "related_chunks": [
+        "phuluc4_mau_kiemthuc_babuoc",
+        "phuluc5_mau_luumau_thuc_an"
+      ],
+      "related_tables": [
+        "phuluc3_bang_danhgia_attp"
+      ],
+      "summary": "Biên bản kiểm tra về an toàn thực phẩm bếp ăn tập thể, gồm thông tin chung về cơ sở, hồ sơ pháp lý và đánh giá điều kiện an toàn thực phẩm",
+      "word_count": 200,
+      "token_count": 280,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "phuluc4_mau_kiemthuc_babuoc",
+      "title": "Mẫu biểu ghi chép kiểm thực ba bước",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "159-160",
+      "related_chunks": [
+        "phuluc3_mau_bieuban_kiemtra_attp",
+        "phuluc5_mau_luumau_thuc_an"
+      ],
+      "related_tables": [
+        "phuluc4_bang_kiemtra_tuoi",
+        "phuluc4_bang_kiemtra_kho",
+        "phuluc4_bang_kiemtra_chebien",
+        "phuluc4_bang_kiemtra_truocan"
+      ],
+      "summary": "Biểu mẫu ghi chép quy trình kiểm thực ba bước: kiểm tra trước khi chế biến, kiểm tra khi chế biến và kiểm tra trước khi ăn",
+      "word_count": 120,
+      "token_count": 180,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "phuluc5_mau_luumau_thuc_an",
+      "title": "Mẫu biểu lưu mẫu thức ăn và hủy mẫu thức ăn lưu",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "161",
+      "related_chunks": [
+        "phuluc3_mau_bieuban_kiemtra_attp",
+        "phuluc4_mau_kiemthuc_babuoc"
+      ],
+      "related_tables": [
+        "phuluc5_bang_theodoi"
+      ],
+      "summary": "Biểu mẫu quản lý và theo dõi việc lưu mẫu thức ăn và hủy mẫu thức ăn lưu trong bếp ăn tập thể",
+      "word_count": 110,
+      "token_count": 160,
+      "contains_table": true,
+      "contains_figure": false
+    }
+  ],
+  "tables": [
+    {
+      "id": "phuluc1_cannang_gai_1-5tuoi",
+      "title": "Chuẩn phát triển cân nặng của bé gái 1-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        5
+      ],
+      "pages": "126-127",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:Tháng",
+        "Tháng",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) của bé gái từ 1-5 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo tháng tuổi và các mức độ lệch chuẩn",
+      "word_count": 320,
+      "token_count": 450
+    },
+    {
+      "id": "phuluc1_cannang_trai_1-5tuoi",
+      "title": "Chuẩn phát triển cân nặng của bé trai 1-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        5
+      ],
+      "pages": "128-129",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:Tháng",
+        "Tháng",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) của bé trai từ 1-5 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo tháng tuổi và các mức độ lệch chuẩn",
+      "word_count": 320,
+      "token_count": 450
+    },
+    {
+      "id": "phuluc1_chieucao_gai_1-5tuoi",
+      "title": "Chuẩn phát triển chiều dài nằm/chiều cao đứng của bé gái 1-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        5
+      ],
+      "pages": "130-132",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:Tháng",
+        "Tháng",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển chiều dài nằm (dưới 24 tháng) và chiều cao đứng (trên 24 tháng) của bé gái 1-5 tuổi theo tiêu chuẩn WHO-2006, đơn vị cen-ti-mét",
+      "word_count": 380,
+      "token_count": 500
+    },
+    {
+      "id": "phuluc1_chieucao_trai_1-5tuoi",
+      "title": "Chuẩn phát triển chiều dài nằm/chiều cao đứng của bé trai 1-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        5
+      ],
+      "pages": "132-134",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:Tháng",
+        "Tháng",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển chiều dài nằm (dưới 24 tháng) và chiều cao đứng (trên 24 tháng) của bé trai 1-5 tuổi theo tiêu chuẩn WHO-2006, đơn vị cen-ti-mét",
+      "word_count": 380,
+      "token_count": 500
+    },
+    {
+      "id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+      "title": "Chuẩn phát triển cân nặng theo chiều dài nằm của bé trai 1-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        5
+      ],
+      "pages": "134-137",
+      "related_chunks": [],
+      "table_columns": [
+        "Chiều dài (cm)",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) theo chiều dài nằm của bé trai từ 1-5 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo mức chiều dài từ 57cm đến 110cm",
+      "word_count": 420,
+      "token_count": 550
+    },
+    {
+      "id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+      "title": "Chuẩn phát triển cân nặng theo chiều cao đứng của bé trai 2-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        2,
+        5
+      ],
+      "pages": "137-140",
+      "related_chunks": [],
+      "table_columns": [
+        "Chiều cao (cm)",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) theo chiều cao đứng của bé trai từ 2-5 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo mức chiều cao từ 65cm đến 120cm",
+      "word_count": 420,
+      "token_count": 550
+    },
+    {
+      "id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+      "title": "Chuẩn phát triển cân nặng theo chiều dài nằm của bé gái 1-2 tuổi",
+      "content_type": "table",
+      "age_range": [
+        1,
+        2
+      ],
+      "pages": "140-143",
+      "related_chunks": [],
+      "table_columns": [
+        "Chiều dài (cm)",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) theo chiều dài nằm của bé gái từ 1-2 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo mức chiều dài từ 57cm đến 110cm",
+      "word_count": 420,
+      "token_count": 550
+    },
+    {
+      "id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+      "title": "Chuẩn phát triển cân nặng theo chiều cao đứng của bé gái 2-5 tuổi",
+      "content_type": "table",
+      "age_range": [
+        2,
+        5
+      ],
+      "pages": "143-146",
+      "related_chunks": [],
+      "table_columns": [
+        "Chiều cao (cm)",
+        "-3 SD",
+        "-2 SD",
+        "-1 SD",
+        "Trung bình",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chuẩn phát triển cân nặng (kg) theo chiều cao đứng của bé gái từ 2-5 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo mức chiều cao từ 65cm đến 120cm",
+      "word_count": 420,
+      "token_count": 550
+    },
+    {
+      "id": "phuluc2_bmi_trai_5-19tuoi",
+      "title": "BMI theo tuổi của trẻ trai 5-19 tuổi",
+      "content_type": "table",
+      "age_range": [
+        5,
+        19
+      ],
+      "pages": "146-151",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:tháng",
+        "Tháng",
+        "-3SD",
+        "-2SD",
+        "-1 SD",
+        "Median",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chỉ số BMI theo tuổi của trẻ trai 5-19 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo tháng tuổi và các mức độ lệch chuẩn",
+      "word_count": 450,
+      "token_count": 600
+    },
+    {
+      "id": "phuluc2_bmi_gai_5-19tuoi",
+      "title": "BMI theo tuổi của trẻ gái 5-19 tuổi",
+      "content_type": "table",
+      "age_range": [
+        5,
+        19
+      ],
+      "pages": "151-156",
+      "related_chunks": [],
+      "table_columns": [
+        "Năm:tháng",
+        "Tháng",
+        "-3SD",
+        "-2SD",
+        "-1 SD",
+        "Median",
+        "1 SD",
+        "2 SD",
+        "3 SD"
+      ],
+      "summary": "Bảng chỉ số BMI theo tuổi của trẻ gái 5-19 tuổi theo tiêu chuẩn WHO-2006, thể hiện theo tháng tuổi và các mức độ lệch chuẩn",
+      "word_count": 450,
+      "token_count": 600
+    },
+    {
+      "id": "phuluc3_bang_danhgia_attp",
+      "title": "Biểu mẫu đánh giá điều kiện ATTP",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "156-158",
+      "related_chunks": [
+        "phuluc3_mau_bieuban_kiemtra_attp"
+      ],
+      "table_columns": [
+        "TT",
+        "Nội dung kiểm tra",
+        "Đạt",
+        "Không đạt",
+        "Nhận xét"
+      ],
+      "summary": "Bảng đánh giá điều kiện an toàn thực phẩm tại bếp ăn tập thể, gồm điều kiện cơ sở, trang thiết bị và điều kiện đối với người chế biến",
+      "word_count": 250,
+      "token_count": 350
+    },
+    {
+      "id": "phuluc4_bang_kiemtra_tuoi",
+      "title": "Biểu mẫu kiểm tra thực phẩm tươi sống, đông lạnh",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "159",
+      "related_chunks": [
+        "phuluc4_mau_kiemthuc_babuoc"
+      ],
+      "table_columns": [
+        "TT",
+        "Tên thực phẩm",
+        "Thời gian nhập",
+        "Khối lượng",
+        "Nơi cung cấp",
+        "Kiểm tra cảm quan",
+        "Xét nghiệm nhanh"
+      ],
+      "summary": "Bảng kiểm tra thực phẩm tươi sống, đông lạnh trước khi chế biến, bao gồm thông tin nguồn gốc, xuất xứ và kết quả kiểm tra cảm quan",
+      "word_count": 80,
+      "token_count": 120
+    },
+    {
+      "id": "phuluc4_bang_kiemtra_kho",
+      "title": "Biểu mẫu kiểm tra thực phẩm khô và bao gói sẵn",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "159",
+      "related_chunks": [
+        "phuluc4_mau_kiemthuc_babuoc"
+      ],
+      "table_columns": [
+        "TT",
+        "Tên thực phẩm",
+        "Tên cơ sở sản xuất",
+        "Địa chỉ sản xuất",
+        "Thời gian nhập",
+        "Hạn sử dụng",
+        "Kiểm tra cảm quan"
+      ],
+      "summary": "Bảng kiểm tra thực phẩm khô và thực phẩm bao gói sẵn, phụ gia thực phẩm trước khi chế biến, bao gồm thông tin sản xuất, hạn sử dụng",
+      "word_count": 80,
+      "token_count": 120
+    },
+    {
+      "id": "phuluc4_bang_kiemtra_chebien",
+      "title": "Biểu mẫu kiểm tra khi chế biến thức ăn",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "160",
+      "related_chunks": [
+        "phuluc4_mau_kiemthuc_babuoc"
+      ],
+      "table_columns": [
+        "TT",
+        "Ca/bữa ăn",
+        "Tên món ăn",
+        "Nguyên liệu chính",
+        "Số lượng suất ăn",
+        "Thời gian sơ chế xong",
+        "Thời gian chế biến xong"
+      ],
+      "summary": "Bảng ghi chép và kiểm tra điều kiện vệ sinh trong quá trình chế biến thức ăn, từ khâu sơ chế đến khi hoàn thành",
+      "word_count": 100,
+      "token_count": 150
+    },
+    {
+      "id": "phuluc4_bang_kiemtra_truocan",
+      "title": "Biểu mẫu kiểm tra trước khi ăn",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "160",
+      "related_chunks": [
+        "phuluc4_mau_kiemthuc_babuoc"
+      ],
+      "table_columns": [
+        "TT",
+        "Ca/bữa ăn",
+        "Tên món ăn",
+        "Số lượng suất ăn",
+        "Thời gian chia món ăn xong",
+        "Thời gian bắt đầu ăn",
+        "Kiểm tra cảm quan món ăn"
+      ],
+      "summary": "Bảng kiểm tra trước khi ăn, ghi nhận tình trạng thức ăn qua kiểm tra cảm quan và các biện pháp xử lý nếu cần",
+      "word_count": 80,
+      "token_count": 120
+    },
+    {
+      "id": "phuluc5_bang_theodoi",
+      "title": "Biểu mẫu theo dõi lưu và hủy mẫu thức ăn",
+      "content_type": "table",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "161",
+      "related_chunks": [
+        "phuluc5_mau_luumau_thuc_an"
+      ],
+      "table_columns": [
+        "TT",
+        "Tên mẫu thức ăn",
+        "Bữa ăn",
+        "Số lượng suất ăn",
+        "Khối lượng/thể tích mẫu",
+        "Nhiệt độ bảo quản",
+        "Thời gian lấy mẫu",
+        "Thời gian hủy mẫu"
+      ],
+      "summary": "Bảng theo dõi quá trình lưu mẫu và hủy mẫu thức ăn, bao gồm thông tin về điều kiện bảo quản và người chịu trách nhiệm",
+      "word_count": 80,
+      "token_count": 120
+    }
+  ],
+  "figures": [],
+  "metadata_version": "1.0",
+  "total_items": {
+    "chunks": 3,
+    "tables": 16,
+    "figures": 0
+  },
+  "document_source": "Bộ Giáo dục và Đào tạo",
+  "last_updated": "2024-04-19"
+}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import { 
   BiUser, 
   BiLock, 
@@ -9,6 +10,8 @@ import {
   BiChevronDown 
 } from 'react-icons/bi';
 
+const API_BASE_URL = 'http://localhost:5000/api';
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -16,7 +19,7 @@ const RegisterPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    birthDate: '',
+    age: '',
     gender: '',
     agreeTerms: false
   });
@@ -54,8 +57,8 @@ const RegisterPage = () => {
       newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
     }
     
-    if (!formData.birthDate) {
-      newErrors.birthDate = 'Vui lòng chọn năm sinh';
+    if (!formData.age) {
+      newErrors.age = 'Vui lòng chọn tuổi';
     }
     
     if (!formData.gender) {
@@ -78,26 +81,45 @@ const RegisterPage = () => {
     setLoading(true);
     
     try {
-      // Giả lập xử lý đăng ký
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Hiển thị thông báo đăng ký thành công
-      Swal.fire({
-        icon: 'success',
-        title: 'Đăng ký thành công!',
-        text: 'Bạn đã tạo tài khoản thành công.',
-        confirmButtonText: 'Đăng nhập ngay',
-        confirmButtonColor: '#36B37E',
-        willClose: () => {
-          navigate('/login');
-        }
+      // Gọi API đăng ký
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        age: formData.age,
+        gender: formData.gender
       });
+      
+      if (response.data.success) {
+        // Hiển thị thông báo đăng ký thành công
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng ký thành công!',
+          text: 'Bạn đã tạo tài khoản thành công.',
+          confirmButtonText: 'Đăng nhập ngay',
+          confirmButtonColor: '#36B37E',
+          willClose: () => {
+            navigate('/login');
+          }
+        });
+      } else {
+        // Xử lý lỗi từ API
+        Swal.fire({
+          icon: 'error',
+          title: 'Đăng ký thất bại',
+          text: response.data.error || 'Có lỗi xảy ra khi đăng ký',
+          confirmButtonText: 'Thử lại',
+          confirmButtonColor: '#36B37E'
+        });
+      }
     } catch (error) {
-      // Xử lý lỗi nếu có
+      console.error("Lỗi đăng ký:", error);
+      
+      // Xử lý lỗi từ API
       Swal.fire({
         icon: 'error',
         title: 'Đăng ký thất bại',
-        text: 'Đã có lỗi xảy ra. Vui lòng thử lại.',
+        text: error.response?.data?.error || 'Đã có lỗi xảy ra. Vui lòng thử lại.',
         confirmButtonText: 'Thử lại',
         confirmButtonColor: '#36B37E'
       });
@@ -108,8 +130,8 @@ const RegisterPage = () => {
 
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: 100 }, 
-    (_, index) => currentYear - index
+    { length: 19 }, 
+    (_, index) => index + 1
   );
 
   return (
@@ -177,32 +199,32 @@ const RegisterPage = () => {
             )}
           </div>
 
-          {/* Ngày sinh và Giới tính */}
+          {/* Tuổi và Giới tính */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="relative">
                 <BiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <select
-                  name="birthDate"
-                  value={formData.birthDate}
+                  name="age"
+                  value={formData.age}
                   onChange={handleChange}
                   className={`w-full pl-10 pr-8 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
-                    ${errors.birthDate 
+                    ${errors.age 
                       ? 'border-red-300 focus:ring-red-200' 
                       : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                     }`}
                 >
-                  <option value="">Năm sinh</option>
+                  <option value="">Tuổi</option>
                   {years.map(year => (
                     <option key={year} value={year}>
-                      {year}
+                      {year} tuổi
                     </option>
                   ))}
                 </select>
                 <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
-              {errors.birthDate && (
-                <p className="text-red-500 text-xs mt-1">{errors.birthDate}</p>
+              {errors.age && (
+                <p className="text-red-500 text-xs mt-1">{errors.age}</p>
               )}
             </div>
             <div>

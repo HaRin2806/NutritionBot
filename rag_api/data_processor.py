@@ -13,9 +13,10 @@ class DataProcessor:
         self._load_all_data()
     
     def _load_all_data(self):
+        """Tải tất cả dữ liệu từ các thư mục con trong data"""
         print(f"Thư mục data: {self.data_dir}")
         print(f"Các items trong thư mục data: {os.listdir(self.data_dir)}")
-        """Tải tất cả dữ liệu từ các thư mục bài học"""
+        
         # Kiểm tra thư mục data có tồn tại không
         if not os.path.exists(self.data_dir):
             print(f"Thư mục data không tồn tại: {self.data_dir}")
@@ -23,11 +24,11 @@ class DataProcessor:
 
         # Quét qua tất cả thư mục trong data
         for item in os.listdir(self.data_dir):
-            bai_dir = os.path.join(self.data_dir, item)
+            folder_path = os.path.join(self.data_dir, item)
             
             # Kiểm tra xem đây có phải là thư mục không
-            if os.path.isdir(bai_dir) and item.startswith("bai"):
-                metadata_file = os.path.join(bai_dir, "metadata.json")
+            if os.path.isdir(folder_path):
+                metadata_file = os.path.join(folder_path, "metadata.json")
                 
                 # Nếu có file metadata.json
                 if os.path.exists(metadata_file):
@@ -38,24 +39,35 @@ class DataProcessor:
                             if not content.strip():
                                 print(f"File metadata trống: {metadata_file}")
                                 continue
-                            bai_metadata = json.loads(content)
+                            folder_metadata = json.loads(content)
                         
-                        # Lưu metadata vào từ điển với key là ID bài học
-                        self.metadata[bai_metadata.get("bai_info", {}).get("id", item)] = bai_metadata
+                        # Xác định ID của thư mục
+                        folder_id = None
+                        if "bai_info" in folder_metadata:
+                            folder_id = folder_metadata["bai_info"].get("id", item)
+                        elif "phuluc_info" in folder_metadata:
+                            folder_id = folder_metadata["phuluc_info"].get("id", item)
+                        else:
+                            folder_id = item
+                        
+                        # Lưu metadata vào từ điển
+                        self.metadata[folder_id] = folder_metadata
                         
                         # Tải tất cả chunks, tables và figures
-                        self._load_content_from_metadata(bai_dir, bai_metadata)
+                        self._load_content_from_metadata(folder_path, folder_metadata)
+                        
+                        print(f"Đã tải xong thư mục: {item}")
                     except json.JSONDecodeError as e:
                         print(f"Lỗi đọc file JSON {metadata_file}: {e}")
                     except Exception as e:
                         print(f"Lỗi khi tải metadata từ {metadata_file}: {e}")
 
-    def _load_content_from_metadata(self, bai_dir: str, bai_metadata: Dict[str, Any]):
+    def _load_content_from_metadata(self, folder_path: str, folder_metadata: Dict[str, Any]):
         """Tải nội dung chunks, tables và figures từ metadata"""
         # Tải chunks
-        for chunk_meta in bai_metadata.get("chunks", []):
+        for chunk_meta in folder_metadata.get("chunks", []):
             chunk_id = chunk_meta.get("id")
-            chunk_path = os.path.join(bai_dir, "chunks", f"{chunk_id}.md")
+            chunk_path = os.path.join(folder_path, "chunks", f"{chunk_id}.md")
             
             chunk_data = chunk_meta.copy()  # Sao chép metadata của chunk
             
@@ -67,13 +79,14 @@ class DataProcessor:
             else:
                 # Nếu không tìm thấy file, tạo nội dung mẫu
                 chunk_data["content"] = f"Nội dung cho {chunk_id} không tìm thấy."
+                print(f"Không tìm thấy file chunk: {chunk_path}")
             
             self.chunks.append(chunk_data)
         
         # Tải tables
-        for table_meta in bai_metadata.get("tables", []):
+        for table_meta in folder_metadata.get("tables", []):
             table_id = table_meta.get("id")
-            table_path = os.path.join(bai_dir, "tables", f"{table_id}.md")
+            table_path = os.path.join(folder_path, "tables", f"{table_id}.md")
             
             table_data = table_meta.copy()
             
@@ -84,13 +97,14 @@ class DataProcessor:
                 table_data["content"] = self._extract_content_from_markdown(content)
             else:
                 table_data["content"] = f"Bảng {table_id} không tìm thấy."
+                print(f"Không tìm thấy file bảng: {table_path}")
             
             self.tables.append(table_data)
         
         # Tải figures
-        for figure_meta in bai_metadata.get("figures", []):
+        for figure_meta in folder_metadata.get("figures", []):
             figure_id = figure_meta.get("id")
-            figure_path = os.path.join(bai_dir, "figures", f"{figure_id}.md")
+            figure_path = os.path.join(folder_path, "figures", f"{figure_id}.md")
             
             figure_data = figure_meta.copy()
             
@@ -101,32 +115,47 @@ class DataProcessor:
                 figure_data["content"] = self._extract_content_from_markdown(content)
             else:
                 figure_data["content"] = f"Hình {figure_id} không tìm thấy."
+                print(f"Không tìm thấy file hình: {figure_path}")
             
             # Thêm đường dẫn đến file hình ảnh nếu có
-            image_path = os.path.join(bai_dir, "figures", f"{figure_id}.png")
-            if os.path.exists(image_path):
-                figure_data["image_path"] = image_path
+            image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.svg']
+            for ext in image_extensions:
+                image_path = os.path.join(folder_path, "figures", f"{figure_id}{ext}")
+                if os.path.exists(image_path):
+                    figure_data["image_path"] = image_path
+                    break
             
             self.figures.append(figure_data)
-    
-    def _load_phuluc_content(self, phuluc_dir: str, phuluc_metadata: Dict[str, Any]):
-        """Tải nội dung từ phụ lục"""
-        for data_file_meta in phuluc_metadata.get("data_files", []):
-            data_id = data_file_meta.get("id")
-            data_path = os.path.join(phuluc_dir, "data", f"{data_id}.md")
-            
-            data_file = data_file_meta.copy()
-            
-            # Thêm nội dung từ file markdown nếu tồn tại
-            if os.path.exists(data_path):
-                with open(data_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                data_file["content"] = self._extract_content_from_markdown(content)
-            else:
-                data_file["content"] = f"Dữ liệu phụ lục {data_id} không tìm thấy."
-            
-            # Thêm vào danh sách tables vì phụ lục thường là bảng dữ liệu
-            self.tables.append(data_file)
+        
+        # Tải data_files (trường hợp phụ lục)
+        if "data_files" in folder_metadata:
+            for data_file_meta in folder_metadata.get("data_files", []):
+                data_id = data_file_meta.get("id")
+                data_path = os.path.join(folder_path, "data", f"{data_id}.md")
+                
+                data_file = data_file_meta.copy()
+                
+                # Thêm nội dung từ file markdown nếu tồn tại
+                if os.path.exists(data_path):
+                    with open(data_path, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    data_file["content"] = self._extract_content_from_markdown(content)
+                    
+                    # Xác định loại nội dung
+                    content_type = data_file.get("content_type", "table")
+                    
+                    # Thêm vào danh sách phù hợp dựa trên loại nội dung
+                    if content_type == "table":
+                        self.tables.append(data_file)
+                    elif content_type == "text":
+                        self.chunks.append(data_file)
+                    elif content_type == "figure":
+                        self.figures.append(data_file)
+                    
+                    print(f"Đã tải dữ liệu: {data_id}, loại: {content_type}")
+                else:
+                    print(f"Không tìm thấy file dữ liệu: {data_path}")
+                    data_file["content"] = f"Dữ liệu {data_id} không tìm thấy."
     
     def _extract_content_from_markdown(self, md_content: str) -> str:
         """Trích xuất nội dung từ markdown, bỏ qua phần frontmatter"""
@@ -146,7 +175,7 @@ class DataProcessor:
         }
     
     def get_all_metadata(self) -> Dict[str, Any]:
-        """Trả về tất cả metadata của các bài học"""
+        """Trả về tất cả metadata của các bài học và phụ lục"""
         return self.metadata
     
     def get_chunk_by_id(self, chunk_id: str) -> Union[Dict[str, Any], None]:
@@ -334,3 +363,16 @@ class DataProcessor:
             all_items.append(embedding_item)
         
         return all_items
+    
+    def count_items_by_prefix(self, prefix: str) -> Dict[str, int]:
+        """Đếm số lượng items theo tiền tố ID"""
+        chunks_count = sum(1 for chunk in self.chunks if chunk.get("id", "").startswith(prefix))
+        tables_count = sum(1 for table in self.tables if table.get("id", "").startswith(prefix))
+        figures_count = sum(1 for figure in self.figures if figure.get("id", "").startswith(prefix))
+        
+        return {
+            "chunks": chunks_count,
+            "tables": tables_count,
+            "figures": figures_count,
+            "total": chunks_count + tables_count + figures_count
+        }

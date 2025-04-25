@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   BiSend, 
   BiPlus, 
@@ -9,7 +10,11 @@ import {
   BiRocket,
   BiUserCircle,
   BiInfoCircle,
-  BiLinkExternal
+  BiLinkExternal,
+  BiLogOut,
+  BiHistory,
+  BiCog,
+  BiChevronDown
 } from 'react-icons/bi';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -75,9 +80,10 @@ const RenderImage = ({ src, alt }) => {
   );
 };
 
-const UserInfo = ({ userAge, setUserAge }) => {
+const UserInfo = ({ userAge, setUserAge, userData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [age, setAge] = useState(userAge || '');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,9 +105,9 @@ const UserInfo = ({ userAge, setUserAge }) => {
     <div className="p-4 bg-white rounded-lg shadow mb-4 border border-gray-200">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <BiUserCircle className="text-3xl text-mint-600 mr-2" />
+          <BiUserCircle className="text-3xl text-mint-600 mr-2" style={{ color: '#36B37E' }} />
           <div>
-            <h3 className="font-medium">Thông tin học sinh</h3>
+            <h3 className="font-medium">{userData ? `Xin chào, ${userData.name}` : 'Thông tin học sinh'}</h3>
             {!isEditing ? (
               <p className="text-gray-600">Độ tuổi: {userAge || 'Chưa thiết lập'}</p>
             ) : null}
@@ -112,6 +118,7 @@ const UserInfo = ({ userAge, setUserAge }) => {
           <button 
             onClick={() => setIsEditing(true)}
             className="text-mint-600 hover:text-mint-700"
+            style={{ color: '#36B37E' }}
           >
             Chỉnh sửa
           </button>
@@ -121,18 +128,20 @@ const UserInfo = ({ userAge, setUserAge }) => {
       {isEditing && (
         <form onSubmit={handleSubmit} className="mt-3">
           <div className="flex items-center">
-            <input
-              type="number"
+            <select
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              placeholder="Nhập tuổi (1-19)"
               className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-mint-500"
-              min="1"
-              max="19"
-            />
+            >
+              <option value="">Chọn tuổi</option>
+              {Array.from({ length: 19 }, (_, i) => i + 1).map(age => (
+                <option key={age} value={age}>{age} tuổi</option>
+              ))}
+            </select>
             <button
               type="submit"
               className="ml-2 px-4 py-2 bg-mint-600 text-white rounded-lg hover:bg-mint-700"
+              style={{ backgroundColor: '#36B37E' }}
             >
               Lưu
             </button>
@@ -156,7 +165,7 @@ const SourceReference = ({ sources }) => {
   return (
     <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm">
       <div className="flex items-center mb-2">
-        <BiInfoCircle className="text-mint-600 mr-1" />
+        <BiInfoCircle className="text-mint-600 mr-1" style={{ color: '#36B37E' }} />
         <span className="font-medium">Nguồn tham khảo:</span>
       </div>
       <ul className="space-y-1 ml-1">
@@ -172,6 +181,58 @@ const SourceReference = ({ sources }) => {
           </li>
         ))}
       </ul>
+    </div>
+  );
+};
+
+// Component mới cho menu tài khoản
+const UserMenu = ({ userData, handleLogout }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <div className="relative ml-2">
+      <button 
+        onClick={toggleMenu}
+        className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
+      >
+        <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
+        <BiChevronDown className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div 
+          className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 py-1 border border-gray-200"
+          onBlur={() => setIsOpen(false)}
+        >
+          <Link 
+            to="/settings" 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+          >
+            <BiCog className="mr-2" />
+            Quản lý tài khoản
+          </Link>
+          <Link 
+            to="/history" 
+            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+          >
+            <BiHistory className="mr-2" />
+            Lịch sử trò chuyện
+          </Link>
+          <hr className="my-1 border-gray-200" />
+          <button 
+            onClick={handleLogout}
+            className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+          >
+            <BiLogOut className="mr-2" />
+            Đăng xuất
+          </button>
+        </div>
+      )}
     </div>
   );
 };
@@ -210,8 +271,41 @@ const ChatPage = () => {
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [userAge, setUserAge] = useState(null);
+  const [userData, setUserData] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Kiểm tra đăng nhập
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    
+    if (user && Object.keys(user).length > 0) {
+      setUserData(user);
+      
+      // Nếu người dùng có tuổi, sử dụng làm tuổi mặc định
+      if (user.age && !userAge) {
+        setUserAge(parseInt(user.age));
+      }
+    } else if (!token) {
+      // Không bắt buộc đăng nhập, nhưng hiển thị thông báo gợi ý
+      Swal.fire({
+        title: 'Chưa đăng nhập',
+        text: 'Bạn chưa đăng nhập. Đăng nhập để lưu lịch sử trò chuyện và nhận nội dung phù hợp với lứa tuổi.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#36B37E',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Đăng nhập',
+        cancelButtonText: 'Tiếp tục dùng thử'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        }
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (activeChat === null && chats.length > 0) {
@@ -250,11 +344,22 @@ const ChatPage = () => {
     setIsLoading(true);
   
     try {
-      // Gọi API với thông tin tuổi người dùng
-      const response = await axios.post(`${API_BASE_URL}/chat`, { 
-        message: newMessage,
-        age: userAge // Gửi thông tin tuổi
-      });
+      // Lấy token từ localStorage hoặc sessionStorage
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      
+      // Gọi API với thông tin tuổi người dùng và token
+      const response = await axios.post(
+        `${API_BASE_URL}/chat`, 
+        { 
+          message: newMessage,
+          age: userAge // Gửi thông tin tuổi
+        },
+        { 
+          headers: token ? { 
+            'Authorization': `Bearer ${token}` 
+          } : {}
+        }
+      );
       
       if (response.data.success) {
         const botMessage = {
@@ -318,6 +423,33 @@ const ChatPage = () => {
         const updatedChats = chats.filter(chat => chat.id !== chatId);
         setChats(updatedChats);
         setActiveChat(updatedChats.length > 0 ? updatedChats[0].id : null);
+      }
+    });
+  };
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Đăng xuất?',
+      text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#36B37E',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đăng xuất',
+      cancelButtonText: 'Hủy'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Xóa token và thông tin người dùng
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        
+        // Đặt lại state
+        setUserData(null);
+        
+        // Chuyển hướng về trang đăng nhập
+        navigate('/login');
       }
     });
   };
@@ -423,7 +555,7 @@ const ChatPage = () => {
 
         {/* User Info */}
         <div className="px-4 pt-4">
-          <UserInfo userAge={userAge} setUserAge={setUserAge} />
+          <UserInfo userAge={userAge} setUserAge={setUserAge} userData={userData} />
         </div>
 
         <div className="flex-1 overflow-y-auto">
@@ -433,6 +565,7 @@ const ChatPage = () => {
               onClick={() => setActiveChat(chat.id)}
               className={`p-4 flex items-center justify-between cursor-pointer transition 
                 ${activeChat === chat.id ? 'bg-mint-100' : 'hover:bg-gray-50'}`}
+              style={{ backgroundColor: activeChat === chat.id ? '#E6F7EF' : '' }}
             >
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-gray-800">{chat.title}</h3>
@@ -465,9 +598,18 @@ const ChatPage = () => {
               <h2 className="text-xl font-bold text-gray-800">
                 {activeCurrentChat.title}
               </h2>
-              <button className="text-gray-500 hover:text-mint-600 transition">
-                <BiDotsVerticalRounded className="text-2xl" />
-              </button>
+              <div className="flex items-center">
+                {/* Thông tin tuổi hiện tại */}
+                {userAge && (
+                  <div className="mr-4 px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm flex items-center">
+                    <BiUserCircle className="mr-1" />
+                    {userAge} tuổi
+                  </div>
+                )}
+                
+                {/* User Menu */}
+                <UserMenu userData={userData} handleLogout={handleLogout} />
+              </div>
             </div>
 
             {/* Messages Area */}
@@ -526,7 +668,7 @@ const ChatPage = () => {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="p-3 bg-white rounded-2xl border border-gray-200 shadow-sm flex items-center">
-                    <BiRocket className="mr-2 text-mint-600 animate-pulse" />
+                    <BiRocket className="mr-2 text-mint-600 animate-pulse" style={{ color: '#36B37E' }} />
                     <span className="text-gray-600">Đang soạn phản hồi...</span>
                   </div>
                 </div>

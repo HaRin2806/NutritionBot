@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 import logging
 import time
 import os
 from data_processor import DataProcessor
 from embedding_model import EmbeddingModel
 from rag_pipeline import RAGPipeline
+from auth import register_user, login_user, get_user_profile, update_user_profile, change_password
 
 # Cấu hình logging
 logging.basicConfig(
@@ -18,6 +20,11 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 # Cho phép CORS từ frontend React
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+
+# Cấu hình JWT
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'your-secret-key')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 24 * 60 * 60  # 1 ngày
+jwt = JWTManager(app)
 
 # Khởi tạo components
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -68,7 +75,160 @@ def health_check():
         "time": time.strftime('%Y-%m-%d %H:%M:%S')
     })
 
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """API endpoint để đăng ký người dùng mới"""
+    try:
+        data = request.json
+        
+        name = data.get('fullName')
+        email = data.get('email')
+        password = data.get('password')
+        age = data.get('age')
+        gender = data.get('gender')
+        
+        success, result = register_user(name, email, password, age, gender)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Đăng ký thành công",
+                "user_id": result.get("user_id")
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi đăng ký người dùng: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """API endpoint để đăng nhập"""
+    try:
+        data = request.json
+        
+        email = data.get('email')
+        password = data.get('password')
+        
+        success, result = login_user(email, password)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "access_token": result.get("access_token"),
+                "user": result.get("user")
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result
+            }), 401
+            
+    except Exception as e:
+        logger.error(f"Lỗi đăng nhập: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/user/profile', methods=['GET'])
+@jwt_required()
+def user_profile():
+    """API endpoint để lấy thông tin người dùng"""
+    try:
+        user_id = get_jwt_identity()
+        profile = get_user_profile(user_id)
+        
+        if profile:
+            return jsonify({
+                "success": True,
+                "user": profile
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy thông tin người dùng"
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Lỗi lấy thông tin người dùng: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/user/profile', methods=['PUT'])
+@jwt_required()
+def update_profile():
+    """API endpoint để cập nhật thông tin người dùng"""
+    try:
+        user_id = get_jwt_identity()
+        data = request.json
+        
+        name = data.get('name')
+        age = data.get('age')
+        gender = data.get('gender')
+        
+        success, message = update_user_profile(user_id, name, age, gender)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi cập nhật thông tin người dùng: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@app.route('/api/user/change-password', methods=['POST'])
+@jwt_required()
+def update_password():
+    """API endpoint để đổi mật khẩu"""
+    try:
+        user_id = get_jwt_identity()
+        data = request.json
+        
+        current_password = data.get('currentPassword')
+        new_password = data.get('newPassword')
+        
+        success, message = change_password(user_id, current_password, new_password)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi đổi mật khẩu: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
 @app.route('/api/chat', methods=['POST'])
+@jwt_required(optional=True)
 def chat():
     """API endpoint để trò chuyện với chatbot"""
     try:
@@ -78,6 +238,14 @@ def chat():
         message = data.get('message')
         # Lấy thông tin tuổi nếu có trong request
         age = data.get('age')
+        
+        # Nếu user đã đăng nhập, lấy thông tin tuổi từ profile nếu không có trong request
+        if not age:
+            user_id = get_jwt_identity()
+            if user_id:
+                profile = get_user_profile(user_id)
+                if profile:
+                    age = profile.get('age')
         
         if not message:
             return jsonify({
@@ -107,55 +275,6 @@ def chat():
             "success": False,
             "error": str(e),
             "reply": "Đã xảy ra lỗi khi xử lý câu hỏi của bạn. Vui lòng thử lại sau."
-        }), 500
-
-@app.route('/api/user', methods=['POST'])
-def register_user():
-    """API endpoint để đăng ký người dùng mới hoặc cập nhật thông tin"""
-    try:
-        data = request.json
-        
-        name = data.get('name')
-        age = data.get('age')
-        
-        if not name or not age:
-            return jsonify({
-                "success": False,
-                "error": "Vui lòng nhập đầy đủ tên và tuổi",
-            }), 400
-        
-        # Kiểm tra tuổi hợp lệ (1-19 tuổi cho tài liệu dinh dưỡng học sinh)
-        try:
-            age = int(age)
-            if age < 1 or age > 19:
-                return jsonify({
-                    "success": False,
-                    "error": "Tuổi phải nằm trong khoảng từ 1 đến 19",
-                }), 400
-        except ValueError:
-            return jsonify({
-                "success": False,
-                "error": "Tuổi phải là một số nguyên",
-            }), 400
-        
-        # Ở đây bạn có thể lưu thông tin người dùng vào cơ sở dữ liệu
-        # Nhưng hiện tại chúng ta chỉ giả lập
-        
-        return jsonify({
-            "success": True,
-            "message": "Đăng ký thành công",
-            "user": {
-                "id": str(int(time.time())),  # ID giả lập
-                "name": name,
-                "age": age
-            }
-        })
-        
-    except Exception as e:
-        logger.error(f"Lỗi đăng ký người dùng: {str(e)}")
-        return jsonify({
-            "success": False,
-            "error": str(e),
         }), 500
 
 @app.route('/api/figures/<path:bai_id>/<path:filename>', methods=['GET'])
