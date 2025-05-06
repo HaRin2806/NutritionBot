@@ -50,7 +50,9 @@ Câu hỏi: {query}
 Tài liệu tham khảo:
 {contexts}
 
-Dựa vào thông tin trong tài liệu tham khảo trên, hãy trả lời câu hỏi một cách chi tiết, dễ hiểu và phù hợp với độ tuổi của người dùng. Nếu trong tài liệu có bảng biểu hoặc hình ảnh, hãy giữ nguyên và đưa vào câu trả lời. Nhớ trích dẫn nguồn thông tin.
+Dựa vào thông tin trong tài liệu tham khảo và ngữ cảnh cuộc trò chuyện (nếu có), hãy trả lời câu hỏi một cách chi tiết, dễ hiểu và phù hợp với độ tuổi của người dùng. Nếu trong tài liệu có bảng biểu hoặc hình ảnh, hãy giữ nguyên và đưa vào câu trả lời. Nhớ trích dẫn nguồn thông tin.
+
+Nếu câu hỏi hiện tại có liên quan đến các cuộc trò chuyện trước đó, hãy cố gắng duy trì sự nhất quán trong câu trả lời.
 """
 
 # Cấu hình Gemini API
@@ -79,7 +81,7 @@ class RAGPipeline:
         )
         logger.info("Đã khởi tạo RAG Pipeline")
     
-    def process_query(self, query: str, age: int = None, top_k: int = TOP_K_RESULTS) -> Dict[str, Any]:
+    def process_query(self, query: str, age: int = None, top_k: int = TOP_K_RESULTS, conversation_context=None) -> Dict[str, Any]:
         """
         Xử lý câu hỏi và trả về kết quả
         
@@ -87,6 +89,7 @@ class RAGPipeline:
             query: Câu hỏi của người dùng
             age: Độ tuổi của người dùng
             top_k: Số lượng kết quả tối đa
+            conversation_context: Ngữ cảnh cuộc hội thoại (tối đa 3 cặp hỏi đáp gần nhất)
             
         Returns:
             Kết quả xử lý RAG bao gồm câu trả lời và thông tin bổ sung
@@ -161,15 +164,30 @@ class RAGPipeline:
             # Định dạng ngữ cảnh cho RAG
             formatted_contexts = self._format_context_for_rag(
                 [{"id": c["id"], 
-                  "title": c["metadata"].get("title", ""), 
-                  "content": c["content"],
-                  "content_type": c["metadata"].get("content_type", "text")
-                 } for c in contexts]
+                "title": c["metadata"].get("title", ""), 
+                "content": c["content"],
+                "content_type": c["metadata"].get("content_type", "text")
+                } for c in contexts]
             )
             
-            # Tạo prompt cho Gemini bằng cách kết hợp system prompt và user prompt
+            # Tạo prompt cho Gemini
             age_text = f"{age} tuổi" if age is not None else "chưa xác định"
-            combined_prompt = f"{SYSTEM_PROMPT}\n\n{HUMAN_PROMPT_TEMPLATE.format(query=query, age=age_text, contexts=formatted_contexts)}"
+            
+            # Thêm ngữ cảnh cuộc hội thoại vào prompt nếu có
+            conversation_context_text = ""
+            if conversation_context and len(conversation_context) > 0:
+                conversation_context_text = "Cuộc trò chuyện trước đó:\n\n"
+                for i, exchange in enumerate(conversation_context, 1):
+                    conversation_context_text += f"Người dùng: {exchange['user']}\n"
+                    conversation_context_text += f"Nutribot: {exchange['bot']}\n\n"
+            
+            # Tạo prompt hoàn chỉnh với System prompt, conversation context và human prompt
+            combined_prompt = f"{SYSTEM_PROMPT}\n\n"
+            
+            if conversation_context_text:
+                combined_prompt += f"{conversation_context_text}\n"
+            
+            combined_prompt += f"{HUMAN_PROMPT_TEMPLATE.format(query=query, age=age_text, contexts=formatted_contexts)}"
             
             # Debug log
             logger.debug(f"Prompt tổng hợp: {combined_prompt[:200]}...")
@@ -198,8 +216,8 @@ class RAGPipeline:
                 "query": query,
                 "success": False,
                 "error": str(e)
-            }
-            
+            }    
+
     def _format_context_for_rag(self, items: List[Dict[str, Any]]) -> str:
         """Định dạng các items để đưa vào ngữ cảnh cho mô hình RAG"""
         if self.data_processor:

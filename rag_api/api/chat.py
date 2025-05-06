@@ -58,13 +58,29 @@ def chat():
         logger.info(f"Nhận câu hỏi: {message}")
         logger.info(f"Độ tuổi người dùng: {age}")
         
+        # Lấy context từ cuộc hội thoại (tối đa 3 câu hỏi và trả lời gần nhất)
+        conversation_context = []
+        if conversation_id:
+            conversation = Conversation.find_by_id(conversation_id)
+            if conversation and conversation.messages:
+                # Lọc ra các tin nhắn gần nhất (tối đa 6 tin nhắn - 3 cặp hỏi đáp)
+                recent_messages = conversation.messages[-6:] if len(conversation.messages) >= 6 else conversation.messages
+                
+                # Chỉ lấy những tin nhắn hoàn chỉnh (cặp user-bot)
+                for i in range(0, len(recent_messages)-1, 2):
+                    if i+1 < len(recent_messages):
+                        if recent_messages[i]["role"] == "user" and recent_messages[i+1]["role"] == "bot":
+                            user_msg = recent_messages[i]["content"]
+                            bot_msg = recent_messages[i+1]["content"]
+                            conversation_context.append({"user": user_msg, "bot": bot_msg})
+        
         # Tạo RAG pipeline mới cho mỗi request (để đảm bảo thread-safe)
         rag_pipeline = get_rag_pipeline()
         
         start_time = time.time()
         
-        # Xử lý câu hỏi qua RAG pipeline
-        result = rag_pipeline.process_query(message, age)
+        # Xử lý câu hỏi qua RAG pipeline với context
+        result = rag_pipeline.process_query(message, age, conversation_context=conversation_context)
         
         end_time = time.time()
         query_time = end_time - start_time

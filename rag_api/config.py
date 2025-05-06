@@ -49,5 +49,7 @@ Câu hỏi: {query}
 Tài liệu tham khảo:
 {contexts}
 
-Dựa vào thông tin trong tài liệu tham khảo trên, hãy trả lời câu hỏi một cách chi tiết, dễ hiểu và phù hợp với độ tuổi của người dùng. Nếu trong tài liệu có bảng biểu hoặc hình ảnh, hãy giữ nguyên và đưa vào câu trả lời. Nhớ trích dẫn nguồn thông tin.
+Dựa vào thông tin trong tài liệu tham khảo và ngữ cảnh cuộc trò chuyện (nếu có), hãy trả lời câu hỏi một cách chi tiết, dễ hiểu và phù hợp với độ tuổi của người dùng. Nếu trong tài liệu có bảng biểu hoặc hình ảnh, hãy giữ nguyên và đưa vào câu trả lời. Nhớ trích dẫn nguồn thông tin.
+
+Nếu câu hỏi hiện tại có liên quan đến các cuộc trò chuyện trước đó, hãy cố gắng duy trì sự nhất quán trong câu trả lời.
 """
