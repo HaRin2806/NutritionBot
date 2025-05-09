@@ -34,13 +34,12 @@ def get_db():
     return _db
 
 class User:
-    def __init__(self, name, email, password, age, gender=None, user_id=None,
-                 created_at=None, updated_at=None):
+    def __init__(self, name, email, password, gender=None, user_id=None,
+                created_at=None, updated_at=None):
         self.user_id = user_id
         self.name = name
         self.email = email
         self.password = password  # Mật khẩu đã mã hóa
-        self.age = age
         self.gender = gender
         self.created_at = created_at or datetime.datetime.now()
         self.updated_at = updated_at or datetime.datetime.now()
@@ -63,7 +62,6 @@ class User:
             "name": self.name,
             "email": self.email,
             "password": self.password,
-            "age": self.age,
             "gender": self.gender,
             "created_at": self.created_at,
             "updated_at": self.updated_at
@@ -83,7 +81,6 @@ class User:
             name=user_dict.get("name"),
             email=user_dict.get("email"),
             password=user_dict.get("password"),
-            age=user_dict.get("age"),
             gender=user_dict.get("gender"),
             created_at=user_dict.get("created_at"),
             updated_at=user_dict.get("updated_at")
@@ -153,7 +150,7 @@ class User:
             return False
 
     @staticmethod
-    def register(name, email, password, age, gender=None):
+    def register(name, email, password, gender=None):
         """Đăng ký người dùng mới"""
         try:
             # Kiểm tra email đã tồn tại chưa
@@ -164,21 +161,11 @@ class User:
             # Mã hóa mật khẩu
             hashed_password = User.hash_password(password)
             
-            # Chuyển đổi age thành số
-            try:
-                age = int(age)
-            except (ValueError, TypeError):
-                return False, "Tuổi không hợp lệ"
-                
-            if age < 1 or age > 19:
-                return False, "Tuổi phải nằm trong khoảng từ 1 đến 19"
-            
             # Tạo người dùng mới
             new_user = User(
                 name=name,
                 email=email,
                 password=hashed_password,
-                age=age,
                 gender=gender
             )
             

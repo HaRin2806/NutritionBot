@@ -39,6 +39,7 @@ const NutribotLogo = () => (
 );
 
 // Component để hiển thị hình ảnh với trạng thái loading
+// Component để hiển thị hình ảnh với trạng thái loading
 const RenderImage = ({ src, alt }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -47,18 +48,37 @@ const RenderImage = ({ src, alt }) => {
   let imgSrc = src;
 
   if (src) {
-    // Lấy tên file từ đường dẫn
-    const fileName = src.split('/').pop();
+    // Xử lý đường dẫn tương đối với '../figures/'
+    if (src.includes('../figures/')) {
+      const relativePath = src.split('../figures/')[1];
+      // Lấy tên file từ đường dẫn
+      const fileName = relativePath;
 
-    // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
-    let baiId = 'bai1'; // Mặc định là bai1
-    const baiMatch = fileName.match(/^(bai\d+)_/);
-    if (baiMatch) {
-      baiId = baiMatch[1];
+      // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
+      let baiId = 'bai1'; // Mặc định là bai1
+      const baiMatch = fileName.match(/^(bai\d+)_/);
+      if (baiMatch) {
+        baiId = baiMatch[1];
+      }
+
+      // Tạo URL API chính xác
+      imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
     }
+    // Trường hợp đường dẫn bình thường
+    else {
+      // Lấy tên file từ đường dẫn
+      const fileName = src.split('/').pop();
 
-    // Tạo URL API chính xác
-    imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
+      // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
+      let baiId = 'bai1'; // Mặc định là bai1
+      const baiMatch = fileName.match(/^(bai\d+)_/);
+      if (baiMatch) {
+        baiId = baiMatch[1];
+      }
+
+      // Tạo URL API chính xác
+      imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
+    }
   }
 
   return (
@@ -192,188 +212,6 @@ const ChatItemMenu = ({ conversation, onDelete, onRename }) => {
   );
 };
 
-// Component header và menu người dùng
-const Header = ({ userData, userAge, setUserAge, handleLogout, toggleSidebar, isMobile, isSidebarVisible }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const menuRef = useRef(null);
-
-  // Đóng menu khi click ngoài
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Xử lý thay đổi tuổi
-  const handleAgeChange = () => {
-    Swal.fire({
-      title: 'Thay đổi độ tuổi',
-      html: `
-        <select id="swal-age" class="swal2-input">
-          ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-        `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-      ).join('')}
-        </select>
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Lưu',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#36B37E',
-      preConfirm: () => {
-        const age = parseInt(document.getElementById('swal-age').value);
-        if (isNaN(age) || age < 1 || age > 19) {
-          Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-        }
-        return age;
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setUserAge(result.value);
-        Swal.fire({
-          icon: 'success',
-          title: 'Đã cập nhật',
-          text: `Đã cập nhật độ tuổi thành ${result.value}`,
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
-      }
-    });
-  };
-
-  return (
-    <div className="p-3 bg-white border-b border-gray-200 flex justify-between items-center sticky top-0 z-10 shadow-sm">
-      <div className="flex items-center space-x-4">
-        {/* Thêm điều kiện hiển thị nút toggle sidebar chỉ khi sidebar đóng hoặc không phải mobile */}
-        {(isMobile && !isSidebarVisible) && (
-          <button
-            onClick={toggleSidebar}
-            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-            style={{ color: '#36B37E' }}
-          >
-            <BiMenu className="text-xl" />
-          </button>
-        )}
-
-        <div className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
-          <NutribotLogo />
-          <span className="font-bold text-lg ml-2 hidden sm:block">Nutribot</span>
-        </div>
-
-        {/* Nút trở về trang chủ */}
-        <Link
-          to="/"
-          className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-          style={{ color: '#36B37E' }}
-        >
-          <BiHomeAlt className="text-xl" />
-        </Link>
-      </div>
-
-      <div className="flex items-center">
-        {/* Hiển thị tuổi hiện tại */}
-        {userAge && (
-          <button
-            onClick={handleAgeChange}
-            className="mr-4 px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm flex items-center hover:bg-mint-200 transition"
-            style={{ backgroundColor: '#E6F7EF', color: '#36B37E' }}
-          >
-            <BiUserCircle className="mr-1" />
-            {userAge} tuổi
-          </button>
-        )}
-
-        {/* Menu người dùng */}
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
-          >
-            <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
-            <BiUserCircle className="text-2xl sm:ml-1" />
-            <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
-          </button>
-
-          {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
-              <Link
-                to="/settings"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-              >
-                <BiCog className="mr-2" />
-                Quản lý tài khoản
-              </Link>
-              <Link
-                to="/history"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-              >
-                <BiHistory className="mr-2" />
-                Lịch sử trò chuyện
-              </Link>
-              <hr className="my-1 border-gray-200" />
-              <button
-                onClick={handleLogout}
-                className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-              >
-                <BiLogOut className="mr-2" />
-                Đăng xuất
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Nhóm các cuộc trò chuyện theo thời gian
-const groupConversationsByTime = (conversations) => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const yesterday = today - 86400000; // Trừ đi 1 ngày
-  const last7Days = today - 86400000 * 7; // Trừ đi 7 ngày
-  const last30Days = today - 86400000 * 30; // Trừ đi 30 ngày
-
-  const groups = {
-    today: [],
-    yesterday: [],
-    last7Days: [],
-    older: []
-  };
-
-  conversations.forEach(conversation => {
-    const conversationDate = new Date(conversation.updated_at).getTime();
-
-    if (conversationDate >= today) {
-      groups.today.push(conversation);
-    } else if (conversationDate >= yesterday) {
-      groups.yesterday.push(conversation);
-    } else if (conversationDate >= last7Days) {
-      groups.last7Days.push(conversation);
-    } else if (conversationDate >= last30Days) {
-      groups.older.push(conversation);
-    } else {
-      groups.older.push(conversation);
-    }
-  });
-
-  return groups;
-};
-
-// Format time từ timestamp
-const formatTime = (timestamp) => {
-  const date = new Date(timestamp);
-  return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-};
-
 // Component chính
 const ChatPage = () => {
   const [activeConversation, setActiveConversation] = useState(null);
@@ -394,10 +232,14 @@ const ChatPage = () => {
   // Phát hiện kích thước màn hình
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(newIsMobile);
       // Trên màn hình lớn, luôn hiển thị sidebar
-      if (window.innerWidth >= 768) {
+      if (!newIsMobile) {
         setIsSidebarVisible(true);
+      } else if (newIsMobile && isSidebarVisible) {
+        // Trên màn hình nhỏ, nếu đang hiển thị sidebar thì ẩn đi
+        setIsSidebarVisible(false);
       }
     };
 
@@ -405,7 +247,207 @@ const ChatPage = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [isSidebarVisible]);
+
+  // Hàm cập nhật age_context
+  const updateConversationAge = async (conversationId, age) => {
+    if (!conversationId) return;
+
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/conversations/${conversationId}`,
+        { age_context: age },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.success) {
+        // Cập nhật cả activeConversation
+        setActiveConversation(prev => ({
+          ...prev,
+          age_context: age
+        }));
+
+        // Cập nhật trong danh sách cuộc hội thoại
+        setConversations(prevConversations =>
+          prevConversations.map(conv =>
+            conv.id === conversationId
+              ? { ...conv, age_context: age }
+              : conv
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Lỗi khi cập nhật tuổi cho cuộc hội thoại:", error);
+    }
+  };
+
+  // Component header và menu người dùng
+  const Header = ({ userData, userAge, setUserAge, handleLogout, toggleSidebar, isMobile, isSidebarVisible, activeConversation }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const menuRef = useRef(null);
+
+    // Đóng menu khi click ngoài
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (menuRef.current && !menuRef.current.contains(event.target)) {
+          setIsMenuOpen(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, []);
+
+    // Xử lý thay đổi tuổi
+    const handleAgeChange = () => {
+      // Kiểm tra nếu đang trong một cuộc hội thoại có age_context và có tin nhắn
+      if (activeConversation && activeConversation.id &&
+        activeConversation.age_context &&
+        activeConversation.messages &&
+        activeConversation.messages.length > 0) {
+        Swal.fire({
+          title: 'Không thể thay đổi độ tuổi',
+          text: 'Cuộc trò chuyện này đã có tin nhắn với độ tuổi cụ thể. Bạn cần tạo cuộc trò chuyện mới để sử dụng độ tuổi khác.',
+          icon: 'warning',
+          confirmButtonText: 'Đã hiểu',
+          confirmButtonColor: '#36B37E'
+        });
+        return;
+      }
+
+      Swal.fire({
+        title: 'Thay đổi độ tuổi',
+        html: `
+          <select id="swal-age" class="swal2-input">
+            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+          `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
+        ).join('')}
+          </select>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Lưu',
+        cancelButtonText: 'Hủy',
+        confirmButtonColor: '#36B37E',
+        preConfirm: () => {
+          const age = parseInt(document.getElementById('swal-age').value);
+          if (isNaN(age) || age < 1 || age > 19) {
+            Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+          }
+          return age;
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const newAge = result.value;
+          setUserAge(newAge);
+
+          // Nếu đang trong cuộc hội thoại, cập nhật age_context
+          if (activeConversation && activeConversation.id) {
+            // Gọi hàm cập nhật age_context
+            updateConversationAge(activeConversation.id, newAge);
+          }
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Đã cập nhật',
+            text: `Đã cập nhật độ tuổi thành ${newAge}`,
+            confirmButtonColor: '#36B37E',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+      });
+    };
+
+    return (
+      <div className="p-3 bg-white border-b border-gray-200 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+        <div className="flex items-center space-x-4">
+          {/* Thêm điều kiện hiển thị nút toggle sidebar chỉ khi sidebar đóng hoặc không phải mobile */}
+          {(isMobile && !isSidebarVisible) && (
+            <button
+              onClick={toggleSidebar}
+              className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
+              style={{ color: '#36B37E' }}
+            >
+              <BiMenu className="text-xl" />
+            </button>
+          )}
+
+          <div className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
+            <NutribotLogo />
+            <span className="font-bold text-lg ml-2 hidden sm:block">Nutribot</span>
+          </div>
+
+          {/* Nút trở về trang chủ */}
+          <Link
+            to="/"
+            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
+            style={{ color: '#36B37E' }}
+          >
+            <BiHomeAlt className="text-xl" />
+          </Link>
+        </div>
+
+        <div className="flex items-center">
+          {/* Hiển thị tuổi hiện tại */}
+          {userAge && (
+            <button
+              onClick={handleAgeChange}
+              className="mr-4 px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm flex items-center hover:bg-mint-200 transition"
+              style={{ backgroundColor: '#E6F7EF', color: '#36B37E' }}
+            >
+              <BiUserCircle className="mr-1" />
+              {userAge} tuổi
+            </button>
+          )}
+
+          {/* Menu người dùng */}
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
+            >
+              <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
+              <BiUserCircle className="text-2xl sm:ml-1" />
+              <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
+                <Link
+                  to="/settings"
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+                >
+                  <BiCog className="mr-2" />
+                  Quản lý tài khoản
+                </Link>
+                <Link
+                  to="/history"
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+                >
+                  <BiHistory className="mr-2" />
+                  Lịch sử trò chuyện
+                </Link>
+                <hr className="my-1 border-gray-200" />
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  <BiLogOut className="mr-2" />
+                  Đăng xuất
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   // Kiểm tra đăng nhập và lấy thông tin user
   useEffect(() => {
@@ -414,12 +456,6 @@ const ChatPage = () => {
 
     if (user && Object.keys(user).length > 0) {
       setUserData(user);
-
-      // Nếu người dùng có tuổi, sử dụng làm tuổi mặc định
-      if (user.age && !userAge) {
-        setUserAge(parseInt(user.age));
-      }
-
       // Lấy danh sách cuộc hội thoại nếu đã đăng nhập
       fetchConversations();
     } else if (!token) {
@@ -455,7 +491,7 @@ const ChatPage = () => {
         }
       });
     }
-  }, [navigate, userAge]);
+  }, [navigate]);
 
   // Lấy danh sách cuộc hội thoại
   const fetchConversations = async () => {
@@ -473,9 +509,10 @@ const ChatPage = () => {
 
         // Nếu có conversationId từ URL, thiết lập nó làm cuộc hội thoại active
         if (conversationId) {
-          setActiveConversation(response.data.conversations.find(c => c.id === conversationId) || null);
-          // Nếu tìm thấy, lấy chi tiết cuộc hội thoại
-          if (response.data.conversations.find(c => c.id === conversationId)) {
+          const foundConversation = response.data.conversations.find(c => c.id === conversationId);
+          if (foundConversation) {
+            setActiveConversation(foundConversation);
+            // Lấy chi tiết cuộc hội thoại
             fetchConversationDetail(conversationId);
           }
         } else if (response.data.conversations.length > 0) {
@@ -502,12 +539,20 @@ const ChatPage = () => {
       });
 
       if (response.data.success) {
-        // Cập nhật cuộc hội thoại đang hoạt động với dữ liệu đầy đủ
-        setActiveConversation(response.data.conversation);
+        const conversation = response.data.conversation;
 
-        // Cập nhật userAge nếu có age_context
-        if (response.data.conversation.age_context && !userAge) {
-          setUserAge(response.data.conversation.age_context);
+        // Cập nhật cuộc hội thoại đang hoạt động với dữ liệu đầy đủ
+        setActiveConversation(conversation);
+
+        // Cập nhật userAge từ age_context nếu có
+        if (conversation.age_context) {
+          setUserAge(conversation.age_context);
+        } else {
+          // Nếu cuộc hội thoại không có age_context và cũng không có tin nhắn
+          // (nghĩa là cuộc hội thoại mới), cho phép người dùng đặt tuổi mới
+          if (!conversation.messages || conversation.messages.length === 0) {
+            setUserAge(null);
+          }
         }
       }
     } catch (error) {
@@ -515,12 +560,19 @@ const ChatPage = () => {
     }
   };
 
+  // Khi không có active conversation nhưng có conversations
   useEffect(() => {
     if (activeConversation === null && conversations.length > 0) {
       setActiveConversation(conversations[0]);
+
+      // Nếu cuộc hội thoại có age_context, cập nhật userAge
+      if (conversations[0].age_context) {
+        setUserAge(conversations[0].age_context);
+      }
     }
   }, [conversations, activeConversation]);
 
+  // Cuộn xuống dưới khi có tin nhắn mới
   useEffect(() => {
     scrollToBottom();
   }, [activeConversation]);
@@ -572,7 +624,14 @@ const ChatPage = () => {
             }
           }).then((result) => {
             if (result.isConfirmed) {
-              setUserAge(result.value);
+              const newAge = result.value;
+              setUserAge(newAge);
+
+              // Nếu đang trong cuộc hội thoại, cập nhật age_context
+              if (activeConversation && activeConversation.id) {
+                updateConversationAge(activeConversation.id, newAge);
+              }
+
               // Tiếp tục gửi tin nhắn sau khi thiết lập tuổi
               setTimeout(() => {
                 handleSendMessage(e);
@@ -583,6 +642,30 @@ const ChatPage = () => {
       });
       return;
     }
+
+    // Kiểm tra nếu đang trong một cuộc hội thoại có age_context khác với userAge hiện tại
+    if (activeConversation && activeConversation.id &&
+      activeConversation.age_context &&
+      activeConversation.age_context !== userAge) {
+      Swal.fire({
+        title: 'Độ tuổi không khớp',
+        text: 'Cuộc trò chuyện này đã được thiết lập cho độ tuổi khác. Vui lòng tạo cuộc trò chuyện mới nếu muốn sử dụng độ tuổi hiện tại.',
+        icon: 'warning',
+        confirmButtonText: 'Tạo cuộc trò chuyện mới',
+        cancelButtonText: 'Đóng',
+        showCancelButton: true,
+        confirmButtonColor: '#36B37E'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          startNewConversation();
+        } else {
+          // Khôi phục lại tuổi theo age_context của cuộc hội thoại
+          setUserAge(activeConversation.age_context);
+        }
+      });
+      return;
+    }
+
 
     // Sao lưu tin nhắn để dùng sau
     const messageContent = newMessage;
@@ -724,26 +807,87 @@ const ChatPage = () => {
 
     if (token) {
       try {
-        // Tạo cuộc hội thoại mới thông qua API
+        // Tạo cuộc hội thoại mới mà không truyền age_context
         const response = await axios.post(
           `${API_BASE_URL}/conversations`,
           {
-            title: 'Cuộc trò chuyện mới',
-            age_context: userAge
+            title: 'Cuộc trò chuyện mới'
+            // Không truyền age_context ở đây
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (response.data.success) {
+          // Tạo thành công, thiết lập lại userAge
+          setUserAge(null); // Reset tuổi để người dùng nhập lại
+
           // Làm mới danh sách cuộc hội thoại
           await fetchConversations();
+
           // Mở cuộc hội thoại mới
-          fetchConversationDetail(response.data.conversation_id);
+          const conversationId = response.data.conversation_id;
+          if (conversationId) {
+            // Tạo một cuộc hội thoại tạm với ID mới và không có age_context
+            const newConversation = {
+              id: conversationId,
+              title: 'Cuộc trò chuyện mới',
+              messages: [],
+              age_context: null, // Đảm bảo không có age_context
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            };
+
+            // Thiết lập cuộc hội thoại mới không có age_context
+            setActiveConversation(newConversation);
+
+            // Lấy chi tiết đầy đủ sau khi thiết lập
+            fetchConversationDetail(conversationId);
+          }
 
           // Trên mobile, ẩn sidebar sau khi tạo cuộc trò chuyện mới
           if (isMobile) {
             setIsSidebarVisible(false);
           }
+
+          // Hiển thị thông báo nhắc người dùng chọn tuổi
+          setTimeout(() => {
+            Swal.fire({
+              title: 'Thiết lập độ tuổi',
+              text: 'Vui lòng thiết lập độ tuổi cho cuộc trò chuyện mới',
+              icon: 'info',
+              confirmButtonText: 'Thiết lập ngay',
+              confirmButtonColor: '#36B37E'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Mở dialog thiết lập tuổi
+                Swal.fire({
+                  title: 'Chọn độ tuổi',
+                  html: `
+                    <select id="swal-age" class="swal2-input">
+                      ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                    `<option value="${age}">${age} tuổi</option>`
+                  ).join('')}
+                    </select>
+                  `,
+                  confirmButtonText: 'Lưu',
+                  confirmButtonColor: '#36B37E',
+                  preConfirm: () => {
+                    const age = parseInt(document.getElementById('swal-age').value);
+                    if (isNaN(age) || age < 1 || age > 19) {
+                      Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+                    }
+                    return age;
+                  }
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    setUserAge(result.value);
+                    // Cập nhật age_context cho cuộc hội thoại mới
+                    updateConversationAge(conversationId, result.value);
+                  }
+                });
+              }
+            });
+          }, 500);
         }
       } catch (error) {
         console.error("Lỗi khi tạo cuộc hội thoại mới:", error);
@@ -913,7 +1057,44 @@ const ChatPage = () => {
   };
 
   // Nhóm các cuộc trò chuyện
-  const groupedConversations = groupConversationsByTime(filteredConversations);
+  const groupConversationsByTime = (conversations) => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterday = today - 86400000; // Trừ đi 1 ngày
+    const last7Days = today - 86400000 * 7; // Trừ đi 7 ngày
+    const last30Days = today - 86400000 * 30; // Trừ đi 30 ngày
+
+    const groups = {
+      today: [],
+      yesterday: [],
+      last7Days: [],
+      older: []
+    };
+
+    conversations.forEach(conversation => {
+      const conversationDate = new Date(conversation.updated_at).getTime();
+
+      if (conversationDate >= today) {
+        groups.today.push(conversation);
+      } else if (conversationDate >= yesterday) {
+        groups.yesterday.push(conversation);
+      } else if (conversationDate >= last7Days) {
+        groups.last7Days.push(conversation);
+      } else if (conversationDate >= last30Days) {
+        groups.older.push(conversation);
+      } else {
+        groups.older.push(conversation);
+      }
+    });
+
+    return groups;
+  };
+
+  // Format time từ timestamp
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+  };
 
   // Custom renderer cho markdown
   const MarkdownComponents = {
@@ -1016,6 +1197,9 @@ const ChatPage = () => {
       );
     }
 
+    // Nhóm các cuộc trò chuyện
+    const groupedConversations = groupConversationsByTime(filteredConversations);
+
     // Render các nhóm
     return (
       <div className="space-y-4">
@@ -1108,6 +1292,7 @@ const ChatPage = () => {
         toggleSidebar={toggleSidebar}
         isMobile={isMobile}
         isSidebarVisible={isSidebarVisible}
+        activeConversation={activeConversation}
       />
 
       {/* Main content */}
@@ -1115,8 +1300,8 @@ const ChatPage = () => {
         {/* Sidebar - fixed on mobile when visible */}
         <div
           className={`${isSidebarVisible
-              ? 'w-80 transform translate-x-0'
-              : 'w-0 -translate-x-full'
+            ? 'w-80 transform translate-x-0'
+            : 'w-0 -translate-x-full'
             } bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden ${isMobile ? 'fixed inset-0 z-30' : 'relative'
             }`}
         >
@@ -1251,11 +1436,11 @@ const ChatPage = () => {
                   <div className="flex justify-start">
                     <div className="p-3 bg-white rounded-2xl border border-gray-200 shadow-sm flex items-center">
                       <div className="flex space-x-1">
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
+                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
+                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
                       </div>
-                      <span className="ml-3 text-gray-600">Đang soạn phản hồi...</span>
+                      <span className="ml-3 text-gray-600">{"Đang soạn phản hồi..."}</span>
                     </div>
                   </div>
                 )}

@@ -160,12 +160,14 @@ def create_conversation():
             
         # Tạo cuộc hội thoại mới
         title = data.get('title', 'Cuộc trò chuyện mới')
-        age_context = data.get('age_context', user.age)  # Lấy tuổi từ thông tin người dùng nếu không có
+        
+        # Không sử dụng age từ user nữa
+        # age_context = data.get('age_context', user.age)  <-- XÓA DÒNG NÀY
         
         conversation = Conversation(
             user_id=ObjectId(user_id),
-            title=title,
-            age_context=age_context
+            title=title
+            # Không có tham số age_context
         )
         
         # Lưu cuộc hội thoại vào database

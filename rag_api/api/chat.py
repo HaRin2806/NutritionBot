@@ -35,18 +35,20 @@ def chat():
         
         # Lấy dữ liệu đầu vào từ frontend React
         message = data.get('message')
-        # Lấy thông tin tuổi nếu có trong request
+        # Lấy thông tin tuổi từ request
         age = data.get('age')
         conversation_id = data.get('conversation_id')
         
-        # Nếu user đã đăng nhập, lấy thông tin tuổi từ profile nếu không có trong request
-        user_id = get_jwt_identity()
-        user = None
+        # Kiểm tra nếu không có tuổi
+        if not age:
+            return jsonify({
+                "success": False,
+                "error": "Vui lòng cung cấp thông tin về độ tuổi",
+                "reply": "Để có thể cung cấp thông tin phù hợp, tôi cần biết độ tuổi của bạn. Vui lòng thiết lập độ tuổi trước khi tiếp tục."
+            }), 400
         
-        if not age and user_id:
-            user = User.find_by_id(user_id)
-            if user:
-                age = user.age
+        # Nếu user đã đăng nhập
+        user_id = get_jwt_identity()
         
         if not message:
             return jsonify({

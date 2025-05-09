@@ -72,6 +72,8 @@ class RAGPipeline:
         
         # Khởi tạo mô hình Gemini
         self.generation_model = genai.GenerativeModel(
+            # gemini-2.0-flash
+            # gemini-2.0-pro-exp-02-05
             model_name="gemini-2.0-flash",
             generation_config={
                 "temperature": TEMPERATURE,

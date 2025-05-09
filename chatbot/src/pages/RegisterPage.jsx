@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
-import { 
-  BiUser, 
-  BiLock, 
-  BiEnvelope, 
-  BiCalendar, 
-  BiChevronDown 
+import {
+  BiUser,
+  BiLock,
+  BiEnvelope,
+  BiCalendar,
+  BiChevronDown
 } from 'react-icons/bi';
 
 const API_BASE_URL = 'http://localhost:5000/api';
@@ -36,50 +36,50 @@ const RegisterPage = () => {
 
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Vui lòng nhập họ tên';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Vui lòng nhập email';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email không hợp lệ';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Vui lòng nhập mật khẩu';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
     }
-    
+
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
     }
-    
+
     if (!formData.age) {
       newErrors.age = 'Vui lòng chọn tuổi';
     }
-    
+
     if (!formData.gender) {
       newErrors.gender = 'Vui lòng chọn giới tính';
     }
-    
+
     if (!formData.agreeTerms) {
       newErrors.agreeTerms = 'Vui lòng đồng ý với điều khoản sử dụng';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) return;
-    
+
     setLoading(true);
-    
+
     try {
       // Gọi API đăng ký
       const response = await axios.post(`${API_BASE_URL}/auth/register`, {
@@ -89,7 +89,7 @@ const RegisterPage = () => {
         age: formData.age,
         gender: formData.gender
       });
-      
+
       if (response.data.success) {
         // Hiển thị thông báo đăng ký thành công
         Swal.fire({
@@ -114,7 +114,7 @@ const RegisterPage = () => {
       }
     } catch (error) {
       console.error("Lỗi đăng ký:", error);
-      
+
       // Xử lý lỗi từ API
       Swal.fire({
         icon: 'error',
@@ -130,14 +130,14 @@ const RegisterPage = () => {
 
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: 19 }, 
+    { length: 19 },
     (_, index) => index + 1
   );
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-      style={{ 
+      style={{
         background: 'linear-gradient(135deg, rgba(54, 179, 126, 0.1) 0%, rgba(78, 204, 163, 0.05) 100%)',
         backgroundSize: 'cover'
       }}
@@ -151,7 +151,7 @@ const RegisterPage = () => {
             Bắt đầu hành trình khám phá dinh dưỡng của bạn
           </p>
         </div>
-        
+
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Họ và tên */}
           <div>
@@ -163,8 +163,8 @@ const RegisterPage = () => {
                 type="text"
                 placeholder="Họ và tên"
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
-                  ${errors.fullName 
-                    ? 'border-red-300 focus:ring-red-200' 
+                  ${errors.fullName
+                    ? 'border-red-300 focus:ring-red-200'
                     : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                   }`}
                 value={formData.fullName}
@@ -186,8 +186,8 @@ const RegisterPage = () => {
                 type="email"
                 placeholder="Email"
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
-                  ${errors.email 
-                    ? 'border-red-300 focus:ring-red-200' 
+                  ${errors.email
+                    ? 'border-red-300 focus:ring-red-200'
                     : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                   }`}
                 value={formData.email}
@@ -203,39 +203,13 @@ const RegisterPage = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="relative">
-                <BiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <select
-                  name="age"
-                  value={formData.age}
-                  onChange={handleChange}
-                  className={`w-full pl-10 pr-8 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
-                    ${errors.age 
-                      ? 'border-red-300 focus:ring-red-200' 
-                      : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
-                    }`}
-                >
-                  <option value="">Tuổi</option>
-                  {years.map(year => (
-                    <option key={year} value={year}>
-                      {year} tuổi
-                    </option>
-                  ))}
-                </select>
-                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
-              {errors.age && (
-                <p className="text-red-500 text-xs mt-1">{errors.age}</p>
-              )}
-            </div>
-            <div>
-              <div className="relative">
                 <select
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
-                    ${errors.gender 
-                      ? 'border-red-300 focus:ring-red-200' 
+        ${errors.gender
+                      ? 'border-red-300 focus:ring-red-200'
                       : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                     }`}
                 >
@@ -262,8 +236,8 @@ const RegisterPage = () => {
                 type="password"
                 placeholder="Mật khẩu"
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
-                  ${errors.password 
-                    ? 'border-red-300 focus:ring-red-200' 
+                  ${errors.password
+                    ? 'border-red-300 focus:ring-red-200'
                     : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                   }`}
                 value={formData.password}
@@ -285,8 +259,8 @@ const RegisterPage = () => {
                 type="password"
                 placeholder="Xác nhận mật khẩu"
                 className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:outline-none 
-                  ${errors.confirmPassword 
-                    ? 'border-red-300 focus:ring-red-200' 
+                  ${errors.confirmPassword
+                    ? 'border-red-300 focus:ring-red-200'
                     : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
                   }`}
                 value={formData.confirmPassword}
@@ -333,14 +307,14 @@ const RegisterPage = () => {
               type="submit"
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg text-white font-semibold transition-all duration-300 
-                ${loading 
-                  ? 'bg-mint-400 cursor-not-allowed' 
+                ${loading
+                  ? 'bg-mint-400 cursor-not-allowed'
                   : 'bg-mint-600 hover:bg-mint-700 focus:outline-none focus:ring-2 focus:ring-mint-500 focus:ring-offset-2'
                 }`}
-              style={{ 
+              style={{
                 backgroundColor: loading ? '#A0D9C1' : '#36B37E',
-                backgroundImage: loading 
-                  ? 'linear-gradient(135deg, #A0D9C1 0%, #A0D9C1 100%)' 
+                backgroundImage: loading
+                  ? 'linear-gradient(135deg, #A0D9C1 0%, #A0D9C1 100%)'
                   : 'linear-gradient(135deg, #36B37E 0%, #4ECCA3 100%)'
               }}
             >
@@ -353,8 +327,8 @@ const RegisterPage = () => {
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Đã có tài khoản?{' '}
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="font-medium text-mint-600 hover:text-mint-500"
             >
               Đăng nhập ngay

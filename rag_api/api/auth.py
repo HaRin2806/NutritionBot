@@ -23,7 +23,7 @@ def validate_password(password):
     # Ví dụ: mật khẩu ít nhất 6 ký tự
     return len(password) >= 6
 
-def register_user(name, email, password, age, gender=None):
+def register_user(name, email, password, gender=None):
     """Đăng ký người dùng mới"""
     # Kiểm tra dữ liệu đầu vào
     if not name or not email or not password:
@@ -35,15 +35,8 @@ def register_user(name, email, password, age, gender=None):
     if not validate_password(password):
         return False, "Mật khẩu phải có ít nhất 6 ký tự"
     
-    try:
-        age = int(age)
-        if age < 1 or age > 19:
-            return False, "Tuổi phải nằm trong khoảng từ 1 đến 19"
-    except ValueError:
-        return False, "Tuổi phải là một số nguyên"
-    
     # Đăng ký người dùng
-    success, result = User.register(name, email, password, age, gender)
+    success, result = User.register(name, email, password, gender)
     if success:
         return True, {"user_id": result}
     else:
@@ -69,7 +62,6 @@ def login_user(email, password):
                 "id": str(user.user_id),
                 "name": user.name,
                 "email": user.email,
-                "age": user.age,
                 "gender": user.gender
             }
         }
@@ -85,10 +77,9 @@ def register():
         name = data.get('fullName')
         email = data.get('email')
         password = data.get('password')
-        age = data.get('age')
         gender = data.get('gender')
         
-        success, result = register_user(name, email, password, age, gender)
+        success, result = register_user(name, email, password, gender)
         
         if success:
             return jsonify({
