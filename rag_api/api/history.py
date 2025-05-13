@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 from bson.objectid import ObjectId
 from models.conversation_model import Conversation
@@ -12,11 +11,15 @@ logger = logging.getLogger(__name__)
 history_routes = Blueprint('history', __name__)
 
 @history_routes.route('/conversations', methods=['GET'])
-@jwt_required()
 def get_conversations():
     """API endpoint để lấy danh sách cuộc hội thoại của người dùng"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
         
         # Lấy tham số phân trang từ query string
         page = int(request.args.get('page', 1))
@@ -78,11 +81,10 @@ def get_conversations():
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>', methods=['GET'])
-@jwt_required()
 def get_conversation_detail(conversation_id):
     """API endpoint để lấy chi tiết một cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -94,7 +96,7 @@ def get_conversation_detail(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền truy cập cuộc hội thoại này"
@@ -143,13 +145,18 @@ def get_conversation_detail(conversation_id):
         }), 500
 
 @history_routes.route('/conversations', methods=['POST'])
-@jwt_required()
 def create_conversation():
     """API endpoint để tạo cuộc hội thoại mới"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
         
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
+            
         # Lấy thông tin user
         user = User.find_by_id(user_id)
         if not user:
@@ -160,14 +167,12 @@ def create_conversation():
             
         # Tạo cuộc hội thoại mới
         title = data.get('title', 'Cuộc trò chuyện mới')
-        
-        # Không sử dụng age từ user nữa
-        # age_context = data.get('age_context', user.age)  <-- XÓA DÒNG NÀY
+        age_context = data.get('age_context')
         
         conversation = Conversation(
-            user_id=ObjectId(user_id),
-            title=title
-            # Không có tham số age_context
+            user_id=ObjectId(user_id) if ObjectId.is_valid(user_id) else None,
+            title=title,
+            age_context=age_context
         )
         
         # Lưu cuộc hội thoại vào database
@@ -187,12 +192,11 @@ def create_conversation():
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>', methods=['PUT'])
-@jwt_required()
 def update_conversation(conversation_id):
     """API endpoint để cập nhật thông tin cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -204,7 +208,7 @@ def update_conversation(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền cập nhật cuộc hội thoại này"
@@ -236,11 +240,10 @@ def update_conversation(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>', methods=['DELETE'])
-@jwt_required()
 def delete_conversation(conversation_id):
     """API endpoint để xóa cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -252,7 +255,7 @@ def delete_conversation(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền xóa cuộc hội thoại này"
@@ -274,11 +277,11 @@ def delete_conversation(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>/archive', methods=['POST'])
-@jwt_required()
 def archive_conversation(conversation_id):
     """API endpoint để lưu trữ cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
+        data = request.json
+        user_id = data.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -290,7 +293,7 @@ def archive_conversation(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền lưu trữ cuộc hội thoại này"
@@ -312,11 +315,11 @@ def archive_conversation(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>/unarchive', methods=['POST'])
-@jwt_required()
 def unarchive_conversation(conversation_id):
     """API endpoint để hủy lưu trữ cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
+        data = request.json
+        user_id = data.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -328,7 +331,7 @@ def unarchive_conversation(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền hủy lưu trữ cuộc hội thoại này"
@@ -350,11 +353,15 @@ def unarchive_conversation(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/search', methods=['GET'])
-@jwt_required()
 def search_conversations():
     """API endpoint để tìm kiếm cuộc hội thoại theo nội dung"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
         
         # Lấy tham số từ query string
         query = request.args.get('q', '')
@@ -411,12 +418,11 @@ def search_conversations():
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>/messages', methods=['POST'])
-@jwt_required()
 def add_message(conversation_id):
     """API endpoint để thêm tin nhắn mới vào cuộc hội thoại"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -428,7 +434,7 @@ def add_message(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền thêm tin nhắn vào cuộc hội thoại này"
@@ -476,12 +482,16 @@ def add_message(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/stats', methods=['GET'])
-@jwt_required()
 def get_user_conversation_stats():
     """API endpoint để lấy thống kê cuộc hội thoại của người dùng"""
     try:
-        user_id = get_jwt_identity()
-        
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
+            
         # Lấy tổng số cuộc hội thoại
         total_conversations = Conversation.count_by_user(
             user_id=user_id,
@@ -545,11 +555,10 @@ def get_user_conversation_stats():
         }), 500
 
 @history_routes.route('/conversations/<conversation_id>/export', methods=['GET'])
-@jwt_required()
 def export_conversation(conversation_id):
     """API endpoint để xuất cuộc hội thoại dưới dạng JSON"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -561,7 +570,7 @@ def export_conversation(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền xuất cuộc hội thoại này"
@@ -601,12 +610,17 @@ def export_conversation(conversation_id):
         }), 500
 
 @history_routes.route('/conversations/bulk-delete', methods=['POST'])
-@jwt_required()
 def bulk_delete_conversations():
     """API endpoint để xóa nhiều cuộc hội thoại cùng lúc"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
         
         conversation_ids = data.get('conversation_ids', [])
         
@@ -649,12 +663,18 @@ def bulk_delete_conversations():
             "error": str(e)
         }), 500
 
-@history_routes.route('/conversations/<conversation_id>/title', methods=['POST'])
-@jwt_required()
-def generate_title(conversation_id):
+@history_routes.route('/conversations/<conversation_id>/generate-title', methods=['POST'])
+def generate_title_for_conversation(conversation_id):
     """API endpoint để tạo tự động tiêu đề cho cuộc hội thoại dựa trên nội dung"""
     try:
-        user_id = get_jwt_identity()
+        data = request.json
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -666,7 +686,7 @@ def generate_title(conversation_id):
             }), 404
         
         # Kiểm tra quyền truy cập
-        if str(conversation.user_id) != user_id:
+        if user_id and str(conversation.user_id) != user_id:
             return jsonify({
                 "success": False,
                 "error": "Bạn không có quyền cập nhật cuộc hội thoại này"
@@ -679,16 +699,22 @@ def generate_title(conversation_id):
                 "error": "Cuộc hội thoại cần ít nhất 2 tin nhắn để tạo tiêu đề"
             }), 400
         
-        # Lấy nội dung các tin nhắn đầu tiên để tạo tiêu đề
-        first_messages = conversation.messages[:2]
-        content = " | ".join([msg["content"] for msg in first_messages])
-        
-        # Tạo tiêu đề từ nội dung (đơn giản hóa)
-        # Trong thực tế, bạn có thể sử dụng mô hình ngôn ngữ để tạo tiêu đề
-        words = content.split()
-        title = " ".join(words[:5])
-        if len(title) > 50:
-            title = title[:47] + "..."
+        # Lấy nội dung tin nhắn đầu tiên của người dùng
+        first_user_message = None
+        for message in conversation.messages:
+            if message["role"] == "user":
+                first_user_message = message["content"]
+                break
+                
+        if not first_user_message:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy tin nhắn của người dùng"
+            }), 400
+            
+        # Tạo tiêu đề từ nội dung
+        from api.utils import generate_conversation_title
+        title = generate_conversation_title(first_user_message)
             
         # Cập nhật tiêu đề
         conversation.title = title

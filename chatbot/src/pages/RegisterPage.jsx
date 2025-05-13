@@ -6,7 +6,6 @@ import {
   BiUser,
   BiLock,
   BiEnvelope,
-  BiCalendar,
   BiChevronDown
 } from 'react-icons/bi';
 
@@ -19,7 +18,6 @@ const RegisterPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    age: '',
     gender: '',
     agreeTerms: false
   });
@@ -197,9 +195,9 @@ const RegisterPage = () => {
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
                 ${errors.gender
-                  ? 'border-red-300 focus:ring-red-200'
-                  : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
-                }`}
+                    ? 'border-red-300 focus:ring-red-200'
+                    : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
+                  }`}
               >
                 <option value="">Giới tính</option>
                 <option value="male">Nam</option>

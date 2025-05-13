@@ -1,13 +1,14 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 import time
+import threading
 from core.rag_pipeline import RAGPipeline
 from core.embedding_model import get_embedding_model
 from core.data_processor import DataProcessor
 from models.user_model import User
 from models.conversation_model import Conversation
 from bson.objectid import ObjectId
+from api.utils import generate_conversation_title
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -26,8 +27,22 @@ def get_rag_pipeline():
     embedding_model = get_embedding_model()
     return RAGPipeline(data_processor, embedding_model)
 
+# Thêm một hàm để cập nhật tên cuộc trò chuyện trong background
+def set_conversation_title_async(conversation, message):
+    """Cập nhật tên cuộc trò chuyện bất đồng bộ"""
+    try:
+        # Tạo tiêu đề tự động
+        title = generate_conversation_title(message)
+        
+        # Cập nhật tiêu đề cho cuộc hội thoại
+        conversation.title = title
+        conversation.save()
+        
+        logger.info(f"Đã cập nhật tên cuộc hội thoại: {title}")
+    except Exception as e:
+        logger.error(f"Lỗi khi cập nhật tên cuộc hội thoại bất đồng bộ: {str(e)}")
+
 @chat_routes.route('/chat', methods=['POST'])
-@jwt_required(optional=True)
 def chat():
     """API endpoint để trò chuyện với chatbot"""
     try:
@@ -38,6 +53,7 @@ def chat():
         # Lấy thông tin tuổi từ request
         age = data.get('age')
         conversation_id = data.get('conversation_id')
+        user_id = data.get('user_id')  # Lấy user_id từ request thay vì JWT
         
         # Kiểm tra nếu không có tuổi
         if not age:
@@ -46,9 +62,6 @@ def chat():
                 "error": "Vui lòng cung cấp thông tin về độ tuổi",
                 "reply": "Để có thể cung cấp thông tin phù hợp, tôi cần biết độ tuổi của bạn. Vui lòng thiết lập độ tuổi trước khi tiếp tục."
             }), 400
-        
-        # Nếu user đã đăng nhập
-        user_id = get_jwt_identity()
         
         if not message:
             return jsonify({
@@ -87,29 +100,30 @@ def chat():
         end_time = time.time()
         query_time = end_time - start_time
         
-        # Lưu trữ tin nhắn vào conversation nếu có conversation_id
+        # Kiểm tra xem đây có phải là tin nhắn đầu tiên và cần tạo cuộc hội thoại mới không
+        is_new_conversation = False
+        conversation = None
+        conversation_title = None
+        
         if user_id:
             # Tìm hoặc tạo cuộc hội thoại
-            conversation = None
-            
             if conversation_id:
                 # Tìm cuộc hội thoại hiện có
                 conversation = Conversation.find_by_id(conversation_id)
                 
-                # Kiểm tra quyền truy cập
-                if conversation and str(conversation.user_id) != user_id:
-                    conversation = None
+                # Kiểm tra số lượng tin nhắn
+                if conversation and len(conversation.messages) == 0:
+                    # Nếu đây là tin nhắn đầu tiên, hãy tạo tiêu đề tự động
+                    is_new_conversation = True
             
-            # Nếu không tìm thấy cuộc hội thoại hoặc không có quyền truy cập, tạo mới
+            # Nếu không tìm thấy cuộc hội thoại, tạo mới và đặt biến flag
             if not conversation:
-                # Tạo tiêu đề từ nội dung tin nhắn (đơn giản)
-                words = message.split()
-                title = " ".join(words[:5]) if len(words) > 0 else "Cuộc trò chuyện mới"
-                if len(title) > 50:
-                    title = title[:47] + "..."
+                is_new_conversation = True
+                # Tạo tiêu đề tạm thời
+                title = "Cuộc trò chuyện mới"
                 
                 conversation = Conversation(
-                    user_id=ObjectId(user_id),
+                    user_id=ObjectId(user_id) if ObjectId.is_valid(user_id) else None,
                     title=title,
                     age_context=age
                 )
@@ -135,6 +149,26 @@ def chat():
                     "token_count": len(result["answer"].split())
                 }
             )
+            
+            # Nếu là cuộc trò chuyện mới, tạo tiêu đề tự động từ tin nhắn đầu tiên
+            if is_new_conversation:
+                # Tạo tiêu đề mặc định trước
+                default_title = message[:50] + ("..." if len(message) > 50 else "")
+                conversation.title = default_title
+                conversation.save()
+                
+                # Tạo tiêu đề cuộc trò chuyện trong background
+                conversation_title = default_title  # Gán tiêu đề mặc định để trả về trong response
+                
+                # Tạo và bắt đầu thread để cập nhật tiêu đề
+                title_thread = threading.Thread(
+                    target=set_conversation_title_async,
+                    args=(conversation, message)
+                )
+                title_thread.daemon = True  # Đảm bảo thread sẽ không chặn ứng dụng kết thúc
+                title_thread.start()
+                
+                logger.info(f"Đã bắt đầu cập nhật tên cuộc hội thoại trong background")
         
         # Định dạng kết quả cho frontend
         response = {
@@ -149,6 +183,10 @@ def chat():
         # Nếu có conversation_id, thêm vào phản hồi
         if conversation_id:
             response["conversation_id"] = conversation_id
+            
+        # Nếu là cuộc trò chuyện mới, thêm tiêu đề vào phản hồi
+        if is_new_conversation and conversation_title:
+            response["conversation_title"] = conversation_title
         
         return jsonify(response)
         
@@ -158,4 +196,148 @@ def chat():
             "success": False,
             "error": str(e),
             "reply": "Đã xảy ra lỗi khi xử lý câu hỏi của bạn. Vui lòng thử lại sau."
+        }), 500
+
+@chat_routes.route('/follow-up-questions', methods=['POST'])
+def get_follow_up_questions():
+    """API endpoint để lấy các câu hỏi gợi ý tiếp theo"""
+    try:
+        data = request.json
+        
+        query = data.get('query')
+        answer = data.get('answer')
+        age = data.get('age')
+        
+        if not query or not answer:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin cần thiết"
+            }), 400
+            
+        # Tạo RAG pipeline
+        rag_pipeline = get_rag_pipeline()
+        
+        # Lấy câu hỏi tiếp theo
+        follow_up_questions = rag_pipeline.get_follow_up_questions(
+            query=query,
+            answer=answer,
+            age=age
+        )
+        
+        return jsonify({
+            "success": True,
+            "follow_up_questions": follow_up_questions
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi khi lấy câu hỏi gợi ý: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@chat_routes.route('/health', methods=['GET'])
+def health_check():
+    """API endpoint để kiểm tra trạng thái của chatbot"""
+    try:
+        # Tải data_processor để kiểm tra dữ liệu
+        data_processor = get_data_processor()
+        chunk_count = len(data_processor.chunks)
+        table_count = len(data_processor.tables)
+        figure_count = len(data_processor.figures)
+        
+        # Tải embedding_model để kiểm tra chỉ mục
+        embedding_model = get_embedding_model()
+        index_count = embedding_model.count()
+        
+        # Kiểm tra RAG pipeline
+        rag_pipeline = get_rag_pipeline()
+        
+        # Thống kê theo bài học
+        stats_by_lesson = {}
+        for key, value in data_processor.get_stats().get("by_lesson", {}).items():
+            stats_by_lesson[key] = {
+                "chunks": value.get("chunks", 0),
+                "tables": value.get("tables", 0),
+                "figures": value.get("figures", 0),
+                "total": value.get("total", 0)
+            }
+        
+        return jsonify({
+            "success": True,
+            "status": "healthy",
+            "data": {
+                "chunks": chunk_count,
+                "tables": table_count,
+                "figures": figure_count,
+                "total_items": chunk_count + table_count + figure_count,
+                "indexed_items": index_count,
+                "stats_by_lesson": stats_by_lesson
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi kiểm tra sức khỏe chatbot: {str(e)}")
+        return jsonify({
+            "success": False,
+            "status": "unhealthy",
+            "error": str(e)
+        }), 500
+
+@chat_routes.route('/search', methods=['GET'])
+def search_data():
+    """API endpoint để tìm kiếm dữ liệu"""
+    try:
+        query = request.args.get('q')
+        age = request.args.get('age')
+        
+        if not query:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu từ khóa tìm kiếm"
+            }), 400
+            
+        # Chuyển đổi age thành số nếu có
+        if age and age.isdigit():
+            age = int(age)
+        else:
+            age = None
+            
+        # Tìm kiếm dữ liệu
+        embedding_model = get_embedding_model()
+        results = embedding_model.search_by_content_types(
+            query=query, 
+            age=age, 
+            content_types=["text", "table", "figure"],
+            top_k=10
+        )
+        
+        # Định dạng kết quả
+        formatted_results = {
+            "text": [],
+            "table": [],
+            "figure": []
+        }
+        
+        for content_type, items in results.items():
+            for item in items:
+                formatted_item = {
+                    "id": item["id"],
+                    "content": item["content"][:200] + "..." if len(item["content"]) > 200 else item["content"],
+                    "metadata": item["metadata"],
+                    "relevance_score": round(item["relevance_score"], 3)
+                }
+                formatted_results[content_type].append(formatted_item)
+        
+        return jsonify({
+            "success": True,
+            "query": query,
+            "results": formatted_results
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi tìm kiếm dữ liệu: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
         }), 500

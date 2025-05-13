@@ -1,8 +1,4 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import (
-    create_access_token, get_jwt_identity, jwt_required
-)
-from datetime import timedelta
 import re
 import logging
 from models.user_model import User
@@ -50,14 +46,9 @@ def login_user(email, password):
     success, result = User.login(email, password)
     if success:
         user = result
-        # Tạo token JWT
-        access_token = create_access_token(
-            identity=str(user.user_id),
-            expires_delta=timedelta(days=1)  # Token hết hạn sau 1 ngày
-        )
         
         return True, {
-            "access_token": access_token,
+            "user_id": str(user.user_id),
             "user": {
                 "id": str(user.user_id),
                 "name": user.name,
@@ -114,7 +105,7 @@ def login():
         if success:
             return jsonify({
                 "success": True,
-                "access_token": result.get("access_token"),
+                "user_id": result.get("user_id"),
                 "user": result.get("user")
             })
         else:
@@ -131,11 +122,16 @@ def login():
         }), 500
 
 @auth_routes.route('/profile', methods=['GET'])
-@jwt_required()
 def user_profile():
     """API endpoint để lấy thông tin người dùng"""
     try:
-        user_id = get_jwt_identity()
+        user_id = request.args.get('user_id')
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
+            
         user = User.find_by_id(user_id)
         
         if user:
@@ -143,7 +139,6 @@ def user_profile():
                 "id": str(user.user_id),
                 "name": user.name,
                 "email": user.email,
-                "age": user.age,
                 "gender": user.gender,
                 "created_at": user.created_at,
                 "updated_at": user.updated_at
@@ -167,12 +162,17 @@ def user_profile():
         }), 500
 
 @auth_routes.route('/profile', methods=['PUT'])
-@jwt_required()
 def update_profile():
     """API endpoint để cập nhật thông tin người dùng"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
+        
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
         
         user = User.find_by_id(user_id)
         if not user:
@@ -184,21 +184,6 @@ def update_profile():
         # Cập nhật thông tin
         if 'name' in data:
             user.name = data['name']
-        
-        if 'age' in data:
-            try:
-                age_val = int(data['age'])
-                if age_val < 1 or age_val > 19:
-                    return jsonify({
-                        "success": False,
-                        "error": "Tuổi phải nằm trong khoảng từ 1 đến 19"
-                    }), 400
-                user.age = age_val
-            except ValueError:
-                return jsonify({
-                    "success": False,
-                    "error": "Tuổi phải là một số nguyên"
-                }), 400
         
         if 'gender' in data:
             user.gender = data['gender']
@@ -219,13 +204,18 @@ def update_profile():
         }), 500
 
 @auth_routes.route('/change-password', methods=['POST'])
-@jwt_required()
 def update_password():
     """API endpoint để đổi mật khẩu"""
     try:
-        user_id = get_jwt_identity()
         data = request.json
+        user_id = data.get('user_id')
         
+        if not user_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu user_id"
+            }), 400
+            
         current_password = data.get('currentPassword')
         new_password = data.get('newPassword')
         

@@ -39,7 +39,6 @@ const NutribotLogo = () => (
 );
 
 // Component để hiển thị hình ảnh với trạng thái loading
-// Component để hiển thị hình ảnh với trạng thái loading
 const RenderImage = ({ src, alt }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -212,6 +211,170 @@ const ChatItemMenu = ({ conversation, onDelete, onRename }) => {
   );
 };
 
+// Component header và menu người dùng
+const Header = ({ userData, userAge, setUserAge, handleLogout, toggleSidebar, isMobile, isSidebarVisible, activeConversation, updateConversationAge }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const menuRef = useRef(null);
+
+  // Đóng menu khi click ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Xử lý thay đổi tuổi
+  const handleAgeChange = () => {
+    // Kiểm tra nếu đang trong một cuộc hội thoại có age_context và có tin nhắn
+    if (activeConversation && activeConversation.id &&
+      activeConversation.age_context &&
+      activeConversation.messages &&
+      activeConversation.messages.length > 0) {
+      Swal.fire({
+        title: 'Không thể thay đổi độ tuổi',
+        text: 'Cuộc trò chuyện này đã có tin nhắn với độ tuổi cụ thể. Bạn cần tạo cuộc trò chuyện mới để sử dụng độ tuổi khác.',
+        icon: 'warning',
+        confirmButtonText: 'Đã hiểu',
+        confirmButtonColor: '#36B37E'
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: 'Thay đổi độ tuổi',
+      html: `
+        <select id="swal-age" class="swal2-input">
+          ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+        `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
+      ).join('')}
+        </select>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Lưu',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#36B37E',
+      preConfirm: () => {
+        const age = parseInt(document.getElementById('swal-age').value);
+        if (isNaN(age) || age < 1 || age > 19) {
+          Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+        }
+        return age;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const newAge = result.value;
+        setUserAge(newAge);
+
+        // Nếu đang trong cuộc hội thoại, cập nhật age_context
+        if (activeConversation && activeConversation.id && userData && userData.id) {
+          updateConversationAge(activeConversation.id, newAge, userData.id);
+        }
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Đã cập nhật',
+          text: `Đã cập nhật độ tuổi thành ${newAge}`,
+          confirmButtonColor: '#36B37E',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
+  };
+
+  return (
+    <div className="p-3 bg-white border-b border-gray-200 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+      <div className="flex items-center space-x-4">
+        {/* Thêm điều kiện hiển thị nút toggle sidebar chỉ khi sidebar đóng hoặc không phải mobile */}
+        {(isMobile && !isSidebarVisible) && (
+          <button
+            onClick={toggleSidebar}
+            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
+            style={{ color: '#36B37E' }}
+          >
+            <BiMenu className="text-xl" />
+          </button>
+        )}
+
+        <div className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
+          <NutribotLogo />
+          <span className="font-bold text-lg ml-2 hidden sm:block">Nutribot</span>
+        </div>
+
+        {/* Nút trở về trang chủ */}
+        <Link
+          to="/"
+          className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
+          style={{ color: '#36B37E' }}
+        >
+          <BiHomeAlt className="text-xl" />
+        </Link>
+      </div>
+
+      <div className="flex items-center">
+        {/* Hiển thị tuổi hiện tại */}
+        {userAge && (
+          <button
+            onClick={handleAgeChange}
+            className="mr-4 px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm flex items-center hover:bg-mint-200 transition"
+            style={{ backgroundColor: '#E6F7EF', color: '#36B37E' }}
+          >
+            <BiUserCircle className="mr-1" />
+            {userAge} tuổi
+          </button>
+        )}
+
+        {/* Menu người dùng */}
+        <div className="relative" ref={menuRef}>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
+          >
+            <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
+            <BiUserCircle className="text-2xl sm:ml-1" />
+            <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+
+          {isMenuOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
+              <Link
+                to="/settings"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+              >
+                <BiCog className="mr-2" />
+                Quản lý tài khoản
+              </Link>
+              <Link
+                to="/history"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+              >
+                <BiHistory className="mr-2" />
+                Lịch sử trò chuyện
+              </Link>
+              <hr className="my-1 border-gray-200" />
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+              >
+                <BiLogOut className="mr-2" />
+                Đăng xuất
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Component chính
 const ChatPage = () => {
   const [activeConversation, setActiveConversation] = useState(null);
@@ -250,17 +413,17 @@ const ChatPage = () => {
   }, [isSidebarVisible]);
 
   // Hàm cập nhật age_context
-  const updateConversationAge = async (conversationId, age) => {
-    if (!conversationId) return;
-
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
+  const updateConversationAge = async (conversationId, age, userId) => {
+    if (!conversationId || !userId) return;
 
     try {
       const response = await axios.put(
         `${API_BASE_URL}/conversations/${conversationId}`,
-        { age_context: age },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          title: activeConversation?.title,
+          age_context: age,
+          user_id: userId
+        }
       );
 
       if (response.data.success) {
@@ -284,181 +447,15 @@ const ChatPage = () => {
     }
   };
 
-  // Component header và menu người dùng
-  const Header = ({ userData, userAge, setUserAge, handleLogout, toggleSidebar, isMobile, isSidebarVisible, activeConversation }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
-    const menuRef = useRef(null);
-
-    // Đóng menu khi click ngoài
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setIsMenuOpen(false);
-        }
-      };
-
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, []);
-
-    // Xử lý thay đổi tuổi
-    const handleAgeChange = () => {
-      // Kiểm tra nếu đang trong một cuộc hội thoại có age_context và có tin nhắn
-      if (activeConversation && activeConversation.id &&
-        activeConversation.age_context &&
-        activeConversation.messages &&
-        activeConversation.messages.length > 0) {
-        Swal.fire({
-          title: 'Không thể thay đổi độ tuổi',
-          text: 'Cuộc trò chuyện này đã có tin nhắn với độ tuổi cụ thể. Bạn cần tạo cuộc trò chuyện mới để sử dụng độ tuổi khác.',
-          icon: 'warning',
-          confirmButtonText: 'Đã hiểu',
-          confirmButtonColor: '#36B37E'
-        });
-        return;
-      }
-
-      Swal.fire({
-        title: 'Thay đổi độ tuổi',
-        html: `
-          <select id="swal-age" class="swal2-input">
-            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-          `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-        ).join('')}
-          </select>
-        `,
-        showCancelButton: true,
-        confirmButtonText: 'Lưu',
-        cancelButtonText: 'Hủy',
-        confirmButtonColor: '#36B37E',
-        preConfirm: () => {
-          const age = parseInt(document.getElementById('swal-age').value);
-          if (isNaN(age) || age < 1 || age > 19) {
-            Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-          }
-          return age;
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const newAge = result.value;
-          setUserAge(newAge);
-
-          // Nếu đang trong cuộc hội thoại, cập nhật age_context
-          if (activeConversation && activeConversation.id) {
-            // Gọi hàm cập nhật age_context
-            updateConversationAge(activeConversation.id, newAge);
-          }
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Đã cập nhật',
-            text: `Đã cập nhật độ tuổi thành ${newAge}`,
-            confirmButtonColor: '#36B37E',
-            timer: 1500,
-            showConfirmButton: false
-          });
-        }
-      });
-    };
-
-    return (
-      <div className="p-3 bg-white border-b border-gray-200 flex justify-between items-center sticky top-0 z-10 shadow-sm">
-        <div className="flex items-center space-x-4">
-          {/* Thêm điều kiện hiển thị nút toggle sidebar chỉ khi sidebar đóng hoặc không phải mobile */}
-          {(isMobile && !isSidebarVisible) && (
-            <button
-              onClick={toggleSidebar}
-              className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-              style={{ color: '#36B37E' }}
-            >
-              <BiMenu className="text-xl" />
-            </button>
-          )}
-
-          <div className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
-            <NutribotLogo />
-            <span className="font-bold text-lg ml-2 hidden sm:block">Nutribot</span>
-          </div>
-
-          {/* Nút trở về trang chủ */}
-          <Link
-            to="/"
-            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-            style={{ color: '#36B37E' }}
-          >
-            <BiHomeAlt className="text-xl" />
-          </Link>
-        </div>
-
-        <div className="flex items-center">
-          {/* Hiển thị tuổi hiện tại */}
-          {userAge && (
-            <button
-              onClick={handleAgeChange}
-              className="mr-4 px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm flex items-center hover:bg-mint-200 transition"
-              style={{ backgroundColor: '#E6F7EF', color: '#36B37E' }}
-            >
-              <BiUserCircle className="mr-1" />
-              {userAge} tuổi
-            </button>
-          )}
-
-          {/* Menu người dùng */}
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
-            >
-              <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
-              <BiUserCircle className="text-2xl sm:ml-1" />
-              <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
-                <Link
-                  to="/settings"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-                >
-                  <BiCog className="mr-2" />
-                  Quản lý tài khoản
-                </Link>
-                <Link
-                  to="/history"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-                >
-                  <BiHistory className="mr-2" />
-                  Lịch sử trò chuyện
-                </Link>
-                <hr className="my-1 border-gray-200" />
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  <BiLogOut className="mr-2" />
-                  Đăng xuất
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   // Kiểm tra đăng nhập và lấy thông tin user
   useEffect(() => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
 
     if (user && Object.keys(user).length > 0) {
       setUserData(user);
       // Lấy danh sách cuộc hội thoại nếu đã đăng nhập
-      fetchConversations();
-    } else if (!token) {
+      fetchConversations(user.id);
+    } else {
       // Hiển thị thông báo chưa đăng nhập nhưng vẫn ở trang chat
       Swal.fire({
         title: 'Bạn chưa đăng nhập',
@@ -470,12 +467,9 @@ const ChatPage = () => {
         confirmButtonColor: '#36B37E',
         didOpen: () => {
           Swal.showLoading();
-          // Bỏ đoạn hiển thị text "Tự động chuyển hướng sau X giây"
           const timerInterval = setInterval(() => {
             // Chỉ để trống, thanh tiến trình sẽ tự động hiển thị
           }, 100);
-
-          // Lưu timerInterval vào Swal để có thể xóa nó sau
           Swal.timerInterval = timerInterval;
         },
         willClose: () => {
@@ -491,14 +485,13 @@ const ChatPage = () => {
   }, [navigate]);
 
   // Lấy danh sách cuộc hội thoại
-  const fetchConversations = async () => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
+  const fetchConversations = async (userId) => {
+    if (!userId) return;
 
     try {
       setIsLoadingConversations(true);
       const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        headers: { Authorization: `Bearer ${token}` }
+        params: { user_id: userId }
       });
 
       if (response.data.success) {
@@ -510,12 +503,12 @@ const ChatPage = () => {
           if (foundConversation) {
             setActiveConversation(foundConversation);
             // Lấy chi tiết cuộc hội thoại
-            fetchConversationDetail(conversationId);
+            fetchConversationDetail(conversationId, userId);
           }
         } else if (response.data.conversations.length > 0) {
           // Nếu không có conversationId từ URL, lấy cuộc hội thoại mới nhất
           setActiveConversation(response.data.conversations[0]);
-          fetchConversationDetail(response.data.conversations[0].id);
+          fetchConversationDetail(response.data.conversations[0].id, userId);
         }
       }
     } catch (error) {
@@ -526,13 +519,12 @@ const ChatPage = () => {
   };
 
   // Lấy chi tiết cuộc hội thoại
-  const fetchConversationDetail = async (id) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token || !id) return;
+  const fetchConversationDetail = async (id, userId) => {
+    if (!id || !userId) return;
 
     try {
       const response = await axios.get(`${API_BASE_URL}/conversations/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        params: { user_id: userId }
       });
 
       if (response.data.success) {
@@ -625,8 +617,8 @@ const ChatPage = () => {
               setUserAge(newAge);
 
               // Nếu đang trong cuộc hội thoại, cập nhật age_context
-              if (activeConversation && activeConversation.id) {
-                updateConversationAge(activeConversation.id, newAge);
+              if (activeConversation && activeConversation.id && userData && userData.id) {
+                updateConversationAge(activeConversation.id, newAge, userData.id);
               }
 
               // Tiếp tục gửi tin nhắn sau khi thiết lập tuổi
@@ -662,7 +654,6 @@ const ChatPage = () => {
       });
       return;
     }
-
 
     // Sao lưu tin nhắn để dùng sau
     const messageContent = newMessage;
@@ -712,13 +703,11 @@ const ChatPage = () => {
     setIsLoading(true);
 
     try {
-      // Lấy token từ localStorage hoặc sessionStorage
-      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-
       // Chuẩn bị dữ liệu gửi đi
       const requestData = {
         message: messageContent,
-        age: userAge
+        age: userAge,
+        user_id: userData?.id
       };
 
       // Nếu đang trong một cuộc hội thoại, thêm conversation_id
@@ -727,26 +716,74 @@ const ChatPage = () => {
       }
 
       // Gọi API
-      const response = await axios.post(
-        `${API_BASE_URL}/chat`,
-        requestData,
-        {
-          headers: token ? {
-            'Authorization': `Bearer ${token}`
-          } : {}
-        }
-      );
+      const response = await axios.post(`${API_BASE_URL}/chat`, requestData);
 
       if (response.data.success) {
         // Nếu có conversation_id mới được tạo, cập nhật state
-        if (response.data.conversation_id && (!activeConversation?.id)) {
-          // Tìm nạp chi tiết cuộc hội thoại mới
-          fetchConversationDetail(response.data.conversation_id);
-          // Làm mới danh sách cuộc hội thoại
-          fetchConversations();
+        if (response.data.conversation_id && (!activeConversation?.id || activeConversation?.id !== response.data.conversation_id)) {
+          const newConversationId = response.data.conversation_id;
+
+          // Cập nhật tên cuộc hội thoại ngay lập tức nếu có
+          if (response.data.conversation_title) {
+            const newTitle = response.data.conversation_title;
+
+            // Cập nhật activeConversation với ID mới và tiêu đề mới
+            setActiveConversation(prev => ({
+              ...prev,
+              id: newConversationId,
+              title: newTitle
+            }));
+
+            // Thêm/cập nhật cuộc hội thoại mới này vào danh sách cuộc hội thoại
+            setConversations(prevConversations => {
+              // Kiểm tra xem cuộc hội thoại đã tồn tại trong danh sách chưa
+              const existingIndex = prevConversations.findIndex(conv => conv.id === newConversationId);
+
+              if (existingIndex >= 0) {
+                // Nếu đã tồn tại, cập nhật tiêu đề
+                const updatedConversations = [...prevConversations];
+                updatedConversations[existingIndex] = {
+                  ...updatedConversations[existingIndex],
+                  title: newTitle
+                };
+                return updatedConversations;
+              } else {
+                // Nếu chưa tồn tại, thêm vào đầu danh sách
+                const newConversation = {
+                  id: newConversationId,
+                  title: newTitle,
+                  created_at: new Date().toISOString(),
+                  updated_at: new Date().toISOString(),
+                  age_context: userAge,
+                  is_archived: false,
+                  last_message: messageContent.substring(0, 50) + (messageContent.length > 50 ? "..." : ""),
+                  message_count: 2 // 1 tin nhắn người dùng + 1 tin nhắn bot
+                };
+                return [newConversation, ...prevConversations];
+              }
+            });
+
+            // Hiển thị thông báo nổi
+            const toastDiv = document.createElement('div');
+            toastDiv.className = 'toast-notification';
+            toastDiv.innerHTML = `<span>Đã đặt tên cuộc hội thoại: ${newTitle}</span>`;
+            document.body.appendChild(toastDiv);
+
+            // Xóa thông báo sau 3 giây
+            setTimeout(() => {
+              toastDiv.remove();
+            }, 3000);
+          }
+
+          // Vẫn tìm nạp chi tiết đầy đủ từ server để đảm bảo đồng bộ
+          // nhưng không chờ đợi phản hồi này để cập nhật giao diện người dùng
+          fetchConversationDetail(newConversationId, userData?.id).then(() => {
+            // Làm mới danh sách cuộc hội thoại sau khi lấy chi tiết
+            fetchConversations(userData?.id);
+          });
         } else if (activeConversation && activeConversation.id) {
           // Nếu đang trong cuộc hội thoại hiện có, làm mới nó
-          fetchConversationDetail(activeConversation.id);
+          fetchConversationDetail(activeConversation.id, userData?.id);
         } else {
           // Nếu không có conversation_id từ API (trường hợp người dùng không đăng nhập)
           // Tạo tin nhắn bot để hiển thị ngay
@@ -800,104 +837,102 @@ const ChatPage = () => {
   };
 
   const startNewConversation = async () => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-
-    if (token) {
-      try {
-        // Tạo cuộc hội thoại mới mà không truyền age_context
-        const response = await axios.post(
-          `${API_BASE_URL}/conversations`,
-          {
-            title: 'Cuộc trò chuyện mới'
-            // Không truyền age_context ở đây
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if (response.data.success) {
-          // Tạo thành công, thiết lập lại userAge
-          setUserAge(null); // Reset tuổi để người dùng nhập lại
-
-          // Làm mới danh sách cuộc hội thoại
-          await fetchConversations();
-
-          // Mở cuộc hội thoại mới
-          const conversationId = response.data.conversation_id;
-          if (conversationId) {
-            // Tạo một cuộc hội thoại tạm với ID mới và không có age_context
-            const newConversation = {
-              id: conversationId,
-              title: 'Cuộc trò chuyện mới',
-              messages: [],
-              age_context: null, // Đảm bảo không có age_context
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            };
-
-            // Thiết lập cuộc hội thoại mới không có age_context
-            setActiveConversation(newConversation);
-
-            // Lấy chi tiết đầy đủ sau khi thiết lập
-            fetchConversationDetail(conversationId);
-          }
-
-          // Trên mobile, ẩn sidebar sau khi tạo cuộc trò chuyện mới
-          if (isMobile) {
-            setIsSidebarVisible(false);
-          }
-
-          // Hiển thị thông báo nhắc người dùng chọn tuổi
-          setTimeout(() => {
-            Swal.fire({
-              title: 'Thiết lập độ tuổi',
-              text: 'Vui lòng thiết lập độ tuổi cho cuộc trò chuyện mới',
-              icon: 'info',
-              confirmButtonText: 'Thiết lập ngay',
-              confirmButtonColor: '#36B37E'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // Mở dialog thiết lập tuổi
-                Swal.fire({
-                  title: 'Chọn độ tuổi',
-                  html: `
-                    <select id="swal-age" class="swal2-input">
-                      ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                    `<option value="${age}">${age} tuổi</option>`
-                  ).join('')}
-                    </select>
-                  `,
-                  confirmButtonText: 'Lưu',
-                  confirmButtonColor: '#36B37E',
-                  preConfirm: () => {
-                    const age = parseInt(document.getElementById('swal-age').value);
-                    if (isNaN(age) || age < 1 || age > 19) {
-                      Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-                    }
-                    return age;
-                  }
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    setUserAge(result.value);
-                    // Cập nhật age_context cho cuộc hội thoại mới
-                    updateConversationAge(conversationId, result.value);
-                  }
-                });
-              }
-            });
-          }, 500);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tạo cuộc hội thoại mới:", error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: 'Không thể tạo cuộc hội thoại mới',
-          confirmButtonColor: '#36B37E'
-        });
-      }
-    } else {
-      // Redirect to login
+    if (!userData || !userData.id) {
       navigate('/login');
+      return;
+    }
+
+    try {
+      // Tạo cuộc hội thoại mới mà không truyền age_context
+      const response = await axios.post(
+        `${API_BASE_URL}/conversations`,
+        {
+          title: 'Cuộc trò chuyện mới',
+          user_id: userData.id
+          // Không truyền age_context ở đây
+        }
+      );
+
+      if (response.data.success) {
+        // Tạo thành công, thiết lập lại userAge
+        setUserAge(null); // Reset tuổi để người dùng nhập lại
+
+        // Làm mới danh sách cuộc hội thoại
+        await fetchConversations(userData.id);
+
+        // Mở cuộc hội thoại mới
+        const conversationId = response.data.conversation_id;
+        if (conversationId) {
+          // Tạo một cuộc hội thoại tạm với ID mới và không có age_context
+          const newConversation = {
+            id: conversationId,
+            title: 'Cuộc trò chuyện mới',
+            messages: [],
+            age_context: null, // Đảm bảo không có age_context
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+
+          // Thiết lập cuộc hội thoại mới không có age_context
+          setActiveConversation(newConversation);
+
+          // Lấy chi tiết đầy đủ sau khi thiết lập
+          fetchConversationDetail(conversationId, userData.id);
+        }
+
+        // Trên mobile, ẩn sidebar sau khi tạo cuộc trò chuyện mới
+        if (isMobile) {
+          setIsSidebarVisible(false);
+        }
+
+        // Hiển thị thông báo nhắc người dùng chọn tuổi
+        setTimeout(() => {
+          Swal.fire({
+            title: 'Thiết lập độ tuổi',
+            text: 'Vui lòng thiết lập độ tuổi cho cuộc trò chuyện mới',
+            icon: 'info',
+            confirmButtonText: 'Thiết lập ngay',
+            confirmButtonColor: '#36B37E'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Mở dialog thiết lập tuổi
+              Swal.fire({
+                title: 'Chọn độ tuổi',
+                html: `
+                  <select id="swal-age" class="swal2-input">
+                    ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                  `<option value="${age}">${age} tuổi</option>`
+                ).join('')}
+                  </select>
+                `,
+                confirmButtonText: 'Lưu',
+                confirmButtonColor: '#36B37E',
+                preConfirm: () => {
+                  const age = parseInt(document.getElementById('swal-age').value);
+                  if (isNaN(age) || age < 1 || age > 19) {
+                    Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+                  }
+                  return age;
+                }
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  setUserAge(result.value);
+                  // Cập nhật age_context cho cuộc hội thoại mới
+                  updateConversationAge(conversationId, result.value, userData.id);
+                }
+              });
+            }
+          });
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo cuộc hội thoại mới:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Không thể tạo cuộc hội thoại mới',
+        confirmButtonColor: '#36B37E'
+      });
     }
 
     // Focus vào input
@@ -905,8 +940,7 @@ const ChatPage = () => {
   };
 
   const deleteConversation = async (conversationId) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
+    if (!userData || !userData.id) return;
 
     Swal.fire({
       title: 'Xóa cuộc trò chuyện?',
@@ -922,7 +956,7 @@ const ChatPage = () => {
         try {
           const response = await axios.delete(
             `${API_BASE_URL}/conversations/${conversationId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
+            { params: { user_id: userData.id } }
           );
 
           if (response.data.success) {
@@ -934,7 +968,7 @@ const ChatPage = () => {
             if (activeConversation && activeConversation.id === conversationId) {
               if (updatedConversations.length > 0) {
                 setActiveConversation(updatedConversations[0]);
-                fetchConversationDetail(updatedConversations[0].id);
+                fetchConversationDetail(updatedConversations[0].id, userData.id);
               } else {
                 setActiveConversation(null);
               }
@@ -948,8 +982,7 @@ const ChatPage = () => {
   };
 
   const renameConversation = async (conversationId, currentTitle) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (!token) return;
+    if (!userData || !userData.id) return;
 
     Swal.fire({
       title: 'Đổi tên cuộc trò chuyện',
@@ -973,8 +1006,10 @@ const ChatPage = () => {
         try {
           const response = await axios.put(
             `${API_BASE_URL}/conversations/${conversationId}`,
-            { title: result.value },
-            { headers: { Authorization: `Bearer ${token}` } }
+            {
+              title: result.value,
+              user_id: userData.id
+            }
           );
 
           if (response.data.success) {
@@ -1022,10 +1057,8 @@ const ChatPage = () => {
       cancelButtonText: 'Hủy'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Xóa token và thông tin người dùng
-        localStorage.removeItem('token');
+        // Xóa thông tin người dùng
         localStorage.removeItem('user');
-        sessionStorage.removeItem('token');
         sessionStorage.removeItem('user');
 
         // Đặt lại state
@@ -1250,7 +1283,7 @@ const ChatPage = () => {
         key={conversation.id}
         onClick={() => {
           if (activeConversation?.id !== conversation.id) {
-            fetchConversationDetail(conversation.id);
+            fetchConversationDetail(conversation.id, userData?.id);
           }
           // Trên mobile, đóng sidebar sau khi chọn
           if (isMobile) {
@@ -1290,6 +1323,7 @@ const ChatPage = () => {
         isMobile={isMobile}
         isSidebarVisible={isSidebarVisible}
         activeConversation={activeConversation}
+        updateConversationAge={updateConversationAge}
       />
 
       {/* Main content */}

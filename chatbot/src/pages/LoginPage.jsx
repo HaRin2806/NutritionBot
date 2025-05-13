@@ -35,9 +35,8 @@ const LoginPage = () => {
       });
       
       if (response.data.success) {
-        // Lưu token và thông tin người dùng vào localStorage hoặc sessionStorage
+        // Lưu thông tin người dùng vào localStorage hoặc sessionStorage
         const storage = formData.rememberMe ? localStorage : sessionStorage;
-        storage.setItem('token', response.data.access_token);
         storage.setItem('user', JSON.stringify(response.data.user));
         
         // Hiển thị thông báo đăng nhập thành công
