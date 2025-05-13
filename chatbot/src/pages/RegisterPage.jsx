@@ -57,10 +57,6 @@ const RegisterPage = () => {
       newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
     }
 
-    if (!formData.age) {
-      newErrors.age = 'Vui lòng chọn tuổi';
-    }
-
     if (!formData.gender) {
       newErrors.gender = 'Vui lòng chọn giới tính';
     }
@@ -86,11 +82,10 @@ const RegisterPage = () => {
         fullName: formData.fullName,
         email: formData.email,
         password: formData.password,
-        age: formData.age,
         gender: formData.gender
       });
 
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         // Hiển thị thông báo đăng ký thành công
         Swal.fire({
           icon: 'success',
@@ -127,12 +122,6 @@ const RegisterPage = () => {
       setLoading(false);
     }
   };
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: 19 },
-    (_, index) => index + 1
-  );
 
   return (
     <div
@@ -199,31 +188,29 @@ const RegisterPage = () => {
             )}
           </div>
 
-          {/* Tuổi và Giới tính */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="relative">
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
-        ${errors.gender
-                      ? 'border-red-300 focus:ring-red-200'
-                      : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
-                    }`}
-                >
-                  <option value="">Giới tính</option>
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
-                </select>
-                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
-              {errors.gender && (
-                <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
-              )}
+          {/* Giới tính - Sửa lại để kéo dài hết hàng */}
+          <div>
+            <div className="relative">
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:outline-none appearance-none
+                ${errors.gender
+                  ? 'border-red-300 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-mint-500 focus:ring-mint-200'
+                }`}
+              >
+                <option value="">Giới tính</option>
+                <option value="male">Nam</option>
+                <option value="female">Nữ</option>
+                <option value="other">Khác</option>
+              </select>
+              <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
             </div>
+            {errors.gender && (
+              <p className="text-red-500 text-xs mt-1">{errors.gender}</p>
+            )}
           </div>
 
           {/* Mật khẩu */}

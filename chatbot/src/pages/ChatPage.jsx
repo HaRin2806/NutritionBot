@@ -470,12 +470,9 @@ const ChatPage = () => {
         confirmButtonColor: '#36B37E',
         didOpen: () => {
           Swal.showLoading();
+          // Bỏ đoạn hiển thị text "Tự động chuyển hướng sau X giây"
           const timerInterval = setInterval(() => {
-            const secondsLeft = Math.ceil(Swal.getTimerLeft() / 1000);
-            const timerText = Swal.getPopup().querySelector('.swal2-timer-progress-bar-container');
-            if (timerText) {
-              timerText.textContent = `Tự động chuyển hướng sau ${secondsLeft} giây`;
-            }
+            // Chỉ để trống, thanh tiến trình sẽ tự động hiển thị
           }, 100);
 
           // Lưu timerInterval vào Swal để có thể xóa nó sau
