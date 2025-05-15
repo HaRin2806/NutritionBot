@@ -39,6 +39,13 @@ def set_conversation_title_async(conversation, message):
         conversation.save()
         
         logger.info(f"Đã cập nhật tên cuộc hội thoại: {title}")
+        
+        # Lưu vết log để gỡ lỗi
+        logger.debug(f"Conversation ID: {conversation.conversation_id}, New title: {title}")
+        
+        # Tại đây bạn có thể thêm cơ chế thông báo (websocket/SSE) nếu cần
+        # Bước phát triển tiếp theo: Triển khai Websocket để thông báo real-time
+        
     except Exception as e:
         logger.error(f"Lỗi khi cập nhật tên cuộc hội thoại bất đồng bộ: {str(e)}")
 

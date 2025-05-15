@@ -720,53 +720,18 @@ const ChatPage = () => {
 
       if (response.data.success) {
         // Nếu có conversation_id mới được tạo, cập nhật state
-        if (response.data.conversation_id && (!activeConversation?.id || activeConversation?.id !== response.data.conversation_id)) {
-          const newConversationId = response.data.conversation_id;
+        if (response.data.conversation_id && (!activeConversation?.id)) {
+          // Tìm nạp chi tiết cuộc hội thoại mới
+          fetchConversationDetail(response.data.conversation_id, userData?.id);
+          // Làm mới danh sách cuộc hội thoại
+          fetchConversations(userData?.id);
 
-          // Cập nhật tên cuộc hội thoại ngay lập tức nếu có
+          // Thêm thông báo khi có title mới được tạo
           if (response.data.conversation_title) {
-            const newTitle = response.data.conversation_title;
-
-            // Cập nhật activeConversation với ID mới và tiêu đề mới
-            setActiveConversation(prev => ({
-              ...prev,
-              id: newConversationId,
-              title: newTitle
-            }));
-
-            // Thêm/cập nhật cuộc hội thoại mới này vào danh sách cuộc hội thoại
-            setConversations(prevConversations => {
-              // Kiểm tra xem cuộc hội thoại đã tồn tại trong danh sách chưa
-              const existingIndex = prevConversations.findIndex(conv => conv.id === newConversationId);
-
-              if (existingIndex >= 0) {
-                // Nếu đã tồn tại, cập nhật tiêu đề
-                const updatedConversations = [...prevConversations];
-                updatedConversations[existingIndex] = {
-                  ...updatedConversations[existingIndex],
-                  title: newTitle
-                };
-                return updatedConversations;
-              } else {
-                // Nếu chưa tồn tại, thêm vào đầu danh sách
-                const newConversation = {
-                  id: newConversationId,
-                  title: newTitle,
-                  created_at: new Date().toISOString(),
-                  updated_at: new Date().toISOString(),
-                  age_context: userAge,
-                  is_archived: false,
-                  last_message: messageContent.substring(0, 50) + (messageContent.length > 50 ? "..." : ""),
-                  message_count: 2 // 1 tin nhắn người dùng + 1 tin nhắn bot
-                };
-                return [newConversation, ...prevConversations];
-              }
-            });
-
-            // Hiển thị thông báo nổi
+            // Hiển thị thông báo nổi nhỏ
             const toastDiv = document.createElement('div');
             toastDiv.className = 'toast-notification';
-            toastDiv.innerHTML = `<span>Đã đặt tên cuộc hội thoại: ${newTitle}</span>`;
+            toastDiv.innerHTML = `<span>Đã đặt tên cuộc hội thoại: ${response.data.conversation_title}</span>`;
             document.body.appendChild(toastDiv);
 
             // Xóa thông báo sau 3 giây
@@ -774,13 +739,6 @@ const ChatPage = () => {
               toastDiv.remove();
             }, 3000);
           }
-
-          // Vẫn tìm nạp chi tiết đầy đủ từ server để đảm bảo đồng bộ
-          // nhưng không chờ đợi phản hồi này để cập nhật giao diện người dùng
-          fetchConversationDetail(newConversationId, userData?.id).then(() => {
-            // Làm mới danh sách cuộc hội thoại sau khi lấy chi tiết
-            fetchConversations(userData?.id);
-          });
         } else if (activeConversation && activeConversation.id) {
           // Nếu đang trong cuộc hội thoại hiện có, làm mới nó
           fetchConversationDetail(activeConversation.id, userData?.id);

@@ -38,7 +38,7 @@ def generate_conversation_title(message, max_length=50, max_retry=2):
         )
         
         # Tạo prompt cho việc tạo tiêu đề - ngắn gọn và cụ thể
-        prompt = f"Tạo tiêu đề ngắn gọn (4-5 từ) cho cuộc hội thoại bắt đầu với câu: '{message}'. Chỉ trả về tiêu đề, không giải thích."
+        prompt = f"Tạo tiêu đề ngắn gọn (dưới 10 từ) cho cuộc hội thoại từ nội dung sau: '{message}'. Chỉ trả về tiêu đề, không giải thích."
         
         # Thử gọi Gemini API với số lần thử lại (retry)
         title = None
