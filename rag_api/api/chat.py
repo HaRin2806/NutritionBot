@@ -1,14 +1,12 @@
 from flask import Blueprint, request, jsonify
 import logging
 import time
-import threading
 from core.rag_pipeline import RAGPipeline
 from core.embedding_model import get_embedding_model
 from core.data_processor import DataProcessor
 from models.user_model import User
 from models.conversation_model import Conversation
 from bson.objectid import ObjectId
-from api.utils import generate_conversation_title
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -27,27 +25,18 @@ def get_rag_pipeline():
     embedding_model = get_embedding_model()
     return RAGPipeline(data_processor, embedding_model)
 
-# Thêm một hàm để cập nhật tên cuộc trò chuyện trong background
-def set_conversation_title_async(conversation, message):
-    """Cập nhật tên cuộc trò chuyện bất đồng bộ"""
-    try:
-        # Tạo tiêu đề tự động
-        title = generate_conversation_title(message)
-        
-        # Cập nhật tiêu đề cho cuộc hội thoại
-        conversation.title = title
-        conversation.save()
-        
-        logger.info(f"Đã cập nhật tên cuộc hội thoại: {title}")
-        
-        # Lưu vết log để gỡ lỗi
-        logger.debug(f"Conversation ID: {conversation.conversation_id}, New title: {title}")
-        
-        # Tại đây bạn có thể thêm cơ chế thông báo (websocket/SSE) nếu cần
-        # Bước phát triển tiếp theo: Triển khai Websocket để thông báo real-time
-        
-    except Exception as e:
-        logger.error(f"Lỗi khi cập nhật tên cuộc hội thoại bất đồng bộ: {str(e)}")
+# Hàm đơn giản để tạo tiêu đề từ nội dung tin nhắn
+def create_title_from_message(message, max_length=50):
+    """Tạo tiêu đề cuộc trò chuyện từ tin nhắn đầu tiên của người dùng"""
+    # Loại bỏ ký tự xuống dòng và khoảng trắng thừa
+    message = message.strip().replace('\n', ' ')
+    
+    # Nếu tin nhắn đủ ngắn, sử dụng làm tiêu đề luôn
+    if len(message) <= max_length:
+        return message
+    
+    # Nếu tin nhắn quá dài, cắt ngắn và thêm dấu "..."
+    return message[:max_length-3] + "..."
 
 @chat_routes.route('/chat', methods=['POST'])
 def chat():
@@ -120,14 +109,14 @@ def chat():
                 
                 # Kiểm tra số lượng tin nhắn
                 if conversation and len(conversation.messages) == 0:
-                    # Nếu đây là tin nhắn đầu tiên, hãy tạo tiêu đề tự động
+                    # Nếu đây là tin nhắn đầu tiên, đánh dấu là cuộc hội thoại mới
                     is_new_conversation = True
             
             # Nếu không tìm thấy cuộc hội thoại, tạo mới và đặt biến flag
             if not conversation:
                 is_new_conversation = True
-                # Tạo tiêu đề tạm thời
-                title = "Cuộc trò chuyện mới"
+                # Tạo tiêu đề từ nội dung tin nhắn đầu tiên
+                title = create_title_from_message(message)
                 
                 conversation = Conversation(
                     user_id=ObjectId(user_id) if ObjectId.is_valid(user_id) else None,
@@ -136,6 +125,7 @@ def chat():
                 )
                 conversation.save()
                 conversation_id = str(conversation.conversation_id)
+                conversation_title = title
             
             # Thêm tin nhắn của người dùng
             conversation.add_message(
@@ -157,25 +147,13 @@ def chat():
                 }
             )
             
-            # Nếu là cuộc trò chuyện mới, tạo tiêu đề tự động từ tin nhắn đầu tiên
-            if is_new_conversation:
-                # Tạo tiêu đề mặc định trước
-                default_title = message[:50] + ("..." if len(message) > 50 else "")
-                conversation.title = default_title
+            # Nếu là cuộc trò chuyện mới, tạo tiêu đề từ tin nhắn đầu tiên
+            if is_new_conversation and not conversation_title:
+                title = create_title_from_message(message)
+                conversation.title = title
                 conversation.save()
-                
-                # Tạo tiêu đề cuộc trò chuyện trong background
-                conversation_title = default_title  # Gán tiêu đề mặc định để trả về trong response
-                
-                # Tạo và bắt đầu thread để cập nhật tiêu đề
-                title_thread = threading.Thread(
-                    target=set_conversation_title_async,
-                    args=(conversation, message)
-                )
-                title_thread.daemon = True  # Đảm bảo thread sẽ không chặn ứng dụng kết thúc
-                title_thread.start()
-                
-                logger.info(f"Đã bắt đầu cập nhật tên cuộc hội thoại trong background")
+                conversation_title = title
+                logger.info(f"Đã tạo tiêu đề cuộc hội thoại: {title}")
         
         # Định dạng kết quả cho frontend
         response = {

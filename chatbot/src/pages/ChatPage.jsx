@@ -38,6 +38,20 @@ const NutribotLogo = () => (
   </svg>
 );
 
+// Hàm tạo tiêu đề từ tin nhắn
+const createTitleFromMessage = (message, maxLength = 50) => {
+  // Loại bỏ ký tự xuống dòng và khoảng trắng thừa
+  const cleanMessage = message.trim().replace(/\n/g, ' ');
+  
+  // Nếu tin nhắn đủ ngắn, sử dụng làm tiêu đề luôn
+  if (cleanMessage.length <= maxLength) {
+    return cleanMessage;
+  }
+  
+  // Nếu tin nhắn quá dài, cắt ngắn và thêm dấu "..."
+  return cleanMessage.slice(0, maxLength - 3) + "...";
+};
+
 // Component để hiển thị hình ảnh với trạng thái loading
 const RenderImage = ({ src, alt }) => {
   const [loading, setLoading] = useState(true);
@@ -495,26 +509,76 @@ const ChatPage = () => {
       });
 
       if (response.data.success) {
-        setConversations(response.data.conversations);
+        const fetchedConversations = response.data.conversations;
+        setConversations(fetchedConversations);
 
         // Nếu có conversationId từ URL, thiết lập nó làm cuộc hội thoại active
         if (conversationId) {
-          const foundConversation = response.data.conversations.find(c => c.id === conversationId);
+          const foundConversation = fetchedConversations.find(c => c.id === conversationId);
           if (foundConversation) {
             setActiveConversation(foundConversation);
             // Lấy chi tiết cuộc hội thoại
             fetchConversationDetail(conversationId, userId);
           }
-        } else if (response.data.conversations.length > 0) {
+        } else if (fetchedConversations.length > 0) {
           // Nếu không có conversationId từ URL, lấy cuộc hội thoại mới nhất
-          setActiveConversation(response.data.conversations[0]);
-          fetchConversationDetail(response.data.conversations[0].id, userId);
+          setActiveConversation(fetchedConversations[0]);
+          fetchConversationDetail(fetchedConversations[0].id, userId);
+        }
+
+        // Lấy tuổi từ cuộc hội thoại gần nhất có age_context
+        if (fetchedConversations.length > 0) {
+          // Tìm cuộc hội thoại gần đây nhất có age_context
+          const lastConversationWithAge = fetchedConversations.find(conv => conv.age_context);
+          if (lastConversationWithAge && lastConversationWithAge.age_context) {
+            setUserAge(lastConversationWithAge.age_context);
+          } else {
+            // Nếu chưa có cuộc hội thoại nào có age_context, cần nhắc người dùng thiết lập
+            promptUserForAge();
+          }
+        } else {
+          // Nếu không có cuộc hội thoại nào, cần nhắc người dùng thiết lập tuổi
+          promptUserForAge();
         }
       }
     } catch (error) {
       console.error("Lỗi khi lấy danh sách cuộc hội thoại:", error);
     } finally {
       setIsLoadingConversations(false);
+    }
+  };
+
+  // Hàm nhắc người dùng thiết lập tuổi nếu cần
+  const promptUserForAge = () => {
+    if (!userAge) {
+      setTimeout(() => {
+        Swal.fire({
+          title: 'Thiết lập độ tuổi',
+          text: 'Vui lòng thiết lập độ tuổi để nhận được thông tin dinh dưỡng phù hợp',
+          icon: 'info',
+          html: `
+            <select id="swal-age" class="swal2-input">
+              ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
+              ).join('')}
+            </select>
+          `,
+          confirmButtonText: 'Lưu',
+          confirmButtonColor: '#36B37E',
+          allowOutsideClick: false,
+          preConfirm: () => {
+            const age = parseInt(document.getElementById('swal-age').value);
+            if (isNaN(age) || age < 1 || age > 19) {
+              Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+            }
+            return age;
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setUserAge(result.value);
+          }
+        });
+      }, 1000);
     }
   };
 
@@ -536,12 +600,6 @@ const ChatPage = () => {
         // Cập nhật userAge từ age_context nếu có
         if (conversation.age_context) {
           setUserAge(conversation.age_context);
-        } else {
-          // Nếu cuộc hội thoại không có age_context và cũng không có tin nhắn
-          // (nghĩa là cuộc hội thoại mới), cho phép người dùng đặt tuổi mới
-          if (!conversation.messages || conversation.messages.length === 0) {
-            setUserAge(null);
-          }
         }
       }
     } catch (error) {
@@ -616,11 +674,6 @@ const ChatPage = () => {
               const newAge = result.value;
               setUserAge(newAge);
 
-              // Nếu đang trong cuộc hội thoại, cập nhật age_context
-              if (activeConversation && activeConversation.id && userData && userData.id) {
-                updateConversationAge(activeConversation.id, newAge, userData.id);
-              }
-
               // Tiếp tục gửi tin nhắn sau khi thiết lập tuổi
               setTimeout(() => {
                 handleSendMessage(e);
@@ -670,6 +723,47 @@ const ChatPage = () => {
       timestamp: new Date().toISOString()
     };
 
+    // Kiểm tra xem đây có phải là cuộc trò chuyện mới không (không có tin nhắn nào)
+    const isNewConversation = activeConversation && 
+                           activeConversation.id && 
+                           (!activeConversation.messages || activeConversation.messages.length === 0);
+
+    // Nếu là cuộc trò chuyện mới, cập nhật tiêu đề ngay lập tức ở frontend
+    if (isNewConversation) {
+      const newTitle = createTitleFromMessage(messageContent);
+      
+      // Cập nhật title trong state của activeConversation
+      setActiveConversation(prev => ({
+        ...prev,
+        title: newTitle
+      }));
+      
+      // Cập nhật title trong danh sách conversations
+      setConversations(prevConversations =>
+        prevConversations.map(conv =>
+          conv.id === activeConversation.id
+            ? { ...conv, title: newTitle }
+            : conv
+        )
+      );
+      
+      // Gửi request đến backend để cập nhật tiêu đề trong database
+      if (userData && userData.id) {
+        try {
+          axios.put(
+            `${API_BASE_URL}/conversations/${activeConversation.id}`,
+            {
+              title: newTitle,
+              user_id: userData.id
+            }
+          );
+          // Không cần đợi phản hồi vì chúng ta đã cập nhật UI
+        } catch (error) {
+          console.error("Lỗi khi cập nhật tiêu đề cuộc hội thoại:", error);
+        }
+      }
+    }
+
     // Cập nhật state để hiển thị tin nhắn người dùng ngay lập tức
     if (activeConversation) {
       setActiveConversation(prev => {
@@ -690,7 +784,7 @@ const ChatPage = () => {
       // Nếu chưa có cuộc hội thoại nào, tạo cuộc hội thoại mới tạm thời
       setActiveConversation({
         id: null,
-        title: 'Cuộc trò chuyện mới',
+        title: createTitleFromMessage(messageContent), // Sử dụng tin nhắn làm tiêu đề ngay lập tức
         messages: [userMessage],
         age_context: userAge
       });
@@ -725,20 +819,6 @@ const ChatPage = () => {
           fetchConversationDetail(response.data.conversation_id, userData?.id);
           // Làm mới danh sách cuộc hội thoại
           fetchConversations(userData?.id);
-
-          // Thêm thông báo khi có title mới được tạo
-          if (response.data.conversation_title) {
-            // Hiển thị thông báo nổi nhỏ
-            const toastDiv = document.createElement('div');
-            toastDiv.className = 'toast-notification';
-            toastDiv.innerHTML = `<span>Đã đặt tên cuộc hội thoại: ${response.data.conversation_title}</span>`;
-            document.body.appendChild(toastDiv);
-
-            // Xóa thông báo sau 3 giây
-            setTimeout(() => {
-              toastDiv.remove();
-            }, 3000);
-          }
         } else if (activeConversation && activeConversation.id) {
           // Nếu đang trong cuộc hội thoại hiện có, làm mới nó
           fetchConversationDetail(activeConversation.id, userData?.id);
@@ -801,37 +881,34 @@ const ChatPage = () => {
     }
 
     try {
-      // Tạo cuộc hội thoại mới mà không truyền age_context
+      // Sử dụng userAge hiện tại (lấy từ cuộc trò chuyện gần nhất có age_context)
       const response = await axios.post(
         `${API_BASE_URL}/conversations`,
         {
           title: 'Cuộc trò chuyện mới',
-          user_id: userData.id
-          // Không truyền age_context ở đây
+          user_id: userData.id,
+          age_context: userAge // Sử dụng tuổi hiện tại cho cuộc trò chuyện mới
         }
       );
 
       if (response.data.success) {
-        // Tạo thành công, thiết lập lại userAge
-        setUserAge(null); // Reset tuổi để người dùng nhập lại
-
         // Làm mới danh sách cuộc hội thoại
         await fetchConversations(userData.id);
 
         // Mở cuộc hội thoại mới
         const conversationId = response.data.conversation_id;
         if (conversationId) {
-          // Tạo một cuộc hội thoại tạm với ID mới và không có age_context
+          // Tạo một cuộc hội thoại tạm với ID mới
           const newConversation = {
             id: conversationId,
             title: 'Cuộc trò chuyện mới',
             messages: [],
-            age_context: null, // Đảm bảo không có age_context
+            age_context: userAge, // Sử dụng tuổi hiện tại
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           };
 
-          // Thiết lập cuộc hội thoại mới không có age_context
+          // Thiết lập cuộc hội thoại mới
           setActiveConversation(newConversation);
 
           // Lấy chi tiết đầy đủ sau khi thiết lập
@@ -842,46 +919,6 @@ const ChatPage = () => {
         if (isMobile) {
           setIsSidebarVisible(false);
         }
-
-        // Hiển thị thông báo nhắc người dùng chọn tuổi
-        setTimeout(() => {
-          Swal.fire({
-            title: 'Thiết lập độ tuổi',
-            text: 'Vui lòng thiết lập độ tuổi cho cuộc trò chuyện mới',
-            icon: 'info',
-            confirmButtonText: 'Thiết lập ngay',
-            confirmButtonColor: '#36B37E'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              // Mở dialog thiết lập tuổi
-              Swal.fire({
-                title: 'Chọn độ tuổi',
-                html: `
-                  <select id="swal-age" class="swal2-input">
-                    ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                  `<option value="${age}">${age} tuổi</option>`
-                ).join('')}
-                  </select>
-                `,
-                confirmButtonText: 'Lưu',
-                confirmButtonColor: '#36B37E',
-                preConfirm: () => {
-                  const age = parseInt(document.getElementById('swal-age').value);
-                  if (isNaN(age) || age < 1 || age > 19) {
-                    Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-                  }
-                  return age;
-                }
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  setUserAge(result.value);
-                  // Cập nhật age_context cho cuộc hội thoại mới
-                  updateConversationAge(conversationId, result.value, userData.id);
-                }
-              });
-            }
-          });
-        }, 500);
       }
     } catch (error) {
       console.error("Lỗi khi tạo cuộc hội thoại mới:", error);

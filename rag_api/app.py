@@ -23,13 +23,13 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 from api.auth import auth_routes
 from api.chat import chat_routes
 from api.data import data_routes
-from api.history import history_routes  # Thêm import cho history routes
+from api.history import history_routes
 
 # Đăng ký các blueprint
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(chat_routes, url_prefix='/api')
 app.register_blueprint(data_routes, url_prefix='/api')
-app.register_blueprint(history_routes, url_prefix='/api')  # Đăng ký history routes
+app.register_blueprint(history_routes, url_prefix='/api')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

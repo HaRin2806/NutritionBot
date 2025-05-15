@@ -10,6 +10,19 @@ logger = logging.getLogger(__name__)
 # Tạo blueprint
 history_routes = Blueprint('history', __name__)
 
+# Hàm đơn giản để tạo tiêu đề từ tin nhắn
+def create_title_from_message(message, max_length=50):
+    """Tạo tiêu đề cuộc trò chuyện từ tin nhắn đầu tiên của người dùng"""
+    # Loại bỏ ký tự xuống dòng và khoảng trắng thừa
+    message = message.strip().replace('\n', ' ')
+    
+    # Nếu tin nhắn đủ ngắn, sử dụng làm tiêu đề luôn
+    if len(message) <= max_length:
+        return message
+    
+    # Nếu tin nhắn quá dài, cắt ngắn và thêm dấu "..."
+    return message[:max_length-3] + "..."
+
 @history_routes.route('/conversations', methods=['GET'])
 def get_conversations():
     """API endpoint để lấy danh sách cuộc hội thoại của người dùng"""
@@ -713,8 +726,7 @@ def generate_title_for_conversation(conversation_id):
             }), 400
             
         # Tạo tiêu đề từ nội dung
-        from api.utils import generate_conversation_title
-        title = generate_conversation_title(first_user_message)
+        title = create_title_from_message(first_user_message)
             
         # Cập nhật tiêu đề
         conversation.title = title
