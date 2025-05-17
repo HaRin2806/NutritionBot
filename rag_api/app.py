@@ -3,6 +3,8 @@ from flask_cors import CORS
 import logging
 import os
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
+import datetime
 
 # Cấu hình logging
 logging.basicConfig(
@@ -16,6 +18,12 @@ load_dotenv()
 
 # Khởi tạo Flask app
 app = Flask(__name__)
+
+# Cấu hình JWT
+app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY", "hathimylinh")  # Dùng secret key từ .env
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=1)  # Token hết hạn sau 1 giờ
+jwt = JWTManager(app)
+
 # Cho phép CORS từ frontend React
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
 

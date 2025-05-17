@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 import re
 import logging
 from models.user_model import User
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+import datetime
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -47,6 +49,18 @@ def login_user(email, password):
     if success:
         user = result
         
+        # Tạo JWT token với thời gian hết hạn 1 giờ
+        expires = datetime.timedelta(hours=1)
+        access_token = create_access_token(
+            identity=str(user.user_id), 
+            expires_delta=expires,
+            additional_claims={
+                "name": user.name,
+                "email": user.email,
+                "gender": user.gender
+            }
+        )
+        
         return True, {
             "user_id": str(user.user_id),
             "user": {
@@ -54,7 +68,9 @@ def login_user(email, password):
                 "name": user.name,
                 "email": user.email,
                 "gender": user.gender
-            }
+            },
+            "access_token": access_token,
+            "expires_in": 3600  # 1 giờ tính bằng giây
         }
     else:
         return False, result
@@ -106,7 +122,9 @@ def login():
             return jsonify({
                 "success": True,
                 "user_id": result.get("user_id"),
-                "user": result.get("user")
+                "user": result.get("user"),
+                "access_token": result.get("access_token"),
+                "expires_in": result.get("expires_in")
             })
         else:
             return jsonify({
@@ -121,11 +139,30 @@ def login():
             "error": str(e)
         }), 500
 
+@auth_routes.route('/verify-token', methods=['POST'])
+@jwt_required()
+def verify_token():
+    """API endpoint để kiểm tra token có hợp lệ không"""
+    current_user_id = get_jwt_identity()
+    
+    # Kiểm tra user có tồn tại không
+    user = User.find_by_id(current_user_id)
+    if not user:
+        return jsonify({
+            "success": False,
+            "error": "User không tồn tại"
+        }), 401
+    
+    return jsonify({
+        "success": True,
+        "user_id": current_user_id
+    })
+
 @auth_routes.route('/profile', methods=['GET'])
 def user_profile():
     """API endpoint để lấy thông tin người dùng"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         if not user_id:
             return jsonify({
                 "success": False,

@@ -7,6 +7,7 @@ from core.data_processor import DataProcessor
 from models.user_model import User
 from models.conversation_model import Conversation
 from bson.objectid import ObjectId
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -44,12 +45,13 @@ def chat():
     try:
         data = request.json
         
+        user_id = get_jwt_identity()
+
         # Lấy dữ liệu đầu vào từ frontend React
         message = data.get('message')
         # Lấy thông tin tuổi từ request
         age = data.get('age')
         conversation_id = data.get('conversation_id')
-        user_id = data.get('user_id')  # Lấy user_id từ request thay vì JWT
         
         # Kiểm tra nếu không có tuổi
         if not age:

@@ -71,12 +71,13 @@ const HistoryPage = () => {
   const fetchConversationHistory = async (userId) => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        params: {
-          user_id: userId,
-          include_archived: true // Lấy tất cả cuộc trò chuyện kể cả đã lưu trữ
-        }
-      });
+    const response = await axios.get(`${API_BASE_URL}/conversations`, {
+      params: {
+        user_id: userId,
+        include_archived: true,
+        per_page: 1000 // Đặt giá trị đủ lớn để lấy tất cả cuộc trò chuyện
+      }
+    });
 
       if (response.data.success) {
         // Thêm các thuộc tính cần thiết vào mỗi cuộc trò chuyện
@@ -439,10 +440,7 @@ const HistoryPage = () => {
 
   // Chuyển đến chat với conversation ID cụ thể - FIX IMPORTANT
   const navigateToChat = (conversationId) => {
-    // Lưu conversationId vào localStorage để đảm bảo nó sẵn có ở trang Chat
-    localStorage.setItem('activeConversationId', conversationId);
-    // Điều hướng đến trang chat
-    navigate('/chat');
+    navigate(`/chat/${conversationId}`);
   };
 
   // Tạo danh sách lọc theo tuổi từ các cuộc hội thoại hiện có
@@ -545,8 +543,8 @@ const HistoryPage = () => {
             <button
               onClick={() => setActiveTab('all')}
               className={`mr-4 pb-3 px-1 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === 'all'
-                  ? 'border-mint-500 text-mint-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-mint-500 text-mint-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               style={{ borderColor: activeTab === 'all' ? '#36B37E' : 'transparent' }}
             >
@@ -555,8 +553,8 @@ const HistoryPage = () => {
             <button
               onClick={() => setActiveTab('archived')}
               className={`mr-4 pb-3 px-1 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === 'archived'
-                  ? 'border-mint-500 text-mint-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-mint-500 text-mint-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               style={{ borderColor: activeTab === 'archived' ? '#36B37E' : 'transparent' }}
             >

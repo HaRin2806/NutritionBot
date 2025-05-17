@@ -3,6 +3,7 @@ import logging
 from bson.objectid import ObjectId
 from models.conversation_model import Conversation
 from models.user_model import User
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ def create_title_from_message(message, max_length=50):
 def get_conversations():
     """API endpoint để lấy danh sách cuộc hội thoại của người dùng"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         if not user_id:
             return jsonify({
                 "success": False,
@@ -97,7 +98,7 @@ def get_conversations():
 def get_conversation_detail(conversation_id):
     """API endpoint để lấy chi tiết một cuộc hội thoại"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -256,7 +257,7 @@ def update_conversation(conversation_id):
 def delete_conversation(conversation_id):
     """API endpoint để xóa cuộc hội thoại"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
@@ -369,7 +370,7 @@ def unarchive_conversation(conversation_id):
 def search_conversations():
     """API endpoint để tìm kiếm cuộc hội thoại theo nội dung"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         if not user_id:
             return jsonify({
                 "success": False,
@@ -498,7 +499,7 @@ def add_message(conversation_id):
 def get_user_conversation_stats():
     """API endpoint để lấy thống kê cuộc hội thoại của người dùng"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         if not user_id:
             return jsonify({
                 "success": False,
@@ -571,7 +572,7 @@ def get_user_conversation_stats():
 def export_conversation(conversation_id):
     """API endpoint để xuất cuộc hội thoại dưới dạng JSON"""
     try:
-        user_id = request.args.get('user_id')
+        user_id = get_jwt_identity()
         
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)

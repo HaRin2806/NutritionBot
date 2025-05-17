@@ -12,7 +12,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/chat/:conversationId?" element={<ChatPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/history" element={<HistoryPage />} />
