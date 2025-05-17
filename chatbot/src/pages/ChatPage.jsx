@@ -42,12 +42,12 @@ const NutribotLogo = () => (
 const createTitleFromMessage = (message, maxLength = 50) => {
   // Loại bỏ ký tự xuống dòng và khoảng trắng thừa
   const cleanMessage = message.trim().replace(/\n/g, ' ');
-  
+
   // Nếu tin nhắn đủ ngắn, sử dụng làm tiêu đề luôn
   if (cleanMessage.length <= maxLength) {
     return cleanMessage;
   }
-  
+
   // Nếu tin nhắn quá dài, cắt ngắn và thêm dấu "..."
   return cleanMessage.slice(0, maxLength - 3) + "...";
 };
@@ -427,16 +427,18 @@ const ChatPage = () => {
   }, [isSidebarVisible]);
 
   // Hàm cập nhật age_context
-  const updateConversationAge = async (conversationId, age, userId) => {
-    if (!conversationId || !userId) return;
+  const updateConversationAge = async (conversationId, age) => {
+    if (!conversationId) return;
 
     try {
       const response = await axios.put(
         `${API_BASE_URL}/conversations/${conversationId}`,
         {
           title: activeConversation?.title,
-          age_context: age,
-          user_id: userId
+          age_context: age
+        },
+        {
+          withCredentials: true
         }
       );
 
@@ -505,7 +507,7 @@ const ChatPage = () => {
     try {
       setIsLoadingConversations(true);
       const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        params: { user_id: userId }
+        withCredentials: true
       });
 
       if (response.data.success) {
@@ -559,8 +561,8 @@ const ChatPage = () => {
           html: `
             <select id="swal-age" class="swal2-input">
               ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-              ).join('')}
+            `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
+          ).join('')}
             </select>
           `,
           confirmButtonText: 'Lưu',
@@ -584,17 +586,15 @@ const ChatPage = () => {
 
   // Lấy chi tiết cuộc hội thoại
   const fetchConversationDetail = async (id, userId) => {
-    if (!id || !userId) return;
+    if (!id) return;
 
     try {
       const response = await axios.get(`${API_BASE_URL}/conversations/${id}`, {
-        params: { user_id: userId }
+        withCredentials: true
       });
 
       if (response.data.success) {
         const conversation = response.data.conversation;
-
-        // Cập nhật cuộc hội thoại đang hoạt động với dữ liệu đầy đủ
         setActiveConversation(conversation);
 
         // Cập nhật userAge từ age_context nếu có
@@ -724,20 +724,20 @@ const ChatPage = () => {
     };
 
     // Kiểm tra xem đây có phải là cuộc trò chuyện mới không (không có tin nhắn nào)
-    const isNewConversation = activeConversation && 
-                           activeConversation.id && 
-                           (!activeConversation.messages || activeConversation.messages.length === 0);
+    const isNewConversation = activeConversation &&
+      activeConversation.id &&
+      (!activeConversation.messages || activeConversation.messages.length === 0);
 
     // Nếu là cuộc trò chuyện mới, cập nhật tiêu đề ngay lập tức ở frontend
     if (isNewConversation) {
       const newTitle = createTitleFromMessage(messageContent);
-      
+
       // Cập nhật title trong state của activeConversation
       setActiveConversation(prev => ({
         ...prev,
         title: newTitle
       }));
-      
+
       // Cập nhật title trong danh sách conversations
       setConversations(prevConversations =>
         prevConversations.map(conv =>
@@ -746,7 +746,7 @@ const ChatPage = () => {
             : conv
         )
       );
-      
+
       // Gửi request đến backend để cập nhật tiêu đề trong database
       if (userData && userData.id) {
         try {
@@ -800,8 +800,7 @@ const ChatPage = () => {
       // Chuẩn bị dữ liệu gửi đi
       const requestData = {
         message: messageContent,
-        age: userAge,
-        user_id: userData?.id
+        age: userAge
       };
 
       // Nếu đang trong một cuộc hội thoại, thêm conversation_id
@@ -810,7 +809,9 @@ const ChatPage = () => {
       }
 
       // Gọi API
-      const response = await axios.post(`${API_BASE_URL}/chat`, requestData);
+      const response = await axios.post(`${API_BASE_URL}/chat`, requestData, {
+        withCredentials: true
+      });
 
       if (response.data.success) {
         // Nếu có conversation_id mới được tạo, cập nhật state
@@ -886,8 +887,10 @@ const ChatPage = () => {
         `${API_BASE_URL}/conversations`,
         {
           title: 'Cuộc trò chuyện mới',
-          user_id: userData.id,
           age_context: userAge // Sử dụng tuổi hiện tại cho cuộc trò chuyện mới
+        },
+        {
+          withCredentials: true
         }
       );
 
@@ -935,23 +938,17 @@ const ChatPage = () => {
   };
 
   const deleteConversation = async (conversationId) => {
-    if (!userData || !userData.id) return;
+    if (!userData) return;
 
     Swal.fire({
       title: 'Xóa cuộc trò chuyện?',
-      text: 'Bạn có chắc muốn xóa cuộc trò chuyện này?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Xóa',
-      cancelButtonText: 'Hủy'
+      // ...
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.delete(
             `${API_BASE_URL}/conversations/${conversationId}`,
-            { params: { user_id: userData.id } }
+            { withCredentials: true }
           );
 
           if (response.data.success) {
@@ -1002,8 +999,10 @@ const ChatPage = () => {
           const response = await axios.put(
             `${API_BASE_URL}/conversations/${conversationId}`,
             {
-              title: result.value,
-              user_id: userData.id
+              title: result.value
+            },
+            {
+              withCredentials: true
             }
           );
 
@@ -1050,19 +1049,34 @@ const ChatPage = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Đăng xuất',
       cancelButtonText: 'Hủy'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // Xóa thông tin người dùng
-        localStorage.removeItem('user');
-        sessionStorage.removeItem('user');
+        try {
+          // Gọi API đăng xuất
+          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
+            withCredentials: true
+          });
 
-        // Đặt lại state
-        setUserData(null);
-        setActiveConversation(null);
-        setConversations([]);
+          // Xóa thông tin người dùng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
 
-        // Chuyển hướng về trang đăng nhập
-        navigate('/login');
+          // Xóa config header
+          delete axios.defaults.headers.common['Authorization'];
+
+          // Chuyển hướng về trang đăng nhập
+          navigate('/login');
+        } catch (error) {
+          console.error("Lỗi khi đăng xuất:", error);
+          // Vẫn xóa dữ liệu người dùng và chuyển hướng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
+          navigate('/login');
+        }
       }
     });
   };

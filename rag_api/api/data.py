@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify, send_from_directory
 import os
 import logging
 from core.data_processor import DataProcessor
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -38,6 +39,7 @@ def serve_figure(bai_id, filename):
         return jsonify({"error": f"Lỗi máy chủ: {str(e)}"}), 500
 
 @data_routes.route('/metadata', methods=['GET'])
+@jwt_required(optional=True)
 def get_metadata():
     """API endpoint để lấy thông tin metadata của tài liệu"""
     try:

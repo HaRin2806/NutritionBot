@@ -71,13 +71,13 @@ const HistoryPage = () => {
   const fetchConversationHistory = async (userId) => {
     setLoading(true);
     try {
-    const response = await axios.get(`${API_BASE_URL}/conversations`, {
-      params: {
-        user_id: userId,
-        include_archived: true,
-        per_page: 1000 // Đặt giá trị đủ lớn để lấy tất cả cuộc trò chuyện
-      }
-    });
+      const response = await axios.get(`${API_BASE_URL}/conversations`, {
+        params: {
+          include_archived: true,
+          per_page: 1000 // Đặt giá trị đủ lớn để lấy tất cả cuộc trò chuyện
+        },
+        withCredentials: true
+      });
 
       if (response.data.success) {
         // Thêm các thuộc tính cần thiết vào mỗi cuộc trò chuyện
@@ -237,7 +237,7 @@ const HistoryPage = () => {
       if (result.isConfirmed) {
         try {
           const response = await axios.delete(`${API_BASE_URL}/conversations/${id}`, {
-            params: { user_id: userData.id }
+            withCredentials: true
           });
 
           if (response.data.success) {
@@ -289,8 +289,9 @@ const HistoryPage = () => {
       if (result.isConfirmed) {
         try {
           const response = await axios.post(`${API_BASE_URL}/conversations/bulk-delete`, {
-            user_id: userData.id,
             conversation_ids: selectedConversations
+          }, {
+            withCredentials: true
           });
 
           if (response.data.success) {
@@ -322,8 +323,8 @@ const HistoryPage = () => {
   // Xử lý lưu trữ cuộc trò chuyện
   const handleArchive = async (id) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/archive`, {
-        user_id: userData.id
+      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/archive`, {}, {
+        withCredentials: true
       });
 
       if (response.data.success) {
@@ -355,8 +356,8 @@ const HistoryPage = () => {
   // Xử lý hủy lưu trữ cuộc trò chuyện
   const handleUnarchive = async (id) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/unarchive`, {
-        user_id: userData.id
+      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/unarchive`, {}, {
+        withCredentials: true
       });
 
       if (response.data.success) {

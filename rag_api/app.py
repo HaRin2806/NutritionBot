@@ -21,11 +21,14 @@ app = Flask(__name__)
 
 # Cấu hình JWT
 app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET_KEY", "hathimylinh")  # Dùng secret key từ .env
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=1)  # Token hết hạn sau 1 giờ
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(hours=24)  # Tăng thời gian hết hạn lên 24h
+app.config['JWT_TOKEN_LOCATION'] = ['headers', 'cookies']  # Cho phép lấy token từ headers hoặc cookies
+app.config['JWT_COOKIE_SECURE'] = False  # Set True khi triển khai HTTPS
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # Set True khi triển khai production
 jwt = JWTManager(app)
 
-# Cho phép CORS từ frontend React
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+# Cho phép CORS từ frontend React với credentials
+CORS(app, resources={r"/api/*": {"origins": ["http://localhost:5173"], "supports_credentials": True}})
 
 # Đăng ký các API endpoints
 from api.auth import auth_routes

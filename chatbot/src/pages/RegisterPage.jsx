@@ -81,6 +81,8 @@ const RegisterPage = () => {
         email: formData.email,
         password: formData.password,
         gender: formData.gender
+      }, {
+        withCredentials: true
       });
 
       if (response.data && response.data.success) {

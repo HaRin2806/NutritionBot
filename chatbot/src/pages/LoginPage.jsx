@@ -26,19 +26,29 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
-      // Gọi API đăng nhập
+      // Gọi API đăng nhập với credentials
       const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         email: formData.email,
-        password: formData.password
+        password: formData.password,
+        rememberMe: formData.rememberMe
+      }, {
+        withCredentials: true // Quan trọng để nhận và lưu cookie
       });
-      
+
       if (response.data.success) {
         // Lưu thông tin người dùng vào localStorage hoặc sessionStorage
         const storage = formData.rememberMe ? localStorage : sessionStorage;
         storage.setItem('user', JSON.stringify(response.data.user));
-        
+
+        // Lưu token cho các request không sử dụng cookie
+        storage.setItem('access_token', response.data.access_token);
+
+        // Cấu hình axios mặc định với token cho tất cả requests sau này
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
+        axios.defaults.withCredentials = true; // Luôn gửi cookie với request
+
         // Hiển thị thông báo đăng nhập thành công
         Swal.fire({
           icon: 'success',
@@ -62,7 +72,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Lỗi đăng nhập:", error);
-      
+
       // Xử lý lỗi nếu có
       Swal.fire({
         icon: 'error',
@@ -77,9 +87,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-      style={{ 
+      style={{
         background: 'linear-gradient(135deg, rgba(54, 179, 126, 0.1) 0%, rgba(78, 204, 163, 0.05) 100%)',
         backgroundSize: 'cover'
       }}
@@ -150,8 +160,8 @@ const LoginPage = () => {
                   Ghi nhớ đăng nhập
                 </label>
               </div>
-              <Link 
-                to="/forgot-password" 
+              <Link
+                to="/forgot-password"
                 className="text-sm font-medium text-mint-600 hover:text-mint-500"
               >
                 Quên mật khẩu?
@@ -164,14 +174,14 @@ const LoginPage = () => {
               type="submit"
               disabled={loading}
               className={`w-full py-3 px-4 rounded-lg text-white font-semibold transition-all duration-300 
-                ${loading 
-                  ? 'bg-mint-400 cursor-not-allowed' 
+                ${loading
+                  ? 'bg-mint-400 cursor-not-allowed'
                   : 'bg-mint-600 hover:bg-mint-700 focus:outline-none focus:ring-2 focus:ring-mint-500 focus:ring-offset-2'
                 }`}
-              style={{ 
+              style={{
                 backgroundColor: loading ? '#A0D9C1' : '#36B37E',
-                backgroundImage: loading 
-                  ? 'linear-gradient(135deg, #A0D9C1 0%, #A0D9C1 100%)' 
+                backgroundImage: loading
+                  ? 'linear-gradient(135deg, #A0D9C1 0%, #A0D9C1 100%)'
                   : 'linear-gradient(135deg, #36B37E 0%, #4ECCA3 100%)'
               }}
             >
@@ -183,8 +193,8 @@ const LoginPage = () => {
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Chưa có tài khoản?{' '}
-            <Link 
-              to="/register" 
+            <Link
+              to="/register"
               className="font-medium text-mint-600 hover:text-mint-500"
             >
               Đăng ký ngay

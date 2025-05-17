@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 import re
 import logging
 from models.user_model import User
@@ -49,8 +49,8 @@ def login_user(email, password):
     if success:
         user = result
         
-        # Tạo JWT token với thời gian hết hạn 1 giờ
-        expires = datetime.timedelta(hours=1)
+        # Tạo JWT token với thời gian hết hạn 24 giờ
+        expires = datetime.timedelta(hours=24)
         access_token = create_access_token(
             identity=str(user.user_id), 
             expires_delta=expires,
@@ -70,7 +70,7 @@ def login_user(email, password):
                 "gender": user.gender
             },
             "access_token": access_token,
-            "expires_in": 3600  # 1 giờ tính bằng giây
+            "expires_in": 86400  # 24 giờ tính bằng giây
         }
     else:
         return False, result
@@ -109,23 +109,41 @@ def register():
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
-    """API endpoint để đăng nhập"""
+    """API endpoint để đăng nhập và thiết lập JWT cookie"""
     try:
         data = request.json
         
         email = data.get('email')
         password = data.get('password')
+        remember_me = data.get('rememberMe', False)
         
         success, result = login_user(email, password)
         
         if success:
-            return jsonify({
+            access_token = result.get("access_token")
+            
+            # Tạo response với cookie
+            response = make_response(jsonify({
                 "success": True,
                 "user_id": result.get("user_id"),
                 "user": result.get("user"),
-                "access_token": result.get("access_token"),
+                "access_token": access_token,
                 "expires_in": result.get("expires_in")
-            })
+            }))
+            
+            # Thiết lập cookie JWT
+            cookie_max_age = 86400 if remember_me else None  # 24h hoặc session cookie
+            response.set_cookie(
+                'access_token_cookie',
+                access_token,
+                max_age=cookie_max_age,
+                httponly=True,
+                path='/api',
+                samesite='Lax',
+                secure=False  # Set True khi triển khai HTTPS
+            )
+            
+            return response
         else:
             return jsonify({
                 "success": False,
@@ -138,6 +156,16 @@ def login():
             "success": False,
             "error": str(e)
         }), 500
+
+@auth_routes.route('/logout', methods=['POST'])
+def logout():
+    """API endpoint để đăng xuất (xóa cookie JWT)"""
+    response = make_response(jsonify({
+        "success": True,
+        "message": "Đăng xuất thành công"
+    }))
+    response.delete_cookie('access_token_cookie', path='/api')
+    return response
 
 @auth_routes.route('/verify-token', methods=['POST'])
 @jwt_required()
@@ -159,15 +187,11 @@ def verify_token():
     })
 
 @auth_routes.route('/profile', methods=['GET'])
+@jwt_required()
 def user_profile():
     """API endpoint để lấy thông tin người dùng"""
     try:
         user_id = get_jwt_identity()
-        if not user_id:
-            return jsonify({
-                "success": False,
-                "error": "Thiếu user_id"
-            }), 400
             
         user = User.find_by_id(user_id)
         
@@ -177,8 +201,8 @@ def user_profile():
                 "name": user.name,
                 "email": user.email,
                 "gender": user.gender,
-                "created_at": user.created_at,
-                "updated_at": user.updated_at
+                "created_at": user.created_at.isoformat() if user.created_at else None,
+                "updated_at": user.updated_at.isoformat() if user.updated_at else None
             }
             
             return jsonify({
@@ -199,17 +223,12 @@ def user_profile():
         }), 500
 
 @auth_routes.route('/profile', methods=['PUT'])
+@jwt_required()
 def update_profile():
     """API endpoint để cập nhật thông tin người dùng"""
     try:
         data = request.json
-        user_id = data.get('user_id')
-        
-        if not user_id:
-            return jsonify({
-                "success": False,
-                "error": "Thiếu user_id"
-            }), 400
+        user_id = get_jwt_identity()
         
         user = User.find_by_id(user_id)
         if not user:
@@ -241,17 +260,12 @@ def update_profile():
         }), 500
 
 @auth_routes.route('/change-password', methods=['POST'])
+@jwt_required()
 def update_password():
     """API endpoint để đổi mật khẩu"""
     try:
         data = request.json
-        user_id = data.get('user_id')
-        
-        if not user_id:
-            return jsonify({
-                "success": False,
-                "error": "Thiếu user_id"
-            }), 400
+        user_id = get_jwt_identity()
             
         current_password = data.get('currentPassword')
         new_password = data.get('newPassword')

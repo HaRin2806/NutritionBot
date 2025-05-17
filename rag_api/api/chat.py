@@ -7,7 +7,7 @@ from core.data_processor import DataProcessor
 from models.user_model import User
 from models.conversation_model import Conversation
 from bson.objectid import ObjectId
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -45,7 +45,12 @@ def chat():
     try:
         data = request.json
         
-        user_id = get_jwt_identity()
+        # Cố gắng lấy user_id từ JWT, nếu có
+        try:
+            verify_jwt_in_request(optional=True)
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
 
         # Lấy dữ liệu đầu vào từ frontend React
         message = data.get('message')
@@ -272,6 +277,7 @@ def health_check():
         }), 500
 
 @chat_routes.route('/search', methods=['GET'])
+@jwt_required(optional=True)
 def search_data():
     """API endpoint để tìm kiếm dữ liệu"""
     try:
