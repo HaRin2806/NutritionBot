@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
-import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield, BiLogOut } from 'react-icons/bi';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield } from 'react-icons/bi';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import Header from '../components/Header';
+
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({
-    fullName: 'Nguyễn Văn A',
-    email: 'nguyenvana@example.com',
+    fullName: '',
+    email: '',
     avatar: null,
-    phone: '0987654321'
+    phone: ''
   });
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...profileData });
@@ -17,41 +23,85 @@ const SettingsPage = () => {
     confirmPassword: ''
   });
   const [theme, setTheme] = useState('mint');
+  const [userData, setUserData] = useState(null);
+  const [userAge, setUserAge] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Lấy thông tin người dùng từ API
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/auth/profile`, {
-          withCredentials: true
+    // Lấy thông tin người dùng từ local/session storage
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    if (user && Object.keys(user).length > 0) {
+      setUserData(user);
+      fetchUserProfile();
+    } else {
+      Swal.fire({
+        title: 'Bạn chưa đăng nhập',
+        text: 'Bạn cần đăng nhập để quản lý tài khoản',
+        icon: 'warning',
+        confirmButtonText: 'Đăng nhập ngay',
+        confirmButtonColor: '#36B37E',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        }
+      });
+    }
+  }, [navigate]);
+
+  // Lấy thông tin người dùng từ API
+  const fetchUserProfile = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/auth/profile`, {
+        withCredentials: true
+      });
+
+      if (response.data.success) {
+        const userData = response.data.user;
+        setProfileData({
+          fullName: userData.name,
+          email: userData.email,
+          avatar: null, // API không trả về avatar
+          phone: userData.phone || ''
+        });
+        setFormData({
+          fullName: userData.name,
+          email: userData.email,
+          avatar: null,
+          phone: userData.phone || ''
         });
 
-        if (response.data.success) {
-          const userData = response.data.user;
-          setProfileData({
-            fullName: userData.name,
-            email: userData.email,
-            avatar: null, // API không trả về avatar
-            phone: userData.phone || ''
-          });
-          setFormData({
-            fullName: userData.name,
-            email: userData.email,
-            avatar: null,
-            phone: userData.phone || ''
-          });
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-        // Nếu lỗi xác thực, chuyển hướng về trang đăng nhập
-        if (error.response && error.response.status === 401) {
-          window.location.href = '/login';
+        // Lấy thông tin tuổi từ một cuộc hội thoại gần đây
+        fetchUserAge();
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      // Nếu lỗi xác thực, chuyển hướng về trang đăng nhập
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    }
+  };
+
+  // Lấy thông tin tuổi từ cuộc hội thoại gần đây
+  const fetchUserAge = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/conversations`, {
+        params: {
+          per_page: 1
+        },
+        withCredentials: true
+      });
+
+      if (response.data.success && response.data.conversations.length > 0) {
+        const latestConversation = response.data.conversations[0];
+        if (latestConversation.age_context) {
+          setUserAge(latestConversation.age_context);
         }
       }
-    };
-
-    fetchUserProfile();
-  }, []);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin tuổi:", error);
+    }
+  };
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +141,18 @@ const SettingsPage = () => {
           timer: 1500,
           showConfirmButton: false
         });
+
+        // Cập nhật userData trong localStorage/sessionStorage
+        const updateUser = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+        updateUser.name = formData.fullName;
+
+        if (localStorage.getItem('user')) {
+          localStorage.setItem('user', JSON.stringify(updateUser));
+        } else if (sessionStorage.getItem('user')) {
+          sessionStorage.setItem('user', JSON.stringify(updateUser));
+        }
+
+        setUserData(updateUser);
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật thông tin:", error);
@@ -166,6 +228,51 @@ const SettingsPage = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Đăng xuất?',
+      text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#36B37E',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Đăng xuất',
+      cancelButtonText: 'Hủy'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Gọi API đăng xuất
+          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
+            withCredentials: true
+          });
+
+          // Xóa thông tin người dùng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
+
+          // Xóa config header
+          delete axios.defaults.headers.common['Authorization'];
+
+          // Chuyển hướng về trang đăng nhập
+          navigate('/login');
+        } catch (error) {
+          console.error("Lỗi khi đăng xuất:", error);
+          // Vẫn xóa dữ liệu người dùng và chuyển hướng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
+          navigate('/login');
+        }
+      }
+    });
+  };
+
+  // Hàm cập nhật độ tuổi - placeholder, sẽ không được sử dụng trong SettingsPage
+  const updateConversationAge = () => { };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -449,6 +556,16 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ backgroundColor: '#F7FFFA' }}>
+      {/* Header */}
+      <Header
+        userData={userData}
+        userAge={userAge}
+        setUserAge={setUserAge}
+        handleLogout={handleLogout}
+        activeConversation={null}
+        updateConversationAge={updateConversationAge}
+      />
+
       <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Cài đặt tài khoản</h2>
 
@@ -482,9 +599,10 @@ const SettingsPage = () => {
                   <span>Giao diện</span>
                 </button>
                 <button
+                  onClick={handleLogout}
                   className="px-4 py-3 text-left flex items-center space-x-2 text-red-600 hover:bg-red-50"
                 >
-                  <BiLogOut className="flex-shrink-0" />
+                  <BiLock className="flex-shrink-0" />
                   <span>Đăng xuất</span>
                 </button>
               </nav>

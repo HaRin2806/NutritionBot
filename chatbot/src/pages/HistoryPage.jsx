@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BiCalendar, BiSearch, BiTrash, BiMessageRounded, BiTime, BiChevronDown, BiChevronLeft, BiChevronRight, BiSortAlt2, BiUser, BiHomeAlt, BiCog, BiHistory, BiLogOut, BiArrowBack, BiChat, BiX, BiArchiveIn, BiBookmark, BiDotsHorizontalRounded, BiCheck } from 'react-icons/bi';
+import { BiCalendar, BiSearch, BiTrash, BiMessageRounded, BiTime, BiChevronDown, BiChevronLeft, BiChevronRight, BiSortAlt2, BiUser, BiArrowBack, BiChat, BiX, BiArchiveIn, BiBookmark, BiDotsHorizontalRounded, BiCheck } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Header from '../components/Header';
 
 const API_BASE_URL = 'http://localhost:5000/api';
-
-// NutriBot Logo Component
-const NutribotLogo = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="#36B37E" fillOpacity="0.2" />
-    <path d="M17.5 9.5C17.5 11.08 16.58 12.45 15.25 13.22C14.58 13.62 13.8 13.85 13 13.85C10.51 13.85 8.5 11.84 8.5 9.35C8.5 8.55 8.73 7.77 9.13 7.1C9.9 5.77 11.27 4.85 12.85 4.85C15.43 4.85 17.5 6.92 17.5 9.5Z" fill="#36B37E" stroke="#36B37E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M6.5 14.5C6.5 16.99 8.51 19 11 19C11.8 19 12.58 18.77 13.25 18.37C14.58 17.6 15.5 16.23 15.5 14.65C15.5 12.07 13.43 10 10.85 10C9.27 10 7.9 10.92 7.13 12.25C6.73 12.92 6.5 13.7 6.5 14.5Z" fill="#36B37E" stroke="#36B37E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 
 const HistoryPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,10 +19,8 @@ const HistoryPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedConversations, setSelectedConversations] = useState([]);
   const [userData, setUserData] = useState(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [hoveredRow, setHoveredRow] = useState(null);
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'archived'
-  const menuRef = useRef(null);
+  const [userAge, setUserAge] = useState(null);
   const navigate = useNavigate();
 
   // Lấy dữ liệu cuộc trò chuyện từ API
@@ -54,20 +44,6 @@ const HistoryPage = () => {
     }
   }, [navigate]);
 
-  // Đóng menu khi click ngoài
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const fetchConversationHistory = async (userId) => {
     setLoading(true);
     try {
@@ -86,6 +62,11 @@ const HistoryPage = () => {
           const messageCount = conversation.message_count ||
             (conversation.messages ? conversation.messages.length :
               Math.floor(Math.random() * 15) + 5); // Random từ 5-20 tin nhắn
+
+          // Lấy age_context cho userAge nếu chưa có
+          if (!userAge && conversation.age_context) {
+            setUserAge(conversation.age_context);
+          }
 
           return {
             ...conversation,
@@ -427,19 +408,39 @@ const HistoryPage = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Đăng xuất',
       cancelButtonText: 'Hủy'
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        // Xóa thông tin người dùng
-        localStorage.removeItem('user');
-        sessionStorage.removeItem('user');
+        try {
+          // Gọi API đăng xuất
+          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
+            withCredentials: true
+          });
 
-        // Chuyển hướng về trang đăng nhập
-        navigate('/login');
+          // Xóa thông tin người dùng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
+
+          // Xóa config header
+          delete axios.defaults.headers.common['Authorization'];
+
+          // Chuyển hướng về trang đăng nhập
+          navigate('/login');
+        } catch (error) {
+          console.error("Lỗi khi đăng xuất:", error);
+          // Vẫn xóa dữ liệu người dùng và chuyển hướng
+          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
+          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('access_token');
+          navigate('/login');
+        }
       }
     });
   };
 
-  // Chuyển đến chat với conversation ID cụ thể - FIX IMPORTANT
+  // Chuyển đến chat với conversation ID cụ thể
   const navigateToChat = (conversationId) => {
     navigate(`/chat/${conversationId}`);
   };
@@ -460,81 +461,21 @@ const HistoryPage = () => {
     return history.filter(chat => !chat.is_archived).length;
   }, [history]);
 
+  // Hàm cập nhật độ tuổi - chỉ là placeholder, sẽ không được sử dụng trong HistoryPage
+  const updateConversationAge = () => { };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-mint-50/30 to-gray-50">
       {/* Header */}
-      <div className="bg-white shadow-md sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <Link
-              to="/chat"
-              className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-lg transition flex items-center"
-              style={{ color: '#36B37E' }}
-            >
-              <BiArrowBack className="text-xl mr-2" />
-              <span className="hidden md:inline">Quay lại chat</span>
-            </Link>
-
-            <div className="flex items-center space-x-2">
-              <NutribotLogo />
-              <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Lịch sử trò chuyện</h1>
-            </div>
-          </div>
-
-          {/* User menu */}
-          <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none bg-gray-50 hover:bg-mint-50 p-2 rounded-full transition-all duration-200"
-            >
-              <span className="hidden sm:block mr-1">{userData ? userData.name : 'Tài khoản'}</span>
-              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-mint-100 text-mint-700">
-                <BiUser className="text-xl" />
-              </div>
-              <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''} ml-1`} />
-            </button>
-
-            {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-lg z-20 py-2 border border-gray-100 animate-fadeIn origin-top-right">
-                <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900">{userData?.name}</p>
-                  <p className="text-xs text-gray-500 truncate">{userData?.email}</p>
-                </div>
-
-                <Link
-                  to="/chat"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-                >
-                  <BiHomeAlt className="mr-2 text-gray-500" />
-                  Trang chủ
-                </Link>
-                <Link
-                  to="/settings"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
-                >
-                  <BiCog className="mr-2 text-gray-500" />
-                  Quản lý tài khoản
-                </Link>
-                <Link
-                  to="/history"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 bg-mint-50 text-mint-700"
-                >
-                  <BiHistory className="mr-2 text-mint-600" />
-                  Lịch sử trò chuyện
-                </Link>
-                <hr className="my-1 border-gray-100" />
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                >
-                  <BiLogOut className="mr-2" />
-                  Đăng xuất
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <Header
+        userData={userData}
+        userAge={userAge}
+        setUserAge={setUserAge}
+        handleLogout={handleLogout}
+        activeConversation={null}
+        updateConversationAge={updateConversationAge}
+        extraButton={<BiArrowBack className="text-xl mr-2" />}
+      />
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -849,9 +790,7 @@ const HistoryPage = () => {
                     {currentItems.map((chat) => (
                       <tr
                         key={chat.id}
-                        className={`group hover:bg-mint-50 transition-colors duration-150 ${hoveredRow === chat.id ? 'bg-mint-50' : 'bg-white'}`}
-                        onMouseEnter={() => setHoveredRow(chat.id)}
-                        onMouseLeave={() => setHoveredRow(null)}
+                        className="group hover:bg-mint-50 transition-colors duration-150"
                       >
                         <td className="px-3 py-4 whitespace-nowrap">
                           <input
