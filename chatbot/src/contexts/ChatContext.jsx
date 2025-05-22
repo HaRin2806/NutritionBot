@@ -12,27 +12,23 @@ export const ChatProvider = ({ children }) => {
     const [activeConversation, setActiveConversation] = useState(null);
     const [conversations, setConversations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [userAge, setUserAge] = useState(null);
+    const [userAge, setUserAge] = useState(null); // Bắt đầu với null
     const [isLoadingConversations, setIsLoadingConversations] = useState(false);
     const navigate = useNavigate();
 
-    // Khởi tạo dữ liệu từ localStorage
-    useEffect(() => {
-        // Lấy tuổi từ storage
-        const storedAge = storageService.getUserAge();
-        if (storedAge) {
-            setUserAge(storedAge);
-        }
-
-        // Lấy danh sách cuộc hội thoại nếu đã đăng nhập
-        const user = storageService.getUserData();
-        if (user && user.id) {
-            fetchConversations();
-        }
-    }, []);
+    // KHÔNG khởi tạo dữ liệu từ localStorage ngay lập tức
+    // useEffect(() => {
+    //     const storedAge = storageService.getUserAge();
+    //     if (storedAge) {
+    //         setUserAge(storedAge);
+    //     }
+    // }, []);
 
     // Lấy danh sách cuộc hội thoại
     const fetchConversations = async () => {
+        const user = storageService.getUserData();
+        if (!user || !user.id) return;
+        
         try {
             setIsLoadingConversations(true);
             const response = await chatService.getConversations(false, 1, 100);
@@ -41,17 +37,24 @@ export const ChatProvider = ({ children }) => {
                 const fetchedConversations = response.conversations;
                 setConversations(fetchedConversations);
 
-                // Lấy tuổi từ cuộc hội thoại gần đây nhất có age_context nếu chưa có
-                if (!userAge && fetchedConversations.length > 0) {
-                    // Tìm cuộc hội thoại gần đây nhất có age_context
-                    const lastConversationWithAge = fetchedConversations.find(conv => conv.age_context);
+                // CHỈ lấy tuổi từ cuộc hội thoại nếu:
+                // 1. Chưa có userAge trong state
+                // 2. Chưa có userAge trong storage 
+                // 3. Có ít nhất 1 cuộc hội thoại với age_context
+                const storedAge = storageService.getUserAge();
+                
+                if (!userAge && !storedAge && fetchedConversations.length > 0) {
+                    const lastConversationWithAge = fetchedConversations
+                        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                        .find(conv => conv.age_context);
+                    
                     if (lastConversationWithAge && lastConversationWithAge.age_context) {
                         setUserAge(lastConversationWithAge.age_context);
                         storageService.saveUserAge(lastConversationWithAge.age_context);
-                    } else {
-                        // Nếu chưa có cuộc hội thoại nào có age_context, cần nhắc người dùng thiết lập
-                        promptUserForAge();
                     }
+                } else if (!userAge && storedAge) {
+                    // Nếu có trong storage nhưng chưa có trong state
+                    setUserAge(storedAge);
                 }
             }
         } catch (error) {
@@ -72,8 +75,8 @@ export const ChatProvider = ({ children }) => {
                 const conversation = response.conversation;
                 setActiveConversation(conversation);
 
-                // Cập nhật userAge từ age_context nếu có
-                if (conversation.age_context && !userAge) {
+                // CHỈ cập nhật userAge nếu chưa có và conversation có age_context
+                if (!userAge && conversation.age_context) {
                     setUserAge(conversation.age_context);
                     storageService.saveUserAge(conversation.age_context);
                 }
@@ -85,46 +88,59 @@ export const ChatProvider = ({ children }) => {
 
     // Hàm nhắc người dùng thiết lập tuổi nếu cần
     const promptUserForAge = () => {
-        if (!userAge) {
-            setTimeout(() => {
-                Swal.fire({
-                    title: 'Thiết lập độ tuổi',
-                    text: 'Vui lòng thiết lập độ tuổi để nhận được thông tin dinh dưỡng phù hợp',
-                    icon: 'info',
-                    html: `
-            <select id="swal-age" class="swal2-input">
-              ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                        `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-                    ).join('')}
-            </select>
-          `,
-                    confirmButtonText: 'Lưu',
-                    confirmButtonColor: '#36B37E',
-                    allowOutsideClick: false,
-                    preConfirm: () => {
-                        const age = parseInt(document.getElementById('swal-age').value);
-                        if (isNaN(age) || age < 1 || age > 19) {
-                            Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-                        }
-                        return age;
+        return new Promise((resolve) => {
+            Swal.fire({
+                title: 'Chào mừng bạn đến với Nutribot!',
+                text: 'Để nhận được thông tin dinh dưỡng phù hợp, vui lòng cho biết độ tuổi của bạn',
+                icon: 'info',
+                html: `
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-3">Để nhận được thông tin dinh dưỡng phù hợp, vui lòng cho biết độ tuổi của bạn</p>
+                        <select id="swal-age" class="swal2-input w-full">
+                            <option value="">-- Chọn độ tuổi --</option>
+                            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                                `<option value="${age}">${age} tuổi</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                `,
+                confirmButtonText: 'Bắt đầu trò chuyện',
+                confirmButtonColor: '#36B37E',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: false,
+                preConfirm: () => {
+                    const age = parseInt(document.getElementById('swal-age').value);
+                    if (isNaN(age) || age < 1 || age > 19) {
+                        Swal.showValidationMessage('Vui lòng chọn độ tuổi từ 1-19');
+                        return false;
                     }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const newAge = result.value;
-                        setUserAge(newAge);
-                        storageService.saveUserAge(newAge);
-                    }
-                });
-            }, 1000);
-        }
+                    return age;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedAge = result.value;
+                    setUserAge(selectedAge);
+                    storageService.saveUserAge(selectedAge);
+                    resolve(selectedAge);
+                }
+            });
+        });
     };
 
     // Hàm gửi tin nhắn
     const sendMessage = async (messageContent, conversationId = null) => {
         // Kiểm tra nếu không có tuổi
         if (!userAge) {
-            await promptUserForAge();
-            return { success: false, error: 'Cần thiết lập tuổi trước khi gửi tin nhắn' };
+            const storedAge = storageService.getUserAge();
+            if (!storedAge) {
+                // Nếu không có tuổi trong storage, bắt buộc chọn
+                await promptUserForAge();
+                return { success: false, error: 'Cần thiết lập tuổi trước khi gửi tin nhắn' };
+            } else {
+                // Nếu có trong storage nhưng chưa có trong state
+                setUserAge(storedAge);
+            }
         }
 
         // Kiểm tra nếu đang trong một cuộc hội thoại có age_context khác với userAge hiện tại
@@ -289,9 +305,25 @@ export const ChatProvider = ({ children }) => {
             return { success: false, error: 'Bạn cần đăng nhập để tạo cuộc hội thoại mới' };
         }
 
+        // Đảm bảo có tuổi trước khi tạo cuộc hội thoại
+        let currentAge = userAge;
+        if (!currentAge) {
+            const storedAge = storageService.getUserAge();
+            if (!storedAge) {
+                // Nếu không có tuổi, bắt buộc chọn
+                currentAge = await promptUserForAge();
+                if (!currentAge) {
+                    return { success: false, error: 'Cần thiết lập tuổi trước khi tạo cuộc hội thoại' };
+                }
+            } else {
+                currentAge = storedAge;
+                setUserAge(storedAge);
+            }
+        }
+
         try {
             // Tạo cuộc hội thoại mới với tiêu đề mặc định và userAge hiện tại
-            const response = await chatService.createConversation('Cuộc trò chuyện mới', userAge);
+            const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
 
             if (response.success) {
                 // Làm mới danh sách cuộc hội thoại
@@ -314,7 +346,7 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // Xóa cuộc hội thoại
+    // Các hàm khác giữ nguyên...
     const deleteConversation = async (conversationId) => {
         const result = await Swal.fire({
             title: 'Xóa cuộc trò chuyện?',
@@ -360,7 +392,6 @@ export const ChatProvider = ({ children }) => {
         return { success: false, cancelled: true };
     };
 
-    // Đổi tên cuộc hội thoại
     const renameConversation = async (conversationId, currentTitle) => {
         const result = await Swal.fire({
             title: 'Đổi tên cuộc trò chuyện',
@@ -418,7 +449,6 @@ export const ChatProvider = ({ children }) => {
         return { success: false, cancelled: true };
     };
 
-    // Cập nhật tuổi người dùng
     const updateUserAge = async (age, conversationId = null) => {
         setUserAge(age);
         storageService.saveUserAge(age);
@@ -472,4 +502,4 @@ export const ChatProvider = ({ children }) => {
             {children}
         </ChatContext.Provider>
     );
-}; 
+};

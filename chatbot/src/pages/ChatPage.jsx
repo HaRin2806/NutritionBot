@@ -14,8 +14,8 @@ const ChatPage = () => {
   const messagesEndRef = useRef(null);
   const fetchingRef = useRef(false);
   const detailFetchedRef = useRef(false);
-  
-  const { 
+
+  const {
     activeConversation,
     conversations,
     isLoading,
@@ -29,12 +29,13 @@ const ChatPage = () => {
     deleteConversation,
     renameConversation,
     updateUserAge,
-    promptUserForAge
+    promptUserForAge,
+    ensureUserAge
   } = useChat();
-  
+
   const { userData, isLoading: isLoadingAuth } = useAuth();
   const { showLoginRequired, showConfirm } = useToast();
-  
+
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -71,7 +72,7 @@ const ChatPage = () => {
     }
   }, [userData, isLoadingAuth, fetchConversations]);
 
-  // Lấy chi tiết cuộc hội thoại khi ID thay đổi (không phụ thuộc vào activeConversation)
+  // Lấy chi tiết cuộc hội thoại khi ID thay đổi
   useEffect(() => {
     const loadConversationDetails = async () => {
       if (conversationId && userData && !isLoadingAuth && !detailFetchedRef.current) {
@@ -79,10 +80,9 @@ const ChatPage = () => {
         await fetchConversationDetail(conversationId);
       }
     };
-    
+
     loadConversationDetails();
-    
-    // Reset flag khi conversation ID thay đổi
+
     return () => {
       detailFetchedRef.current = false;
     };
@@ -95,7 +95,6 @@ const ChatPage = () => {
     }, 100);
   }, []);
 
-  // Scroll xuống mỗi khi messages thay đổi
   useEffect(() => {
     if (activeConversation?.messages?.length > 0) {
       scrollToBottom();
@@ -118,14 +117,15 @@ const ChatPage = () => {
       showLoginRequired(() => navigate('/login'));
       return;
     }
-    
-    if (!userAge) {
-      promptUserForAge();
+
+    // Đảm bảo có tuổi trước khi tạo cuộc hội thoại mới
+    const currentAge = await ensureUserAge();
+    if (!currentAge) {
       return;
     }
-    
+
     const result = await startNewConversation();
-    
+
     if (result.success) {
       if (isMobile) {
         setIsSidebarVisible(false);
@@ -136,11 +136,10 @@ const ChatPage = () => {
   // Xử lý chọn cuộc hội thoại
   const handleSelectConversation = (id) => {
     if (id !== activeConversation?.id) {
-      // Reset flag khi chọn conversation mới
       detailFetchedRef.current = false;
       navigate(`/chat/${id}`);
     }
-    
+
     if (isMobile) {
       setIsSidebarVisible(false);
     }
@@ -189,7 +188,7 @@ const ChatPage = () => {
 
       {/* Main content */}
       <div className="flex flex-1 overflow-hidden relative">
-        {/* Sidebar - fixed on mobile when visible */}
+        {/* Sidebar */}
         <div
           className={`${isSidebarVisible
             ? 'w-80 transform translate-x-0'

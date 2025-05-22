@@ -1,16 +1,7 @@
 import { useCallback } from 'react';
 import Swal from 'sweetalert2';
 
-/**
- * Hook cung cấp các hàm hiển thị thông báo
- * @returns {Object} Các hàm hiển thị thông báo
- */
 const useToast = () => {
-    /**
-     * Hiển thị thông báo thành công
-     * @param {string} message - Nội dung thông báo
-     * @param {number} timer - Thời gian hiển thị (ms)
-     */
     const showSuccess = useCallback((message, timer = 1500) => {
         Swal.fire({
             icon: 'success',
@@ -22,10 +13,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo lỗi
-     * @param {string} message - Nội dung thông báo
-     */
     const showError = useCallback((message) => {
         Swal.fire({
             icon: 'error',
@@ -36,11 +23,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo xác nhận
-     * @param {Object} options - Tùy chọn
-     * @returns {Promise} Kết quả xác nhận
-     */
     const showConfirm = useCallback(({
         title = 'Xác nhận',
         text = 'Bạn có chắc chắn muốn thực hiện hành động này?',
@@ -60,11 +42,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị prompt nhập liệu
-     * @param {Object} options - Tùy chọn
-     * @returns {Promise} Kết quả nhập liệu
-     */
     const showPrompt = useCallback(({
         title = 'Nhập thông tin',
         input = 'text',
@@ -96,11 +73,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị prompt tuổi
-     * @param {number} currentAge - Tuổi hiện tại
-     * @returns {Promise} Kết quả chọn tuổi
-     */
     const showAgePrompt = useCallback((currentAge = null) => {
         return Swal.fire({
             title: 'Thiết lập độ tuổi',
@@ -124,11 +96,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo với tiêu đề và nội dung tùy chỉnh
-     * @param {Object} options - Tùy chọn
-     * @returns {Promise} Kết quả
-     */
     const showCustomMessage = useCallback(({
         title,
         text,
@@ -152,12 +119,7 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị toast thông báo nhỏ
-     * @param {string} message - Nội dung thông báo
-     * @param {string} icon - Icon (success, error, warning, info)
-     * @param {number} timer - Thời gian hiển thị (ms)
-     */
+    // Thêm showToast method
     const showToast = useCallback((message, icon = 'success', timer = 3000) => {
         const Toast = Swal.mixin({
             toast: true,
@@ -177,10 +139,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo đăng nhập thành công
-     * @param {Function} callback - Hàm callback sau khi đóng thông báo
-     */
     const showLoginSuccess = useCallback((callback) => {
         Swal.fire({
             icon: 'success',
@@ -192,10 +150,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo đăng ký thành công
-     * @param {Function} callback - Hàm callback sau khi đóng thông báo
-     */
     const showRegisterSuccess = useCallback((callback) => {
         Swal.fire({
             icon: 'success',
@@ -207,10 +161,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo xác nhận đăng xuất
-     * @param {Function} callback - Hàm callback sau khi xác nhận
-     */
     const showLogoutConfirm = useCallback((callback) => {
         Swal.fire({
             title: 'Đăng xuất?',
@@ -228,10 +178,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo lỗi khi chưa đăng nhập
-     * @param {Function} callback - Hàm callback sau khi đóng thông báo
-     */
     const showLoginRequired = useCallback((callback) => {
         Swal.fire({
             title: 'Bạn chưa đăng nhập',
@@ -246,10 +192,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo xác nhận xóa cuộc trò chuyện
-     * @param {Function} callback - Hàm callback sau khi xác nhận
-     */
     const showDeleteConfirm = useCallback((callback) => {
         Swal.fire({
             title: 'Xóa cuộc trò chuyện?',
@@ -267,11 +209,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo xác nhận xóa nhiều cuộc trò chuyện
-     * @param {number} count - Số lượng cuộc trò chuyện
-     * @param {Function} callback - Hàm callback sau khi xác nhận
-     */
     const showBulkDeleteConfirm = useCallback((count, callback) => {
         Swal.fire({
             title: `Xác nhận xóa ${count} cuộc trò chuyện`,
@@ -289,11 +226,6 @@ const useToast = () => {
         });
     }, []);
 
-    /**
-     * Hiển thị thông báo lỗi khi độ tuổi không khớp
-     * @param {Function} createNewCallback - Callback tạo mới
-     * @param {Function} restoreAgeCallback - Callback khôi phục tuổi
-     */
     const showAgeMismatchWarning = useCallback((createNewCallback, restoreAgeCallback) => {
         Swal.fire({
             title: 'Độ tuổi không khớp',
@@ -319,7 +251,7 @@ const useToast = () => {
         showPrompt,
         showAgePrompt,
         showCustomMessage,
-        showToast,
+        showToast, // Thêm vào đây
         showLoginSuccess,
         showRegisterSuccess,
         showLogoutConfirm,

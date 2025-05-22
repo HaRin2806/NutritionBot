@@ -2,30 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { BiCalendar, BiSearch, BiTrash, BiMessageRounded, BiTime, BiChevronDown, BiChevronLeft, BiChevronRight, BiSortAlt2, BiUser, BiArrowBack, BiChat, BiX, BiArchiveIn, BiBookmark, BiDotsHorizontalRounded, BiCheck } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import useChat from '../hooks/useChat';
 import useConversation from '../hooks/useConversation';
 import useToast from '../hooks/useToast';
 import { Header } from '../components/layout';
 import { Button, Loader } from '../components/common';
 import { formatDate, formatTime, getRelativeDate } from '../utils/dateUtils';
+import chatService from '../services/chatService';
 
 const HistoryPage = () => {
   const navigate = useNavigate();
-  const { userData } = useAuth();
-  const {
-    conversations,
-    isLoadingConversations,
-    fetchConversations,
-    userAge,
-    setUserAge,
-    updateUserAge,
-    deleteConversation,
-    bulkDeleteConversations,
-    archiveConversation,
-    unarchiveConversation,
-    renameConversation
-  } = useChat();
-
+  const { userData, isLoading: isLoadingAuth } = useAuth();
   const {
     selectedConversations,
     searchTerm,
@@ -58,20 +44,231 @@ const HistoryPage = () => {
     getConversationCounts
   } = useConversation();
 
-  const { showDeleteConfirm, showBulkDeleteConfirm } = useToast();
+  const { showDeleteConfirm, showBulkDeleteConfirm, showLoginRequired } = useToast();
 
-  // Kiểm tra đăng nhập khi vào trang
+  // State riêng cho HistoryPage
+  const [conversations, setConversations] = useState([]);
+  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
+  const [userAge, setUserAge] = useState(null);
+
+  // Kiểm tra đăng nhập khi component mount (tương tự ChatPage)
   useEffect(() => {
-    if (!userData) {
-      navigate('/login');
-      return;
+    if (!isLoadingAuth && !userData) {
+      showLoginRequired(() => navigate('/login'));
     }
+  }, [userData, isLoadingAuth, navigate, showLoginRequired]);
 
-    // Lấy danh sách cuộc hội thoại
-    fetchConversations(true);
-  }, [userData, navigate, fetchConversations]);
+  // Lấy danh sách cuộc hội thoại (bao gồm cả lưu trữ)
+  const fetchConversations = async () => {
+    if (!userData) return;
 
-  // Lấy danh sách lọc theo activeTab
+    try {
+      setIsLoadingConversations(true);
+      // Lấy tất cả cuộc hội thoại (bao gồm cả đã lưu trữ)
+      const response = await chatService.getConversations(true, 1, 1000); // Lấy nhiều hơn để đảm bảo có đủ dữ liệu
+
+      if (response.success) {
+        setConversations(response.conversations || []);
+
+        // Lấy tuổi từ cuộc hội thoại gần đây nhất nếu chưa có
+        if (!userAge && response.conversations && response.conversations.length > 0) {
+          const lastConversationWithAge = response.conversations.find(conv => conv.age_context);
+          if (lastConversationWithAge && lastConversationWithAge.age_context) {
+            setUserAge(lastConversationWithAge.age_context);
+          }
+        }
+      } else {
+        console.error('Error fetching conversations:', response.error);
+        setConversations([]);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách cuộc hội thoại:", error);
+      setConversations([]);
+    } finally {
+      setIsLoadingConversations(false);
+    }
+  };
+
+  // Lấy dữ liệu khi component mount và khi user thay đổi
+  useEffect(() => {
+    if (userData && !isLoadingAuth) {
+      fetchConversations();
+    }
+  }, [userData, isLoadingAuth]);
+
+  // Hàm lưu trữ cuộc hội thoại
+  const archiveConversation = async (conversationId) => {
+    try {
+      const response = await chatService.archiveConversation(conversationId);
+
+      if (response.success) {
+        // Cập nhật state local
+        setConversations(prevConversations =>
+          prevConversations.map(conv =>
+            conv.id === conversationId
+              ? { ...conv, is_archived: true }
+              : conv
+          )
+        );
+
+        // Hiển thị thông báo thành công
+        const { showToast } = useToast();
+        showToast('Đã lưu trữ cuộc trò chuyện', 'success');
+      } else {
+        console.error('Error archiving conversation:', response.error);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lưu trữ cuộc hội thoại:", error);
+    }
+  };
+
+  // Hàm hủy lưu trữ cuộc hội thoại
+  const unarchiveConversation = async (conversationId) => {
+    try {
+      const response = await chatService.unarchiveConversation(conversationId);
+
+      if (response.success) {
+        // Cập nhật state local
+        setConversations(prevConversations =>
+          prevConversations.map(conv =>
+            conv.id === conversationId
+              ? { ...conv, is_archived: false }
+              : conv
+          )
+        );
+
+        // Hiển thị thông báo thành công
+        const { showToast } = useToast();
+        showToast('Đã khôi phục cuộc trò chuyện', 'success');
+      } else {
+        console.error('Error unarchiving conversation:', response.error);
+      }
+    } catch (error) {
+      console.error("Lỗi khi khôi phục cuộc hội thoại:", error);
+    }
+  };
+
+  // Hàm xóa cuộc hội thoại
+  const deleteConversation = async (conversationId) => {
+    try {
+      const response = await chatService.deleteConversation(conversationId);
+
+      if (response.success) {
+        // Cập nhật state local
+        setConversations(prevConversations =>
+          prevConversations.filter(conv => conv.id !== conversationId)
+        );
+
+        // Xóa khỏi selectedConversations nếu có
+        setSelectedConversations(prev => prev.filter(id => id !== conversationId));
+
+        // Hiển thị thông báo thành công
+        const { showToast } = useToast();
+        showToast('Đã xóa cuộc trò chuyện', 'success');
+      } else {
+        console.error('Error deleting conversation:', response.error);
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa cuộc hội thoại:", error);
+    }
+  };
+
+  // Override các hàm từ useConversation để sử dụng state local
+  const handleArchiveMultipleLocal = async () => {
+    if (selectedConversations.length === 0) return;
+
+    try {
+      // Lưu trữ tất cả các cuộc hội thoại đã chọn
+      const promises = selectedConversations.map(id => chatService.archiveConversation(id));
+      await Promise.all(promises);
+
+      // Cập nhật state local
+      setConversations(prevConversations =>
+        prevConversations.map(conv =>
+          selectedConversations.includes(conv.id)
+            ? { ...conv, is_archived: true }
+            : conv
+        )
+      );
+
+      setSelectedConversations([]);
+
+      // Hiển thị thông báo thành công
+      const { showToast } = useToast();
+      showToast(`Đã lưu trữ ${selectedConversations.length} cuộc trò chuyện`, 'success');
+    } catch (error) {
+      console.error("Lỗi khi lưu trữ nhiều cuộc hội thoại:", error);
+    }
+  };
+
+  const handleUnarchiveMultipleLocal = async () => {
+    if (selectedConversations.length === 0) return;
+
+    try {
+      // Khôi phục tất cả các cuộc hội thoại đã chọn
+      const promises = selectedConversations.map(id => chatService.unarchiveConversation(id));
+      await Promise.all(promises);
+
+      // Cập nhật state local
+      setConversations(prevConversations =>
+        prevConversations.map(conv =>
+          selectedConversations.includes(conv.id)
+            ? { ...conv, is_archived: false }
+            : conv
+        )
+      );
+
+      setSelectedConversations([]);
+
+      // Hiển thị thông báo thành công
+      const { showToast } = useToast();
+      showToast(`Đã khôi phục ${selectedConversations.length} cuộc trò chuyện`, 'success');
+    } catch (error) {
+      console.error("Lỗi khi khôi phục nhiều cuộc hội thoại:", error);
+    }
+  };
+
+  const handleDeleteMultipleLocal = async () => {
+    if (selectedConversations.length === 0) return;
+
+    try {
+      const response = await chatService.bulkDeleteConversations(selectedConversations);
+
+      if (response.success) {
+        // Cập nhật state local
+        setConversations(prevConversations =>
+          prevConversations.filter(conv => !selectedConversations.includes(conv.id))
+        );
+
+        setSelectedConversations([]);
+
+        // Hiển thị thông báo thành công
+        const { showToast } = useToast();
+        showToast(`Đã xóa ${response.deleted_count} cuộc trò chuyện`, 'success');
+      }
+    } catch (error) {
+      console.error("Lỗi khi xóa nhiều cuộc hội thoại:", error);
+    }
+  };
+
+  // Cập nhật độ tuổi
+  const updateConversationAge = (newAge) => {
+    setUserAge(newAge);
+  };
+
+  // Hiển thị loading nếu đang xác thực
+  if (isLoadingAuth) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="spinner mx-auto mb-4"></div>
+          <p className="text-gray-600">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Lọc danh sách cuộc hội thoại
   const filteredConversations = filterConversations(conversations);
 
   // Tính toán phân trang
@@ -100,7 +297,7 @@ const HistoryPage = () => {
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        updateConversationAge={updateUserAge}
+        updateConversationAge={updateConversationAge}
         extraButton={<BiArrowBack className="text-xl mr-2" />}
       />
 
@@ -213,7 +410,7 @@ const HistoryPage = () => {
                 <div className="flex space-x-2">
                   {activeTab === 'all' ? (
                     <Button
-                      onClick={handleArchiveMultiple}
+                      onClick={handleArchiveMultipleLocal}
                       color="mint"
                       size="sm"
                       icon={<BiArchiveIn className="mr-1.5" />}
@@ -222,7 +419,7 @@ const HistoryPage = () => {
                     </Button>
                   ) : (
                     <Button
-                      onClick={handleUnarchiveMultiple}
+                      onClick={handleUnarchiveMultipleLocal}
                       color="mint"
                       size="sm"
                       icon={<BiCheck className="mr-1.5" />}
@@ -231,7 +428,7 @@ const HistoryPage = () => {
                     </Button>
                   )}
                   <Button
-                    onClick={() => showBulkDeleteConfirm(selectedConversations.length, handleDeleteMultiple)}
+                    onClick={() => showBulkDeleteConfirm(selectedConversations.length, handleDeleteMultipleLocal)}
                     color="red"
                     size="sm"
                     icon={<BiTrash className="mr-1.5" />}
@@ -458,7 +655,7 @@ const HistoryPage = () => {
                               key={i + 1}
                               onClick={() => setCurrentPage(i + 1)}
                               className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors duration-200
-                                ${currentPage === i + 1
+                               ${currentPage === i + 1
                                   ? 'z-10 bg-mint-50 border-mint-500 text-mint-600'
                                   : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                                 }`}
@@ -560,49 +757,49 @@ const HistoryPage = () => {
 
       {/* CSS để thêm animation */}
       <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out forwards;
-        }
-        
-        @keyframes scaleIn {
-          from { transform: scale(0.95); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-        
-        .animate-scaleIn {
-          animation: scaleIn 0.2s ease-out forwards;
-        }
-        
-        /* Hover effect for buttons */
-        button:hover {
-          transform: translateY(-1px);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-          height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: #c5e0d5;
-          border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: #36B37E;
-        }
-      `}</style>
+       @keyframes fadeIn {
+         from { opacity: 0; transform: translateY(10px); }
+         to { opacity: 1; transform: translateY(0); }
+       }
+       
+       .animate-fadeIn {
+         animation: fadeIn 0.3s ease-out forwards;
+       }
+       
+       @keyframes scaleIn {
+         from { transform: scale(0.95); opacity: 0; }
+         to { transform: scale(1); opacity: 1; }
+       }
+       
+       .animate-scaleIn {
+         animation: scaleIn 0.2s ease-out forwards;
+       }
+       
+       /* Hover effect for buttons */
+       button:hover {
+         transform: translateY(-1px);
+       }
+       
+       /* Custom scrollbar */
+       ::-webkit-scrollbar {
+         width: 8px;
+         height: 8px;
+       }
+       
+       ::-webkit-scrollbar-track {
+         background: #f1f1f1;
+         border-radius: 10px;
+       }
+       
+       ::-webkit-scrollbar-thumb {
+         background: #c5e0d5;
+         border-radius: 10px;
+       }
+       
+       ::-webkit-scrollbar-thumb:hover {
+         background: #36B37E;
+       }
+     `}</style>
     </div>
   );
 };

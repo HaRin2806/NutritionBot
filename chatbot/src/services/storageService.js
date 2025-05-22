@@ -29,15 +29,25 @@ const storageService = {
     localStorage.removeItem('access_token');
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('access_token');
+    // XÓA LUÔN TUỔI KHI ĐĂNG XUẤT
+    localStorage.removeItem('user_age');
   },
   
   saveUserAge: (age) => {
+    console.log('Lưu tuổi vào storage:', age);
     localStorage.setItem('user_age', age.toString());
   },
   
   getUserAge: () => {
     const age = localStorage.getItem('user_age');
+    console.log('Lấy tuổi từ storage:', age);
     return age ? parseInt(age, 10) : null;
+  },
+
+  // Thêm function để clear tuổi riêng
+  clearUserAge: () => {
+    console.log('Xóa tuổi khỏi storage');
+    localStorage.removeItem('user_age');
   }
 };
 

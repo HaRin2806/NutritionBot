@@ -59,7 +59,7 @@ const Header = ({
       activeConversation.age_context &&
       activeConversation.messages &&
       activeConversation.messages.length > 0) {
-      showToast.showCustomMessage({
+      showCustomMessage({
         title: 'Không thể thay đổi độ tuổi',
         text: 'Cuộc trò chuyện này đã có tin nhắn với độ tuổi cụ thể. Bạn cần tạo cuộc trò chuyện mới để sử dụng độ tuổi khác.',
         icon: 'warning',
@@ -81,9 +81,10 @@ const Header = ({
     });
   };
 
-  // Xử lý đăng xuất
-  const handleLogout = () => {
-    showLogoutConfirm(logout);
+  // Xử lý đăng xuất - KHÔNG gọi showLogoutConfirm nữa vì logout đã có confirm
+  const handleLogout = async () => {
+    // Gọi trực tiếp logout từ useAuth, không cần confirm thêm
+    await logout();
   };
 
   return (
@@ -135,6 +136,7 @@ const Header = ({
               <Link
                 to="/settings"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+                onClick={() => setIsMenuOpen(false)}
               >
                 <BiCog className="mr-2" />
                 Quản lý tài khoản
@@ -142,13 +144,17 @@ const Header = ({
               <Link
                 to="/history"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50 hover:text-mint-700"
+                onClick={() => setIsMenuOpen(false)}
               >
                 <BiHistory className="mr-2" />
                 Lịch sử trò chuyện
               </Link>
               <hr className="my-1 border-gray-200" />
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  handleLogout();
+                }}
                 className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
               >
                 <BiLogOut className="mr-2" />

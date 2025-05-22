@@ -1,29 +1,22 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { ChatContext } from '../contexts/ChatContext';
 import chatService from '../services/chatService';
 import storageService from '../services/storageService';
 import { createTitleFromMessage, generateTempId } from '../utils/formatters';
 
-/**
- * Hook quản lý các chức năng chat
- * @returns {Object} Các hàm và state quản lý chat
- */
 const useChat = () => {
-    // State
     const [activeConversation, setActiveConversation] = useState(null);
     const [conversations, setConversations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingConversations, setIsLoadingConversations] = useState(false);
-    const [userAge, setUserAge] = useState(storageService.getUserAge());
+    const [userAge, setUserAge] = useState(null); // Luôn bắt đầu với null
     const navigate = useNavigate();
-    const fetchingDetailRef = useRef(false); // Prevent redundant API calls
+    const fetchingDetailRef = useRef(false);
+    const hasInitializedAge = useRef(false); // Flag để tránh init nhiều lần
 
     /**
-     * Lấy danh sách cuộc hội thoại
-     * @param {boolean} includeArchived - Có lấy cuộc hội thoại đã lưu trữ
-     * @returns {Promise<Array>} Danh sách cuộc hội thoại
+     * Lấy danh sách cuộc hội thoại và xử lý tuổi
      */
     const fetchConversations = useCallback(async (includeArchived = false) => {
         try {
@@ -34,12 +27,36 @@ const useChat = () => {
                 const fetchedConversations = response.conversations;
                 setConversations(fetchedConversations);
 
-                // Lấy tuổi từ cuộc hội thoại gần đây nhất có age_context
-                if (!userAge && fetchedConversations.length > 0) {
-                    const lastConversationWithAge = fetchedConversations.find(conv => conv.age_context);
-                    if (lastConversationWithAge && lastConversationWithAge.age_context) {
-                        setUserAge(lastConversationWithAge.age_context);
-                        storageService.saveUserAge(lastConversationWithAge.age_context);
+                // CHỈ xử lý tuổi nếu chưa được khởi tạo
+                if (!hasInitializedAge.current) {
+                    hasInitializedAge.current = true;
+                    
+                    // Bước 1: Kiểm tra storage trước
+                    const storedAge = storageService.getUserAge();
+                    
+                    if (storedAge) {
+                        // Có tuổi trong storage -> người dùng cũ
+                        console.log('Người dùng cũ - lấy tuổi từ storage:', storedAge);
+                        setUserAge(storedAge);
+                    } else if (fetchedConversations.length > 0) {
+                        // Không có trong storage nhưng có cuộc hội thoại -> lấy từ cuộc hội thoại gần nhất
+                        const lastConversationWithAge = fetchedConversations
+                            .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+                            .find(conv => conv.age_context);
+                        
+                        if (lastConversationWithAge && lastConversationWithAge.age_context) {
+                            console.log('Lấy tuổi từ cuộc hội thoại gần nhất:', lastConversationWithAge.age_context);
+                            setUserAge(lastConversationWithAge.age_context);
+                            storageService.saveUserAge(lastConversationWithAge.age_context);
+                        } else {
+                            // Có cuộc hội thoại nhưng không có age_context -> người dùng mới hoặc dữ liệu cũ
+                            console.log('Người dùng mới - không có tuổi');
+                            setUserAge(null);
+                        }
+                    } else {
+                        // Không có storage và không có cuộc hội thoại -> người dùng hoàn toàn mới
+                        console.log('Người dùng hoàn toàn mới');
+                        setUserAge(null);
                     }
                 }
 
@@ -53,12 +70,10 @@ const useChat = () => {
         } finally {
             setIsLoadingConversations(false);
         }
-    }, [userAge]);
+    }, []);
 
     /**
      * Lấy chi tiết cuộc hội thoại
-     * @param {string} id - ID cuộc hội thoại
-     * @returns {Promise<Object>} Chi tiết cuộc hội thoại
      */
     const fetchConversationDetail = useCallback(async (id) => {
         if (!id || fetchingDetailRef.current) return null;
@@ -70,13 +85,6 @@ const useChat = () => {
             if (response.success) {
                 const conversation = response.conversation;
                 setActiveConversation(conversation);
-
-                // Cập nhật userAge từ age_context nếu có
-                if (conversation.age_context && !userAge) {
-                    setUserAge(conversation.age_context);
-                    storageService.saveUserAge(conversation.age_context);
-                }
-
                 return conversation;
             }
 
@@ -87,48 +95,76 @@ const useChat = () => {
         } finally {
             fetchingDetailRef.current = false;
         }
-    }, [userAge]);
+    }, []);
 
     /**
      * Nhắc người dùng thiết lập tuổi
      */
     const promptUserForAge = useCallback(() => {
+        return new Promise((resolve) => {
+            Swal.fire({
+                title: 'Chào mừng bạn đến với Nutribot!',
+                html: `
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-3">Để nhận được thông tin dinh dưỡng phù hợp, vui lòng cho biết độ tuổi của bạn</p>
+                        <select id="swal-age" class="swal2-input w-full">
+                            <option value="">-- Chọn độ tuổi --</option>
+                            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                                `<option value="${age}">${age} tuổi</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                `,
+                confirmButtonText: 'Bắt đầu trò chuyện',
+                confirmButtonColor: '#36B37E',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                showCancelButton: false,
+                preConfirm: () => {
+                    const age = parseInt(document.getElementById('swal-age').value);
+                    if (isNaN(age) || age < 1 || age > 19) {
+                        Swal.showValidationMessage('Vui lòng chọn độ tuổi từ 1-19');
+                        return false;
+                    }
+                    return age;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const selectedAge = result.value;
+                    console.log('Người dùng đã chọn tuổi:', selectedAge);
+                    setUserAge(selectedAge);
+                    storageService.saveUserAge(selectedAge);
+                    resolve(selectedAge);
+                }
+            });
+        });
+    }, []);
+
+    /**
+     * Đảm bảo có tuổi trước khi thực hiện hành động
+     */
+    const ensureUserAge = useCallback(async () => {
+        console.log('ensureUserAge - Current userAge:', userAge);
+        
         if (!userAge) {
-            setTimeout(() => {
-                Swal.fire({
-                    title: 'Thiết lập độ tuổi',
-                    text: 'Vui lòng thiết lập độ tuổi để nhận được thông tin dinh dưỡng phù hợp',
-                    icon: 'info',
-                    html: `
-            <select id="swal-age" class="swal2-input">
-              ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                        `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-                    ).join('')}
-            </select>
-          `,
-                    confirmButtonText: 'Lưu',
-                    confirmButtonColor: '#36B37E',
-                    allowOutsideClick: false,
-                    preConfirm: () => {
-                        const age = parseInt(document.getElementById('swal-age').value);
-                        if (isNaN(age) || age < 1 || age > 19) {
-                            Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-                        }
-                        return age;
-                    }
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        setUserAge(result.value);
-                        storageService.saveUserAge(result.value);
-                    }
-                });
-            }, 1000);
+            // Kiểm tra lại storage 1 lần nữa
+            const storedAge = storageService.getUserAge();
+            console.log('ensureUserAge - Stored age:', storedAge);
+            
+            if (storedAge) {
+                setUserAge(storedAge);
+                return storedAge;
+            } else {
+                // Bắt buộc người dùng chọn tuổi
+                console.log('Bắt buộc chọn tuổi');
+                return await promptUserForAge();
+            }
         }
-    }, [userAge]);
+        return userAge;
+    }, [userAge, promptUserForAge]);
 
     /**
      * Tạo cuộc hội thoại mới
-     * @returns {Promise<Object>} Kết quả tạo cuộc hội thoại
      */
     const startNewConversation = useCallback(async () => {
         const user = storageService.getUserData();
@@ -138,8 +174,14 @@ const useChat = () => {
             return { success: false, error: 'Bạn cần đăng nhập để tạo cuộc hội thoại mới' };
         }
 
+        // Đảm bảo có tuổi trước khi tạo cuộc hội thoại
+        const currentAge = await ensureUserAge();
+        if (!currentAge) {
+            return { success: false, error: 'Cần thiết lập tuổi trước khi tạo cuộc hội thoại' };
+        }
+
         try {
-            const response = await chatService.createConversation('Cuộc trò chuyện mới', userAge);
+            const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
 
             if (response.success) {
                 await fetchConversations();
@@ -157,7 +199,6 @@ const useChat = () => {
         } catch (error) {
             console.error("Lỗi khi tạo cuộc hội thoại mới:", error);
 
-            // Hiển thị thông báo lỗi
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi',
@@ -167,37 +208,22 @@ const useChat = () => {
 
             return { success: false, error: error.message || 'Không thể tạo cuộc hội thoại mới' };
         }
-    }, [userAge, navigate, fetchConversationDetail, fetchConversations]);
+    }, [navigate, fetchConversationDetail, fetchConversations, ensureUserAge]);
 
     /**
      * Gửi tin nhắn
-     * @param {string} messageContent - Nội dung tin nhắn
-     * @param {string} conversationId - ID cuộc hội thoại
-     * @returns {Promise<Object>} Kết quả gửi tin nhắn
      */
     const sendMessage = useCallback(async (messageContent, conversationId = null) => {
-        // Kiểm tra nếu không có tuổi
-        if (!userAge) {
-            Swal.fire({
-                title: 'Chưa thiết lập tuổi',
-                text: 'Bạn cần thiết lập tuổi để nhận câu trả lời phù hợp.',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Thiết lập ngay',
-                cancelButtonText: 'Để sau',
-                confirmButtonColor: '#36B37E'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    promptUserForAge();
-                }
-            });
+        // Đảm bảo có tuổi trước khi gửi tin nhắn
+        const currentAge = await ensureUserAge();
+        if (!currentAge) {
             return { success: false, error: 'Cần thiết lập tuổi trước khi gửi tin nhắn' };
         }
 
-        // Kiểm tra nếu đang trong một cuộc hội thoại có age_context khác với userAge hiện tại
+        // Kiểm tra độ tuổi khớp với cuộc hội thoại
         if (activeConversation && activeConversation.id &&
             activeConversation.age_context &&
-            activeConversation.age_context !== userAge) {
+            activeConversation.age_context !== currentAge) {
             const result = await Swal.fire({
                 title: 'Độ tuổi không khớp',
                 text: 'Cuộc trò chuyện này đã được thiết lập cho độ tuổi khác. Vui lòng tạo cuộc trò chuyện mới nếu muốn sử dụng độ tuổi hiện tại.',
@@ -211,17 +237,13 @@ const useChat = () => {
             if (result.isConfirmed) {
                 await startNewConversation();
             } else {
-                // Khôi phục lại tuổi theo age_context của cuộc hội thoại
                 setUserAge(activeConversation.age_context);
                 storageService.saveUserAge(activeConversation.age_context);
             }
             return { success: false, error: 'Độ tuổi không khớp với cuộc trò chuyện' };
         }
 
-        // Tạo ID tạm thời cho tin nhắn người dùng
         const tempUserId = generateTempId();
-
-        // Tạo tin nhắn người dùng để hiển thị ngay lập tức
         const userMessage = {
             id: tempUserId,
             role: 'user',
@@ -229,22 +251,18 @@ const useChat = () => {
             timestamp: new Date().toISOString()
         };
 
-        // Kiểm tra xem đây có phải là cuộc trò chuyện mới không
         const isNewConversation = activeConversation &&
             activeConversation.id &&
             (!activeConversation.messages || activeConversation.messages.length === 0);
 
-        // Nếu là cuộc trò chuyện mới, cập nhật tiêu đề
         if (isNewConversation) {
             const newTitle = createTitleFromMessage(messageContent);
 
-            // Cập nhật title trong state của activeConversation
             setActiveConversation(prev => ({
                 ...prev,
                 title: newTitle
             }));
 
-            // Cập nhật title trong danh sách conversations
             setConversations(prevConversations =>
                 prevConversations.map(conv =>
                     conv.id === activeConversation.id
@@ -253,7 +271,6 @@ const useChat = () => {
                 )
             );
 
-            // Cập nhật title trong database
             try {
                 chatService.updateConversation(activeConversation.id, { title: newTitle });
             } catch (error) {
@@ -261,41 +278,34 @@ const useChat = () => {
             }
         }
 
-        // Cập nhật state để hiển thị tin nhắn người dùng ngay lập tức
         if (activeConversation) {
             setActiveConversation(prev => {
                 const updatedConversation = { ...prev };
-
                 if (!updatedConversation.messages) {
                     updatedConversation.messages = [];
                 }
-
                 updatedConversation.messages = [...updatedConversation.messages, userMessage];
                 return updatedConversation;
             });
         } else {
-            // Nếu chưa có cuộc hội thoại, tạo mới
             setActiveConversation({
                 id: null,
                 title: createTitleFromMessage(messageContent),
                 messages: [userMessage],
-                age_context: userAge
+                age_context: currentAge
             });
         }
 
-        // Bắt đầu loading
         setIsLoading(true);
 
         try {
-            // Gọi API
             const response = await chatService.sendMessage(
                 messageContent,
-                userAge,
+                currentAge,
                 conversationId || activeConversation?.id
             );
 
             if (response.success) {
-                // Xử lý khi có conversation_id mới
                 if (response.conversation_id && (!activeConversation?.id || conversationId !== activeConversation?.id)) {
                     await fetchConversationDetail(response.conversation_id);
                     await fetchConversations();
@@ -303,7 +313,6 @@ const useChat = () => {
                 } else if (activeConversation && activeConversation.id) {
                     await fetchConversationDetail(activeConversation.id);
                 } else {
-                    // Tạo tin nhắn bot trực tiếp nếu không có conversation_id
                     const botMessage = {
                         id: generateTempId(),
                         role: 'bot',
@@ -326,7 +335,6 @@ const useChat = () => {
         } catch (error) {
             console.error("Lỗi khi gọi API:", error);
 
-            // Xóa tin nhắn tạm nếu gặp lỗi
             if (activeConversation) {
                 setActiveConversation(prev => {
                     const updatedConversation = { ...prev };
@@ -335,7 +343,6 @@ const useChat = () => {
                 });
             }
 
-            // Hiển thị thông báo lỗi
             Swal.fire({
                 icon: 'error',
                 title: 'Lỗi kết nối',
@@ -348,23 +355,17 @@ const useChat = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [activeConversation, userAge, navigate, fetchConversationDetail, fetchConversations, promptUserForAge, startNewConversation]);
+    }, [activeConversation, navigate, fetchConversationDetail, fetchConversations, ensureUserAge, startNewConversation]);
 
-    /**
-     * Xóa cuộc hội thoại
-     * @param {string} conversationId - ID cuộc hội thoại
-     * @returns {Promise<Object>} Kết quả xóa cuộc hội thoại
-     */
+    // Các hàm khác giữ nguyên...
     const deleteConversation = useCallback(async (conversationId) => {
         try {
             const response = await chatService.deleteConversation(conversationId);
 
             if (response.success) {
-                // Cập nhật state
                 const updatedConversations = conversations.filter(c => c.id !== conversationId);
                 setConversations(updatedConversations);
 
-                // Nếu đang xem cuộc hội thoại bị xóa, chuyển sang cuộc khác
                 if (activeConversation && activeConversation.id === conversationId) {
                     if (updatedConversations.length > 0) {
                         await fetchConversationDetail(updatedConversations[0].id);
@@ -385,12 +386,6 @@ const useChat = () => {
         }
     }, [activeConversation, conversations, navigate, fetchConversationDetail]);
 
-    /**
-     * Đổi tên cuộc hội thoại
-     * @param {string} conversationId - ID cuộc hội thoại
-     * @param {string} currentTitle - Tiêu đề hiện tại
-     * @returns {Promise<Object>} Kết quả đổi tên
-     */
     const renameConversation = useCallback(async (conversationId, currentTitle) => {
         try {
             const result = await Swal.fire({
@@ -418,7 +413,6 @@ const useChat = () => {
                 });
 
                 if (response.success) {
-                    // Cập nhật title trong state
                     setConversations(prevConversations =>
                         prevConversations.map(conv =>
                             conv.id === conversationId
@@ -427,7 +421,6 @@ const useChat = () => {
                         )
                     );
 
-                    // Nếu đang xem cuộc hội thoại được đổi tên, cập nhật title
                     if (activeConversation && activeConversation.id === conversationId) {
                         setActiveConversation(prev => ({
                             ...prev,
@@ -435,7 +428,6 @@ const useChat = () => {
                         }));
                     }
 
-                    // Hiển thị thông báo thành công
                     Swal.fire({
                         icon: 'success',
                         title: 'Đã đổi tên',
@@ -456,24 +448,16 @@ const useChat = () => {
         }
     }, [activeConversation]);
 
-    /**
-     * Cập nhật tuổi người dùng
-     * @param {number} age - Tuổi mới
-     * @param {string} conversationId - ID cuộc hội thoại cần cập nhật
-     * @returns {Promise<Object>} Kết quả cập nhật
-     */
     const updateUserAge = useCallback(async (age, conversationId = null) => {
         setUserAge(age);
         storageService.saveUserAge(age);
 
-        // Nếu đang trong cuộc hội thoại, cập nhật age_context
         if (conversationId && activeConversation) {
             try {
                 await chatService.updateConversation(conversationId, {
                     age_context: age
                 });
 
-                // Cập nhật trong state
                 if (activeConversation.id === conversationId) {
                     setActiveConversation(prev => ({
                         ...prev,
@@ -499,7 +483,14 @@ const useChat = () => {
         return { success: true };
     }, [activeConversation]);
 
-    // Clear active conversation when navigating out
+    // KHÔNG tự động lấy từ storage khi component mount
+    // useEffect(() => {
+    //     const storedAge = storageService.getUserAge();
+    //     if (storedAge && !userAge) {
+    //         setUserAge(storedAge);
+    //     }
+    // }, [userAge]);
+
     useEffect(() => {
         return () => {
             setActiveConversation(null);
@@ -521,7 +512,8 @@ const useChat = () => {
         deleteConversation,
         renameConversation,
         updateUserAge,
-        promptUserForAge
+        promptUserForAge,
+        ensureUserAge
     };
 };
 
