@@ -5,9 +5,13 @@ import {
   BiChevronDown,
   BiCog,
   BiHistory,
-  BiLogOut
+  BiLogOut,
+  BiMenu,
+  BiX
 } from 'react-icons/bi';
-import Swal from 'sweetalert2';
+import useAuth from '../../hooks/useAuth';
+import useToast from '../../hooks/useToast';
+import { Button } from '../common';
 
 // NutriBot Logo Component
 const NutribotLogo = () => (
@@ -19,10 +23,8 @@ const NutribotLogo = () => (
 );
 
 const Header = ({ 
-  userData, 
   userAge, 
   setUserAge, 
-  handleLogout, 
   toggleSidebar, 
   isMobile, 
   isSidebarVisible, 
@@ -31,6 +33,8 @@ const Header = ({
   extraButton = null
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { userData, logout } = useAuth();
+  const { showAgePrompt, showLogoutConfirm } = useToast();
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
@@ -55,37 +59,16 @@ const Header = ({
       activeConversation.age_context &&
       activeConversation.messages &&
       activeConversation.messages.length > 0) {
-      Swal.fire({
+      showToast.showCustomMessage({
         title: 'Không thể thay đổi độ tuổi',
         text: 'Cuộc trò chuyện này đã có tin nhắn với độ tuổi cụ thể. Bạn cần tạo cuộc trò chuyện mới để sử dụng độ tuổi khác.',
         icon: 'warning',
-        confirmButtonText: 'Đã hiểu',
-        confirmButtonColor: '#36B37E'
+        confirmButtonText: 'Đã hiểu'
       });
       return;
     }
 
-    Swal.fire({
-      title: 'Thay đổi độ tuổi',
-      html: `
-        <select id="swal-age" class="swal2-input">
-          ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-        `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-      ).join('')}
-        </select>
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Lưu',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#36B37E',
-      preConfirm: () => {
-        const age = parseInt(document.getElementById('swal-age').value);
-        if (isNaN(age) || age < 1 || age > 19) {
-          Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-        }
-        return age;
-      }
-    }).then((result) => {
+    showAgePrompt(userAge).then((result) => {
       if (result.isConfirmed) {
         const newAge = result.value;
         setUserAge(newAge);
@@ -94,17 +77,13 @@ const Header = ({
         if (activeConversation && activeConversation.id && userData && userData.id) {
           updateConversationAge(activeConversation.id, newAge, userData.id);
         }
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Đã cập nhật',
-          text: `Đã cập nhật độ tuổi thành ${newAge}`,
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
       }
     });
+  };
+
+  // Xử lý đăng xuất
+  const handleLogout = () => {
+    showLogoutConfirm(logout);
   };
 
   return (
@@ -117,7 +96,7 @@ const Header = ({
             className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
             style={{ color: '#36B37E' }}
           >
-            {extraButton}
+            {extraButton || <BiMenu className="text-xl" />}
           </button>
         )}
 

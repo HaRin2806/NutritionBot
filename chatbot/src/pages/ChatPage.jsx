@@ -1,244 +1,58 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import {
-  BiSend,
-  BiPlus,
-  BiHistory,
-  BiSearch,
-  BiInfoCircle,
-  BiDotsVerticalRounded,
-  BiTrash,
-  BiEdit,
-  BiX,
-  BiMenu,
-  BiRocket
-} from 'react-icons/bi';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { tomorrow } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import Header from '../components/Header';
-import './ChatPage.css';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { BiPlus, BiChat } from 'react-icons/bi';
+import useChat from '../hooks/useChat';
+import useAuth from '../hooks/useAuth';
+import useToast from '../hooks/useToast';
+import { Header, Sidebar } from '../components/layout';
+import { MessageList, ChatInput } from '../components/chat';
+import '../styles/chat.css';
 
-const API_BASE_URL = 'http://localhost:5000/api';
-
-// Hàm tạo tiêu đề từ tin nhắn
-const createTitleFromMessage = (message, maxLength = 50) => {
-  // Loại bỏ ký tự xuống dòng và khoảng trắng thừa
-  const cleanMessage = message.trim().replace(/\n/g, ' ');
-
-  // Nếu tin nhắn đủ ngắn, sử dụng làm tiêu đề luôn
-  if (cleanMessage.length <= maxLength) {
-    return cleanMessage;
-  }
-
-  // Nếu tin nhắn quá dài, cắt ngắn và thêm dấu "..."
-  return cleanMessage.slice(0, maxLength - 3) + "...";
-};
-
-// Component để hiển thị hình ảnh với trạng thái loading
-const RenderImage = ({ src, alt }) => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  // Xử lý đường dẫn hình ảnh
-  let imgSrc = src;
-
-  if (src) {
-    // Xử lý đường dẫn tương đối với '../figures/'
-    if (src.includes('../figures/')) {
-      const relativePath = src.split('../figures/')[1];
-      // Lấy tên file từ đường dẫn
-      const fileName = relativePath;
-
-      // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
-      let baiId = 'bai1'; // Mặc định là bai1
-      const baiMatch = fileName.match(/^(bai\d+)_/);
-      if (baiMatch) {
-        baiId = baiMatch[1];
-      }
-
-      // Tạo URL API chính xác
-      imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
-    }
-    // Trường hợp đường dẫn bình thường
-    else {
-      // Lấy tên file từ đường dẫn
-      const fileName = src.split('/').pop();
-
-      // Tìm mã bài từ tên file (ví dụ: bai1_hinh1.jpg -> bai1)
-      let baiId = 'bai1'; // Mặc định là bai1
-      const baiMatch = fileName.match(/^(bai\d+)_/);
-      if (baiMatch) {
-        baiId = baiMatch[1];
-      }
-
-      // Tạo URL API chính xác
-      imgSrc = `${API_BASE_URL}/figures/${baiId}/${fileName}`;
-    }
-  }
-
-  return (
-    <span className="block my-4">
-      {loading && (
-        <span className="flex items-center justify-center h-24 bg-gray-100 rounded-lg animate-pulse">
-          <span className="text-gray-500">Đang tải hình ảnh...</span>
-        </span>
-      )}
-      {error && (
-        <span className="flex items-center justify-center h-24 bg-red-50 rounded-lg">
-          <span className="text-red-500">Không thể tải hình ảnh</span>
-        </span>
-      )}
-      <img
-        src={imgSrc}
-        alt={alt || "Hình ảnh"}
-        className={`max-w-full rounded-lg border border-gray-200 shadow-sm ${loading ? 'hidden' : 'block'}`}
-        onLoad={() => setLoading(false)}
-        onError={() => {
-          setLoading(false);
-          setError(true);
-        }}
-      />
-      {alt && !error && <span className="block text-center text-sm text-gray-600 mt-1">{alt}</span>}
-    </span>
-  );
-};
-
-// Component hiển thị nguồn tham khảo
-const SourceReference = ({ sources }) => {
-  if (!sources || sources.length === 0) return null;
-
-  return (
-    <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm">
-      <div className="flex items-center mb-2">
-        <BiInfoCircle className="text-mint-600 mr-1" style={{ color: '#36B37E' }} />
-        <span className="font-medium">Nguồn tham khảo:</span>
-      </div>
-      <ul className="space-y-1 ml-1">
-        {sources.map((source, index) => (
-          <li key={index} className="flex items-start">
-            <span className="text-xs text-gray-500 mr-1">[{index + 1}]</span>
-            <span className="text-gray-700">
-              {source.title}
-              {source.pages && <span className="text-gray-500 ml-1">(Trang {source.pages})</span>}
-              {source.content_type === 'table' && <span className="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">Bảng</span>}
-              {source.content_type === 'figure' && <span className="ml-1 px-1.5 py-0.5 bg-green-100 text-green-700 text-xs rounded">Hình</span>}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-// Component hiển thị menu cho mỗi đoạn chat
-const ChatItemMenu = ({ conversation, onDelete, onRename }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const menuRef = useRef(null);
-  const [menuPosition, setMenuPosition] = useState('bottom'); // 'bottom' hoặc 'top'
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Kiểm tra vị trí để quyết định hiển thị menu hướng lên hay xuống
-  const toggleMenu = (e) => {
-    if (!isOpen) {
-      const button = e.currentTarget;
-      const buttonRect = button.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const bottomSpace = windowHeight - buttonRect.bottom;
-
-      // Nếu khoảng cách từ button đến bottom của trang < 100px, hiển thị menu ở phía trên
-      setMenuPosition(bottomSpace < 100 ? 'top' : 'bottom');
-    }
-
-    setIsOpen(!isOpen);
-  };
-
-  const handleRename = () => {
-    onRename(conversation.id, conversation.title);
-    setIsOpen(false);
-  };
-
-  const handleDelete = () => {
-    onDelete(conversation.id);
-    setIsOpen(false);
-  };
-
-  return (
-    <div className="relative" ref={menuRef}>
-      <button
-        onClick={toggleMenu}
-        className="text-gray-400 hover:text-gray-600 transition p-1 rounded-full hover:bg-gray-100"
-      >
-        <BiDotsVerticalRounded />
-      </button>
-
-      {isOpen && (
-        <div
-          className={`absolute ${menuPosition === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1'} right-0 w-40 bg-white rounded-md shadow-lg z-10 py-1 border border-gray-200`}
-        >
-          <button
-            onClick={handleRename}
-            className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-          >
-            <BiEdit className="mr-2" />
-            Đổi tên
-          </button>
-          <button
-            onClick={handleDelete}
-            className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-          >
-            <BiTrash className="mr-2" />
-            Xóa
-          </button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Component chính
 const ChatPage = () => {
-  const [activeConversation, setActiveConversation] = useState(null);
-  const [conversations, setConversations] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [userAge, setUserAge] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
+  const { conversationId } = useParams();
+  const navigate = useNavigate();
+  const messagesEndRef = useRef(null);
+  const fetchingRef = useRef(false);
+  const detailFetchedRef = useRef(false);
+  
+  const { 
+    activeConversation,
+    conversations,
+    isLoading,
+    isLoadingConversations,
+    userAge,
+    setUserAge,
+    fetchConversations,
+    fetchConversationDetail,
+    sendMessage,
+    startNewConversation,
+    deleteConversation,
+    renameConversation,
+    updateUserAge,
+    promptUserForAge
+  } = useChat();
+  
+  const { userData, isLoading: isLoadingAuth } = useAuth();
+  const { showLoginRequired, showConfirm } = useToast();
+  
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
-  const navigate = useNavigate();
-  const { conversationId } = useParams();
+
+  // Kiểm tra đăng nhập
+  useEffect(() => {
+    if (!isLoadingAuth && !userData) {
+      showLoginRequired(() => navigate('/login'));
+    }
+  }, [userData, isLoadingAuth, navigate, showLoginRequired]);
 
   // Phát hiện kích thước màn hình
   useEffect(() => {
     const handleResize = () => {
       const newIsMobile = window.innerWidth < 768;
       setIsMobile(newIsMobile);
-      // Trên màn hình lớn, luôn hiển thị sidebar
       if (!newIsMobile) {
         setIsSidebarVisible(true);
       } else if (newIsMobile && isSidebarVisible) {
-        // Trên màn hình nhỏ, nếu đang hiển thị sidebar thì ẩn đi
         setIsSidebarVisible(false);
       }
     };
@@ -249,905 +63,115 @@ const ChatPage = () => {
     };
   }, [isSidebarVisible]);
 
-  // Hàm cập nhật age_context
-  const updateConversationAge = async (conversationId, age) => {
-    if (!conversationId) return;
-
-    try {
-      const response = await axios.put(
-        `${API_BASE_URL}/conversations/${conversationId}`,
-        {
-          title: activeConversation?.title,
-          age_context: age
-        },
-        {
-          withCredentials: true
-        }
-      );
-
-      if (response.data.success) {
-        // Cập nhật cả activeConversation
-        setActiveConversation(prev => ({
-          ...prev,
-          age_context: age
-        }));
-
-        // Cập nhật trong danh sách cuộc hội thoại
-        setConversations(prevConversations =>
-          prevConversations.map(conv =>
-            conv.id === conversationId
-              ? { ...conv, age_context: age }
-              : conv
-          )
-        );
-      }
-    } catch (error) {
-      console.error("Lỗi khi cập nhật tuổi cho cuộc hội thoại:", error);
-    }
-  };
-
-  // Kiểm tra đăng nhập và lấy thông tin user
+  // Chỉ lấy danh sách cuộc hội thoại 1 lần khi component mount
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-
-    if (user && Object.keys(user).length > 0) {
-      setUserData(user);
-      // Lấy danh sách cuộc hội thoại nếu đã đăng nhập
-      fetchConversations(user.id);
-    } else {
-      // Hiển thị thông báo chưa đăng nhập nhưng vẫn ở trang chat
-      Swal.fire({
-        title: 'Bạn chưa đăng nhập',
-        text: 'Bạn cần đăng nhập để sử dụng ứng dụng này',
-        icon: 'warning',
-        timer: 5000,
-        timerProgressBar: true,
-        confirmButtonText: 'Đăng nhập ngay',
-        confirmButtonColor: '#36B37E',
-        didOpen: () => {
-          Swal.showLoading();
-          const timerInterval = setInterval(() => {
-            // Chỉ để trống, thanh tiến trình sẽ tự động hiển thị
-          }, 100);
-          Swal.timerInterval = timerInterval;
-        },
-        willClose: () => {
-          clearInterval(Swal.timerInterval);
-          navigate('/login');
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/login');
-        }
-      });
+    if (userData && !isLoadingAuth && !fetchingRef.current) {
+      fetchingRef.current = true;
+      fetchConversations();
     }
-  }, [navigate]);
+  }, [userData, isLoadingAuth, fetchConversations]);
 
-  // Lấy danh sách cuộc hội thoại
-  const fetchConversations = async (userId) => {
-    if (!userId) return;
-
-    try {
-      setIsLoadingConversations(true);
-      const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        const fetchedConversations = response.data.conversations;
-        setConversations(fetchedConversations);
-
-        // Nếu có conversationId từ URL, thiết lập nó làm cuộc hội thoại active
-        if (conversationId) {
-          const foundConversation = fetchedConversations.find(c => c.id === conversationId);
-          if (foundConversation) {
-            setActiveConversation(foundConversation);
-            // Lấy chi tiết cuộc hội thoại
-            fetchConversationDetail(conversationId, userId);
-          }
-        } else if (fetchedConversations.length > 0) {
-          // Nếu không có conversationId từ URL, lấy cuộc hội thoại mới nhất
-          setActiveConversation(fetchedConversations[0]);
-          fetchConversationDetail(fetchedConversations[0].id, userId);
-        }
-
-        // Lấy tuổi từ cuộc hội thoại gần nhất có age_context
-        if (fetchedConversations.length > 0) {
-          // Tìm cuộc hội thoại gần đây nhất có age_context
-          const lastConversationWithAge = fetchedConversations.find(conv => conv.age_context);
-          if (lastConversationWithAge && lastConversationWithAge.age_context) {
-            setUserAge(lastConversationWithAge.age_context);
-          } else {
-            // Nếu chưa có cuộc hội thoại nào có age_context, cần nhắc người dùng thiết lập
-            promptUserForAge();
-          }
-        } else {
-          // Nếu không có cuộc hội thoại nào, cần nhắc người dùng thiết lập tuổi
-          promptUserForAge();
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách cuộc hội thoại:", error);
-    } finally {
-      setIsLoadingConversations(false);
-    }
-  };
-
-  // Hàm nhắc người dùng thiết lập tuổi nếu cần
-  const promptUserForAge = () => {
-    if (!userAge) {
-      setTimeout(() => {
-        Swal.fire({
-          title: 'Thiết lập độ tuổi',
-          text: 'Vui lòng thiết lập độ tuổi để nhận được thông tin dinh dưỡng phù hợp',
-          icon: 'info',
-          html: `
-            <select id="swal-age" class="swal2-input">
-              ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-            `<option value="${age}" ${userAge === age ? 'selected' : ''}>${age} tuổi</option>`
-          ).join('')}
-            </select>
-          `,
-          confirmButtonText: 'Lưu',
-          confirmButtonColor: '#36B37E',
-          allowOutsideClick: false,
-          preConfirm: () => {
-            const age = parseInt(document.getElementById('swal-age').value);
-            if (isNaN(age) || age < 1 || age > 19) {
-              Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-            }
-            return age;
-          }
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setUserAge(result.value);
-          }
-        });
-      }, 1000);
-    }
-  };
-
-  // Lấy chi tiết cuộc hội thoại
-  const fetchConversationDetail = async (id, userId) => {
-    if (!id) return;
-
-    try {
-      const response = await axios.get(`${API_BASE_URL}/conversations/${id}`, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        const conversation = response.data.conversation;
-        setActiveConversation(conversation);
-
-        // Cập nhật userAge từ age_context nếu có
-        if (conversation.age_context) {
-          setUserAge(conversation.age_context);
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy chi tiết cuộc hội thoại:", error);
-    }
-  };
-
-  // Khi không có active conversation nhưng có conversations
+  // Lấy chi tiết cuộc hội thoại khi ID thay đổi (không phụ thuộc vào activeConversation)
   useEffect(() => {
-    if (activeConversation === null && conversations.length > 0) {
-      setActiveConversation(conversations[0]);
-
-      // Nếu cuộc hội thoại có age_context, cập nhật userAge
-      if (conversations[0].age_context) {
-        setUserAge(conversations[0].age_context);
+    const loadConversationDetails = async () => {
+      if (conversationId && userData && !isLoadingAuth && !detailFetchedRef.current) {
+        detailFetchedRef.current = true;
+        await fetchConversationDetail(conversationId);
       }
-    }
-  }, [conversations, activeConversation]);
+    };
+    
+    loadConversationDetails();
+    
+    // Reset flag khi conversation ID thay đổi
+    return () => {
+      detailFetchedRef.current = false;
+    };
+  }, [conversationId, userData, isLoadingAuth, fetchConversationDetail]);
 
   // Cuộn xuống dưới khi có tin nhắn mới
+  const scrollToBottom = useCallback(() => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  }, []);
+
+  // Scroll xuống mỗi khi messages thay đổi
   useEffect(() => {
-    scrollToBottom();
-  }, [activeConversation]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Hàm tạo ID duy nhất cho tin nhắn tạm thời
-  const generateTempId = () => {
-    return 'temp_' + Date.now();
-  };
-
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-
-    if (!newMessage.trim()) return;
-
-    // Kiểm tra nếu không có tuổi
-    if (!userAge) {
-      Swal.fire({
-        title: 'Chưa thiết lập tuổi',
-        text: 'Bạn cần thiết lập tuổi để nhận câu trả lời phù hợp.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Thiết lập ngay',
-        cancelButtonText: 'Để sau',
-        confirmButtonColor: '#36B37E'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Mở dialog thiết lập tuổi
-          Swal.fire({
-            title: 'Thiết lập độ tuổi',
-            html: `
-              <select id="swal-age" class="swal2-input">
-                ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-              `<option value="${age}">${age} tuổi</option>`
-            ).join('')}
-              </select>
-            `,
-            confirmButtonText: 'Lưu',
-            confirmButtonColor: '#36B37E',
-            preConfirm: () => {
-              const age = parseInt(document.getElementById('swal-age').value);
-              if (isNaN(age) || age < 1 || age > 19) {
-                Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-              }
-              return age;
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              const newAge = result.value;
-              setUserAge(newAge);
-
-              // Tiếp tục gửi tin nhắn sau khi thiết lập tuổi
-              setTimeout(() => {
-                handleSendMessage(e);
-              }, 500);
-            }
-          });
-        }
-      });
-      return;
+    if (activeConversation?.messages?.length > 0) {
+      scrollToBottom();
     }
-
-    // Kiểm tra nếu đang trong một cuộc hội thoại có age_context khác với userAge hiện tại
-    if (activeConversation && activeConversation.id &&
-      activeConversation.age_context &&
-      activeConversation.age_context !== userAge) {
-      Swal.fire({
-        title: 'Độ tuổi không khớp',
-        text: 'Cuộc trò chuyện này đã được thiết lập cho độ tuổi khác. Vui lòng tạo cuộc trò chuyện mới nếu muốn sử dụng độ tuổi hiện tại.',
-        icon: 'warning',
-        confirmButtonText: 'Tạo cuộc trò chuyện mới',
-        cancelButtonText: 'Đóng',
-        showCancelButton: true,
-        confirmButtonColor: '#36B37E'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          startNewConversation();
-        } else {
-          // Khôi phục lại tuổi theo age_context của cuộc hội thoại
-          setUserAge(activeConversation.age_context);
-        }
-      });
-      return;
-    }
-
-    // Sao lưu tin nhắn để dùng sau
-    const messageContent = newMessage;
-    setNewMessage('');
-
-    // Tạo ID tạm thời cho tin nhắn người dùng
-    const tempUserId = generateTempId();
-
-    // Tạo tin nhắn người dùng để hiển thị ngay lập tức
-    const userMessage = {
-      id: tempUserId,
-      role: 'user',
-      content: messageContent,
-      timestamp: new Date().toISOString()
-    };
-
-    // Kiểm tra xem đây có phải là cuộc trò chuyện mới không (không có tin nhắn nào)
-    const isNewConversation = activeConversation &&
-      activeConversation.id &&
-      (!activeConversation.messages || activeConversation.messages.length === 0);
-
-    // Nếu là cuộc trò chuyện mới, cập nhật tiêu đề ngay lập tức ở frontend
-    if (isNewConversation) {
-      const newTitle = createTitleFromMessage(messageContent);
-
-      // Cập nhật title trong state của activeConversation
-      setActiveConversation(prev => ({
-        ...prev,
-        title: newTitle
-      }));
-
-      // Cập nhật title trong danh sách conversations
-      setConversations(prevConversations =>
-        prevConversations.map(conv =>
-          conv.id === activeConversation.id
-            ? { ...conv, title: newTitle }
-            : conv
-        )
-      );
-
-      // Gửi request đến backend để cập nhật tiêu đề trong database
-      if (userData && userData.id) {
-        try {
-          axios.put(
-            `${API_BASE_URL}/conversations/${activeConversation.id}`,
-            {
-              title: newTitle,
-              user_id: userData.id
-            }
-          );
-          // Không cần đợi phản hồi vì chúng ta đã cập nhật UI
-        } catch (error) {
-          console.error("Lỗi khi cập nhật tiêu đề cuộc hội thoại:", error);
-        }
-      }
-    }
-
-    // Cập nhật state để hiển thị tin nhắn người dùng ngay lập tức
-    if (activeConversation) {
-      setActiveConversation(prev => {
-        // Tạo bản sao của cuộc hội thoại hiện tại
-        const updatedConversation = { ...prev };
-
-        // Khởi tạo mảng messages nếu chưa có
-        if (!updatedConversation.messages) {
-          updatedConversation.messages = [];
-        }
-
-        // Thêm tin nhắn mới
-        updatedConversation.messages = [...updatedConversation.messages, userMessage];
-
-        return updatedConversation;
-      });
-    } else {
-      // Nếu chưa có cuộc hội thoại nào, tạo cuộc hội thoại mới tạm thời
-      setActiveConversation({
-        id: null,
-        title: createTitleFromMessage(messageContent), // Sử dụng tin nhắn làm tiêu đề ngay lập tức
-        messages: [userMessage],
-        age_context: userAge
-      });
-    }
-
-    // Cuộn xuống dưới để hiển thị tin nhắn mới
-    setTimeout(scrollToBottom, 100);
-
-    // Bắt đầu loading
-    setIsLoading(true);
-
-    try {
-      // Chuẩn bị dữ liệu gửi đi
-      const requestData = {
-        message: messageContent,
-        age: userAge
-      };
-
-      // Nếu đang trong một cuộc hội thoại, thêm conversation_id
-      if (activeConversation && activeConversation.id) {
-        requestData.conversation_id = activeConversation.id;
-      }
-
-      // Gọi API
-      const response = await axios.post(`${API_BASE_URL}/chat`, requestData, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        // Nếu có conversation_id mới được tạo, cập nhật state
-        if (response.data.conversation_id && (!activeConversation?.id)) {
-          // Tìm nạp chi tiết cuộc hội thoại mới
-          fetchConversationDetail(response.data.conversation_id, userData?.id);
-          // Làm mới danh sách cuộc hội thoại
-          fetchConversations(userData?.id);
-        } else if (activeConversation && activeConversation.id) {
-          // Nếu đang trong cuộc hội thoại hiện có, làm mới nó
-          fetchConversationDetail(activeConversation.id, userData?.id);
-        } else {
-          // Nếu không có conversation_id từ API (trường hợp người dùng không đăng nhập)
-          // Tạo tin nhắn bot để hiển thị ngay
-          const botMessage = {
-            id: generateTempId(),
-            role: 'bot',
-            content: response.data.reply,
-            timestamp: new Date().toISOString(),
-            sources: response.data.sources || []
-          };
-
-          // Cập nhật giao diện với tin nhắn bot
-          setActiveConversation(prev => {
-            const updatedConversation = { ...prev };
-            updatedConversation.messages = [...updatedConversation.messages, botMessage];
-            return updatedConversation;
-          });
-        }
-      } else {
-        // Xử lý lỗi
-        Swal.fire({
-          icon: 'error',
-          title: 'Lỗi',
-          text: response.data.error || 'Có lỗi xảy ra',
-          confirmButtonText: 'Đóng',
-          confirmButtonColor: '#36B37E'
-        });
-      }
-    } catch (error) {
-      console.error("Lỗi khi gọi API:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi kết nối',
-        text: 'Không thể kết nối tới máy chủ. Vui lòng thử lại.',
-        confirmButtonText: 'Đóng',
-        confirmButtonColor: '#36B37E'
-      });
-
-      // Xóa tin nhắn tạm nếu gặp lỗi
-      if (activeConversation) {
-        setActiveConversation(prev => {
-          const updatedConversation = { ...prev };
-          updatedConversation.messages = updatedConversation.messages.filter(m => m.id !== tempUserId);
-          return updatedConversation;
-        });
-      }
-    } finally {
-      setIsLoading(false);
-      setTimeout(scrollToBottom, 100);
-    }
-  };
-
-  const startNewConversation = async () => {
-    if (!userData || !userData.id) {
-      navigate('/login');
-      return;
-    }
-
-    try {
-      // Sử dụng userAge hiện tại (lấy từ cuộc trò chuyện gần nhất có age_context)
-      const response = await axios.post(
-        `${API_BASE_URL}/conversations`,
-        {
-          title: 'Cuộc trò chuyện mới',
-          age_context: userAge // Sử dụng tuổi hiện tại cho cuộc trò chuyện mới
-        },
-        {
-          withCredentials: true
-        }
-      );
-
-      if (response.data.success) {
-        // Làm mới danh sách cuộc hội thoại
-        await fetchConversations(userData.id);
-
-        // Mở cuộc hội thoại mới
-        const conversationId = response.data.conversation_id;
-        if (conversationId) {
-          // Tạo một cuộc hội thoại tạm với ID mới
-          const newConversation = {
-            id: conversationId,
-            title: 'Cuộc trò chuyện mới',
-            messages: [],
-            age_context: userAge, // Sử dụng tuổi hiện tại
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          };
-
-          // Thiết lập cuộc hội thoại mới
-          setActiveConversation(newConversation);
-
-          // Lấy chi tiết đầy đủ sau khi thiết lập
-          fetchConversationDetail(conversationId, userData.id);
-        }
-
-        // Trên mobile, ẩn sidebar sau khi tạo cuộc trò chuyện mới
-        if (isMobile) {
-          setIsSidebarVisible(false);
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi tạo cuộc hội thoại mới:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Không thể tạo cuộc hội thoại mới',
-        confirmButtonColor: '#36B37E'
-      });
-    }
-
-    // Focus vào input
-    inputRef.current?.focus();
-  };
-
-  const deleteConversation = async (conversationId) => {
-    if (!userData) return;
-
-    Swal.fire({
-      title: 'Xóa cuộc trò chuyện?',
-      text: 'Bạn có chắc muốn xóa cuộc trò chuyện này? Hành động này không thể hoàn tác.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.delete(
-            `${API_BASE_URL}/conversations/${conversationId}`,
-            { withCredentials: true }
-          );
-
-          if (response.data.success) {
-            // Xóa khỏi state
-            const updatedConversations = conversations.filter(c => c.id !== conversationId);
-            setConversations(updatedConversations);
-
-            // Nếu đang xem cuộc hội thoại bị xóa, chuyển sang cuộc hội thoại khác
-            if (activeConversation && activeConversation.id === conversationId) {
-              if (updatedConversations.length > 0) {
-                setActiveConversation(updatedConversations[0]);
-                fetchConversationDetail(updatedConversations[0].id, userData.id);
-              } else {
-                setActiveConversation(null);
-              }
-            }
-          }
-        } catch (error) {
-          console.error("Lỗi khi xóa cuộc hội thoại:", error);
-        }
-      }
-    });
-  };
-
-  const renameConversation = async (conversationId, currentTitle) => {
-    if (!userData || !userData.id) return;
-
-    Swal.fire({
-      title: 'Đổi tên cuộc trò chuyện',
-      input: 'text',
-      inputValue: currentTitle,
-      inputAttributes: {
-        autocapitalize: 'off'
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Lưu',
-      cancelButtonText: 'Hủy',
-      confirmButtonColor: '#36B37E',
-      preConfirm: (title) => {
-        if (!title.trim()) {
-          Swal.showValidationMessage('Tên cuộc trò chuyện không được để trống');
-        }
-        return title;
-      }
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.put(
-            `${API_BASE_URL}/conversations/${conversationId}`,
-            {
-              title: result.value
-            },
-            {
-              withCredentials: true
-            }
-          );
-
-          if (response.data.success) {
-            // Cập nhật title trong state
-            setConversations(prevConversations =>
-              prevConversations.map(conv =>
-                conv.id === conversationId
-                  ? { ...conv, title: result.value }
-                  : conv
-              )
-            );
-
-            // Nếu đang xem cuộc hội thoại được đổi tên, cập nhật title
-            if (activeConversation && activeConversation.id === conversationId) {
-              setActiveConversation(prev => ({
-                ...prev,
-                title: result.value
-              }));
-            }
-
-            // Thông báo thành công
-            Swal.fire({
-              icon: 'success',
-              title: 'Đã đổi tên',
-              timer: 1500,
-              showConfirmButton: false
-            });
-          }
-        } catch (error) {
-          console.error("Lỗi khi đổi tên cuộc hội thoại:", error);
-        }
-      }
-    });
-  };
-
-  const handleLogout = () => {
-    Swal.fire({
-      title: 'Đăng xuất?',
-      text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Đăng xuất',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          // Gọi API đăng xuất
-          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
-            withCredentials: true
-          });
-
-          // Xóa thông tin người dùng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-
-          // Xóa config header
-          delete axios.defaults.headers.common['Authorization'];
-
-          // Chuyển hướng về trang đăng nhập
-          navigate('/login');
-        } catch (error) {
-          console.error("Lỗi khi đăng xuất:", error);
-          // Vẫn xóa dữ liệu người dùng và chuyển hướng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-          navigate('/login');
-        }
-      }
-    });
-  };
-
-  const handleSearchConversations = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  // Lọc conversations dựa trên searchTerm
-  const filteredConversations = conversations.filter(
-    conv => conv.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  }, [activeConversation?.messages, scrollToBottom]);
 
   // Toggle sidebar (cho responsive)
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
 
-  // Nhóm các cuộc trò chuyện
-  const groupConversationsByTime = (conversations) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-    const yesterday = today - 86400000; // Trừ đi 1 ngày
-    const last7Days = today - 86400000 * 7; // Trừ đi 7 ngày
-    const last30Days = today - 86400000 * 30; // Trừ đi 30 ngày
+  // Xử lý gửi tin nhắn
+  const handleSendMessage = async (message) => {
+    await sendMessage(message, activeConversation?.id);
+  };
 
-    const groups = {
-      today: [],
-      yesterday: [],
-      last7Days: [],
-      older: []
-    };
+  // Xử lý tạo cuộc hội thoại mới
+  const handleNewConversation = async () => {
+    if (!userData) {
+      showLoginRequired(() => navigate('/login'));
+      return;
+    }
+    
+    if (!userAge) {
+      promptUserForAge();
+      return;
+    }
+    
+    const result = await startNewConversation();
+    
+    if (result.success) {
+      if (isMobile) {
+        setIsSidebarVisible(false);
+      }
+    }
+  };
 
-    conversations.forEach(conversation => {
-      const conversationDate = new Date(conversation.updated_at).getTime();
+  // Xử lý chọn cuộc hội thoại
+  const handleSelectConversation = (id) => {
+    if (id !== activeConversation?.id) {
+      // Reset flag khi chọn conversation mới
+      detailFetchedRef.current = false;
+      navigate(`/chat/${id}`);
+    }
+    
+    if (isMobile) {
+      setIsSidebarVisible(false);
+    }
+  };
 
-      if (conversationDate >= today) {
-        groups.today.push(conversation);
-      } else if (conversationDate >= yesterday) {
-        groups.yesterday.push(conversation);
-      } else if (conversationDate >= last7Days) {
-        groups.last7Days.push(conversation);
-      } else if (conversationDate >= last30Days) {
-        groups.older.push(conversation);
-      } else {
-        groups.older.push(conversation);
+  // Xử lý xóa cuộc hội thoại
+  const handleDeleteConversation = (id) => {
+    showConfirm({
+      title: 'Xóa cuộc trò chuyện?',
+      text: 'Bạn có chắc muốn xóa cuộc trò chuyện này? Hành động này không thể hoàn tác.',
+      confirmButtonText: 'Xác nhận',
+      cancelButtonText: 'Hủy',
+      icon: 'warning'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteConversation(id);
       }
     });
-
-    return groups;
   };
 
-  // Format time từ timestamp
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-  };
-
-  // Custom renderer cho markdown
-  const MarkdownComponents = {
-    // Xử lý image để tránh lỗi nested DOM
-    img: ({ node, ...props }) => {
-      return <RenderImage src={props.src} alt={props.alt} />;
-    },
-
-    // Override p để ngăn các thành phần không hợp lệ bên trong
-    p: ({ node, children, ...props }) => {
-      // Kiểm tra nếu children có chứa RenderImage
-      const hasSpecialChild = React.Children.toArray(children).some(
-        child => React.isValidElement(child) &&
-          (child.type === RenderImage || child.props?.src)
-      );
-
-      // Nếu có special child, chỉ render children
-      if (hasSpecialChild) {
-        return <>{children}</>;
-      }
-
-      // Nếu không, render như paragraph bình thường
-      return <p {...props}>{children}</p>;
-    },
-
-    table: ({ node, ...props }) => {
-      return (
-        <div className="overflow-x-auto my-4">
-          <table className="min-w-full border-collapse border border-gray-300 rounded-lg">
-            {props.children}
-          </table>
-        </div>
-      );
-    },
-    thead: ({ node, ...props }) => {
-      return <thead className="bg-mint-50">{props.children}</thead>;
-    },
-    th: ({ node, ...props }) => {
-      return <th className="border border-gray-300 px-4 py-2 text-left font-semibold text-gray-700">{props.children}</th>;
-    },
-    td: ({ node, ...props }) => {
-      return <td className="border border-gray-300 px-4 py-2 text-gray-700">{props.children}</td>;
-    },
-    code: ({ node, inline, className, children, ...props }) => {
-      const match = /language-(\w+)/.exec(className || '');
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={tomorrow}
-          language={match[1]}
-          PreTag="div"
-          className="rounded-md my-4"
-          {...props}
-        >
-          {String(children).replace(/\n$/, '')}
-        </SyntaxHighlighter>
-      ) : (
-        <code className={`${className} bg-gray-100 px-1 py-0.5 rounded text-gray-800`} {...props}>
-          {children}
-        </code>
-      );
-    },
-    blockquote: ({ node, ...props }) => {
-      return (
-        <blockquote className="border-l-4 border-mint-500 pl-4 italic text-gray-700 my-4">
-          {props.children}
-        </blockquote>
-      );
-    },
-    li: ({ node, ...props }) => {
-      return <li className="mb-1">{props.children}</li>;
-    }
-  };
-
-  // Tạo phần conversation list với các nhóm thời gian
-  const renderConversationGroups = () => {
-    // Nếu đang loading
-    if (isLoadingConversations) {
-      return (
-        <div className="p-4 text-center text-gray-500">
-          <div className="animate-pulse flex flex-col space-y-4">
-            <div className="h-12 bg-gray-200 rounded-md"></div>
-            <div className="h-12 bg-gray-200 rounded-md"></div>
-            <div className="h-12 bg-gray-200 rounded-md"></div>
-          </div>
-          <p className="mt-4">Đang tải cuộc trò chuyện...</p>
-        </div>
-      );
-    }
-
-    // Nếu không có kết quả
-    if (filteredConversations.length === 0) {
-      return searchTerm ? (
-        <div className="p-4 text-center text-gray-500">
-          Không tìm thấy cuộc trò chuyện phù hợp
-        </div>
-      ) : (
-        <div className="p-4 text-center text-gray-500">
-          Chưa có cuộc trò chuyện nào. Bấm + để bắt đầu.
-        </div>
-      );
-    }
-
-    // Nhóm các cuộc trò chuyện
-    const groupedConversations = groupConversationsByTime(filteredConversations);
-
-    // Render các nhóm
+  // Hiển thị loading nếu đang xác thực
+  if (isLoadingAuth) {
     return (
-      <div className="space-y-4">
-        {/* Nhóm Hôm nay */}
-        {groupedConversations.today.length > 0 && (
-          <div>
-            <h3 className="px-4 pt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-              Hôm nay
-            </h3>
-            {groupedConversations.today.map(renderConversationItem)}
-          </div>
-        )}
-
-        {/* Nhóm Hôm qua */}
-        {groupedConversations.yesterday.length > 0 && (
-          <div>
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-              Hôm qua
-            </h3>
-            {groupedConversations.yesterday.map(renderConversationItem)}
-          </div>
-        )}
-
-        {/* Nhóm 7 ngày qua */}
-        {groupedConversations.last7Days.length > 0 && (
-          <div>
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-              7 ngày qua
-            </h3>
-            {groupedConversations.last7Days.map(renderConversationItem)}
-          </div>
-        )}
-
-        {/* Nhóm Cũ hơn */}
-        {groupedConversations.older.length > 0 && (
-          <div>
-            <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-              30 ngày qua
-            </h3>
-            {groupedConversations.older.map(renderConversationItem)}
-          </div>
-        )}
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="spinner mx-auto mb-4"></div>
+          <p className="text-gray-600">Đang tải...</p>
+        </div>
       </div>
     );
-  };
-
-  // Render một item cuộc trò chuyện
-  const renderConversationItem = (conversation) => {
-    return (
-      <div
-        key={conversation.id}
-        onClick={() => {
-          if (activeConversation?.id !== conversation.id) {
-            fetchConversationDetail(conversation.id, userData?.id);
-          }
-          // Trên mobile, đóng sidebar sau khi chọn
-          if (isMobile) {
-            setIsSidebarVisible(false);
-          }
-        }}
-        className={`px-4 py-3 flex items-center justify-between cursor-pointer transition rounded-md mx-2
-          ${activeConversation?.id === conversation.id ? 'bg-mint-100' : 'hover:bg-gray-50'}`}
-        style={{ backgroundColor: activeConversation?.id === conversation.id ? '#E6F7EF' : '' }}
-      >
-        <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-center mb-1">
-            <h3 className="font-medium text-gray-800 truncate">{conversation.title}</h3>
-          </div>
-          <div className="text-xs text-gray-500">
-            {formatTime(conversation.updated_at)}
-          </div>
-        </div>
-        <ChatItemMenu
-          conversation={conversation}
-          onDelete={deleteConversation}
-          onRename={renameConversation}
-        />
-      </div>
-    );
-  };
+  }
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
@@ -1156,13 +180,11 @@ const ChatPage = () => {
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        handleLogout={handleLogout}
         toggleSidebar={toggleSidebar}
         isMobile={isMobile}
         isSidebarVisible={isSidebarVisible}
         activeConversation={activeConversation}
-        updateConversationAge={updateConversationAge}
-        extraButton={<BiMenu className="text-xl" />}
+        updateConversationAge={updateUserAge}
       />
 
       {/* Main content */}
@@ -1175,54 +197,17 @@ const ChatPage = () => {
             } bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden ${isMobile ? 'fixed inset-0 z-30' : 'relative'
             }`}
         >
-          {/* Header của sidebar riêng, nút đóng chuyển lên đây */}
-          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-800">Trò chuyện</h2>
-            <div className="flex space-x-2">
-              {isMobile && (
-                <button
-                  onClick={toggleSidebar}
-                  className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-                  style={{ color: '#36B37E' }}
-                >
-                  <BiX className="text-xl" />
-                </button>
-              )}
-              <Link
-                to="/history"
-                className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-                style={{ color: '#36B37E' }}
-              >
-                <BiHistory className="text-lg" />
-              </Link>
-              <button
-                onClick={startNewConversation}
-                className="p-2 bg-mint-600 text-white rounded-full hover:bg-mint-700 transition shadow-sm"
-                style={{ backgroundColor: '#36B37E' }}
-              >
-                <BiPlus className="text-lg" />
-              </button>
-            </div>
-          </div>
-
-          {/* Search section */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Tìm kiếm..."
-                className="w-full py-2 pl-8 pr-3 border border-mint-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-transparent"
-                style={{ borderColor: '#A0D9C1' }}
-                value={searchTerm}
-                onChange={handleSearchConversations}
-              />
-              <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-
-          <div className="flex-1 overflow-y-auto">
-            {renderConversationGroups()}
-          </div>
+          <Sidebar
+            conversations={conversations}
+            activeConversation={activeConversation}
+            onSelectConversation={handleSelectConversation}
+            onCreateNewConversation={handleNewConversation}
+            onDeleteConversation={handleDeleteConversation}
+            onRenameConversation={renameConversation}
+            isLoading={isLoadingConversations}
+            isMobile={isMobile}
+            onCloseSidebar={() => setIsSidebarVisible(false)}
+          />
         </div>
 
         {/* Overlay mới với background transparent và chỉ backdrop filter */}
@@ -1244,112 +229,44 @@ const ChatPage = () => {
             <>
               {/* Messages Area */}
               <div
-                className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6"
+                className="flex-1 overflow-y-auto"
                 style={{
                   backgroundColor: '#F7FFFA',
                   backgroundImage: 'linear-gradient(to bottom, rgba(54, 179, 126, 0.05) 0%, rgba(54, 179, 126, 0.01) 100%)'
                 }}
               >
-                {activeConversation.messages && activeConversation.messages.length > 0 ? (activeConversation.messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'
-                      } message-animation`}
-                  >
-                    <div
-                      className={`max-w-[90%] md:max-w-[80%] p-4 rounded-2xl shadow-sm ${message.role === 'user'
-                        ? 'bg-mint-600 text-white'
-                        : 'bg-white text-gray-800 border border-gray-200'
-                        }`}
-                      style={{
-                        backgroundColor: message.role === 'user'
-                          ? '#36B37E'
-                          : '#FFFFFF'
-                      }}
-                    >
-                      {message.role === 'user' ? (
-                        <div>{message.content}</div>
-                      ) : (
-                        <div className="markdown-content">
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            rehypePlugins={[rehypeRaw]}
-                            components={MarkdownComponents}
-                          >
-                            {message.content}
-                          </ReactMarkdown>
-                          {message.sources && message.sources.length > 0 && (
-                            <SourceReference sources={message.sources} />
-                          )}
-                        </div>
-                      )}
-                      <div className={`text-xs mt-2 ${message.role === 'user'
-                        ? 'text-mint-200'
-                        : 'text-gray-500'
-                        }`}>
-                        {formatTime(message.timestamp)}
-                      </div>
-                    </div>
-                  </div>
-                ))
+                {activeConversation.messages && activeConversation.messages.length > 0 ? (
+                  <>
+                    <MessageList
+                      messages={activeConversation.messages}
+                      isLoading={isLoading}
+                      onCreateNewChat={handleNewConversation}
+                    />
+                    <div ref={messagesEndRef} style={{ float: "left", clear: "both", height: "1px" }} />
+                  </>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                    <BiRocket className="text-5xl mb-4" style={{ color: '#36B37E' }} />
-                    <p className="text-lg mb-2">Bắt đầu cuộc trò chuyện mới</p>
-                    <p className="text-sm text-center max-w-md">
-                      Hãy đặt câu hỏi về dinh dưỡng và an toàn thực phẩm để tôi có thể giúp bạn
+                  <div className="h-full flex flex-col items-center justify-center">
+                    <BiChat className="text-4xl mb-4 text-mint-500" style={{ color: '#36B37E' }} />
+                    <p className="text-lg mb-2 text-gray-700">Bắt đầu cuộc trò chuyện mới</p>
+                    <p className="text-gray-500 mb-4 text-center max-w-md px-4">
+                      Hãy nhập câu hỏi vào ô bên dưới để bắt đầu trò chuyện với Nutribot
                     </p>
                   </div>
                 )}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="p-3 bg-white rounded-2xl border border-gray-200 shadow-sm flex items-center">
-                      <div className="flex space-x-1">
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                        <div className="h-2 w-2 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
-                      </div>
-                      <span className="ml-3 text-gray-600">{"Đang soạn phản hồi..."}</span>
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
               </div>
 
               {/* Input Area */}
-              <form
-                onSubmit={handleSendMessage}
-                className="p-4 bg-white border-t border-gray-200"
-              >
-                <div className="flex items-center space-x-2">
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    placeholder="Nhập câu hỏi của bạn..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-mint-500"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className={`p-3 rounded-lg text-white transition ${isLoading
-                      ? 'bg-mint-400 cursor-not-allowed'
-                      : 'bg-mint-600 hover:bg-mint-700'
-                      }`}
-                    style={{ backgroundColor: isLoading ? '#A0D9C1' : '#36B37E' }}
-                  >
-                    <BiSend />
-                  </button>
-                </div>
-              </form>
+              <ChatInput
+                onSendMessage={handleSendMessage}
+                disabled={isLoading}
+              />
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 flex-col">
-              <BiRocket className="text-7xl mb-6" style={{ color: '#36B37E' }} />
+              <BiChat className="text-7xl mb-6" style={{ color: '#36B37E' }} />
               <p className="text-xl mb-4">Chưa có cuộc trò chuyện nào</p>
               <button
-                onClick={startNewConversation}
+                onClick={handleNewConversation}
                 className="px-6 py-3 bg-mint-600 text-white rounded-lg hover:bg-mint-700 transition flex items-center"
                 style={{ backgroundColor: '#36B37E' }}
               >

@@ -1,107 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield } from 'react-icons/bi';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import Header from '../components/Header';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import useAuth from '../hooks/useAuth';
+import useToast from '../hooks/useToast';
+import { Header } from '../components/layout';
+import { Button, Input } from '../components/common';
+import config from '../config';
 
 const SettingsPage = () => {
+  const { userData, updateProfile, changePassword, logout } = useAuth();
+  const { showSuccess, showError, showPrompt } = useToast();
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState('profile');
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userAge, setUserAge] = useState(null);
+
   const [profileData, setProfileData] = useState({
     fullName: '',
     email: '',
     avatar: null,
     phone: ''
   });
-  const [isEditing, setIsEditing] = useState(false);
+
   const [formData, setFormData] = useState({ ...profileData });
+
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
+
   const [theme, setTheme] = useState('mint');
-  const [userData, setUserData] = useState(null);
-  const [userAge, setUserAge] = useState(null);
-  const navigate = useNavigate();
 
+  // Lấy thông tin người dùng khi vào trang
   useEffect(() => {
-    // Lấy thông tin người dùng từ local/session storage
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    if (user && Object.keys(user).length > 0) {
-      setUserData(user);
-      fetchUserProfile();
+    if (userData) {
+      setProfileData({
+        fullName: userData.name || '',
+        email: userData.email || '',
+        avatar: null,
+        phone: userData.phone || ''
+      });
+      setFormData({
+        fullName: userData.name || '',
+        email: userData.email || '',
+        avatar: null,
+        phone: userData.phone || ''
+      });
     } else {
-      Swal.fire({
-        title: 'Bạn chưa đăng nhập',
-        text: 'Bạn cần đăng nhập để quản lý tài khoản',
-        icon: 'warning',
-        confirmButtonText: 'Đăng nhập ngay',
-        confirmButtonColor: '#36B37E',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/login');
-        }
-      });
+      navigate('/login');
     }
-  }, [navigate]);
-
-  // Lấy thông tin người dùng từ API
-  const fetchUserProfile = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/auth/profile`, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        const userData = response.data.user;
-        setProfileData({
-          fullName: userData.name,
-          email: userData.email,
-          avatar: null, // API không trả về avatar
-          phone: userData.phone || ''
-        });
-        setFormData({
-          fullName: userData.name,
-          email: userData.email,
-          avatar: null,
-          phone: userData.phone || ''
-        });
-
-        // Lấy thông tin tuổi từ một cuộc hội thoại gần đây
-        fetchUserAge();
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
-      // Nếu lỗi xác thực, chuyển hướng về trang đăng nhập
-      if (error.response && error.response.status === 401) {
-        navigate('/login');
-      }
-    }
-  };
-
-  // Lấy thông tin tuổi từ cuộc hội thoại gần đây
-  const fetchUserAge = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        params: {
-          per_page: 1
-        },
-        withCredentials: true
-      });
-
-      if (response.data.success && response.data.conversations.length > 0) {
-        const latestConversation = response.data.conversations[0];
-        if (latestConversation.age_context) {
-          setUserAge(latestConversation.age_context);
-        }
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy thông tin tuổi:", error);
-    }
-  };
+  }, [userData, navigate]);
 
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
@@ -120,97 +71,76 @@ const SettingsPage = () => {
   };
 
   const handleSaveProfile = async () => {
+    if (!formData.fullName.trim()) {
+      showError('Vui lòng nhập họ tên');
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // Gọi API cập nhật thông tin cá nhân
-      const response = await axios.put(`${API_BASE_URL}/auth/profile`, {
+      const result = await updateProfile({
         name: formData.fullName,
-        gender: formData.gender
-      }, {
-        withCredentials: true
+        phone: formData.phone
       });
 
-      if (response.data.success) {
+      if (result.success) {
         setProfileData(formData);
         setIsEditing(false);
-        // Thông báo lưu thành công
-        Swal.fire({
-          icon: 'success',
-          title: 'Lưu thành công',
-          text: 'Thông tin cá nhân đã được cập nhật',
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
-
-        // Cập nhật userData trong localStorage/sessionStorage
-        const updateUser = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-        updateUser.name = formData.fullName;
-
-        if (localStorage.getItem('user')) {
-          localStorage.setItem('user', JSON.stringify(updateUser));
-        } else if (sessionStorage.getItem('user')) {
-          sessionStorage.setItem('user', JSON.stringify(updateUser));
-        }
-
-        setUserData(updateUser);
+        showSuccess('Thông tin cá nhân đã được cập nhật');
+      } else {
+        showError(result.error || 'Không thể cập nhật thông tin cá nhân');
       }
     } catch (error) {
-      console.error("Lỗi khi cập nhật thông tin:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Không thể cập nhật thông tin cá nhân',
-        confirmButtonColor: '#36B37E'
-      });
+      showError(error.message || 'Đã có lỗi xảy ra');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSavePassword = async (e) => {
     e.preventDefault();
-    // Kiểm tra xác nhận mật khẩu
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Mật khẩu xác nhận không khớp',
-        confirmButtonColor: '#36B37E'
-      });
+
+    // Kiểm tra mật khẩu
+    if (!passwordData.currentPassword) {
+      showError('Vui lòng nhập mật khẩu hiện tại');
       return;
     }
 
+    if (!passwordData.newPassword) {
+      showError('Vui lòng nhập mật khẩu mới');
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      showError('Mật khẩu mới phải có ít nhất 6 ký tự');
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      showError('Mật khẩu xác nhận không khớp');
+      return;
+    }
+
+    setIsLoading(true);
+
     try {
-      // Gọi API đổi mật khẩu
-      const response = await axios.post(`${API_BASE_URL}/auth/change-password`, {
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
-      }, {
-        withCredentials: true
-      });
+      const result = await changePassword(passwordData);
 
-      if (response.data.success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Thành công',
-          text: 'Mật khẩu đã được cập nhật',
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
-
+      if (result.success) {
+        showSuccess('Mật khẩu đã được cập nhật');
         setPasswordData({
           currentPassword: '',
           newPassword: '',
           confirmPassword: ''
         });
+      } else {
+        showError(result.error || 'Không thể cập nhật mật khẩu');
       }
     } catch (error) {
-      console.error("Lỗi khi đổi mật khẩu:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: error.response?.data?.error || 'Không thể cập nhật mật khẩu',
-        confirmButtonColor: '#36B37E'
-      });
+      showError(error.message || 'Đã có lỗi xảy ra');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -229,49 +159,30 @@ const SettingsPage = () => {
     }
   };
 
-  const handleLogout = () => {
-    Swal.fire({
-      title: 'Đăng xuất?',
-      text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Đăng xuất',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          // Gọi API đăng xuất
-          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
-            withCredentials: true
-          });
-
-          // Xóa thông tin người dùng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-
-          // Xóa config header
-          delete axios.defaults.headers.common['Authorization'];
-
-          // Chuyển hướng về trang đăng nhập
-          navigate('/login');
-        } catch (error) {
-          console.error("Lỗi khi đăng xuất:", error);
-          // Vẫn xóa dữ liệu người dùng và chuyển hướng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-          navigate('/login');
+  const handleChangeTab = (tab) => {
+    setActiveTab(tab);
+    // Nếu đang chỉnh sửa profile và chuyển tab, hỏi xác nhận
+    if (isEditing && activeTab === 'profile' && tab !== 'profile') {
+      showPrompt({
+        title: 'Bạn có muốn lưu thay đổi?',
+        text: 'Các thay đổi sẽ bị mất nếu bạn rời khỏi tab này.',
+        confirmButtonText: 'Lưu',
+        cancelButtonText: 'Không lưu'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleSaveProfile();
+        } else {
+          setFormData({ ...profileData });
         }
-      }
-    });
+        setIsEditing(false);
+        setActiveTab(tab);
+      });
+    } else {
+      setActiveTab(tab);
+    }
   };
 
-  // Hàm cập nhật độ tuổi - placeholder, sẽ không được sử dụng trong SettingsPage
+  // Cập nhật độ tuổi - placeholder, không dùng thực tế trong SettingsPage
   const updateConversationAge = () => { };
 
   const renderTabContent = () => {
@@ -281,14 +192,14 @@ const SettingsPage = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-medium">Thông tin cá nhân</h3>
-              <button
+              <Button
                 onClick={() => setIsEditing(!isEditing)}
-                className="flex items-center text-mint-600 hover:text-mint-700"
-                style={{ color: '#36B37E' }}
+                color={isEditing ? "gray" : "mint"}
+                outline={true}
+                icon={<BiEdit className="mr-1" />}
               >
-                <BiEdit className="mr-1" />
                 {isEditing ? 'Hủy' : 'Chỉnh sửa'}
-              </button>
+              </Button>
             </div>
 
             <div className="flex flex-col md:flex-row gap-6">
@@ -329,66 +240,53 @@ const SettingsPage = () => {
               <div className="flex-1">
                 {isEditing ? (
                   <div className="space-y-4">
-                    <div>
-                      <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                        Họ và tên
-                      </label>
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                        value={formData.fullName}
-                        onChange={handleProfileChange}
-                        style={{ boxShadow: '0 0 0 2px rgba(54, 179, 126, 0.05)' }}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
-                        value={formData.email}
-                        onChange={handleProfileChange}
-                        readOnly
-                      />
-                      <p className="text-xs text-gray-500 mt-1">Email không thể thay đổi</p>
-                    </div>
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                        Số điện thoại
-                      </label>
-                      <input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                        value={formData.phone}
-                        onChange={handleProfileChange}
-                        style={{ boxShadow: '0 0 0 2px rgba(54, 179, 126, 0.05)' }}
-                      />
-                    </div>
+                    <Input
+                      label="Họ và tên"
+                      name="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={handleProfileChange}
+                      required
+                    />
+
+                    <Input
+                      label="Email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleProfileChange}
+                      disabled
+                      helpText="Email không thể thay đổi"
+                    />
+
+                    <Input
+                      label="Số điện thoại"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleProfileChange}
+                    />
+
                     <div className="pt-3">
-                      <button
+                      <Button
                         onClick={handleSaveProfile}
-                        className="bg-mint-600 text-white px-4 py-2 rounded-md hover:bg-mint-700 mr-2"
-                        style={{ backgroundColor: '#36B37E' }}
+                        color="mint"
+                        disabled={isLoading}
+                        className="mr-2"
                       >
-                        Lưu thay đổi
-                      </button>
-                      <button
+                        {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+                      </Button>
+
+                      <Button
                         onClick={() => {
                           setFormData({ ...profileData });
                           setIsEditing(false);
                         }}
-                        className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200"
+                        color="gray"
+                        outline
                       >
                         Hủy
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 ) : (
@@ -421,60 +319,42 @@ const SettingsPage = () => {
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-medium mb-6">Thay đổi mật khẩu</h3>
             <form onSubmit={handleSavePassword} className="space-y-4">
-              <div>
-                <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Mật khẩu hiện tại
-                </label>
-                <input
-                  id="currentPassword"
-                  name="currentPassword"
-                  type="password"
-                  required
-                  className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordChange}
-                  style={{ boxShadow: '0 0 0 2px rgba(54, 179, 126, 0.05)' }}
-                />
-              </div>
-              <div>
-                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Mật khẩu mới
-                </label>
-                <input
-                  id="newPassword"
-                  name="newPassword"
-                  type="password"
-                  required
-                  className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordChange}
-                  style={{ boxShadow: '0 0 0 2px rgba(54, 179, 126, 0.05)' }}
-                />
-                <p className="text-xs text-gray-500 mt-1">Mật khẩu phải có ít nhất 8 ký tự</p>
-              </div>
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                  Xác nhận mật khẩu mới
-                </label>
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  className="focus:ring-mint-500 focus:border-mint-500 block w-full px-3 py-2 border border-gray-300 rounded-md"
-                  value={passwordData.confirmPassword}
-                  onChange={handlePasswordChange}
-                  style={{ boxShadow: '0 0 0 2px rgba(54, 179, 126, 0.05)' }}
-                />
-              </div>
+              <Input
+                label="Mật khẩu hiện tại"
+                name="currentPassword"
+                type="password"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+                required
+              />
+
+              <Input
+                label="Mật khẩu mới"
+                name="newPassword"
+                type="password"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                helpText="Mật khẩu phải có ít nhất 8 ký tự"
+                required
+              />
+
+              <Input
+                label="Xác nhận mật khẩu mới"
+                name="confirmPassword"
+                type="password"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+                required
+              />
+
               <div className="pt-3">
-                <button
+                <Button
                   type="submit"
-                  className="bg-mint-600 text-white px-4 py-2 rounded-md hover:bg-mint-700"
-                  style={{ backgroundColor: '#36B37E' }}
+                  color="mint"
+                  disabled={isLoading}
                 >
-                  Cập nhật mật khẩu
-                </button>
+                  {isLoading ? 'Đang cập nhật...' : 'Cập nhật mật khẩu'}
+                </Button>
               </div>
             </form>
           </div>
@@ -488,25 +368,15 @@ const SettingsPage = () => {
               <div>
                 <h4 className="font-medium text-gray-800 mb-3">Màu sắc chủ đạo</h4>
                 <div className="grid grid-cols-5 gap-4">
-                  {['mint', 'blue', 'purple', 'pink', 'orange'].map(color => (
+                  {Object.keys(config.themes).map(color => (
                     <div
                       key={color}
                       className={`cursor-pointer rounded-lg p-4 h-16 flex items-center justify-center transition-all ${theme === color ? 'ring-2 ring-offset-2' : 'hover:opacity-80'}`}
                       style={{
-                        backgroundColor:
-                          color === 'mint' ? '#36B37E' :
-                            color === 'blue' ? '#2563EB' :
-                              color === 'purple' ? '#8B5CF6' :
-                                color === 'pink' ? '#EC4899' :
-                                  '#F97316',
+                        backgroundColor: config.themes[color].primary,
                         color: 'white',
                         boxShadow: theme === color ? '0 0 0 2px rgba(255, 255, 255, 0.5)' : 'none',
-                        ringColor:
-                          color === 'mint' ? '#36B37E' :
-                            color === 'blue' ? '#2563EB' :
-                              color === 'purple' ? '#8B5CF6' :
-                                color === 'pink' ? '#EC4899' :
-                                  '#F97316',
+                        ringColor: config.themes[color].primary,
                       }}
                       onClick={() => setTheme(color)}
                     >
@@ -537,13 +407,12 @@ const SettingsPage = () => {
               </div>
 
               <div className="pt-3">
-                <button
-                  className="bg-mint-600 text-white px-4 py-2 rounded-md hover:bg-mint-700"
-                  style={{ backgroundColor: '#36B37E' }}
-                  onClick={() => alert('Cài đặt giao diện đã được lưu!')}
+                <Button
+                  color="mint"
+                  onClick={() => showSuccess('Cài đặt giao diện đã được lưu!')}
                 >
                   Lưu cài đặt
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -561,7 +430,7 @@ const SettingsPage = () => {
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        handleLogout={handleLogout}
+        handleLogout={logout}
         activeConversation={null}
         updateConversationAge={updateConversationAge}
       />
@@ -576,7 +445,7 @@ const SettingsPage = () => {
               <nav className="flex flex-col">
                 <button
                   className={`px-4 py-3 text-left flex items-center space-x-2 ${activeTab === 'profile' ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700' : 'text-gray-700 hover:bg-gray-50'}`}
-                  onClick={() => setActiveTab('profile')}
+                  onClick={() => handleChangeTab('profile')}
                   style={activeTab === 'profile' ? { backgroundColor: '#E6F7EF', borderLeftColor: '#36B37E', color: '#36B37E' } : {}}
                 >
                   <BiUser className="flex-shrink-0" />
@@ -584,7 +453,7 @@ const SettingsPage = () => {
                 </button>
                 <button
                   className={`px-4 py-3 text-left flex items-center space-x-2 ${activeTab === 'password' ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700' : 'text-gray-700 hover:bg-gray-50'}`}
-                  onClick={() => setActiveTab('password')}
+                  onClick={() => handleChangeTab('password')}
                   style={activeTab === 'password' ? { backgroundColor: '#E6F7EF', borderLeftColor: '#36B37E', color: '#36B37E' } : {}}
                 >
                   <BiLock className="flex-shrink-0" />
@@ -592,14 +461,14 @@ const SettingsPage = () => {
                 </button>
                 <button
                   className={`px-4 py-3 text-left flex items-center space-x-2 ${activeTab === 'appearance' ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700' : 'text-gray-700 hover:bg-gray-50'}`}
-                  onClick={() => setActiveTab('appearance')}
+                  onClick={() => handleChangeTab('appearance')}
                   style={activeTab === 'appearance' ? { backgroundColor: '#E6F7EF', borderLeftColor: '#36B37E', color: '#36B37E' } : {}}
                 >
                   <BiPalette className="flex-shrink-0" />
                   <span>Giao diện</span>
                 </button>
                 <button
-                  onClick={handleLogout}
+                  onClick={logout}
                   className="px-4 py-3 text-left flex items-center space-x-2 text-red-600 hover:bg-red-50"
                 >
                   <BiLock className="flex-shrink-0" />

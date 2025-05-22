@@ -1,468 +1,97 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BiCalendar, BiSearch, BiTrash, BiMessageRounded, BiTime, BiChevronDown, BiChevronLeft, BiChevronRight, BiSortAlt2, BiUser, BiArrowBack, BiChat, BiX, BiArchiveIn, BiBookmark, BiDotsHorizontalRounded, BiCheck } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import Header from '../components/Header';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import useAuth from '../hooks/useAuth';
+import useChat from '../hooks/useChat';
+import useConversation from '../hooks/useConversation';
+import useToast from '../hooks/useToast';
+import { Header } from '../components/layout';
+import { Button, Loader } from '../components/common';
+import { formatDate, formatTime, getRelativeDate } from '../utils/dateUtils';
 
 const HistoryPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [ageFilter, setAgeFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('date'); // 'date' hoặc 'age'
-  const [sortOrder, setSortOrder] = useState('desc'); // 'asc' hoặc 'desc'
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedConversations, setSelectedConversations] = useState([]);
-  const [userData, setUserData] = useState(null);
-  const [activeTab, setActiveTab] = useState('all'); // 'all', 'archived'
-  const [userAge, setUserAge] = useState(null);
   const navigate = useNavigate();
+  const { userData } = useAuth();
+  const {
+    conversations,
+    isLoadingConversations,
+    fetchConversations,
+    userAge,
+    setUserAge,
+    updateUserAge,
+    deleteConversation,
+    bulkDeleteConversations,
+    archiveConversation,
+    unarchiveConversation,
+    renameConversation
+  } = useChat();
 
-  // Lấy dữ liệu cuộc trò chuyện từ API
+  const {
+    selectedConversations,
+    searchTerm,
+    dateFilter,
+    ageFilter,
+    sortBy,
+    sortOrder,
+    currentPage,
+    itemsPerPage,
+    activeTab,
+    setSelectedConversations,
+    setSearchTerm,
+    setDateFilter,
+    setAgeFilter,
+    setSortBy,
+    setSortOrder,
+    setCurrentPage,
+    setActiveTab,
+    filterConversations,
+    getPaginationData,
+    getAgeOptions,
+    handleSelectAll,
+    handleSelect,
+    handleSortChange,
+    clearFilters,
+    handleDeleteMultiple,
+    handleArchiveMultiple,
+    handleUnarchiveMultiple,
+    navigateToChat,
+    getConversationCounts
+  } = useConversation();
+
+  const { showDeleteConfirm, showBulkDeleteConfirm } = useToast();
+
+  // Kiểm tra đăng nhập khi vào trang
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    if (user && user.id) {
-      setUserData(user);
-      fetchConversationHistory(user.id);
-    } else {
-      Swal.fire({
-        title: 'Bạn chưa đăng nhập',
-        text: 'Bạn cần đăng nhập để xem lịch sử trò chuyện',
-        icon: 'warning',
-        confirmButtonText: 'Đăng nhập ngay',
-        confirmButtonColor: '#36B37E',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigate('/login');
-        }
-      });
-    }
-  }, [navigate]);
-
-  const fetchConversationHistory = async (userId) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${API_BASE_URL}/conversations`, {
-        params: {
-          include_archived: true,
-          per_page: 1000 // Đặt giá trị đủ lớn để lấy tất cả cuộc trò chuyện
-        },
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        // Thêm các thuộc tính cần thiết vào mỗi cuộc trò chuyện
-        const enhancedHistory = response.data.conversations.map(conversation => {
-          // Tạo danh sách tin nhắn giả nếu API không trả về tin nhắn
-          const messageCount = conversation.message_count ||
-            (conversation.messages ? conversation.messages.length :
-              Math.floor(Math.random() * 15) + 5); // Random từ 5-20 tin nhắn
-
-          // Lấy age_context cho userAge nếu chưa có
-          if (!userAge && conversation.age_context) {
-            setUserAge(conversation.age_context);
-          }
-
-          return {
-            ...conversation,
-            messageCount,
-            startTime: conversation.created_at,
-            endTime: conversation.updated_at,
-          };
-        });
-
-        setHistory(enhancedHistory);
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy lịch sử trò chuyện:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Không thể lấy lịch sử trò chuyện',
-        confirmButtonColor: '#36B37E'
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Lọc và sắp xếp dữ liệu lịch sử
-  const filteredAndSortedHistory = React.useMemo(() => {
-    // Bước 1: Lọc theo tab active (tất cả hoặc lưu trữ)
-    let filteredData = history.filter((chat) => {
-      if (activeTab === 'all') return !chat.is_archived;
-      if (activeTab === 'archived') return chat.is_archived;
-      return true;
-    });
-
-    // Bước 2: Lọc theo tìm kiếm
-    if (searchTerm) {
-      filteredData = filteredData.filter((chat) => {
-        return chat.title.toLowerCase().includes(searchTerm.toLowerCase());
-      });
-    }
-
-    // Bước 3: Lọc theo ngày
-    if (dateFilter !== 'all') {
-      const today = new Date();
-      const filterDate = new Date();
-
-      switch (dateFilter) {
-        case 'today':
-          filterDate.setHours(0, 0, 0, 0);
-          filteredData = filteredData.filter(chat => new Date(chat.updated_at) >= filterDate);
-          break;
-        case 'week':
-          filterDate.setDate(today.getDate() - 7);
-          filteredData = filteredData.filter(chat => new Date(chat.updated_at) >= filterDate);
-          break;
-        case 'month':
-          filterDate.setMonth(today.getMonth() - 1);
-          filteredData = filteredData.filter(chat => new Date(chat.updated_at) >= filterDate);
-          break;
-        default:
-          break;
-      }
-    }
-
-    // Bước 4: Lọc theo tuổi nếu không phải 'all'
-    if (ageFilter !== 'all') {
-      const ageValue = parseInt(ageFilter, 10);
-      if (!isNaN(ageValue)) {
-        filteredData = filteredData.filter(chat => chat.age_context === ageValue);
-      }
-    }
-
-    // Bước 5: Sắp xếp
-    const sortedData = [...filteredData].sort((a, b) => {
-      if (sortBy === 'date') {
-        const dateA = new Date(a.updated_at);
-        const dateB = new Date(b.updated_at);
-        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-      } else if (sortBy === 'age') {
-        const ageA = a.age_context || 0;
-        const ageB = b.age_context || 0;
-        return sortOrder === 'asc' ? ageA - ageB : ageB - ageA;
-      }
-      return 0;
-    });
-
-    return sortedData;
-  }, [history, searchTerm, dateFilter, ageFilter, sortBy, sortOrder, activeTab]);
-
-  // Phân trang
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAndSortedHistory.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredAndSortedHistory.length / itemsPerPage);
-
-  // Format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  };
-
-  // Format time
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString('vi-VN', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Lấy ngày tương đối
-  const getRelativeDate = (dateString) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) {
-      const hours = date.getHours();
-      const minutes = date.getMinutes();
-      return `Hôm nay, ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-    } else if (diffDays === 1) {
-      return "Hôm qua";
-    } else if (diffDays < 7) {
-      return `${diffDays} ngày trước`;
-    } else if (diffDays < 30) {
-      const weeks = Math.floor(diffDays / 7);
-      return `${weeks} tuần trước`;
-    } else {
-      return formatDate(dateString);
-    }
-  };
-
-  // Xử lý xóa cuộc trò chuyện
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: 'Xác nhận xóa',
-      text: 'Bạn có chắc chắn muốn xóa cuộc trò chuyện này?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.delete(`${API_BASE_URL}/conversations/${id}`, {
-            withCredentials: true
-          });
-
-          if (response.data.success) {
-            setHistory(history.filter(chat => chat.id !== id));
-            Swal.fire({
-              icon: 'success',
-              title: 'Đã xóa',
-              text: 'Cuộc trò chuyện đã được xóa thành công',
-              confirmButtonColor: '#36B37E',
-              timer: 1500,
-              showConfirmButton: false
-            });
-          }
-        } catch (error) {
-          console.error("Lỗi khi xóa cuộc trò chuyện:", error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: 'Không thể xóa cuộc trò chuyện',
-            confirmButtonColor: '#36B37E'
-          });
-        }
-      }
-    });
-  };
-
-  // Xử lý xóa nhiều cuộc trò chuyện
-  const handleDeleteMultiple = () => {
-    if (selectedConversations.length === 0) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Chưa chọn cuộc trò chuyện',
-        text: 'Vui lòng chọn ít nhất một cuộc trò chuyện để xóa',
-        confirmButtonColor: '#36B37E'
-      });
+    if (!userData) {
+      navigate('/login');
       return;
     }
 
-    Swal.fire({
-      title: `Xác nhận xóa ${selectedConversations.length} cuộc trò chuyện`,
-      text: 'Bạn có chắc chắn muốn xóa các cuộc trò chuyện đã chọn?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await axios.post(`${API_BASE_URL}/conversations/bulk-delete`, {
-            conversation_ids: selectedConversations
-          }, {
-            withCredentials: true
-          });
+    // Lấy danh sách cuộc hội thoại
+    fetchConversations(true);
+  }, [userData, navigate, fetchConversations]);
 
-          if (response.data.success) {
-            setHistory(history.filter(chat => !selectedConversations.includes(chat.id)));
-            setSelectedConversations([]);
+  // Lấy danh sách lọc theo activeTab
+  const filteredConversations = filterConversations(conversations);
 
-            Swal.fire({
-              icon: 'success',
-              title: 'Đã xóa',
-              text: `Đã xóa ${response.data.deleted_count} cuộc trò chuyện thành công`,
-              confirmButtonColor: '#36B37E',
-              timer: 1500,
-              showConfirmButton: false
-            });
-          }
-        } catch (error) {
-          console.error("Lỗi khi xóa nhiều cuộc trò chuyện:", error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Lỗi',
-            text: 'Không thể xóa các cuộc trò chuyện',
-            confirmButtonColor: '#36B37E'
-          });
-        }
-      }
-    });
+  // Tính toán phân trang
+  const {
+    currentItems,
+    totalPages,
+    indexOfFirstItem,
+    indexOfLastItem
+  } = getPaginationData(filteredConversations);
+
+  // Lấy các options tuổi từ cuộc hội thoại
+  const ageOptions = getAgeOptions(conversations);
+
+  // Lấy các counts
+  const { archivedCount, activeCount } = getConversationCounts(conversations);
+
+  // Xử lý chọn/bỏ chọn tất cả trên trang hiện tại
+  const handleSelectAllOnPage = (e) => {
+    handleSelectAll(e, currentItems);
   };
-
-  // Xử lý lưu trữ cuộc trò chuyện
-  const handleArchive = async (id) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/archive`, {}, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        // Cập nhật trạng thái lưu trữ trong danh sách
-        setHistory(history.map(chat =>
-          chat.id === id ? { ...chat, is_archived: true } : chat
-        ));
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Đã lưu trữ',
-          text: 'Cuộc trò chuyện đã được lưu trữ',
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
-      }
-    } catch (error) {
-      console.error("Lỗi khi lưu trữ cuộc trò chuyện:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Không thể lưu trữ cuộc trò chuyện',
-        confirmButtonColor: '#36B37E'
-      });
-    }
-  };
-
-  // Xử lý hủy lưu trữ cuộc trò chuyện
-  const handleUnarchive = async (id) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/conversations/${id}/unarchive`, {}, {
-        withCredentials: true
-      });
-
-      if (response.data.success) {
-        // Cập nhật trạng thái lưu trữ trong danh sách
-        setHistory(history.map(chat =>
-          chat.id === id ? { ...chat, is_archived: false } : chat
-        ));
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Đã hủy lưu trữ',
-          text: 'Cuộc trò chuyện đã được khôi phục',
-          confirmButtonColor: '#36B37E',
-          timer: 1500,
-          showConfirmButton: false
-        });
-      }
-    } catch (error) {
-      console.error("Lỗi khi hủy lưu trữ cuộc trò chuyện:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: 'Không thể hủy lưu trữ cuộc trò chuyện',
-        confirmButtonColor: '#36B37E'
-      });
-    }
-  };
-
-  // Xử lý chọn/bỏ chọn tất cả
-  const handleSelectAll = (e) => {
-    if (e.target.checked) {
-      const allIds = currentItems.map(item => item.id);
-      setSelectedConversations(allIds);
-    } else {
-      setSelectedConversations([]);
-    }
-  };
-
-  // Xử lý chọn/bỏ chọn một cuộc trò chuyện
-  const handleSelect = (id) => {
-    if (selectedConversations.includes(id)) {
-      setSelectedConversations(selectedConversations.filter(chatId => chatId !== id));
-    } else {
-      setSelectedConversations([...selectedConversations, id]);
-    }
-  };
-
-  // Xử lý thay đổi sắp xếp
-  const handleSortChange = (newSortBy) => {
-    if (sortBy === newSortBy) {
-      // Nếu đang sắp xếp theo cùng một cột, đảo ngược thứ tự
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      // Nếu chuyển sang cột khác, đặt lại thứ tự là desc (mới nhất trước)
-      setSortBy(newSortBy);
-      setSortOrder('desc');
-    }
-  };
-
-  const handleLogout = () => {
-    Swal.fire({
-      title: 'Đăng xuất?',
-      text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Đăng xuất',
-      cancelButtonText: 'Hủy'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          // Gọi API đăng xuất
-          await axios.post(`${API_BASE_URL}/auth/logout`, {}, {
-            withCredentials: true
-          });
-
-          // Xóa thông tin người dùng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-
-          // Xóa config header
-          delete axios.defaults.headers.common['Authorization'];
-
-          // Chuyển hướng về trang đăng nhập
-          navigate('/login');
-        } catch (error) {
-          console.error("Lỗi khi đăng xuất:", error);
-          // Vẫn xóa dữ liệu người dùng và chuyển hướng
-          localStorage.removeItem('user');
-          localStorage.removeItem('access_token');
-          sessionStorage.removeItem('user');
-          sessionStorage.removeItem('access_token');
-          navigate('/login');
-        }
-      }
-    });
-  };
-
-  // Chuyển đến chat với conversation ID cụ thể
-  const navigateToChat = (conversationId) => {
-    navigate(`/chat/${conversationId}`);
-  };
-
-  // Tạo danh sách lọc theo tuổi từ các cuộc hội thoại hiện có
-  const ageOptions = React.useMemo(() => {
-    const ages = [...new Set(history.map(chat => chat.age_context).filter(Boolean))];
-    return ages.sort((a, b) => a - b);
-  }, [history]);
-
-  // Đếm số lượng cuộc trò chuyện đã lưu trữ
-  const archivedCount = React.useMemo(() => {
-    return history.filter(chat => chat.is_archived).length;
-  }, [history]);
-
-  // Đếm số lượng cuộc trò chuyện chưa lưu trữ
-  const activeCount = React.useMemo(() => {
-    return history.filter(chat => !chat.is_archived).length;
-  }, [history]);
-
-  // Hàm cập nhật độ tuổi - chỉ là placeholder, sẽ không được sử dụng trong HistoryPage
-  const updateConversationAge = () => { };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-mint-50/30 to-gray-50">
@@ -471,9 +100,7 @@ const HistoryPage = () => {
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        handleLogout={handleLogout}
-        activeConversation={null}
-        updateConversationAge={updateConversationAge}
+        updateConversationAge={updateUserAge}
         extraButton={<BiArrowBack className="text-xl mr-2" />}
       />
 
@@ -488,7 +115,7 @@ const HistoryPage = () => {
                 ? 'border-mint-500 text-mint-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
-              style={{ borderColor: activeTab === 'all' ? '#36B37E' : 'transparent' }}
+              style={{ borderColor: activeTab === 'all' ? '#36B37E' : 'transparent', color: activeTab === 'all' ? '#36B37E' : '' }}
             >
               Tất cả ({activeCount})
             </button>
@@ -498,7 +125,7 @@ const HistoryPage = () => {
                 ? 'border-mint-500 text-mint-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
-              style={{ borderColor: activeTab === 'archived' ? '#36B37E' : 'transparent' }}
+              style={{ borderColor: activeTab === 'archived' ? '#36B37E' : 'transparent', color: activeTab === 'archived' ? '#36B37E' : '' }}
             >
               Đã lưu trữ ({archivedCount})
             </button>
@@ -585,87 +212,32 @@ const HistoryPage = () => {
                 </div>
                 <div className="flex space-x-2">
                   {activeTab === 'all' ? (
-                    <button
-                      onClick={() => {
-                        // Archive all selected conversations
-                        const promises = selectedConversations.map(id =>
-                          axios.post(`${API_BASE_URL}/conversations/${id}/archive`, {
-                            user_id: userData.id
-                          })
-                        );
-
-                        Promise.all(promises)
-                          .then(() => {
-                            setHistory(history.map(chat =>
-                              selectedConversations.includes(chat.id)
-                                ? { ...chat, is_archived: true }
-                                : chat
-                            ));
-                            setSelectedConversations([]);
-
-                            Swal.fire({
-                              icon: 'success',
-                              title: 'Đã lưu trữ',
-                              text: `Đã lưu trữ ${selectedConversations.length} cuộc trò chuyện`,
-                              confirmButtonColor: '#36B37E',
-                              timer: 1500,
-                              showConfirmButton: false
-                            });
-                          })
-                          .catch(error => {
-                            console.error("Lỗi khi lưu trữ nhiều cuộc trò chuyện:", error);
-                          });
-                      }}
-                      className="bg-mint-600 text-white px-4 py-1.5 rounded-md hover:bg-mint-700 flex items-center text-sm shadow-sm hover:shadow transition-all duration-200"
+                    <Button
+                      onClick={handleArchiveMultiple}
+                      color="mint"
+                      size="sm"
+                      icon={<BiArchiveIn className="mr-1.5" />}
                     >
-                      <BiArchiveIn className="mr-1.5" />
                       Lưu trữ đã chọn
-                    </button>
+                    </Button>
                   ) : (
-                    <button
-                      onClick={() => {
-                        // Unarchive all selected conversations
-                        const promises = selectedConversations.map(id =>
-                          axios.post(`${API_BASE_URL}/conversations/${id}/unarchive`, {
-                            user_id: userData.id
-                          })
-                        );
-
-                        Promise.all(promises)
-                          .then(() => {
-                            setHistory(history.map(chat =>
-                              selectedConversations.includes(chat.id)
-                                ? { ...chat, is_archived: false }
-                                : chat
-                            ));
-                            setSelectedConversations([]);
-
-                            Swal.fire({
-                              icon: 'success',
-                              title: 'Đã khôi phục',
-                              text: `Đã khôi phục ${selectedConversations.length} cuộc trò chuyện`,
-                              confirmButtonColor: '#36B37E',
-                              timer: 1500,
-                              showConfirmButton: false
-                            });
-                          })
-                          .catch(error => {
-                            console.error("Lỗi khi khôi phục nhiều cuộc trò chuyện:", error);
-                          });
-                      }}
-                      className="bg-mint-600 text-white px-4 py-1.5 rounded-md hover:bg-mint-700 flex items-center text-sm shadow-sm hover:shadow transition-all duration-200"
+                    <Button
+                      onClick={handleUnarchiveMultiple}
+                      color="mint"
+                      size="sm"
+                      icon={<BiCheck className="mr-1.5" />}
                     >
-                      <BiCheck className="mr-1.5" />
                       Khôi phục đã chọn
-                    </button>
+                    </Button>
                   )}
-                  <button
-                    onClick={handleDeleteMultiple}
-                    className="bg-red-500 text-white px-4 py-1.5 rounded-md hover:bg-red-600 flex items-center text-sm shadow-sm hover:shadow transition-all duration-200"
+                  <Button
+                    onClick={() => showBulkDeleteConfirm(selectedConversations.length, handleDeleteMultiple)}
+                    color="red"
+                    size="sm"
+                    icon={<BiTrash className="mr-1.5" />}
                   >
-                    <BiTrash className="mr-1.5" />
                     Xóa đã chọn
-                  </button>
+                  </Button>
                 </div>
               </div>
             )}
@@ -705,12 +277,9 @@ const HistoryPage = () => {
                   </div>
                 )}
                 <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setDateFilter('all');
-                    setAgeFilter('all');
-                  }}
+                  onClick={clearFilters}
                   className="text-mint-600 text-xs hover:underline flex items-center"
+                  style={{ color: '#36B37E' }}
                 >
                   Xóa tất cả bộ lọc
                 </button>
@@ -719,24 +288,9 @@ const HistoryPage = () => {
           </div>
 
           {/* Loading state */}
-          {loading ? (
+          {isLoadingConversations ? (
             <div className="flex flex-col items-center justify-center p-12">
-              <div className="animate-pulse space-y-4 w-full max-w-4xl">
-                <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto"></div>
-                <div className="h-16 bg-gray-200 rounded"></div>
-                <div className="h-16 bg-gray-200 rounded"></div>
-                <div className="h-16 bg-gray-200 rounded"></div>
-                <div className="flex space-x-4">
-                  <div className="h-16 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-16 bg-gray-200 rounded w-1/2"></div>
-                </div>
-              </div>
-              <div className="flex items-center justify-center space-x-2 mt-8">
-                <div className="w-3 h-3 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-3 h-3 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                <div className="w-3 h-3 bg-mint-600 rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
-              </div>
-              <p className="mt-4 text-gray-500">Đang tải dữ liệu...</p>
+              <Loader type="spinner" size="lg" color="mint" text="Đang tải dữ liệu..." />
             </div>
           ) : currentItems.length > 0 ? (
             <>
@@ -750,13 +304,14 @@ const HistoryPage = () => {
                           type="checkbox"
                           className="h-4 w-4 text-mint-600 focus:ring-mint-500 border-gray-300 rounded transition-all duration-200"
                           checked={currentItems.length > 0 && currentItems.every(item => selectedConversations.includes(item.id))}
-                          onChange={handleSelectAll}
+                          onChange={handleSelectAllOnPage}
                         />
                       </th>
                       <th scope="col" className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Tiêu đề
                       </th>
-                      <th scope="col"
+                      <th
+                        scope="col"
                         className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                         onClick={() => handleSortChange('date')}
                       >
@@ -767,7 +322,8 @@ const HistoryPage = () => {
                           )}
                         </div>
                       </th>
-                      <th scope="col"
+                      <th
+                        scope="col"
                         className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                         onClick={() => handleSortChange('age')}
                       >
@@ -823,50 +379,51 @@ const HistoryPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-mint-100 text-mint-800"
-                            style={{ backgroundColor: 'rgba(54, 179, 126, 0.2)' }}>
+                            style={{ backgroundColor: 'rgba(54, 179, 126, 0.2)', color: '#2E7D6B' }}>
                             {chat.age_context || 'N/A'} tuổi
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center text-sm text-gray-700">
                             <BiMessageRounded className="mr-1.5 text-mint-500" />
-                            <span className="font-medium">{chat.messageCount || 0}</span>
+                            <span className="font-medium">{chat.message_count || 0}</span>
                             <span className="text-xs text-gray-500 ml-1">tin nhắn</span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div className="flex justify-end space-x-1">
-                            <button
+                            <Button
                               onClick={() => navigateToChat(chat.id)}
-                              className="text-mint-600 hover:text-white hover:bg-green-600 px-3 py-1.5 rounded-md transition-all duration-200 flex items-center"
+                              color="mint"
+                              size="sm"
+                              icon={<BiChat className="mr-1.5" />}
                             >
-                              <BiChat className="mr-1.5" />
                               Xem
-                            </button>
+                            </Button>
                             {chat.is_archived ? (
-                              <button
-                                onClick={() => handleUnarchive(chat.id)}
-                                className="text-mint-600 hover:text-white hover:bg-mint-600 px-2 py-1.5 rounded-md transition-all duration-200"
-                                title="Khôi phục"
-                              >
-                                <BiCheck />
-                              </button>
+                              <Button
+                                onClick={() => unarchiveConversation(chat.id)}
+                                color="gray"
+                                size="sm"
+                                icon={<BiCheck />}
+                                className="px-2"
+                              />
                             ) : (
-                              <button
-                                onClick={() => handleArchive(chat.id)}
-                                className="text-gray-600 hover:text-white hover:bg-gray-600 px-2 py-1.5 rounded-md transition-all duration-200"
-                                title="Lưu trữ"
-                              >
-                                <BiArchiveIn />
-                              </button>
+                              <Button
+                                onClick={() => archiveConversation(chat.id)}
+                                color="gray"
+                                size="sm"
+                                icon={<BiArchiveIn />}
+                                className="px-2"
+                              />
                             )}
-                            <button
-                              onClick={() => handleDelete(chat.id)}
-                              className="text-red-600 hover:text-white hover:bg-red-600 px-2 py-1.5 rounded-md transition-all duration-200"
-                              title="Xóa"
-                            >
-                              <BiTrash />
-                            </button>
+                            <Button
+                              onClick={() => showDeleteConfirm(() => deleteConversation(chat.id))}
+                              color="red"
+                              size="sm"
+                              icon={<BiTrash />}
+                              className="px-2"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -882,7 +439,7 @@ const HistoryPage = () => {
                     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                       <div>
                         <p className="text-sm text-gray-700">
-                          Hiển thị <span className="font-medium">{indexOfFirstItem + 1}</span> đến <span className="font-medium">{Math.min(indexOfLastItem, filteredAndSortedHistory.length)}</span> trong <span className="font-medium">{filteredAndSortedHistory.length}</span> kết quả
+                          Hiển thị <span className="font-medium">{indexOfFirstItem + 1}</span> đến <span className="font-medium">{Math.min(indexOfLastItem, filteredConversations.length)}</span> trong <span className="font-medium">{filteredConversations.length}</span> kết quả
                         </p>
                       </div>
                       <div>
@@ -908,6 +465,7 @@ const HistoryPage = () => {
                               style={currentPage === i + 1 ? {
                                 backgroundColor: '#E6F7EF',
                                 borderColor: '#36B37E',
+                                color: '#36B37E',
                                 fontWeight: 'bold'
                               } : {}}
                             >
@@ -945,18 +503,13 @@ const HistoryPage = () => {
                   <>
                     <p className="text-xl font-medium text-gray-700 mb-2">Không tìm thấy cuộc trò chuyện nào phù hợp</p>
                     <p className="text-gray-500 mb-6 max-w-md">Thử thay đổi các bộ lọc hoặc sử dụng từ khóa tìm kiếm khác</p>
-                    <button
-                      onClick={() => {
-                        setSearchTerm('');
-                        setDateFilter('all');
-                        setAgeFilter('all');
-                      }}
-                      className="px-4 py-2 bg-mint-600 text-white rounded-lg hover:bg-mint-700 transition-all duration-200 shadow-sm hover:shadow flex items-center"
-                      style={{ backgroundColor: '#36B37E' }}
+                    <Button
+                      onClick={clearFilters}
+                      color="mint"
+                      icon={<BiX className="mr-1.5" />}
                     >
-                      <BiX className="mr-1.5" />
                       Xóa bộ lọc
-                    </button>
+                    </Button>
                   </>
                 ) : (
                   <>
@@ -964,26 +517,25 @@ const HistoryPage = () => {
                       <>
                         <p className="text-xl font-medium text-gray-700 mb-2">Không có cuộc trò chuyện nào được lưu trữ</p>
                         <p className="text-gray-500 mb-6 max-w-md">Bạn có thể lưu trữ các cuộc trò chuyện để tham khảo sau</p>
-                        <button
+                        <Button
                           onClick={() => setActiveTab('all')}
-                          className="px-4 py-2 bg-mint-600 text-white rounded-lg hover:bg-mint-700 transition-all duration-200 shadow-sm hover:shadow flex items-center"
-                          style={{ backgroundColor: '#36B37E' }}
+                          color="mint"
+                          icon={<BiMessageRounded className="mr-1.5" />}
                         >
-                          <BiMessageRounded className="mr-1.5" />
                           Xem tất cả cuộc trò chuyện
-                        </button>
+                        </Button>
                       </>
                     ) : (
                       <>
                         <p className="text-xl font-medium text-gray-700 mb-2">Chưa có cuộc trò chuyện nào</p>
                         <p className="text-gray-500 mb-6 max-w-md">Bắt đầu trò chuyện mới với Nutribot để nhận thông tin hữu ích về dinh dưỡng</p>
-                        <Link
-                          to="/chat"
-                          className="px-4 py-2 bg-mint-600 text-white rounded-lg hover:bg-mint-700 transition-all duration-200 shadow-sm hover:shadow flex items-center"
-                          style={{ backgroundColor: '#36B37E' }}
-                        >
-                          <BiChat className="mr-1.5" />
-                          Bắt đầu trò chuyện
+                        <Link to="/chat">
+                          <Button
+                            color="mint"
+                            icon={<BiChat className="mr-1.5" />}
+                          >
+                            Bắt đầu trò chuyện
+                          </Button>
                         </Link>
                       </>
                     )}
