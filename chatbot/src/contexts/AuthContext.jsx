@@ -113,24 +113,25 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success) {
         // Cập nhật userData trong state
-        setUserData(prev => ({
-          ...prev,
+        const updatedUser = {
+          ...userData,
           ...newData
-        }));
+        };
+        setUserData(updatedUser);
         
         // Cập nhật trong storage
         const currentUser = storageService.getUserData();
         if (currentUser) {
-          const updatedUser = {
+          const newUserData = {
             ...currentUser,
             ...newData
           };
           
           // Lưu lại vào storage
           if (localStorage.getItem('user')) {
-            localStorage.setItem('user', JSON.stringify(updatedUser));
+            localStorage.setItem('user', JSON.stringify(newUserData));
           } else if (sessionStorage.getItem('user')) {
-            sessionStorage.setItem('user', JSON.stringify(updatedUser));
+            sessionStorage.setItem('user', JSON.stringify(newUserData));
           }
         }
         
@@ -140,6 +141,23 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: response.error || 'Cập nhật thất bại' };
     } catch (error) {
       return { success: false, error: error.error || 'Cập nhật thất bại' };
+    }
+  };
+
+  // Làm mới thông tin người dùng từ server
+  const refreshUserData = async () => {
+    try {
+      const response = await authService.getProfile();
+      if (response.success) {
+        setUserData(response.user);
+        // Cập nhật storage
+        const storage = localStorage.getItem('user') ? localStorage : sessionStorage;
+        storage.setItem('user', JSON.stringify(response.user));
+        return { success: true };
+      }
+      return { success: false, error: response.error };
+    } catch (error) {
+      return { success: false, error: error.error || 'Không thể tải thông tin người dùng' };
     }
   };
 
@@ -156,6 +174,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateUserData,
+    refreshUserData,
     isAuthenticated
   };
 

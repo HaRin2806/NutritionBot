@@ -14,7 +14,7 @@
   --color-mint-700: #2FAB76;
   --color-mint-800: #2E7D6B;
   --color-mint-900: #205A4E;
-  
+
   --color-grey-50: #F9FAFB;
   --color-grey-100: #F3F4F6;
   --color-grey-200: #E5E7EB;
@@ -25,18 +25,61 @@
   --color-grey-700: #374151;
   --color-grey-800: #1F2937;
   --color-grey-900: #111827;
+
+  /* Primary colors - can be overridden by theme */
+  --color-primary: var(--color-mint-600);
+  --color-primary-light: var(--color-mint-100);
+  --color-primary-dark: var(--color-mint-700);
+}
+
+/* Dark mode variables */
+.dark {
+  --color-mint-50: #1a2e1f;
+  --color-mint-100: #1a4d3a;
+  --color-mint-200: #2a5f45;
+  --color-mint-300: #3a7050;
+  --color-mint-400: #4a825c;
+  --color-mint-500: #5a9367;
+  --color-mint-600: #6aa473;
+  --color-mint-700: #7ab67e;
+  --color-mint-800: #8ac78a;
+  --color-mint-900: #9ad895;
+
+  --color-grey-50: #18181b;
+  --color-grey-100: #27272a;
+  --color-grey-200: #3f3f46;
+  --color-grey-300: #52525b;
+  --color-grey-400: #71717a;
+  --color-grey-500: #a1a1aa;
+  --color-grey-600: #d4d4d8;
+  --color-grey-700: #e4e4e7;
+  --color-grey-800: #f4f4f5;
+  --color-grey-900: #fafafa;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--color-grey-800);
   line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  color: var(--color-grey-200);
+  background-color: var(--color-grey-900);
 }
 
 /* Animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
@@ -44,8 +87,15 @@ body {
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .animate-scaleIn {
@@ -63,13 +113,25 @@ body {
   border-radius: 10px;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #c5e0d5;
   border-radius: 10px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #36B37E;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #6aa473;
 }
 
 /* Focus styles */
@@ -88,31 +150,140 @@ button:active {
 
 /* Link styles */
 a {
-  color: var(--color-mint-600);
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 a:hover {
   text-decoration: underline;
 }
 
+/* Dark mode link styles */
+.dark a {
+  color: var(--color-mint-400);
+}
+
 /* Màu theme chính */
 .text-mint {
-  color: #36B37E !important;
+  color: var(--color-primary) !important;
 }
 
 .bg-mint {
-  background-color: #36B37E !important;
+  background-color: var(--color-primary) !important;
 }
 
 .border-mint {
-  border-color: #36B37E !important;
+  border-color: var(--color-primary) !important;
 }
 
 .hover-bg-mint:hover {
-  background-color: #2FAB76 !important;
+  background-color: var(--color-primary-dark) !important;
 }
 
 .focus-ring-mint:focus {
   box-shadow: 0 0 0 3px rgba(54, 179, 126, 0.5) !important;
+}
+
+/* Dark mode specific utilities */
+.dark .text-mint {
+  color: var(--color-mint-400) !important;
+}
+
+.dark .bg-mint {
+  background-color: var(--color-mint-600) !important;
+}
+
+.dark .border-mint {
+  border-color: var(--color-mint-500) !important;
+}
+
+/* Form elements dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: var(--color-grey-700);
+  border-color: var(--color-grey-600);
+  color: var(--color-grey-100);
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: var(--color-mint-500);
+  box-shadow: 0 0 0 3px rgba(106, 164, 115, 0.3);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--color-grey-400);
+}
+
+/* Button dark mode */
+.dark .btn-mint {
+  background-color: var(--color-mint-600);
+  border-color: var(--color-mint-600);
+}
+
+.dark .btn-mint:hover {
+  background-color: var(--color-mint-700);
+  border-color: var(--color-mint-700);
+}
+
+.dark .btn-outline.btn-mint {
+  border-color: var(--color-mint-500);
+  color: var(--color-mint-400);
+}
+
+.dark .btn-outline.btn-mint:hover {
+  background-color: rgba(106, 164, 115, 0.1);
+}
+
+/* Modal dark mode */
+.dark .modal {
+  background-color: var(--color-grey-800);
+  color: var(--color-grey-100);
+}
+
+.dark .modal-header {
+  border-bottom-color: var(--color-grey-600);
+}
+
+.dark .modal-footer {
+  border-top-color: var(--color-grey-600);
+}
+
+/* Card dark mode */
+.dark .card {
+  background-color: var(--color-grey-800);
+  border-color: var(--color-grey-700);
+}
+
+.dark .card-header,
+.dark .card-footer {
+  background-color: var(--color-grey-700);
+  border-color: var(--color-grey-600);
+}
+
+/* Alert dark mode */
+.dark .alert-mint {
+  background-color: rgba(106, 164, 115, 0.1);
+  border-left-color: var(--color-mint-500);
+  color: var(--color-mint-400);
+}
+
+/* Badge dark mode */
+.dark .badge-mint {
+  background-color: rgba(106, 164, 115, 0.2);
+  color: var(--color-mint-300);
+}
+
+/* Transition for theme switching */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Prevent transition on page load */
+.preload * {
+  transition: none !important;
 }

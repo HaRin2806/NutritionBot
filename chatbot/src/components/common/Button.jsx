@@ -4,8 +4,8 @@ const Button = ({
   children, 
   onClick, 
   type = 'button',
-  color = 'mint', // mint, gray, red
-  size = 'md', // sm, md, lg
+  color = 'mint',
+  size = 'md',
   fullWidth = false,
   outline = false,
   icon = null,
@@ -13,25 +13,39 @@ const Button = ({
   disabled = false,
   className = ''
 }) => {
+  const getBaseStyles = () => {
+    const base = {
+      mint: {
+        background: '#36B37E',
+        color: '#FFFFFF',
+        hoverBackground: '#2FAB76'
+      },
+      red: {
+        background: '#EF4444', 
+        color: '#FFFFFF',
+        hoverBackground: '#DC2626'
+      },
+      gray: {
+        background: '#E5E7EB',
+        color: '#4B5563', 
+        hoverBackground: '#D1D5DB'
+      }
+    };
+    return base[color] || base.mint;
+  };
+
   const getColorClasses = () => {
     if (outline) {
       switch (color) {
         case 'mint':
-          return 'border-mint-600 text-mint-600 hover:bg-mint-50';
+          return 'border-2 hover:bg-opacity-10';
         case 'red':
-          return 'border-red-600 text-red-600 hover:bg-red-50';
+          return 'border-2 hover:bg-opacity-10';
         default:
-          return 'border-gray-300 text-gray-700 hover:bg-gray-50';
+          return 'border-2 hover:bg-gray-50';
       }
     } else {
-      switch (color) {
-        case 'mint':
-          return 'bg-mint-600 text-white hover:bg-mint-700 shadow-sm';
-        case 'red':
-          return 'bg-red-600 text-white hover:bg-red-700 shadow-sm';
-        default:
-          return 'bg-gray-200 text-gray-700 hover:bg-gray-300';
-      }
+      return 'shadow-sm';
     }
   };
 
@@ -46,27 +60,45 @@ const Button = ({
     }
   };
 
+  const styles = getBaseStyles();
   const colorClasses = getColorClasses();
   const sizeClasses = getSizeClasses();
   const widthClasses = fullWidth ? 'w-full' : '';
-  const outlineClass = outline ? 'border' : '';
+
+  const buttonStyle = outline ? {
+    borderColor: styles.background,
+    color: styles.background,
+    backgroundColor: 'transparent'
+  } : {
+    backgroundColor: styles.background,
+    color: styles.color
+  };
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
+      style={buttonStyle}
       className={`
         ${colorClasses}
         ${sizeClasses}
         ${widthClasses}
-        ${outlineClass}
         rounded-md transition-all duration-200
         font-medium flex items-center justify-center
-        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:transform hover:-translate-y-0.5'}
         ${className}
       `}
-      style={color === 'mint' && !outline ? { backgroundColor: '#36B37E' } : {}}
+      onMouseEnter={(e) => {
+        if (!disabled && !outline) {
+          e.target.style.backgroundColor = styles.hoverBackground;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!disabled && !outline) {
+          e.target.style.backgroundColor = styles.background;
+        }
+      }}
     >
       {icon && iconPosition === 'left' && <span className="mr-1.5">{icon}</span>}
       {children}
