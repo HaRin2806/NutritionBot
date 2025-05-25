@@ -30,10 +30,10 @@ const useChat = () => {
                 // CHỈ xử lý tuổi nếu chưa được khởi tạo
                 if (!hasInitializedAge.current) {
                     hasInitializedAge.current = true;
-                    
+
                     // Bước 1: Kiểm tra storage trước
                     const storedAge = storageService.getUserAge();
-                    
+
                     if (storedAge) {
                         // Có tuổi trong storage -> người dùng cũ
                         console.log('Người dùng cũ - lấy tuổi từ storage:', storedAge);
@@ -43,7 +43,7 @@ const useChat = () => {
                         const lastConversationWithAge = fetchedConversations
                             .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
                             .find(conv => conv.age_context);
-                        
+
                         if (lastConversationWithAge && lastConversationWithAge.age_context) {
                             console.log('Lấy tuổi từ cuộc hội thoại gần nhất:', lastConversationWithAge.age_context);
                             setUserAge(lastConversationWithAge.age_context);
@@ -110,8 +110,8 @@ const useChat = () => {
                         <select id="swal-age" class="swal2-input w-full">
                             <option value="">-- Chọn độ tuổi --</option>
                             ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                                `<option value="${age}">${age} tuổi</option>`
-                            ).join('')}
+                    `<option value="${age}">${age} tuổi</option>`
+                ).join('')}
                         </select>
                     </div>
                 `,
@@ -145,12 +145,12 @@ const useChat = () => {
      */
     const ensureUserAge = useCallback(async () => {
         console.log('ensureUserAge - Current userAge:', userAge);
-        
+
         if (!userAge) {
             // Kiểm tra lại storage 1 lần nữa
             const storedAge = storageService.getUserAge();
             console.log('ensureUserAge - Stored age:', storedAge);
-            
+
             if (storedAge) {
                 setUserAge(storedAge);
                 return storedAge;
@@ -357,6 +357,168 @@ const useChat = () => {
         }
     }, [activeConversation, navigate, fetchConversationDetail, fetchConversations, ensureUserAge, startNewConversation]);
 
+    // === MESSAGE EDITING FUNCTIONS ===
+
+    /**
+     * Chỉnh sửa tin nhắn
+     */
+    const editMessage = useCallback(async (messageId, conversationId, newContent) => {
+        try {
+            // Đảm bảo có userAge
+            const currentAge = userAge || storageService.getUserAge();
+            if (!currentAge) {
+                throw new Error('Thiếu thông tin độ tuổi');
+            }
+
+            const response = await chatService.editMessage(messageId, conversationId, newContent, currentAge);
+
+            if (response.success) {
+                // Refresh conversation detail để lấy message đã được update
+                await fetchConversationDetail(conversationId);
+
+                // Hiển thị thông báo phù hợp
+                if (response.bot_response_generated) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Đã chỉnh sửa tin nhắn và tạo phản hồi mới',
+                        confirmButtonColor: '#36B37E',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công',
+                        text: 'Đã chỉnh sửa tin nhắn thành công',
+                        confirmButtonColor: '#36B37E',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                }
+
+                return { success: true };
+            } else {
+                throw new Error(response.error || 'Không thể chỉnh sửa tin nhắn');
+            }
+        } catch (error) {
+            console.error('Error editing message:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể chỉnh sửa tin nhắn: ' + (error.error || error.message),
+                confirmButtonColor: '#36B37E'
+            });
+
+            throw error;
+        }
+    }, [fetchConversationDetail, userAge]);
+
+    /**
+     * Chuyển đổi version tin nhắn
+     */
+    const switchMessageVersion = useCallback(async (messageId, conversationId, version) => {
+        try {
+            const response = await chatService.switchMessageVersion(messageId, conversationId, version);
+
+            if (response.success) {
+                // Refresh conversation detail
+                await fetchConversationDetail(conversationId);
+                return { success: true };
+            } else {
+                throw new Error(response.error || 'Không thể chuyển đổi version');
+            }
+        } catch (error) {
+            console.error('Error switching version:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể chuyển đổi version: ' + (error.error || error.message),
+                confirmButtonColor: '#36B37E'
+            });
+
+            throw error;
+        }
+    }, [fetchConversationDetail]);
+
+    /**
+     * Tạo lại phản hồi của bot
+     */
+    const regenerateResponse = useCallback(async (messageId, conversationId, age) => {
+        try {
+            const response = await chatService.regenerateResponse(messageId, conversationId, age);
+
+            if (response.success) {
+                // Refresh conversation detail
+                await fetchConversationDetail(conversationId);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Đã tạo lại phản hồi thành công',
+                    confirmButtonColor: '#36B37E',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                return { success: true };
+            } else {
+                throw new Error(response.error || 'Không thể tạo lại phản hồi');
+            }
+        } catch (error) {
+            console.error('Error regenerating response:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể tạo lại phản hồi: ' + (error.error || error.message),
+                confirmButtonColor: '#36B37E'
+            });
+
+            throw error;
+        }
+    }, [fetchConversationDetail]);
+
+    /**
+     * Xóa tin nhắn và tất cả tin nhắn sau nó
+     */
+    const deleteMessageAndFollowing = useCallback(async (messageId, conversationId) => {
+        try {
+            const response = await chatService.deleteMessageAndFollowing(messageId, conversationId);
+
+            if (response.success) {
+                // Refresh conversation detail
+                await fetchConversationDetail(conversationId);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: 'Đã xóa tin nhắn và các tin nhắn sau nó',
+                    confirmButtonColor: '#36B37E',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                return { success: true };
+            } else {
+                throw new Error(response.error || 'Không thể xóa tin nhắn');
+            }
+        } catch (error) {
+            console.error('Error deleting message:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể xóa tin nhắn: ' + (error.error || error.message),
+                confirmButtonColor: '#36B37E'
+            });
+
+            throw error;
+        }
+    }, [fetchConversationDetail]);
+
     // Các hàm khác giữ nguyên...
     const deleteConversation = useCallback(async (conversationId) => {
         try {
@@ -483,14 +645,6 @@ const useChat = () => {
         return { success: true };
     }, [activeConversation]);
 
-    // KHÔNG tự động lấy từ storage khi component mount
-    // useEffect(() => {
-    //     const storedAge = storageService.getUserAge();
-    //     if (storedAge && !userAge) {
-    //         setUserAge(storedAge);
-    //     }
-    // }, [userAge]);
-
     useEffect(() => {
         return () => {
             setActiveConversation(null);
@@ -513,7 +667,12 @@ const useChat = () => {
         renameConversation,
         updateUserAge,
         promptUserForAge,
-        ensureUserAge
+        ensureUserAge,
+        // Message editing functions
+        editMessage,
+        switchMessageVersion,
+        regenerateResponse,
+        deleteMessageAndFollowing
     };
 };
 

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import logging
 import time
+import datetime
 from core.rag_pipeline import RAGPipeline
 from core.embedding_model import get_embedding_model
 from core.data_processor import DataProcessor
@@ -190,6 +191,436 @@ def chat():
             "reply": "Đã xảy ra lỗi khi xử lý câu hỏi của bạn. Vui lòng thử lại sau."
         }), 500
 
+@chat_routes.route('/messages/<message_id>/edit', methods=['PUT'])
+@jwt_required()
+def edit_message(message_id):
+    """API endpoint để chỉnh sửa tin nhắn và tự động regenerate bot response"""
+    try:
+        data = request.json
+        user_id = get_jwt_identity()
+        
+        new_content = data.get('content')
+        conversation_id = data.get('conversation_id')
+        age = data.get('age')  # Thêm age để regenerate
+        
+        if not new_content:
+            return jsonify({
+                "success": False,
+                "error": "Nội dung tin nhắn không được để trống"
+            }), 400
+            
+        if not conversation_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin cuộc hội thoại"
+            }), 400
+            
+        if not age:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin độ tuổi"
+            }), 400
+        
+        # Tìm cuộc hội thoại
+        conversation = Conversation.find_by_id(conversation_id)
+        if not conversation:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy cuộc hội thoại"
+            }), 404
+        
+        # Kiểm tra quyền truy cập
+        if str(conversation.user_id) != user_id:
+            return jsonify({
+                "success": False,
+                "error": "Bạn không có quyền chỉnh sửa tin nhắn này"
+            }), 403
+        
+        # Chỉnh sửa tin nhắn
+        success, message_result = conversation.edit_message(message_id, new_content)
+        
+        if not success:
+            return jsonify({
+                "success": False,
+                "error": message_result
+            }), 400
+        
+        # Tìm bot message cần regenerate
+        user_message_index = None
+        for i, msg in enumerate(conversation.messages):
+            if str(msg["_id"]) == str(message_id):
+                user_message_index = i
+                break
+        
+        bot_response_generated = False
+        bot_message = None
+        
+        if user_message_index is not None:
+            bot_message_index = user_message_index + 1
+            
+            if (bot_message_index < len(conversation.messages) and 
+                conversation.messages[bot_message_index]["role"] == "bot"):
+                
+                # Regenerate bot response
+                try:
+                    # Tạo RAG pipeline
+                    rag_pipeline = get_rag_pipeline()
+                    
+                    # Lấy context từ cuộc hội thoại (các tin nhắn trước tin nhắn user này)
+                    conversation_context = []
+                    if user_message_index > 0:
+                        context_messages = conversation.messages[:user_message_index]
+                        for i in range(0, len(context_messages)-1, 2):
+                            if i+1 < len(context_messages):
+                                if context_messages[i]["role"] == "user" and context_messages[i+1]["role"] == "bot":
+                                    user_msg = context_messages[i]["content"]
+                                    bot_msg = context_messages[i+1]["content"]
+                                    conversation_context.append({"user": user_msg, "bot": bot_msg})
+                    
+                    start_time = time.time()
+                    
+                    # Tạo phản hồi mới
+                    result = rag_pipeline.process_query(
+                        new_content, 
+                        age, 
+                        conversation_context=conversation_context
+                    )
+                    
+                    end_time = time.time()
+                    query_time = end_time - start_time
+                    
+                    # Cập nhật bot message với version mới
+                    bot_message = conversation.messages[bot_message_index]
+                    timestamp = datetime.datetime.now()
+                    
+                    # Tạo version mới cho bot response
+                    new_version = len(bot_message.get("versions", [])) + 1
+                    new_version_data = {
+                        "content": result["answer"],
+                        "timestamp": timestamp,
+                        "version": new_version,
+                        "sources": result.get("sources", []),
+                        "metadata": {
+                            "query_time": query_time,
+                            "token_count": len(result["answer"].split()),
+                            "regenerated_from_edit": True
+                        }
+                    }
+                    
+                    # Khởi tạo versions nếu chưa có
+                    if "versions" not in bot_message:
+                        bot_message["versions"] = [{
+                            "content": bot_message["content"],
+                            "timestamp": bot_message["timestamp"],
+                            "version": 1,
+                            "sources": bot_message.get("sources", []),
+                            "metadata": bot_message.get("metadata", {})
+                        }]
+                    
+                    # Thêm version mới
+                    bot_message["versions"].append(new_version_data)
+                    bot_message["current_version"] = new_version
+                    bot_message["content"] = result["answer"]
+                    bot_message["sources"] = result.get("sources", [])
+                    bot_message["is_edited"] = True
+                    
+                    # Xóa flag needs_regeneration
+                    if "needs_regeneration" in bot_message:
+                        del bot_message["needs_regeneration"]
+                    
+                    # Cập nhật thời gian của cuộc hội thoại
+                    conversation.updated_at = timestamp
+                    conversation.save()
+                    
+                    bot_response_generated = True
+                    logger.info(f"Đã regenerate bot response thành công cho message: {bot_message['_id']}")
+                    
+                except Exception as regenerate_error:
+                    logger.error(f"Lỗi khi regenerate bot response: {regenerate_error}")
+                    # Vẫn trả về success cho việc edit, chỉ log lỗi regenerate
+        
+        # Lấy tin nhắn đã cập nhật
+        updated_user_message = conversation.get_message_by_id(message_id)
+        updated_bot_message = None
+        if bot_message:
+            updated_bot_message = conversation.get_message_by_id(str(bot_message["_id"]))
+        
+        response_data = {
+            "success": True,
+            "message": "Đã chỉnh sửa tin nhắn thành công",
+            "updated_message": updated_user_message,
+            "bot_response_generated": bot_response_generated
+        }
+        
+        if updated_bot_message:
+            response_data["updated_bot_message"] = updated_bot_message
+        
+        return jsonify(response_data)
+            
+    except Exception as e:
+        logger.error(f"Lỗi khi chỉnh sửa tin nhắn: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@chat_routes.route('/messages/<message_id>/versions/<int:version>', methods=['PUT'])
+@jwt_required()
+def switch_message_version(message_id, version):
+    """API endpoint để chuyển đổi version của tin nhắn"""
+    try:
+        data = request.json
+        user_id = get_jwt_identity()
+        conversation_id = data.get('conversation_id')
+        
+        if not conversation_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin cuộc hội thoại"
+            }), 400
+        
+        # Tìm cuộc hội thoại
+        conversation = Conversation.find_by_id(conversation_id)
+        if not conversation:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy cuộc hội thoại"
+            }), 404
+        
+        # Kiểm tra quyền truy cập
+        if str(conversation.user_id) != user_id:
+            return jsonify({
+                "success": False,
+                "error": "Bạn không có quyền thao tác với tin nhắn này"
+            }), 403
+        
+        # Chuyển đổi version
+        success, message_result = conversation.switch_message_version(message_id, version)
+        
+        if success:
+            # Lấy tin nhắn đã cập nhật và convert ObjectId
+            updated_message = conversation.get_message_by_id(message_id)
+            
+            return jsonify({
+                "success": True,
+                "message": "Đã chuyển đổi version thành công",
+                "updated_message": updated_message
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": message_result
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi khi chuyển đổi version tin nhắn: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@chat_routes.route('/messages/<message_id>/regenerate', methods=['POST'])
+@jwt_required()
+def regenerate_response(message_id):
+    """API endpoint để tạo lại phản hồi của bot cho tin nhắn user"""
+    try:
+        data = request.json
+        user_id = get_jwt_identity()
+        conversation_id = data.get('conversation_id')
+        age = data.get('age')
+        
+        if not conversation_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin cuộc hội thoại"
+            }), 400
+            
+        if not age:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin độ tuổi"
+            }), 400
+        
+        # Tìm cuộc hội thoại
+        conversation = Conversation.find_by_id(conversation_id)
+        if not conversation:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy cuộc hội thoại"
+            }), 404
+        
+        # Kiểm tra quyền truy cập
+        if str(conversation.user_id) != user_id:
+            return jsonify({
+                "success": False,
+                "error": "Bạn không có quyền thao tác với cuộc hội thoại này"
+            }), 403
+        
+        # Tìm tin nhắn user
+        user_message = conversation.get_message_by_id(message_id)
+        if not user_message or user_message["role"] != "user":
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy tin nhắn của người dùng"
+            }), 404
+        
+        # Tạo RAG pipeline
+        rag_pipeline = get_rag_pipeline()
+        
+        # Tìm index của user message
+        user_message_index = None
+        for i, msg in enumerate(conversation.messages):
+            if str(msg["_id"]) == str(message_id):
+                user_message_index = i
+                break
+        
+        # Lấy context từ cuộc hội thoại (các tin nhắn trước tin nhắn này)
+        conversation_context = []
+        if user_message_index and user_message_index > 0:
+            # Lấy context từ các tin nhắn trước đó
+            context_messages = conversation.messages[:user_message_index]
+            for i in range(0, len(context_messages)-1, 2):
+                if i+1 < len(context_messages):
+                    if context_messages[i]["role"] == "user" and context_messages[i+1]["role"] == "bot":
+                        user_msg = context_messages[i]["content"]
+                        bot_msg = context_messages[i+1]["content"]
+                        conversation_context.append({"user": user_msg, "bot": bot_msg})
+        
+        start_time = time.time()
+        
+        # Tạo phản hồi mới
+        result = rag_pipeline.process_query(
+            user_message["content"], 
+            age, 
+            conversation_context=conversation_context
+        )
+        
+        end_time = time.time()
+        query_time = end_time - start_time
+        
+        # Tìm tin nhắn bot tương ứng (tin nhắn ngay sau tin nhắn user)
+        bot_message_index = user_message_index + 1
+        
+        if bot_message_index < len(conversation.messages) and conversation.messages[bot_message_index]["role"] == "bot":
+            # Cập nhật tin nhắn bot hiện có với version mới
+            bot_message = conversation.messages[bot_message_index]
+            timestamp = datetime.datetime.now()
+            
+            # Tạo version mới cho bot response
+            new_version = len(bot_message["versions"]) + 1
+            new_version_data = {
+                "content": result["answer"],
+                "timestamp": timestamp,
+                "version": new_version,
+                "sources": result.get("sources", []),
+                "metadata": {
+                    "query_time": query_time,
+                    "token_count": len(result["answer"].split()),
+                    "regenerated": True
+                }
+            }
+            
+            # Thêm version mới
+            bot_message["versions"].append(new_version_data)
+            bot_message["current_version"] = new_version
+            bot_message["content"] = result["answer"]
+            bot_message["sources"] = result.get("sources", [])
+            bot_message["is_edited"] = True
+            
+            # Xóa flag regenerate_required nếu có
+            if "regenerate_required" in bot_message:
+                del bot_message["regenerate_required"]
+            
+            # Cập nhật thời gian của cuộc hội thoại
+            conversation.updated_at = timestamp
+            conversation.save()
+            
+            # Lấy tin nhắn đã cập nhật và convert ObjectId
+            updated_message = conversation.get_message_by_id(str(bot_message["_id"]))
+            
+            return jsonify({
+                "success": True,
+                "message": "Đã tạo lại phản hồi thành công",
+                "updated_message": updated_message,
+                "reply": result["answer"],
+                "sources": result.get("sources", []),
+                "query_time": query_time
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy tin nhắn bot tương ứng"
+            }), 404
+            
+    except Exception as e:
+        logger.error(f"Lỗi khi tạo lại phản hồi: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@chat_routes.route('/messages/<message_id>', methods=['DELETE'])
+@jwt_required()
+def delete_message_and_following(message_id):
+    """API endpoint để xóa tin nhắn và tất cả tin nhắn sau nó"""
+    try:
+        data = request.json
+        user_id = get_jwt_identity()
+        conversation_id = data.get('conversation_id')
+        
+        if not conversation_id:
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thông tin cuộc hội thoại"
+            }), 400
+        
+        # Tìm cuộc hội thoại
+        conversation = Conversation.find_by_id(conversation_id)
+        if not conversation:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy cuộc hội thoại"
+            }), 404
+        
+        # Kiểm tra quyền truy cập
+        if str(conversation.user_id) != user_id:
+            return jsonify({
+                "success": False,
+                "error": "Bạn không có quyền xóa tin nhắn này"
+            }), 403
+        
+        # Xóa tin nhắn và các tin nhắn sau nó
+        success, message_result = conversation.delete_message_and_following(message_id)
+        
+        if success:
+            # Convert ObjectId trong messages
+            updated_messages = []
+            for msg in conversation.messages:
+                msg_copy = msg.copy()
+                msg_copy["_id"] = str(msg_copy["_id"])
+                if "parent_message_id" in msg_copy and msg_copy["parent_message_id"]:
+                    msg_copy["parent_message_id"] = str(msg_copy["parent_message_id"])
+                updated_messages.append(msg_copy)
+            
+            return jsonify({
+                "success": True,
+                "message": "Đã xóa tin nhắn và các tin nhắn sau nó",
+                "updated_messages": updated_messages
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": message_result
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi khi xóa tin nhắn: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+# Các route khác giữ nguyên...
 @chat_routes.route('/follow-up-questions', methods=['POST'])
 def get_follow_up_questions():
     """API endpoint để lấy các câu hỏi gợi ý tiếp theo"""

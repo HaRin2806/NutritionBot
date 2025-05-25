@@ -104,22 +104,32 @@ class Conversation:
             logger.error(f"Lỗi khi lưu thông tin cuộc hội thoại: {e}")
             raise
 
-    def add_message(self, role, content, sources=None, metadata=None):
-        """Thêm tin nhắn mới vào cuộc hội thoại"""
+    def add_message(self, role, content, sources=None, metadata=None, parent_message_id=None):
+        """Thêm tin nhắn mới vào cuộc hội thoại với hỗ trợ versioning"""
         timestamp = datetime.datetime.now()
         
         message = {
             "_id": ObjectId(),
             "role": role,
             "content": content,
-            "timestamp": timestamp
+            "timestamp": timestamp,
+            "versions": [{
+                "content": content,
+                "timestamp": timestamp,
+                "version": 1
+            }],
+            "current_version": 1,
+            "parent_message_id": parent_message_id,  # Để track message thread
+            "is_edited": False
         }
         
         if sources:
             message["sources"] = sources
+            message["versions"][0]["sources"] = sources
             
         if metadata:
             message["metadata"] = metadata
+            message["versions"][0]["metadata"] = metadata
             
         # Thêm tin nhắn vào danh sách
         self.messages.append(message)
@@ -131,6 +141,172 @@ class Conversation:
         self.save()
         
         return message["_id"]
+
+    def edit_message(self, message_id, new_content):
+        """Chỉnh sửa tin nhắn và tạo version mới, đồng thời đánh dấu cần regenerate bot response"""
+        try:
+            # Tìm tin nhắn cần chỉnh sửa
+            message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(message_id):
+                    message_index = i
+                    break
+            
+            if message_index is None:
+                return False, "Không tìm thấy tin nhắn"
+            
+            message = self.messages[message_index]
+            
+            # Chỉ cho phép chỉnh sửa tin nhắn của user
+            if message["role"] != "user":
+                return False, "Chỉ có thể chỉnh sửa tin nhắn của người dùng"
+            
+            timestamp = datetime.datetime.now()
+            
+            # Tạo version mới
+            new_version = len(message["versions"]) + 1
+            new_version_data = {
+                "content": new_content,
+                "timestamp": timestamp,
+                "version": new_version
+            }
+            
+            # Thêm version mới vào danh sách
+            message["versions"].append(new_version_data)
+            message["current_version"] = new_version
+            message["content"] = new_content  # Cập nhật content hiện tại
+            message["is_edited"] = True
+            
+            # Đánh dấu bot message tiếp theo cần được regenerate
+            bot_message_index = message_index + 1
+            if bot_message_index < len(self.messages) and self.messages[bot_message_index]["role"] == "bot":
+                self.messages[bot_message_index]["needs_regeneration"] = True
+                logger.info(f"Đã đánh dấu bot message cần regenerate: {self.messages[bot_message_index]['_id']}")
+            
+            # Cập nhật thời gian của cuộc hội thoại
+            self.updated_at = timestamp
+            
+            # Lưu thay đổi vào database
+            self.save()
+            
+            return True, "Đã chỉnh sửa tin nhắn thành công"
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi chỉnh sửa tin nhắn: {e}")
+            return False, f"Lỗi khi chỉnh sửa tin nhắn: {str(e)}"
+
+    def switch_message_version(self, message_id, version_number):
+        """Chuyển đổi version của tin nhắn"""
+        try:
+            # Tìm tin nhắn
+            message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(message_id):
+                    message_index = i
+                    break
+            
+            if message_index is None:
+                return False, "Không tìm thấy tin nhắn"
+            
+            message = self.messages[message_index]
+            
+            # Kiểm tra version có tồn tại không
+            if version_number > len(message["versions"]) or version_number < 1:
+                return False, "Version không tồn tại"
+            
+            # Chuyển đổi version
+            selected_version = message["versions"][version_number - 1]
+            message["current_version"] = version_number
+            message["content"] = selected_version["content"]
+            
+            # Cập nhật sources và metadata nếu có
+            if "sources" in selected_version:
+                message["sources"] = selected_version["sources"]
+            if "metadata" in selected_version:
+                message["metadata"] = selected_version["metadata"]
+            
+            # Lưu thay đổi vào database
+            self.save()
+            
+            return True, "Đã chuyển đổi version thành công"
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi chuyển đổi version tin nhắn: {e}")
+            return False, f"Lỗi khi chuyển đổi version: {str(e)}"
+
+    def regenerate_bot_response(self, user_message_id):
+        """Tạo lại phản hồi của bot cho tin nhắn user cụ thể"""
+        try:
+            # Tìm tin nhắn user
+            user_message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(user_message_id):
+                    user_message_index = i
+                    break
+            
+            if user_message_index is None:
+                return False, "Không tìm thấy tin nhắn của người dùng"
+            
+            user_message = self.messages[user_message_index]
+            
+            if user_message["role"] != "user":
+                return False, "Chỉ có thể tạo lại phản hồi cho tin nhắn của người dùng"
+            
+            # Tìm tin nhắn bot tương ứng (tin nhắn ngay sau tin nhắn user)
+            bot_message_index = user_message_index + 1
+            
+            if bot_message_index < len(self.messages) and self.messages[bot_message_index]["role"] == "bot":
+                # Đánh dấu cần tạo lại phản hồi
+                self.messages[bot_message_index]["regenerate_required"] = True
+                self.save()
+                return True, "Đã đánh dấu cần tạo lại phản hồi"
+            else:
+                # Không có tin nhắn bot tương ứng
+                return False, "Không tìm thấy tin nhắn bot tương ứng"
+                
+        except Exception as e:
+            logger.error(f"Lỗi khi đánh dấu tạo lại phản hồi: {e}")
+            return False, f"Lỗi: {str(e)}"
+
+    def get_message_by_id(self, message_id):
+        """Lấy tin nhắn theo ID và convert ObjectId thành string"""
+        for message in self.messages:
+            if str(message["_id"]) == str(message_id):
+                # Convert ObjectId thành string để có thể serialize JSON
+                message_copy = message.copy()
+                message_copy["_id"] = str(message_copy["_id"])
+                if "parent_message_id" in message_copy and message_copy["parent_message_id"]:
+                    message_copy["parent_message_id"] = str(message_copy["parent_message_id"])
+                return message_copy
+        return None
+
+    def delete_message_and_following(self, message_id):
+        """Xóa tin nhắn và tất cả tin nhắn sau nó"""
+        try:
+            # Tìm index của tin nhắn cần xóa
+            message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(message_id):
+                    message_index = i
+                    break
+            
+            if message_index is None:
+                return False, "Không tìm thấy tin nhắn"
+            
+            # Xóa tin nhắn và tất cả tin nhắn sau nó
+            self.messages = self.messages[:message_index]
+            
+            # Cập nhật thời gian
+            self.updated_at = datetime.datetime.now()
+            
+            # Lưu thay đổi
+            self.save()
+            
+            return True, "Đã xóa tin nhắn và các tin nhắn sau nó"
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi xóa tin nhắn: {e}")
+            return False, f"Lỗi: {str(e)}"
         
     def delete(self):
         """Xóa cuộc hội thoại từ database"""

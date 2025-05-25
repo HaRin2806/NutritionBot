@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MessageBubble from './MessageBubble';
 import { Loader } from '../common';
 import { BiRocket } from 'react-icons/bi';
@@ -6,9 +6,17 @@ import { BiRocket } from 'react-icons/bi';
 const MessageList = ({ 
   messages, 
   isLoading,
-  onCreateNewChat
+  onCreateNewChat,
+  onEditMessage,
+  onSwitchVersion,
+  onRegenerateResponse,
+  onDeleteMessage,
+  conversationId,
+  userAge
 }) => {
   const messagesEndRef = useRef(null);
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [regeneratingMessageId, setRegeneratingMessageId] = useState(null);
 
   // Cuộn xuống dưới khi có tin nhắn mới
   useEffect(() => {
@@ -17,6 +25,55 @@ const MessageList = ({
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Handle edit message
+  const handleEditMessage = async (messageId, conversationId, newContent) => {
+    try {
+      await onEditMessage(messageId, conversationId, newContent);
+      setEditingMessageId(null);
+    } catch (error) {
+      console.error('Error in MessageList handleEditMessage:', error);
+      throw error;
+    }
+  };
+
+  // Handle switch version
+  const handleSwitchVersion = async (messageId, conversationId, version) => {
+    try {
+      await onSwitchVersion(messageId, conversationId, version);
+    } catch (error) {
+      console.error('Error in MessageList handleSwitchVersion:', error);
+      throw error;
+    }
+  };
+
+  // Handle regenerate response
+  const handleRegenerateResponse = async (messageId, conversationId, userAge) => {
+    try {
+      setRegeneratingMessageId(messageId);
+      await onRegenerateResponse(messageId, conversationId, userAge);
+    } catch (error) {
+      console.error('Error in MessageList handleRegenerateResponse:', error);
+      throw error;
+    } finally {
+      setRegeneratingMessageId(null);
+    }
+  };
+
+  // Handle delete message
+  const handleDeleteMessage = async (messageId, conversationId) => {
+    try {
+      await onDeleteMessage(messageId, conversationId);
+    } catch (error) {
+      console.error('Error in MessageList handleDeleteMessage:', error);
+      throw error;
+    }
+  };
+
+  // Helper function to get message ID
+  const getMessageId = (message) => {
+    return message._id || message.id;
   };
 
   // Nếu không có tin nhắn nào
@@ -45,13 +102,39 @@ const MessageList = ({
   return (
     <div className="flex flex-col space-y-6 p-4">
       {/* Danh sách tin nhắn */}
-      {messages.map((message) => (
-        <MessageBubble
-          key={message.id}
-          message={message}
-          isUser={message.role === 'user'}
-        />
-      ))}
+      {messages.map((message, index) => {
+        const messageId = getMessageId(message);
+        
+        // Kiểm tra xem có đang regenerating message tiếp theo không
+        // Tìm tin nhắn user có messageId = regeneratingMessageId
+        let isRegenerating = false;
+        if (regeneratingMessageId && message.role === 'bot') {
+          // Tìm index của user message với regeneratingMessageId
+          const userMessageIndex = messages.findIndex(m => getMessageId(m) === regeneratingMessageId);
+          // Kiểm tra nếu message hiện tại là bot message ngay sau user message đó
+          if (userMessageIndex >= 0 && index === userMessageIndex + 1) {
+            isRegenerating = true;
+          }
+        }
+
+        return (
+          <MessageBubble
+            key={messageId}
+            message={message}
+            isUser={message.role === 'user'}
+            onEditMessage={handleEditMessage}
+            onSwitchVersion={handleSwitchVersion}
+            onRegenerateResponse={handleRegenerateResponse}
+            onDeleteMessage={handleDeleteMessage}
+            conversationId={conversationId}
+            userAge={userAge}
+            isEditing={editingMessageId === messageId}
+            onEditStart={(messageId) => setEditingMessageId(messageId)}
+            onEditEnd={() => setEditingMessageId(null)}
+            isRegenerating={isRegenerating}
+          />
+        );
+      })}
 
       {/* Hiển thị loading khi đang gửi tin nhắn */}
       {isLoading && (

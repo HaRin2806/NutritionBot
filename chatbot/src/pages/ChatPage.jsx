@@ -30,7 +30,11 @@ const ChatPage = () => {
     renameConversation,
     updateUserAge,
     promptUserForAge,
-    ensureUserAge
+    ensureUserAge,
+    editMessage,
+    switchMessageVersion,
+    regenerateResponse,
+    deleteMessageAndFollowing
   } = useChat();
 
   const { userData, isLoading: isLoadingAuth } = useAuth();
@@ -240,6 +244,12 @@ const ChatPage = () => {
                       messages={activeConversation.messages}
                       isLoading={isLoading}
                       onCreateNewChat={handleNewConversation}
+                      onEditMessage={editMessage}
+                      onSwitchVersion={switchMessageVersion}
+                      onRegenerateResponse={regenerateResponse}
+                      onDeleteMessage={deleteMessageAndFollowing}
+                      conversationId={activeConversation.id}
+                      userAge={userAge}
                     />
                     <div ref={messagesEndRef} style={{ float: "left", clear: "both", height: "1px" }} />
                   </>
