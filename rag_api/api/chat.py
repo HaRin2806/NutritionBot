@@ -201,7 +201,7 @@ def edit_message(message_id):
         
         new_content = data.get('content')
         conversation_id = data.get('conversation_id')
-        age = data.get('age')  # Thêm age để regenerate
+        age = data.get('age')
         
         if not new_content:
             return jsonify({
@@ -236,7 +236,7 @@ def edit_message(message_id):
                 "error": "Bạn không có quyền chỉnh sửa tin nhắn này"
             }), 403
         
-        # Chỉnh sửa tin nhắn
+        # BƯỚC 1: Chỉnh sửa tin nhắn trước
         success, message_result = conversation.edit_message(message_id, new_content)
         
         if not success:
@@ -245,15 +245,21 @@ def edit_message(message_id):
                 "error": message_result
             }), 400
         
-        # Tìm bot message cần regenerate
+        # Lưu thay đổi vào database ngay lập tức
+        conversation.save()
+        
+        # Lấy tin nhắn đã cập nhật
+        updated_user_message = conversation.get_message_by_id(message_id)
+        
+        # BƯỚC 2: Tìm bot message cần regenerate
         user_message_index = None
         for i, msg in enumerate(conversation.messages):
             if str(msg["_id"]) == str(message_id):
                 user_message_index = i
                 break
         
-        bot_response_generated = False
-        bot_message = None
+        bot_message_exists = False
+        bot_message_id = None
         
         if user_message_index is not None:
             bot_message_index = user_message_index + 1
@@ -261,18 +267,62 @@ def edit_message(message_id):
             if (bot_message_index < len(conversation.messages) and 
                 conversation.messages[bot_message_index]["role"] == "bot"):
                 
-                # Regenerate bot response
+                bot_message_exists = True
+                bot_message_id = str(conversation.messages[bot_message_index]["_id"])
+        
+        # BƯỚC 3: Trả về response ngay lập tức
+        response_data = {
+            "success": True,
+            "message": "Đã lưu tin nhắn thành công",
+            "updated_message": updated_user_message,
+            "bot_message_exists": bot_message_exists,
+            "bot_message_id": bot_message_id,
+            "regenerating": bot_message_exists  # Flag để frontend biết có regenerate không
+        }
+        
+        # BƯỚC 4: Regenerate bot response trong background thread
+        if bot_message_exists:
+            def regenerate_bot_response(edited_content):
                 try:
+                    logger.info(f"Bắt đầu regenerate bot response cho message: {message_id}")
+                    
+                    # Tải lại conversation từ database
+                    fresh_conversation = Conversation.find_by_id(conversation_id)
+                    if not fresh_conversation:
+                        logger.error("Không tìm thấy conversation khi regenerate")
+                        return
+                    
+                    # Tìm lại bot message
+                    fresh_user_message_index = None
+                    for i, msg in enumerate(fresh_conversation.messages):
+                        if str(msg["_id"]) == str(message_id):
+                            fresh_user_message_index = i
+                            break
+                    
+                    if fresh_user_message_index is None:
+                        logger.error("Không tìm thấy user message khi regenerate")
+                        return
+                    
+                    fresh_bot_message_index = fresh_user_message_index + 1
+                    
+                    if (fresh_bot_message_index >= len(fresh_conversation.messages) or 
+                        fresh_conversation.messages[fresh_bot_message_index]["role"] != "bot"):
+                        logger.error("Không tìm thấy bot message khi regenerate")
+                        return
+                    
+                    bot_message = fresh_conversation.messages[fresh_bot_message_index]
+                    
                     # Tạo RAG pipeline
                     rag_pipeline = get_rag_pipeline()
                     
                     # Lấy context từ cuộc hội thoại (các tin nhắn trước tin nhắn user này)
                     conversation_context = []
-                    if user_message_index > 0:
-                        context_messages = conversation.messages[:user_message_index]
+                    if fresh_user_message_index > 0:
+                        context_messages = fresh_conversation.messages[:fresh_user_message_index]
                         for i in range(0, len(context_messages)-1, 2):
                             if i+1 < len(context_messages):
-                                if context_messages[i]["role"] == "user" and context_messages[i+1]["role"] == "bot":
+                                if (context_messages[i]["role"] == "user" and 
+                                    context_messages[i+1]["role"] == "bot"):
                                     user_msg = context_messages[i]["content"]
                                     bot_msg = context_messages[i+1]["content"]
                                     conversation_context.append({"user": user_msg, "bot": bot_msg})
@@ -281,7 +331,7 @@ def edit_message(message_id):
                     
                     # Tạo phản hồi mới
                     result = rag_pipeline.process_query(
-                        new_content, 
+                        edited_content, 
                         age, 
                         conversation_context=conversation_context
                     )
@@ -290,7 +340,6 @@ def edit_message(message_id):
                     query_time = end_time - start_time
                     
                     # Cập nhật bot message với version mới
-                    bot_message = conversation.messages[bot_message_index]
                     timestamp = datetime.datetime.now()
                     
                     # Tạo version mới cho bot response
@@ -324,36 +373,39 @@ def edit_message(message_id):
                     bot_message["sources"] = result.get("sources", [])
                     bot_message["is_edited"] = True
                     
-                    # Xóa flag needs_regeneration
+                    # Xóa flag regenerating và needs_regeneration nếu có
+                    if "isRegenerating" in bot_message:
+                        del bot_message["isRegenerating"]
                     if "needs_regeneration" in bot_message:
                         del bot_message["needs_regeneration"]
                     
                     # Cập nhật thời gian của cuộc hội thoại
-                    conversation.updated_at = timestamp
-                    conversation.save()
+                    fresh_conversation.updated_at = timestamp
+                    fresh_conversation.save()
                     
-                    bot_response_generated = True
                     logger.info(f"Đã regenerate bot response thành công cho message: {bot_message['_id']}")
                     
                 except Exception as regenerate_error:
                     logger.error(f"Lỗi khi regenerate bot response: {regenerate_error}")
-                    # Vẫn trả về success cho việc edit, chỉ log lỗi regenerate
-        
-        # Lấy tin nhắn đã cập nhật
-        updated_user_message = conversation.get_message_by_id(message_id)
-        updated_bot_message = None
-        if bot_message:
-            updated_bot_message = conversation.get_message_by_id(str(bot_message["_id"]))
-        
-        response_data = {
-            "success": True,
-            "message": "Đã chỉnh sửa tin nhắn thành công",
-            "updated_message": updated_user_message,
-            "bot_response_generated": bot_response_generated
-        }
-        
-        if updated_bot_message:
-            response_data["updated_bot_message"] = updated_bot_message
+                    
+                    # Xóa flag regenerating nếu có lỗi
+                    try:
+                        error_conversation = Conversation.find_by_id(conversation_id)
+                        if error_conversation:
+                            for msg in error_conversation.messages:
+                                if "isRegenerating" in msg:
+                                    del msg["isRegenerating"]
+                            error_conversation.save()
+                    except Exception as cleanup_error:
+                        logger.error(f"Lỗi khi cleanup regenerating flag: {cleanup_error}")
+            
+            # Chạy regenerate trong background thread
+            import threading
+            regenerate_thread = threading.Thread(target=regenerate_bot_response, args=(new_content,))
+            regenerate_thread.daemon = True
+            regenerate_thread.start()
+            
+            logger.info(f"Đã khởi động background thread để regenerate bot response")
         
         return jsonify(response_data)
             

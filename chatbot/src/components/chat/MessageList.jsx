@@ -3,8 +3,8 @@ import MessageBubble from './MessageBubble';
 import { Loader } from '../common';
 import { BiRocket } from 'react-icons/bi';
 
-const MessageList = ({ 
-  messages, 
+const MessageList = ({
+  messages,
   isLoading,
   onCreateNewChat,
   onEditMessage,
@@ -86,7 +86,7 @@ const MessageList = ({
           Hãy đặt câu hỏi về dinh dưỡng và an toàn thực phẩm để tôi có thể giúp bạn
         </p>
         {onCreateNewChat && (
-          <button 
+          <button
             onClick={onCreateNewChat}
             className="px-4 py-2 bg-mint-600 text-white rounded-md hover:bg-mint-700 transition flex items-center shadow-sm"
             style={{ backgroundColor: '#36B37E' }}
@@ -104,18 +104,9 @@ const MessageList = ({
       {/* Danh sách tin nhắn */}
       {messages.map((message, index) => {
         const messageId = getMessageId(message);
-        
-        // Kiểm tra xem có đang regenerating message tiếp theo không
-        // Tìm tin nhắn user có messageId = regeneratingMessageId
-        let isRegenerating = false;
-        if (regeneratingMessageId && message.role === 'bot') {
-          // Tìm index của user message với regeneratingMessageId
-          const userMessageIndex = messages.findIndex(m => getMessageId(m) === regeneratingMessageId);
-          // Kiểm tra nếu message hiện tại là bot message ngay sau user message đó
-          if (userMessageIndex >= 0 && index === userMessageIndex + 1) {
-            isRegenerating = true;
-          }
-        }
+
+        // Kiểm tra xem message này có đang regenerating không
+        const isRegenerating = message.isRegenerating || false;
 
         return (
           <MessageBubble

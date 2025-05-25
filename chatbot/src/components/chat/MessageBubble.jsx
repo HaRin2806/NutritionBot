@@ -76,23 +76,30 @@ const MessageBubble = ({
     }
 
     setIsSubmitting(true);
+
     try {
+      // Chỉ lưu tin nhắn, KHÔNG đợi regenerate
       await onEditMessage(messageId, conversationId, editContent.trim());
+
+      // Reset ngay lập tức sau khi lưu
+      setIsSubmitting(false);
       setIsEditing(false);
+
       if (onEditEnd) {
         onEditEnd();
       }
+
     } catch (error) {
       console.error('Error editing message:', error);
-      // Không cần hiển thị error ở đây vì useChat đã handle rồi
-    } finally {
       setIsSubmitting(false);
+      // Chỉ reset khi có lỗi
     }
   };
 
   const handleEditCancel = () => {
     setIsEditing(false);
     setEditContent(message.content);
+    setIsSubmitting(false);
     if (onEditEnd) {
       onEditEnd();
     }
@@ -134,8 +141,8 @@ const MessageBubble = ({
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group`}>
       <div
         className={`max-w-[90%] md:max-w-[80%] rounded-2xl shadow-sm relative ${isUser
-            ? 'bg-mint-600 text-white'
-            : 'bg-white text-gray-800 border border-gray-200'
+          ? 'bg-mint-600 text-white'
+          : 'bg-white text-gray-800 border border-gray-200'
           } ${isRegenerating ? 'opacity-75' : ''}`}
         style={{
           backgroundColor: isUser ? '#36B37E' : '#FFFFFF',
@@ -188,8 +195,17 @@ const MessageBubble = ({
                   className="px-3 py-1 text-sm bg-mint-600 text-white rounded hover:bg-mint-700 disabled:opacity-50 transition-colors flex items-center"
                   style={{ backgroundColor: '#36B37E' }}
                 >
-                  <BiCheck className="w-4 h-4 mr-1" />
-                  {isSubmitting ? 'Đang lưu...' : 'Lưu'}
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></div>
+                      Đang lưu...
+                    </>
+                  ) : (
+                    <>
+                      <BiCheck className="w-4 h-4 mr-1" />
+                      Lưu
+                    </>
+                  )}
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-1">
@@ -224,8 +240,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.max(1, currentVersion - 1))}
                   disabled={currentVersion <= 1}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                      ? 'hover:bg-mint-700 text-mint-200'
-                      : 'hover:bg-gray-200 text-gray-500'
+                    ? 'hover:bg-mint-700 text-mint-200'
+                    : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản trước"
                 >
@@ -235,8 +251,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.min(totalVersions, currentVersion + 1))}
                   disabled={currentVersion >= totalVersions}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                      ? 'hover:bg-mint-700 text-mint-200'
-                      : 'hover:bg-gray-200 text-gray-500'
+                    ? 'hover:bg-mint-700 text-mint-200'
+                    : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản tiếp theo"
                 >

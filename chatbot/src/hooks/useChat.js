@@ -10,10 +10,10 @@ const useChat = () => {
     const [conversations, setConversations] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingConversations, setIsLoadingConversations] = useState(false);
-    const [userAge, setUserAge] = useState(null); // Luôn bắt đầu với null
+    const [userAge, setUserAge] = useState(null);
     const navigate = useNavigate();
     const fetchingDetailRef = useRef(false);
-    const hasInitializedAge = useRef(false); // Flag để tránh init nhiều lần
+    const hasInitializedAge = useRef(false);
 
     /**
      * Lấy danh sách cuộc hội thoại và xử lý tuổi
@@ -27,19 +27,15 @@ const useChat = () => {
                 const fetchedConversations = response.conversations;
                 setConversations(fetchedConversations);
 
-                // CHỈ xử lý tuổi nếu chưa được khởi tạo
                 if (!hasInitializedAge.current) {
                     hasInitializedAge.current = true;
 
-                    // Bước 1: Kiểm tra storage trước
                     const storedAge = storageService.getUserAge();
 
                     if (storedAge) {
-                        // Có tuổi trong storage -> người dùng cũ
                         console.log('Người dùng cũ - lấy tuổi từ storage:', storedAge);
                         setUserAge(storedAge);
                     } else if (fetchedConversations.length > 0) {
-                        // Không có trong storage nhưng có cuộc hội thoại -> lấy từ cuộc hội thoại gần nhất
                         const lastConversationWithAge = fetchedConversations
                             .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
                             .find(conv => conv.age_context);
@@ -49,12 +45,10 @@ const useChat = () => {
                             setUserAge(lastConversationWithAge.age_context);
                             storageService.saveUserAge(lastConversationWithAge.age_context);
                         } else {
-                            // Có cuộc hội thoại nhưng không có age_context -> người dùng mới hoặc dữ liệu cũ
                             console.log('Người dùng mới - không có tuổi');
                             setUserAge(null);
                         }
                     } else {
-                        // Không có storage và không có cuộc hội thoại -> người dùng hoàn toàn mới
                         console.log('Người dùng hoàn toàn mới');
                         setUserAge(null);
                     }
@@ -147,7 +141,6 @@ const useChat = () => {
         console.log('ensureUserAge - Current userAge:', userAge);
 
         if (!userAge) {
-            // Kiểm tra lại storage 1 lần nữa
             const storedAge = storageService.getUserAge();
             console.log('ensureUserAge - Stored age:', storedAge);
 
@@ -155,7 +148,6 @@ const useChat = () => {
                 setUserAge(storedAge);
                 return storedAge;
             } else {
-                // Bắt buộc người dùng chọn tuổi
                 console.log('Bắt buộc chọn tuổi');
                 return await promptUserForAge();
             }
@@ -174,7 +166,6 @@ const useChat = () => {
             return { success: false, error: 'Bạn cần đăng nhập để tạo cuộc hội thoại mới' };
         }
 
-        // Đảm bảo có tuổi trước khi tạo cuộc hội thoại
         const currentAge = await ensureUserAge();
         if (!currentAge) {
             return { success: false, error: 'Cần thiết lập tuổi trước khi tạo cuộc hội thoại' };
@@ -214,13 +205,11 @@ const useChat = () => {
      * Gửi tin nhắn
      */
     const sendMessage = useCallback(async (messageContent, conversationId = null) => {
-        // Đảm bảo có tuổi trước khi gửi tin nhắn
         const currentAge = await ensureUserAge();
         if (!currentAge) {
             return { success: false, error: 'Cần thiết lập tuổi trước khi gửi tin nhắn' };
         }
 
-        // Kiểm tra độ tuổi khớp với cuộc hội thoại
         if (activeConversation && activeConversation.id &&
             activeConversation.age_context &&
             activeConversation.age_context !== currentAge) {
@@ -357,60 +346,124 @@ const useChat = () => {
         }
     }, [activeConversation, navigate, fetchConversationDetail, fetchConversations, ensureUserAge, startNewConversation]);
 
-    // === MESSAGE EDITING FUNCTIONS ===
-
     /**
-     * Chỉnh sửa tin nhắn
+     * Chỉnh sửa tin nhắn - Sửa lại flow để đúng
      */
     const editMessage = useCallback(async (messageId, conversationId, newContent) => {
         try {
-            // Đảm bảo có userAge
             const currentAge = userAge || storageService.getUserAge();
             if (!currentAge) {
                 throw new Error('Thiếu thông tin độ tuổi');
             }
 
-            const response = await chatService.editMessage(messageId, conversationId, newContent, currentAge);
+            // Bước 1: Cập nhật tin nhắn user ngay lập tức
+            setActiveConversation(prev => {
+                if (!prev) return prev;
 
-            if (response.success) {
-                // Refresh conversation detail để lấy message đã được update
-                await fetchConversationDetail(conversationId);
+                const updatedMessages = prev.messages.map(msg => {
+                    if ((msg._id || msg.id) === messageId) {
+                        return {
+                            ...msg,
+                            content: newContent,
+                            is_edited: true
+                        };
+                    }
+                    return msg;
+                });
 
-                // Hiển thị thông báo phù hợp
-                if (response.bot_response_generated) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công',
-                        text: 'Đã chỉnh sửa tin nhắn và tạo phản hồi mới',
-                        confirmButtonColor: '#36B37E',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Thành công',
-                        text: 'Đã chỉnh sửa tin nhắn thành công',
-                        confirmButtonColor: '#36B37E',
-                        timer: 1500,
-                        showConfirmButton: false
-                    });
-                }
-
-                return { success: true };
-            } else {
-                throw new Error(response.error || 'Không thể chỉnh sửa tin nhắn');
-            }
-        } catch (error) {
-            console.error('Error editing message:', error);
-
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi',
-                text: 'Không thể chỉnh sửa tin nhắn: ' + (error.error || error.message),
-                confirmButtonColor: '#36B37E'
+                return {
+                    ...prev,
+                    messages: updatedMessages
+                };
             });
 
+            // Bước 2: Set bot message thành typing indicator
+            setActiveConversation(prev => {
+                if (!prev) return prev;
+
+                const messageIndex = prev.messages.findIndex(msg =>
+                    (msg._id || msg.id) === messageId
+                );
+
+                if (messageIndex >= 0) {
+                    const botMessageIndex = messageIndex + 1;
+                    if (botMessageIndex < prev.messages.length &&
+                        prev.messages[botMessageIndex].role === 'bot') {
+
+                        const updatedMessages = [...prev.messages];
+                        updatedMessages[botMessageIndex] = {
+                            ...updatedMessages[botMessageIndex],
+                            isRegenerating: true
+                        };
+
+                        return {
+                            ...prev,
+                            messages: updatedMessages
+                        };
+                    }
+                }
+
+                return prev;
+            });
+
+            // Bước 3: Gọi API edit
+            const response = await chatService.editMessage(messageId, conversationId, newContent, currentAge);
+
+            if (response.success && response.bot_message_exists) {
+                // Bước 4: Polling để check khi nào regenerate xong
+                const pollForCompletion = async () => {
+                    const maxAttempts = 30; // Tối đa 30 lần (15 giây)
+                    let attempts = 0;
+
+                    const checkCompletion = async () => {
+                        attempts++;
+
+                        try {
+                            // Lấy conversation mới nhất
+                            const latestConversation = await chatService.getConversationDetail(conversationId);
+
+                            if (latestConversation.success) {
+                                const botMessage = latestConversation.conversation.messages.find(msg =>
+                                    (msg._id || msg.id) === response.bot_message_id
+                                );
+
+                                // Check xem bot message có còn flag isRegenerating không
+                                if (botMessage && !botMessage.isRegenerating) {
+                                    // Regenerate đã xong, cập nhật UI
+                                    setActiveConversation(latestConversation.conversation);
+                                    return true;
+                                }
+                            }
+
+                            // Chưa xong, thử lại sau 500ms
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkCompletion, 500);
+                            } else {
+                                // Timeout, refresh anyway
+                                await fetchConversationDetail(conversationId);
+                            }
+
+                        } catch (error) {
+                            console.error('Error polling for completion:', error);
+                            if (attempts < maxAttempts) {
+                                setTimeout(checkCompletion, 500);
+                            }
+                        }
+                    };
+
+                    // Bắt đầu polling sau 1 giây
+                    setTimeout(checkCompletion, 1000);
+                };
+
+                pollForCompletion();
+            }
+
+            return { success: true };
+
+        } catch (error) {
+            console.error('Error editing message:', error);
+            // Rollback nếu có lỗi
+            await fetchConversationDetail(conversationId);
             throw error;
         }
     }, [fetchConversationDetail, userAge]);
@@ -423,7 +476,6 @@ const useChat = () => {
             const response = await chatService.switchMessageVersion(messageId, conversationId, version);
 
             if (response.success) {
-                // Refresh conversation detail
                 await fetchConversationDetail(conversationId);
                 return { success: true };
             } else {
@@ -451,7 +503,6 @@ const useChat = () => {
             const response = await chatService.regenerateResponse(messageId, conversationId, age);
 
             if (response.success) {
-                // Refresh conversation detail
                 await fetchConversationDetail(conversationId);
 
                 Swal.fire({
@@ -489,7 +540,6 @@ const useChat = () => {
             const response = await chatService.deleteMessageAndFollowing(messageId, conversationId);
 
             if (response.success) {
-                // Refresh conversation detail
                 await fetchConversationDetail(conversationId);
 
                 Swal.fire({
@@ -668,7 +718,6 @@ const useChat = () => {
         updateUserAge,
         promptUserForAge,
         ensureUserAge,
-        // Message editing functions
         editMessage,
         switchMessageVersion,
         regenerateResponse,
