@@ -338,23 +338,61 @@ export const ChatProvider = ({ children }) => {
     const messageOperations = {
         edit: async (messageId, conversationId, newContent) => {
             try {
+                // Tìm vị trí của user message và bot message tương ứng
+                const currentMessages = state.activeConversation.messages;
+                const userMessageIndex = currentMessages.findIndex(msg =>
+                    (msg._id || msg.id) === messageId && msg.role === 'user'
+                );
+
+                if (userMessageIndex === -1) {
+                    throw new Error('Không tìm thấy tin nhắn user');
+                }
+
+                const botMessageIndex = userMessageIndex + 1;
+                const hasBotMessage = botMessageIndex < currentMessages.length &&
+                    currentMessages[botMessageIndex].role === 'bot';
+
+                // Cập nhật UI ngay lập tức
+                const updatedMessages = [...currentMessages];
+
+                // Cập nhật user message
+                updatedMessages[userMessageIndex] = {
+                    ...updatedMessages[userMessageIndex],
+                    content: newContent,
+                    is_edited: true
+                };
+
+                // Nếu có bot message, reset và show typing indicator
+                if (hasBotMessage) {
+                    updatedMessages[botMessageIndex] = {
+                        ...updatedMessages[botMessageIndex],
+                        isRegenerating: true,
+                        content: ''
+                    };
+                }
+
+                // Cập nhật state NGAY LẬP TỨC
+                updateState({
+                    activeConversation: {
+                        ...state.activeConversation,
+                        messages: updatedMessages
+                    }
+                });
+
+                // Gọi API trong background
                 const response = await chatService.editMessage(messageId, conversationId, newContent, state.userAge);
+
                 if (response.success) {
-                    updateState({
-                        activeConversation: {
-                            ...state.activeConversation,
-                            messages: state.activeConversation.messages.map(msg =>
-                                (msg._id || msg.id) === messageId
-                                    ? { ...msg, content: newContent, is_edited: true }
-                                    : msg
-                            )
-                        }
-                    });
+                    // Fetch lại conversation detail để có data mới từ server
+                    await fetchConversationDetail(conversationId);
                     return { success: true };
                 }
                 throw new Error(response.error);
+
             } catch (error) {
                 console.error("Error editing message:", error);
+                // Nếu có lỗi, fetch lại conversation để khôi phục state
+                await fetchConversationDetail(conversationId);
                 throw error;
             }
         },
@@ -375,14 +413,49 @@ export const ChatProvider = ({ children }) => {
 
         regenerate: async (messageId, conversationId, age) => {
             try {
+                // Tìm user message và bot message tương ứng
+                const currentMessages = state.activeConversation.messages;
+                const userMessageIndex = currentMessages.findIndex(msg =>
+                    (msg._id || msg.id) === messageId && msg.role === 'user'
+                );
+
+                if (userMessageIndex === -1) {
+                    throw new Error('Không tìm thấy tin nhắn user');
+                }
+
+                const botMessageIndex = userMessageIndex + 1;
+                if (botMessageIndex >= currentMessages.length ||
+                    currentMessages[botMessageIndex].role !== 'bot') {
+                    throw new Error('Không tìm thấy tin nhắn bot tương ứng');
+                }
+
+                // Cập nhật UI ngay lập tức - set regenerating flag cho bot message
+                const updatedMessages = [...currentMessages];
+                updatedMessages[botMessageIndex] = {
+                    ...updatedMessages[botMessageIndex],
+                    isRegenerating: true,
+                    content: '' // Xóa nội dung cũ
+                };
+
+                updateState({
+                    activeConversation: {
+                        ...state.activeConversation,
+                        messages: updatedMessages
+                    }
+                });
+
+                // Gọi API regenerate
                 const response = await chatService.regenerateResponse(messageId, conversationId, age);
                 if (response.success) {
+                    // Fetch lại conversation detail để có data mới
                     await fetchConversationDetail(conversationId);
                     return { success: true };
                 }
                 throw new Error(response.error);
             } catch (error) {
                 console.error("Error regenerating:", error);
+                // Khôi phục state nếu có lỗi
+                await fetchConversationDetail(conversationId);
                 throw error;
             }
         },

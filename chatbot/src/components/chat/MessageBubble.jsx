@@ -21,7 +21,6 @@ const MessageBubble = ({
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
 
-
   // Get message ID - handle both _id and id
   const messageId = message._id || message.id;
 
@@ -63,19 +62,17 @@ const MessageBubble = ({
     setIsSubmitting(true);
 
     try {
-      // Gọi API edit - chỉ đợi lưu tin nhắn, KHÔNG đợi regenerate
-      await onEditMessage(messageId, conversationId, editContent.trim());
-
-      // NGAY LẬP TỨC reset UI edit sau khi lưu thành công
+      // Reset UI edit state NGAY LẬP TỨC
       setIsSubmitting(false);
       setIsEditing(false);
 
-      // Tin nhắn bot sẽ hiển thị typing indicator tự động thông qua useChat logic
+      // Gọi API edit message (không cần await ở đây để UI responsive)
+      onEditMessage(messageId, conversationId, editContent.trim());
 
     } catch (error) {
       console.error('Error editing message:', error);
       setIsSubmitting(false);
-      // Không reset editing state nếu có lỗi, để user có thể thử lại
+      setIsEditing(true); // Hiện lại form edit nếu có lỗi
     }
   };
 
@@ -116,14 +113,16 @@ const MessageBubble = ({
   const hasVersions = message.versions && message.versions.length > 1;
   const currentVersion = message.current_version || 1;
   const totalVersions = message.versions ? message.versions.length : 1;
+
+  // Kiểm tra xem tin nhắn này có đang được regenerate hay không
   const isRegenerating = !isUser && message.isRegenerating;
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group`}>
       <div
         className={`max-w-[90%] md:max-w-[80%] rounded-2xl shadow-sm relative ${isUser
-            ? 'bg-mint-600 text-white'
-            : 'bg-white text-gray-800 border border-gray-200'
+          ? 'bg-mint-600 text-white'
+          : 'bg-white text-gray-800 border border-gray-200'
           } ${isRegenerating ? 'opacity-75' : ''}`}
         style={{
           backgroundColor: isUser ? '#36B37E' : '#FFFFFF',
@@ -131,14 +130,16 @@ const MessageBubble = ({
       >
         {/* Typing indicator overlay cho bot message đang regenerating */}
         {isRegenerating && (
-          <div className="absolute inset-0 bg-white bg-opacity-90 rounded-2xl flex items-center justify-center z-10">
-            <div className="flex items-center space-x-2 text-mint-600">
+          <div className="absolute inset-0 bg-white bg-opacity-95 rounded-2xl flex items-center justify-center z-10">
+            <div className="flex items-center space-x-3 text-mint-600 px-4 py-2">
               <div className="dots">
                 <div></div>
                 <div></div>
                 <div></div>
               </div>
-              <span className="text-sm" style={{ color: '#36B37E' }}>Đang tạo phản hồi...</span>
+              <span className="text-sm font-medium" style={{ color: '#36B37E' }}>
+                Đang tạo phản hồi...
+              </span>
             </div>
           </div>
         )}
@@ -146,7 +147,7 @@ const MessageBubble = ({
         {/* Message content */}
         <div className="p-4">
           {isEditing ? (
-            // Edit form - giữ nguyên
+            // Edit form
             <div>
               <textarea
                 ref={textareaRef}
@@ -234,8 +235,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.max(1, currentVersion - 1))}
                   disabled={currentVersion <= 1}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                      ? 'hover:bg-mint-700 text-mint-200'
-                      : 'hover:bg-gray-200 text-gray-500'
+                    ? 'hover:bg-mint-700 text-mint-200'
+                    : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản trước"
                 >
@@ -245,8 +246,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.min(totalVersions, currentVersion + 1))}
                   disabled={currentVersion >= totalVersions}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                      ? 'hover:bg-mint-700 text-mint-200'
-                      : 'hover:bg-gray-200 text-gray-500'
+                    ? 'hover:bg-mint-700 text-mint-200'
+                    : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản tiếp theo"
                 >
