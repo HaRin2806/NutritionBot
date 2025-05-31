@@ -20,7 +20,46 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Hiệu ứng loading */
+/* SỬA: Typing indicator đẹp hơn */
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #36B37E;
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+
+.typing-dots .dot:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.typing-dots .dot:nth-child(2) {
+  animation-delay: 200ms;
+}
+
+.typing-dots .dot:nth-child(3) {
+  animation-delay: 400ms;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* Hiệu ứng loading cũ - XÓA hoặc COMMENT lại */
+/*
 .dot-typing {
   position: relative;
   left: -9999px;
@@ -56,6 +95,7 @@
     box-shadow: 9984px 0 0 0 #36B37E, 9999px 0 0 0 #36B37E, 10014px 0 0 0 #36B37E;
   }
 }
+*/
 
 /* Token style */
 .token-badge {
@@ -133,7 +173,7 @@
   }
 }
 
-/* Typing indicator styles */
+/* XÓA typing indicator cũ và thay bằng cái mới */
 .dots {
   display: inline-flex;
   align-items: center;

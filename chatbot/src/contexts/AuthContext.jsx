@@ -71,59 +71,50 @@ export const AuthProvider = ({ children }) => {
     verifyToken();
   }, [state.userData, state.isVerified, updateState]);
 
-  // API call helper
+  // API call helper - SỬA: Không hiển thị SweetAlert ở đây
   const apiCall = async (method, url, data = null, showSuccessMessage = false) => {
     try {
       const response = await api[method](url, data);
       
       if (response.data.success && showSuccessMessage) {
         Swal.fire({
-          icon: 'success',
           title: 'Thành công',
+          confirmButtonColor: '#36B37E',
           timer: 1500,
-          showConfirmButton: false,
-          confirmButtonColor: '#36B37E'
+          showConfirmButton: false
         });
       }
       
       return response.data;
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.message || 'Có lỗi xảy ra';
-      
-      Swal.fire({
-        icon: 'error',
-        title: 'Lỗi',
-        text: errorMsg,
-        confirmButtonColor: '#36B37E'
-      });
-      
       throw new Error(errorMsg);
     }
   };
 
-  // Auth operations
+  // SỬA: Login function với xử lý lỗi rõ ràng
   const login = async (email, password, rememberMe = false) => {
     updateState({ isLoading: true });
     
     try {
-      const response = await apiCall('post', '/auth/login', {
+      const response = await api.post('/auth/login', {
         email, password, rememberMe
       });
       
-      if (response.success) {
+      if (response.data.success) {
         const storage = rememberMe ? localStorage : sessionStorage;
-        storageService.saveUserData(response.user, response.access_token, storage);
+        storageService.saveUserData(response.data.user, response.data.access_token, storage);
         
-        api.defaults.headers.common['Authorization'] = `Bearer ${response.access_token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
         
         updateState({
-          userData: response.user,
+          userData: response.data.user,
           isLoading: false,
           isVerified: true
         });
         
+        // Success message
         Swal.fire({
-          icon: 'success',
           title: 'Đăng nhập thành công!',
           text: 'Chào mừng bạn đến với Nutribot',
           confirmButtonColor: '#36B37E',
@@ -134,10 +125,41 @@ export const AuthProvider = ({ children }) => {
         return { success: true };
       }
       
-      throw new Error(response.error);
+      throw new Error(response.data.error);
     } catch (error) {
       updateState({ isLoading: false });
-      return { success: false, error: error.message };
+      
+      // SỬA: Xử lý lỗi login với message cụ thể
+      let errorMessage = 'Đăng nhập thất bại';
+      
+      if (error.response) {
+        // API response error
+        errorMessage = error.response.data?.error || 'Email hoặc mật khẩu không chính xác';
+      } else if (error.request) {
+        // Network error
+        errorMessage = 'Không thể kết nối đến máy chủ';
+      } else {
+        // Other error
+        errorMessage = error.message || 'Có lỗi xảy ra';
+      }
+      
+      // QUAN TRỌNG: Đảm bảo SweetAlert không bị override
+      setTimeout(() => {
+        Swal.fire({
+          title: 'Đăng nhập thất bại',
+          text: errorMessage,
+          confirmButtonColor: '#36B37E',
+          confirmButtonText: 'Thử lại',
+          allowOutsideClick: true,
+          allowEscapeKey: true,
+          showConfirmButton: true,
+          // Đảm bảo không có timer
+          timer: null,
+          timerProgressBar: false
+        });
+      }, 100);
+      
+      return { success: false, error: errorMessage };
     }
   };
 
@@ -151,12 +173,13 @@ export const AuthProvider = ({ children }) => {
         updateState({ isLoading: false });
         
         Swal.fire({
-          icon: 'success',
           title: 'Đăng ký thành công!',
           text: 'Bạn đã tạo tài khoản thành công.',
           confirmButtonText: 'Đăng nhập ngay',
           confirmButtonColor: '#36B37E',
-          willClose: () => navigate('/login')
+          allowOutsideClick: false
+        }).then(() => {
+          navigate('/login');
         });
         
         return { success: true };
@@ -173,7 +196,6 @@ export const AuthProvider = ({ children }) => {
     const result = await Swal.fire({
       title: 'Đăng xuất?',
       text: 'Bạn có chắc muốn đăng xuất khỏi tài khoản?',
-      icon: 'question',
       showCancelButton: true,
       confirmButtonColor: '#36B37E',
       cancelButtonColor: '#d33',
@@ -239,7 +261,6 @@ export const AuthProvider = ({ children }) => {
       Swal.fire({
         title: 'Cần đăng nhập',
         text: 'Vui lòng đăng nhập để tiếp tục',
-        icon: 'warning',
         confirmButtonColor: '#36B37E',
         confirmButtonText: 'Đăng nhập'
       }).then(() => {

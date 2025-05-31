@@ -19,7 +19,8 @@ const chatService = {
     }
   },
 
-  getConversations: async (includeArchived = false, page = 1, perPage = 10) => {
+  // SỬA: Load conversations với pagination đầy đủ
+  getConversations: async (includeArchived = false, page = 1, perPage = 50) => {
     try {
       const response = await api.get('/conversations', {
         params: {
@@ -29,6 +30,45 @@ const chatService = {
         }
       });
       return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  // THÊM: Load ALL conversations với pagination tự động
+  getAllConversations: async (includeArchived = false) => {
+    try {
+      let allConversations = [];
+      let page = 1;
+      const perPage = 50;
+      let hasMore = true;
+
+      while (hasMore) {
+        const response = await api.get('/conversations', {
+          params: {
+            include_archived: includeArchived,
+            page,
+            per_page: perPage
+          }
+        });
+
+        if (response.data.success) {
+          allConversations = [...allConversations, ...response.data.conversations];
+          
+          // Kiểm tra có trang tiếp theo không
+          const { pagination } = response.data;
+          hasMore = page < pagination.pages;
+          page++;
+        } else {
+          hasMore = false;
+        }
+      }
+
+      return {
+        success: true,
+        conversations: allConversations,
+        total: allConversations.length
+      };
     } catch (error) {
       throw error.response?.data || error;
     }
@@ -66,13 +106,16 @@ const chatService = {
 
   deleteConversation: async (conversationId) => {
     try {
-      const response = await api.delete(`/conversations/${conversationId}`);
+      const response = await api.delete(`/conversations/${conversationId}`, {
+        data: { conversation_id: conversationId }
+      });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
     }
   },
 
+  // THÊM: Archive conversation
   archiveConversation: async (conversationId) => {
     try {
       const response = await api.post(`/conversations/${conversationId}/archive`);
@@ -82,6 +125,7 @@ const chatService = {
     }
   },
 
+  // THÊM: Unarchive conversation
   unarchiveConversation: async (conversationId) => {
     try {
       const response = await api.post(`/conversations/${conversationId}/unarchive`);
@@ -115,14 +159,13 @@ const chatService = {
     }
   },
 
-  // === NEW MESSAGE EDITING FUNCTIONS ===
-
+  // === MESSAGE EDITING FUNCTIONS ===
   editMessage: async (messageId, conversationId, newContent, age) => {
     try {
       const response = await api.put(`/messages/${messageId}/edit`, {
         content: newContent,
         conversation_id: conversationId,
-        age: age  // Thêm age vào request
+        age: age
       });
       return response.data;
     } catch (error) {

@@ -27,12 +27,15 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-// Thêm interceptor cho response
+// SỬA: Thêm interceptor cho response với xử lý đặc biệt cho login
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // Xử lý lỗi 401 Unauthorized
-    if (error.response && error.response.status === 401) {
+    // QUAN TRỌNG: Chỉ xử lý 401 khi KHÔNG phải đang login
+    const isLoginRequest = error.config?.url?.includes('/auth/login');
+    const isOnLoginPage = window.location.pathname === '/login';
+    
+    if (error.response && error.response.status === 401 && !isLoginRequest && !isOnLoginPage) {
       // Xóa token và thông tin người dùng
       localStorage.removeItem('access_token');
       localStorage.removeItem('user');
