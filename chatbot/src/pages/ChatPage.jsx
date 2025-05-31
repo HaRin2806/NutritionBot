@@ -1,175 +1,140 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiPlus, BiChat } from 'react-icons/bi';
-import useChat from '../hooks/useChat';
-import useAuth from '../hooks/useAuth';
-import useToast from '../hooks/useToast';
+import { useApp } from '../hooks/useContext';
 import { Header, Sidebar } from '../components/layout';
 import { MessageList, ChatInput } from '../components/chat';
-import '../styles/chat.css';
 
 const ChatPage = () => {
   const { conversationId } = useParams();
   const navigate = useNavigate();
-  const messagesEndRef = useRef(null);
-  const fetchingRef = useRef(false);
-  const detailFetchedRef = useRef(false);
-
   const {
-    activeConversation,
-    conversations,
-    isLoading,
-    isLoadingConversations,
-    userAge,
-    setUserAge,
-    fetchConversations,
-    fetchConversationDetail,
-    sendMessage,
-    startNewConversation,
-    deleteConversation,
-    renameConversation,
-    updateUserAge,
-    promptUserForAge,
-    ensureUserAge,
-    editMessage,
-    switchMessageVersion,
-    regenerateResponse,
-    deleteMessageAndFollowing
-  } = useChat();
-
-  const { userData, isLoading: isLoadingAuth } = useAuth();
-  const { showLoginRequired, showConfirm } = useToast();
+    // Auth - ✅ SỬA: Dùng đúng tên functions
+    userData, isLoading: isLoadingAuth, isAuthenticated, showLoginRequired,
+    
+    // Chat
+    activeConversation, conversations, isLoading, isLoadingConversations,
+    userAge, setUserAge, fetchConversations, fetchConversationDetail,
+    sendMessage, startNewConversation, deleteConversation, renameConversation,
+    editMessage, switchMessageVersion, regenerateResponse, deleteMessageAndFollowing,
+    
+    // Toast
+    showConfirm
+  } = useApp();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const messagesEndRef = useRef(null);
 
-  // Kiểm tra đăng nhập
+  // ✅ SỬA: Auth check logic đúng
   useEffect(() => {
-    if (!isLoadingAuth && !userData) {
-      showLoginRequired(() => navigate('/login'));
+    console.log('🔍 ChatPage auth check:', { userData, isLoadingAuth, isAuthenticated: isAuthenticated() }); // DEBUG
+    
+    // CHỈ check khi đã load xong auth
+    if (!isLoadingAuth) {
+      if (!isAuthenticated()) {
+        console.log('❌ Not authenticated, showing login required'); // DEBUG
+        showLoginRequired(() => navigate('/login'));
+      } else {
+        console.log('✅ User authenticated:', userData?.name); // DEBUG
+      }
     }
-  }, [userData, isLoadingAuth, navigate, showLoginRequired]);
+  }, [userData, isLoadingAuth, isAuthenticated, showLoginRequired, navigate]);
 
-  // Phát hiện kích thước màn hình
+  // Responsive
   useEffect(() => {
     const handleResize = () => {
       const newIsMobile = window.innerWidth < 768;
       setIsMobile(newIsMobile);
-      if (!newIsMobile) {
-        setIsSidebarVisible(true);
-      } else if (newIsMobile && isSidebarVisible) {
-        setIsSidebarVisible(false);
-      }
+      if (!newIsMobile) setIsSidebarVisible(true);
+      else if (newIsMobile && isSidebarVisible) setIsSidebarVisible(false);
     };
 
     window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, [isSidebarVisible]);
 
-  // Chỉ lấy danh sách cuộc hội thoại 1 lần khi component mount
+  // ✅ SỬA: Load data chỉ khi đã authenticated
   useEffect(() => {
-    if (userData && !isLoadingAuth && !fetchingRef.current) {
-      fetchingRef.current = true;
+    if (userData && !isLoadingAuth && isAuthenticated()) {
       fetchConversations();
     }
-  }, [userData, isLoadingAuth, fetchConversations]);
+  }, [userData, isLoadingAuth, isAuthenticated, fetchConversations]);
 
-  // Lấy chi tiết cuộc hội thoại khi ID thay đổi
   useEffect(() => {
-    const loadConversationDetails = async () => {
-      if (conversationId && userData && !isLoadingAuth && !detailFetchedRef.current) {
-        detailFetchedRef.current = true;
-        await fetchConversationDetail(conversationId);
-      }
-    };
+    if (conversationId && userData && !isLoadingAuth && isAuthenticated()) {
+      fetchConversationDetail(conversationId);
+    }
+  }, [conversationId, userData, isLoadingAuth, isAuthenticated, fetchConversationDetail]);
 
-    loadConversationDetails();
-
-    return () => {
-      detailFetchedRef.current = false;
-    };
-  }, [conversationId, userData, isLoadingAuth, fetchConversationDetail]);
-
-  // Cuộn xuống dưới khi có tin nhắn mới
-  const scrollToBottom = useCallback(() => {
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  }, []);
-
+  // Auto scroll
   useEffect(() => {
     if (activeConversation?.messages?.length > 0) {
-      scrollToBottom();
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
-  }, [activeConversation?.messages, scrollToBottom]);
+  }, [activeConversation?.messages]);
 
-  // Toggle sidebar (cho responsive)
-  const toggleSidebar = () => {
-    setIsSidebarVisible(!isSidebarVisible);
-  };
-
-  // Xử lý gửi tin nhắn
-  const handleSendMessage = async (message) => {
-    await sendMessage(message, activeConversation?.id);
-  };
-
-  // Xử lý tạo cuộc hội thoại mới
+  // ✅ SỬA: Handlers với proper error handling
   const handleNewConversation = async () => {
-    if (!userData) {
+    if (!isAuthenticated()) {
       showLoginRequired(() => navigate('/login'));
       return;
     }
 
-    // Đảm bảo có tuổi trước khi tạo cuộc hội thoại mới
-    const currentAge = await ensureUserAge();
-    if (!currentAge) {
-      return;
-    }
-
-    const result = await startNewConversation();
-
-    if (result.success) {
-      if (isMobile) {
-        setIsSidebarVisible(false);
-      }
+    try {
+      const result = await startNewConversation();
+      if (result.success && isMobile) setIsSidebarVisible(false);
+    } catch (error) {
+      console.error('Error creating conversation:', error);
     }
   };
 
-  // Xử lý chọn cuộc hội thoại
   const handleSelectConversation = (id) => {
     if (id !== activeConversation?.id) {
-      detailFetchedRef.current = false;
       navigate(`/chat/${id}`);
     }
-
-    if (isMobile) {
-      setIsSidebarVisible(false);
-    }
+    if (isMobile) setIsSidebarVisible(false);
   };
 
-  // Xử lý xóa cuộc hội thoại
   const handleDeleteConversation = (id) => {
     showConfirm({
       title: 'Xóa cuộc trò chuyện?',
-      text: 'Bạn có chắc muốn xóa cuộc trò chuyện này? Hành động này không thể hoàn tác.',
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
+      text: 'Hành động này không thể hoàn tác.',
       icon: 'warning'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await deleteConversation(id);
+        try {
+          await deleteConversation(id);
+        } catch (error) {
+          console.error('Error deleting conversation:', error);
+        }
       }
     });
   };
 
-  // Hiển thị loading nếu đang xác thực
+  // ✅ SỬA: Send message với proper auth check
+  const handleSendMessage = async (message) => {
+    if (!isAuthenticated()) {
+      showLoginRequired(() => navigate('/login'));
+      return;
+    }
+
+    try {
+      await sendMessage(message, activeConversation?.id);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
+
+  // ✅ SỬA: Loading state cho auth
   if (isLoadingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="spinner mx-auto mb-4"></div>
+          <div className="w-8 h-8 border-4 border-mint-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" 
+               style={{ borderColor: '#36B37E', borderTopColor: 'transparent' }}></div>
           <p className="text-gray-600">Đang tải...</p>
         </div>
       </div>
@@ -178,28 +143,21 @@ const ChatPage = () => {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
       <Header
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        toggleSidebar={toggleSidebar}
+        toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)}
         isMobile={isMobile}
         isSidebarVisible={isSidebarVisible}
         activeConversation={activeConversation}
-        updateConversationAge={updateUserAge}
       />
 
-      {/* Main content */}
       <div className="flex flex-1 overflow-hidden relative">
         {/* Sidebar */}
-        <div
-          className={`${isSidebarVisible
-            ? 'w-80 transform translate-x-0'
-            : 'w-0 -translate-x-full'
-            } bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden ${isMobile ? 'fixed inset-0 z-30' : 'relative'
-            }`}
-        >
+        <div className={`${isSidebarVisible ? 'w-80 translate-x-0' : 'w-0 -translate-x-full'} 
+          bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden 
+          ${isMobile ? 'fixed inset-0 z-30' : 'relative'}`}>
           <Sidebar
             conversations={conversations}
             activeConversation={activeConversation}
@@ -213,36 +171,25 @@ const ChatPage = () => {
           />
         </div>
 
-        {/* Overlay mới với background transparent và chỉ backdrop filter */}
+        {/* Overlay */}
         {isMobile && isSidebarVisible && (
           <div
-            className="fixed inset-0 z-20"
-            style={{
-              backgroundColor: 'rgba(0,0,0,0.15)',
-              backdropFilter: 'blur(2px)',
-              WebkitBackdropFilter: 'blur(2px)'
-            }}
-            onClick={toggleSidebar}
-          ></div>
+            className="fixed inset-0 z-20 bg-black bg-opacity-30"
+            onClick={() => setIsSidebarVisible(false)}
+          />
         )}
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col relative z-5">
+        <div className="flex-1 flex flex-col">
           {activeConversation ? (
             <>
-              {/* Messages Area */}
-              <div
-                className="flex-1 overflow-y-auto"
-                style={{
-                  backgroundColor: '#F7FFFA',
-                  backgroundImage: 'linear-gradient(to bottom, rgba(54, 179, 126, 0.05) 0%, rgba(54, 179, 126, 0.01) 100%)'
-                }}
-              >
-                {activeConversation.messages && activeConversation.messages.length > 0 ? (
+              <div className="flex-1 overflow-y-auto" 
+                   style={{ backgroundColor: '#F7FFFA' }}>
+                {activeConversation.messages?.length > 0 ? (
                   <>
                     <MessageList
                       messages={activeConversation.messages}
-                      isLoading={isLoading}
+                      isLoading={isLoading} // ✅ SỬA: Pass isLoading để hiển thị typing indicator
                       onCreateNewChat={handleNewConversation}
                       onEditMessage={editMessage}
                       onSwitchVersion={switchMessageVersion}
@@ -251,7 +198,7 @@ const ChatPage = () => {
                       conversationId={activeConversation.id}
                       userAge={userAge}
                     />
-                    <div ref={messagesEndRef} style={{ float: "left", clear: "both", height: "1px" }} />
+                    <div ref={messagesEndRef} />
                   </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center">
@@ -263,12 +210,8 @@ const ChatPage = () => {
                   </div>
                 )}
               </div>
-
-              {/* Input Area */}
-              <ChatInput
-                onSendMessage={handleSendMessage}
-                disabled={isLoading}
-              />
+              
+              <ChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 flex-col">

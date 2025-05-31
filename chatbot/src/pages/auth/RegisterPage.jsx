@@ -7,14 +7,12 @@ import {
   BiChevronDown
 } from 'react-icons/bi';
 import { Input, Button } from '../../components/common';
-import useAuth from '../../hooks/useAuth';
-import useToast from '../../hooks/useToast';
+import { useApp } from '../../hooks/useContext'; // ✅ Import mới
 import { validateRegisterForm } from '../../utils/validators';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
-  const { showRegisterSuccess, showError } = useToast();
+  const { register, isLoading } = useApp(); // ✅ Dùng useApp thay vì useAuth
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -24,7 +22,6 @@ const RegisterPage = () => {
     gender: '',
     agreeTerms: false
   });
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -53,22 +50,15 @@ const RegisterPage = () => {
       return;
     }
 
-    setLoading(true);
-
     try {
       const result = await register(formData);
       
       if (result.success) {
-        showRegisterSuccess(() => {
-          navigate('/login');
-        });
-      } else {
-        showError(result.error || 'Đăng ký thất bại');
+        // Success message và navigation đã được xử lý trong AuthContext
+        // Không cần làm gì thêm ở đây
       }
     } catch (error) {
-      showError(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
-    } finally {
-      setLoading(false);
+      console.error('Register error:', error);
     }
   };
 
@@ -193,9 +183,9 @@ const RegisterPage = () => {
             type="submit"
             color="mint"
             fullWidth
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? 'Đang xử lý...' : 'Đăng ký'}
+            {isLoading ? 'Đang xử lý...' : 'Đăng ký'}
           </Button>
         </form>
 

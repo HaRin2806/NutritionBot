@@ -2,10 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { BiLeaf, BiMessageDetail, BiShield, BiUser, BiRocket } from 'react-icons/bi';
 import { Button } from '../components/common';
-import useAuth from '../hooks/useAuth';
+import { useApp } from '../hooks/useContext';
 
 const LandingPage = () => {
-  const { userData } = useAuth();
+  const { userData } = useApp();
 
   return (
     <div className="min-h-screen flex flex-col">

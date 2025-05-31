@@ -1,16 +1,24 @@
+// pages/SettingsPage.jsx - VERSION ĐÃ SỬA
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield, BiMoon, BiSun } from 'react-icons/bi';
-import useAuth from '../hooks/useAuth';
-import useToast from '../hooks/useToast';
+import { useApp } from '../hooks/useContext';
 import { Header } from '../components/layout';
 import { Button, Input } from '../components/common';
-import authService from '../services/authService';
 import config from '../config';
 
 const SettingsPage = () => {
-  const { userData, logout, isLoading: isLoadingAuth, updateUserData, refreshUserData } = useAuth();
-  const { showSuccess, showError, showLoginRequired } = useToast();
+  const { 
+    userData, 
+    logout, 
+    isLoading: isLoadingAuth, 
+    updateProfile, 
+    changePassword,
+    requireAuth,
+    showSuccess,
+    showError
+  } = useApp();
+  
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('profile');
@@ -44,14 +52,14 @@ const SettingsPage = () => {
 
   const [errors, setErrors] = useState({});
 
-  // Kiểm tra đăng nhập khi component mount (tương tự ChatPage)
+  // Auth check
   useEffect(() => {
     if (!isLoadingAuth && !userData) {
-      showLoginRequired(() => navigate('/login'));
+      requireAuth(() => navigate('/login'));
     }
-  }, [userData, isLoadingAuth, navigate, showLoginRequired]);
+  }, [userData, isLoadingAuth, navigate, requireAuth]);
 
-  // Lấy thông tin người dùng khi vào trang
+  // Load user data
   useEffect(() => {
     if (userData) {
       const newProfileData = {
@@ -67,20 +75,22 @@ const SettingsPage = () => {
     }
   }, [userData]);
 
-  // Apply theme and dark mode
+  // Apply theme
   useEffect(() => {
     document.documentElement.className = '';
     if (darkMode) {
       document.documentElement.classList.add('dark');
     }
     
-    // Apply theme colors
-    const root = document.documentElement;
-    const themeColors = config.themes[theme];
-    if (themeColors) {
-      root.style.setProperty('--color-primary', themeColors.primary);
-      root.style.setProperty('--color-primary-light', themeColors.light);
-      root.style.setProperty('--color-primary-dark', themeColors.dark);
+    // Apply theme colors if config.themes exists
+    if (config.themes) {
+      const root = document.documentElement;
+      const themeColors = config.themes[theme];
+      if (themeColors) {
+        root.style.setProperty('--color-primary', themeColors.primary);
+        root.style.setProperty('--color-primary-light', themeColors.light);
+        root.style.setProperty('--color-primary-dark', themeColors.dark);
+      }
     }
   }, [theme, darkMode]);
 
@@ -91,7 +101,6 @@ const SettingsPage = () => {
       [name]: value
     }));
     
-    // Clear error when typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -107,7 +116,6 @@ const SettingsPage = () => {
       [name]: value
     }));
     
-    // Clear error when typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -164,20 +172,17 @@ const SettingsPage = () => {
     setIsLoading(true);
 
     try {
-      // Sử dụng method từ AuthContext
-      const result = await updateUserData({
+      const result = await updateProfile({
         name: formData.fullName,
         gender: formData.gender,
         phone: formData.phone
       });
 
       if (result.success) {
-        // Cập nhật local state
         setProfileData(formData);
         setIsEditing(false);
         setErrors({});
-        
-        showSuccess('Thông tin cá nhân đã được cập nhật thành công', 3000);
+        showSuccess('Thông tin cá nhân đã được cập nhật thành công');
       } else {
         showError(result.error || 'Không thể cập nhật thông tin cá nhân');
       }
@@ -199,12 +204,12 @@ const SettingsPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await authService.changePassword({
+      const result = await changePassword({
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword
       });
 
-      if (response.success) {
+      if (result.success) {
         showSuccess('Mật khẩu đã được cập nhật thành công');
         setPasswordData({
           currentPassword: '',
@@ -213,11 +218,11 @@ const SettingsPage = () => {
         });
         setErrors({});
       } else {
-        showError(response.error || 'Không thể cập nhật mật khẩu');
+        showError(result.error || 'Không thể cập nhật mật khẩu');
       }
     } catch (error) {
       console.error('Error changing password:', error);
-      showError(error.error || 'Đã có lỗi xảy ra khi đổi mật khẩu');
+      showError('Đã có lỗi xảy ra khi đổi mật khẩu');
     } finally {
       setIsLoading(false);
     }
@@ -226,19 +231,16 @@ const SettingsPage = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Kiểm tra kích thước file (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showError('Kích thước file không được vượt quá 5MB');
         return;
       }
       
-      // Kiểm tra định dạng file
       if (!file.type.startsWith('image/')) {
         showError('Vui lòng chọn file hình ảnh');
         return;
       }
       
-      // Đọc file thành URL để hiển thị preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData(prev => ({
@@ -261,25 +263,21 @@ const SettingsPage = () => {
     localStorage.setItem('darkMode', newDarkMode.toString());
   };
 
-  // Cập nhật độ tuổi - placeholder, không dùng thực tế trong SettingsPage
-  const updateConversationAge = () => { };
-
   const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
-        // Hiển thị loading nếu đang xác thực
-  if (isLoadingAuth) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="spinner mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tải...</p>
-        </div>
-      </div>
-    );
-  }
+        if (isLoadingAuth) {
+          return (
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="spinner mx-auto mb-4"></div>
+                <p className="text-gray-600">Đang tải...</p>
+              </div>
+            </div>
+          );
+        }
 
-  return (
+        return (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-medium text-gray-900 dark:text-white">Thông tin cá nhân</h3>
@@ -518,7 +516,7 @@ const SettingsPage = () => {
                     }`}
                   >
                     <span
-                      className={`inline-block w-4 h-4 transform bg-mint rounded-full transition-transform ${
+                      className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
                         darkMode ? 'translate-x-6' : 'translate-x-1'
                       }`}
                     />
@@ -527,30 +525,32 @@ const SettingsPage = () => {
               </div>
 
               {/* Theme Colors */}
-              <div>
-                <h4 className="font-medium text-gray-800 dark:text-white mb-3">Màu sắc chủ đạo</h4>
-                <div className="grid grid-cols-5 gap-4">
-                  {Object.keys(config.themes).map(color => (
-                    <div
-                      key={color}
-                      className={`cursor-pointer rounded-lg p-4 h-16 flex items-center justify-center transition-all ${
-                        theme === color ? 'ring-2 ring-offset-2 dark:ring-offset-gray-800' : 'hover:opacity-80'
-                      }`}
-                      style={{
-                        backgroundColor: config.themes[color].primary,
-                        color: 'white',
-                        ringColor: theme === color ? config.themes[color].primary : 'transparent',
-                      }}
-                      onClick={() => handleThemeChange(color)}
-                    >
-                      {theme === color && <BiCheckCircle className="w-6 h-6" />}
-                    </div>
-                  ))}
+              {config.themes && (
+                <div>
+                  <h4 className="font-medium text-gray-800 dark:text-white mb-3">Màu sắc chủ đạo</h4>
+                  <div className="grid grid-cols-5 gap-4">
+                    {Object.keys(config.themes).map(color => (
+                      <div
+                        key={color}
+                        className={`cursor-pointer rounded-lg p-4 h-16 flex items-center justify-center transition-all ${
+                          theme === color ? 'ring-2 ring-offset-2 dark:ring-offset-gray-800' : 'hover:opacity-80'
+                        }`}
+                        style={{
+                          backgroundColor: config.themes[color].primary,
+                          color: 'white',
+                          ringColor: theme === color ? config.themes[color].primary : 'transparent',
+                        }}
+                        onClick={() => handleThemeChange(color)}
+                      >
+                        {theme === color && <BiCheckCircle className="w-6 h-6" />}
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    Chọn màu chủ đạo cho giao diện ứng dụng
+                  </p>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                  Chọn màu chủ đạo cho giao diện ứng dụng
-                </p>
-              </div>
+              )}
 
               <div className="pt-3">
                 <Button
@@ -577,9 +577,6 @@ const SettingsPage = () => {
         userData={userData}
         userAge={userAge}
         setUserAge={setUserAge}
-        handleLogout={logout}
-        activeConversation={null}
-        updateConversationAge={updateConversationAge}
       />
 
       <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">

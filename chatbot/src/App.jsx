@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
+import { AuthProvider } from './contexts/AuthContext';
 import { ChatProvider } from './contexts/ChatContext';
 import ChatPage from './pages/ChatPage';
 import LoginPage from './pages/auth/LoginPage';
@@ -10,24 +11,18 @@ import LandingPage from './pages/LandingPage';
 import SettingsPage from './pages/SettingsPage';
 import storageService from './services/storageService';
 import config from './config';
-import { AuthProvider } from './contexts/AuthContext';
 import './styles/global.css';
 
 function App() {
-  // Thiết lập header Authorization khi component mount
+  // Thiết lập axios defaults
   useEffect(() => {
-    // Lấy token từ localStorage hoặc sessionStorage
     const token = storageService.getToken();
     
     if (token) {
-      // Thiết lập Authorization header
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
     
-    // Thiết lập base URL từ config
     axios.defaults.baseURL = config.apiBaseUrl;
-    
-    // Luôn gửi cookies với requests
     axios.defaults.withCredentials = true;
   }, []);
 

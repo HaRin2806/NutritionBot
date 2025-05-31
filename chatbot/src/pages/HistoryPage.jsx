@@ -1,627 +1,234 @@
 import React, { useState, useEffect } from 'react';
-import { BiCalendar, BiSearch, BiTrash, BiMessageRounded, BiTime, BiChevronDown, BiChevronLeft, BiChevronRight, BiSortAlt2, BiUser, BiArrowBack, BiChat, BiX, BiArchiveIn, BiBookmark, BiDotsHorizontalRounded, BiCheck } from 'react-icons/bi';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import useConversation from '../hooks/useConversation';
-import useToast from '../hooks/useToast';
+import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser } from 'react-icons/bi';
+import { useApp } from '../hooks/useContext';
 import { Header } from '../components/layout';
 import { Button, Loader } from '../components/common';
 import { formatDate, formatTime, getRelativeDate } from '../utils/dateUtils';
-import chatService from '../services/chatService';
 
 const HistoryPage = () => {
   const navigate = useNavigate();
-  const { userData, isLoading: isLoadingAuth } = useAuth();
   const {
-    selectedConversations,
-    searchTerm,
-    dateFilter,
-    ageFilter,
-    sortBy,
-    sortOrder,
-    currentPage,
-    itemsPerPage,
-    activeTab,
-    setSelectedConversations,
-    setSearchTerm,
-    setDateFilter,
-    setAgeFilter,
-    setSortBy,
-    setSortOrder,
-    setCurrentPage,
-    setActiveTab,
-    filterConversations,
-    getPaginationData,
-    getAgeOptions,
-    handleSelectAll,
-    handleSelect,
-    handleSortChange,
-    clearFilters,
-    handleDeleteMultiple,
-    handleArchiveMultiple,
-    handleUnarchiveMultiple,
-    navigateToChat,
-    getConversationCounts
-  } = useConversation();
+    // Auth
+    userData, isLoading: isLoadingAuth, requireAuth,
+    
+    // Chat
+    conversations, isLoadingConversations, fetchConversations,
+    userAge, setUserAge, filterConversations, updateFilters,
+    selectConversations, selectedConversations, bulkDeleteConversations,
+    
+    // State
+    searchTerm, filters, pagination,
+    
+    // Toast
+    showConfirm, showSuccess,
+    
+    // Combined
+    safeOperation
+  } = useApp();
 
-  const { showDeleteConfirm, showBulkDeleteConfirm, showLoginRequired } = useToast();
+  const [localConversations, setLocalConversations] = useState([]);
 
-  // State riêng cho HistoryPage
-  const [conversations, setConversations] = useState([]);
-  const [isLoadingConversations, setIsLoadingConversations] = useState(false);
-  const [userAge, setUserAge] = useState(null);
-
-  // Kiểm tra đăng nhập khi component mount (tương tự ChatPage)
+  // Auth check
   useEffect(() => {
     if (!isLoadingAuth && !userData) {
-      showLoginRequired(() => navigate('/login'));
+      requireAuth(() => navigate('/login'));
     }
-  }, [userData, isLoadingAuth, navigate, showLoginRequired]);
+  }, [userData, isLoadingAuth, requireAuth, navigate]);
 
-  // Lấy danh sách cuộc hội thoại (bao gồm cả lưu trữ)
-  const fetchConversations = async () => {
-    if (!userData) return;
-
-    try {
-      setIsLoadingConversations(true);
-      // Lấy tất cả cuộc hội thoại (bao gồm cả đã lưu trữ)
-      const response = await chatService.getConversations(true, 1, 1000); // Lấy nhiều hơn để đảm bảo có đủ dữ liệu
-
-      if (response.success) {
-        setConversations(response.conversations || []);
-
-        // Lấy tuổi từ cuộc hội thoại gần đây nhất nếu chưa có
-        if (!userAge && response.conversations && response.conversations.length > 0) {
-          const lastConversationWithAge = response.conversations.find(conv => conv.age_context);
-          if (lastConversationWithAge && lastConversationWithAge.age_context) {
-            setUserAge(lastConversationWithAge.age_context);
-          }
-        }
-      } else {
-        console.error('Error fetching conversations:', response.error);
-        setConversations([]);
-      }
-    } catch (error) {
-      console.error("Lỗi khi lấy danh sách cuộc hội thoại:", error);
-      setConversations([]);
-    } finally {
-      setIsLoadingConversations(false);
-    }
-  };
-
-  // Lấy dữ liệu khi component mount và khi user thay đổi
+  // Load conversations
   useEffect(() => {
     if (userData && !isLoadingAuth) {
-      fetchConversations();
+      safeOperation(() => fetchConversations(true)).then(result => {
+        if (result) setLocalConversations(result);
+      });
     }
-  }, [userData, isLoadingAuth]);
+  }, [userData, isLoadingAuth, fetchConversations, safeOperation]);
 
-  // Hàm lưu trữ cuộc hội thoại
-  const archiveConversation = async (conversationId) => {
-    try {
-      const response = await chatService.archiveConversation(conversationId);
+  // Apply filters
+  const filteredConversations = filterConversations(localConversations);
+  
+  // Pagination
+  const startIndex = (pagination.page - 1) * pagination.itemsPerPage;
+  const endIndex = startIndex + pagination.itemsPerPage;
+  const currentItems = filteredConversations.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredConversations.length / pagination.itemsPerPage);
 
-      if (response.success) {
-        // Cập nhật state local
-        setConversations(prevConversations =>
-          prevConversations.map(conv =>
-            conv.id === conversationId
-              ? { ...conv, is_archived: true }
-              : conv
-          )
-        );
-
-        // Hiển thị thông báo thành công
-        const { showToast } = useToast();
-        showToast('Đã lưu trữ cuộc trò chuyện', 'success');
-      } else {
-        console.error('Error archiving conversation:', response.error);
-      }
-    } catch (error) {
-      console.error("Lỗi khi lưu trữ cuộc hội thoại:", error);
-    }
-  };
-
-  // Hàm hủy lưu trữ cuộc hội thoại
-  const unarchiveConversation = async (conversationId) => {
-    try {
-      const response = await chatService.unarchiveConversation(conversationId);
-
-      if (response.success) {
-        // Cập nhật state local
-        setConversations(prevConversations =>
-          prevConversations.map(conv =>
-            conv.id === conversationId
-              ? { ...conv, is_archived: false }
-              : conv
-          )
-        );
-
-        // Hiển thị thông báo thành công
-        const { showToast } = useToast();
-        showToast('Đã khôi phục cuộc trò chuyện', 'success');
-      } else {
-        console.error('Error unarchiving conversation:', response.error);
-      }
-    } catch (error) {
-      console.error("Lỗi khi khôi phục cuộc hội thoại:", error);
-    }
-  };
-
-  // Hàm xóa cuộc hội thoại
-  const deleteConversation = async (conversationId) => {
-    try {
-      const response = await chatService.deleteConversation(conversationId);
-
-      if (response.success) {
-        // Cập nhật state local
-        setConversations(prevConversations =>
-          prevConversations.filter(conv => conv.id !== conversationId)
-        );
-
-        // Xóa khỏi selectedConversations nếu có
-        setSelectedConversations(prev => prev.filter(id => id !== conversationId));
-
-        // Hiển thị thông báo thành công
-        const { showToast } = useToast();
-        showToast('Đã xóa cuộc trò chuyện', 'success');
-      } else {
-        console.error('Error deleting conversation:', response.error);
-      }
-    } catch (error) {
-      console.error("Lỗi khi xóa cuộc hội thoại:", error);
-    }
-  };
-
-  // Override các hàm từ useConversation để sử dụng state local
-  const handleArchiveMultipleLocal = async () => {
+  const handleBulkDelete = () => {
     if (selectedConversations.length === 0) return;
-
-    try {
-      // Lưu trữ tất cả các cuộc hội thoại đã chọn
-      const promises = selectedConversations.map(id => chatService.archiveConversation(id));
-      await Promise.all(promises);
-
-      // Cập nhật state local
-      setConversations(prevConversations =>
-        prevConversations.map(conv =>
-          selectedConversations.includes(conv.id)
-            ? { ...conv, is_archived: true }
-            : conv
-        )
-      );
-
-      setSelectedConversations([]);
-
-      // Hiển thị thông báo thành công
-      const { showToast } = useToast();
-      showToast(`Đã lưu trữ ${selectedConversations.length} cuộc trò chuyện`, 'success');
-    } catch (error) {
-      console.error("Lỗi khi lưu trữ nhiều cuộc hội thoại:", error);
-    }
-  };
-
-  const handleUnarchiveMultipleLocal = async () => {
-    if (selectedConversations.length === 0) return;
-
-    try {
-      // Khôi phục tất cả các cuộc hội thoại đã chọn
-      const promises = selectedConversations.map(id => chatService.unarchiveConversation(id));
-      await Promise.all(promises);
-
-      // Cập nhật state local
-      setConversations(prevConversations =>
-        prevConversations.map(conv =>
-          selectedConversations.includes(conv.id)
-            ? { ...conv, is_archived: false }
-            : conv
-        )
-      );
-
-      setSelectedConversations([]);
-
-      // Hiển thị thông báo thành công
-      const { showToast } = useToast();
-      showToast(`Đã khôi phục ${selectedConversations.length} cuộc trò chuyện`, 'success');
-    } catch (error) {
-      console.error("Lỗi khi khôi phục nhiều cuộc hội thoại:", error);
-    }
-  };
-
-  const handleDeleteMultipleLocal = async () => {
-    if (selectedConversations.length === 0) return;
-
-    try {
-      const response = await chatService.bulkDeleteConversations(selectedConversations);
-
-      if (response.success) {
-        // Cập nhật state local
-        setConversations(prevConversations =>
-          prevConversations.filter(conv => !selectedConversations.includes(conv.id))
-        );
-
-        setSelectedConversations([]);
-
-        // Hiển thị thông báo thành công
-        const { showToast } = useToast();
-        showToast(`Đã xóa ${response.deleted_count} cuộc trò chuyện`, 'success');
+    
+    showConfirm({
+      title: `Xóa ${selectedConversations.length} cuộc trò chuyện?`,
+      text: 'Hành động này không thể hoàn tác.',
+      icon: 'warning'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const deleteResult = await safeOperation(() => bulkDeleteConversations(selectedConversations));
+        if (deleteResult.success) {
+          setLocalConversations(prev => prev.filter(c => !selectedConversations.includes(c.id)));
+          showSuccess(`Đã xóa ${deleteResult.deletedCount} cuộc trò chuyện`);
+        }
       }
-    } catch (error) {
-      console.error("Lỗi khi xóa nhiều cuộc hội thoại:", error);
-    }
+    });
   };
 
-  // Cập nhật độ tuổi
-  const updateConversationAge = (newAge) => {
-    setUserAge(newAge);
-  };
-
-  // Hiển thị loading nếu đang xác thực
   if (isLoadingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <div className="spinner mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tải...</p>
-        </div>
+        <Loader type="spinner" color="mint" text="Đang tải..." />
       </div>
     );
   }
 
-  // Lọc danh sách cuộc hội thoại
-  const filteredConversations = filterConversations(conversations);
-
-  // Tính toán phân trang
-  const {
-    currentItems,
-    totalPages,
-    indexOfFirstItem,
-    indexOfLastItem
-  } = getPaginationData(filteredConversations);
-
-  // Lấy các options tuổi từ cuộc hội thoại
-  const ageOptions = getAgeOptions(conversations);
-
-  // Lấy các counts
-  const { archivedCount, activeCount } = getConversationCounts(conversations);
-
-  // Xử lý chọn/bỏ chọn tất cả trên trang hiện tại
-  const handleSelectAllOnPage = (e) => {
-    handleSelectAll(e, currentItems);
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-mint-50/30 to-gray-50">
-      {/* Header */}
-      <Header
-        userData={userData}
-        userAge={userAge}
-        setUserAge={setUserAge}
-        updateConversationAge={updateConversationAge}
-        extraButton={<BiArrowBack className="text-xl mr-2" />}
-      />
-
-      {/* Main content */}
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="bg-white overflow-hidden shadow-md rounded-lg transition-all duration-300 hover:shadow-lg">
-          {/* Tabs */}
-          <div className="px-4 pt-4 sm:p-6 sm:pb-0 flex border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`mr-4 pb-3 px-1 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === 'all'
-                ? 'border-mint-500 text-mint-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              style={{ borderColor: activeTab === 'all' ? '#36B37E' : 'transparent', color: activeTab === 'all' ? '#36B37E' : '' }}
-            >
-              Tất cả ({activeCount})
-            </button>
-            <button
-              onClick={() => setActiveTab('archived')}
-              className={`mr-4 pb-3 px-1 text-sm font-medium border-b-2 transition-all duration-200 ${activeTab === 'archived'
-                ? 'border-mint-500 text-mint-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              style={{ borderColor: activeTab === 'archived' ? '#36B37E' : 'transparent', color: activeTab === 'archived' ? '#36B37E' : '' }}
-            >
-              Đã lưu trữ ({archivedCount})
-            </button>
-          </div>
-
+    <div className="min-h-screen bg-gray-50">
+      <Header userData={userData} userAge={userAge} setUserAge={setUserAge} />
+      
+      <div className="max-w-7xl mx-auto py-6 px-4">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Filters */}
-          <div className="p-4 sm:p-6 border-b border-gray-200">
+          <div className="p-6 border-b border-gray-200">
             <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <BiSearch className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Tìm kiếm cuộc trò chuyện..."
-                    className="focus:ring-mint-500 focus:border-mint-500 block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md transition-all duration-200"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ boxShadow: searchTerm ? '0 0 0 3px rgba(54, 179, 126, 0.1)' : 'none' }}
-                  />
-                  {searchTerm && (
-                    <button
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setSearchTerm('')}
-                    >
-                      <BiX className="h-5 w-5 text-gray-400 hover:text-gray-500" />
-                    </button>
-                  )}
-                </div>
+              {/* Search */}
+              <div className="flex-1 relative">
+                <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm cuộc trò chuyện..."
+                  className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500"
+                  value={searchTerm}
+                  onChange={(e) => updateFilters({ searchTerm: e.target.value })}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => updateFilters({ searchTerm: '' })}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                  >
+                    <BiX className="text-gray-400 hover:text-gray-600" />
+                  </button>
+                )}
               </div>
 
-              {/* Lọc theo ngày */}
-              <div className="w-full sm:w-48">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <BiCalendar className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <select
-                    className="focus:ring-mint-500 focus:border-mint-500 block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md appearance-none transition-all duration-200"
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    style={{ boxShadow: dateFilter !== 'all' ? '0 0 0 3px rgba(54, 179, 126, 0.1)' : 'none' }}
-                  >
-                    <option value="all">Tất cả thời gian</option>
-                    <option value="today">Hôm nay</option>
-                    <option value="week">Tuần này</option>
-                    <option value="month">Tháng này</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <BiChevronDown className="h-5 w-5 text-gray-400" />
-                  </div>
-                </div>
+              {/* Date filter */}
+              <div className="relative">
+                <BiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <select
+                  className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 appearance-none"
+                  value={filters.date}
+                  onChange={(e) => updateFilters({ date: e.target.value })}
+                >
+                  <option value="all">Tất cả thời gian</option>
+                  <option value="today">Hôm nay</option>
+                  <option value="week">Tuần này</option>
+                  <option value="month">Tháng này</option>
+                </select>
+                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
-              {/* Lọc theo tuổi */}
-              <div className="w-full sm:w-48">
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <BiUser className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <select
-                    className="focus:ring-mint-500 focus:border-mint-500 block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md appearance-none transition-all duration-200"
-                    value={ageFilter}
-                    onChange={(e) => setAgeFilter(e.target.value)}
-                    style={{ boxShadow: ageFilter !== 'all' ? '0 0 0 3px rgba(54, 179, 126, 0.1)' : 'none' }}
-                  >
-                    <option value="all">Tất cả độ tuổi</option>
-                    {ageOptions.map(age => (
-                      <option key={age} value={age}>{age} tuổi</option>
-                    ))}
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <BiChevronDown className="h-5 w-5 text-gray-400" />
-                  </div>
-                </div>
+
+              {/* Age filter */}
+              <div className="relative">
+                <BiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <select
+                  className="pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 appearance-none"
+                  value={filters.age}
+                  onChange={(e) => updateFilters({ age: e.target.value })}
+                >
+                  <option value="all">Tất cả độ tuổi</option>
+                  {[...Array(19)].map((_, i) => (
+                    <option key={i + 1} value={i + 1}>{i + 1} tuổi</option>
+                  ))}
+                </select>
+                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
             </div>
 
-            {/* Thanh công cụ - Chọn tất cả và Xóa */}
+            {/* Bulk actions */}
             {selectedConversations.length > 0 && (
-              <div className="mt-4 p-3 bg-mint-50 rounded-lg flex items-center justify-between animate-fadeIn" style={{ backgroundColor: 'rgba(54, 179, 126, 0.1)' }}>
-                <div className="flex items-center">
-                  <span className="text-mint-700 font-medium">Đã chọn {selectedConversations.length} cuộc trò chuyện</span>
-                </div>
-                <div className="flex space-x-2">
-                  {activeTab === 'all' ? (
-                    <Button
-                      onClick={handleArchiveMultipleLocal}
-                      color="mint"
-                      size="sm"
-                      icon={<BiArchiveIn className="mr-1.5" />}
-                    >
-                      Lưu trữ đã chọn
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handleUnarchiveMultipleLocal}
-                      color="mint"
-                      size="sm"
-                      icon={<BiCheck className="mr-1.5" />}
-                    >
-                      Khôi phục đã chọn
-                    </Button>
-                  )}
-                  <Button
-                    onClick={() => showBulkDeleteConfirm(selectedConversations.length, handleDeleteMultipleLocal)}
-                    color="red"
-                    size="sm"
-                    icon={<BiTrash className="mr-1.5" />}
-                  >
-                    Xóa đã chọn
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {/* Hiển thị bộ lọc đang hoạt động */}
-            {(searchTerm || dateFilter !== 'all' || ageFilter !== 'all') && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {searchTerm && (
-                  <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md text-xs flex items-center">
-                    <span>Tìm kiếm: {searchTerm}</span>
-                    <button onClick={() => setSearchTerm('')} className="ml-1 text-gray-500 hover:text-gray-700">
-                      <BiX className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-                {dateFilter !== 'all' && (
-                  <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md text-xs flex items-center">
-                    <span>
-                      Thời gian: {
-                        dateFilter === 'today' ? 'Hôm nay' :
-                          dateFilter === 'week' ? 'Tuần này' :
-                            dateFilter === 'month' ? 'Tháng này' :
-                              dateFilter
-                      }
-                    </span>
-                    <button onClick={() => setDateFilter('all')} className="ml-1 text-gray-500 hover:text-gray-700">
-                      <BiX className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-                {ageFilter !== 'all' && (
-                  <div className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md text-xs flex items-center">
-                    <span>Độ tuổi: {ageFilter} tuổi</span>
-                    <button onClick={() => setAgeFilter('all')} className="ml-1 text-gray-500 hover:text-gray-700">
-                      <BiX className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-                <button
-                  onClick={clearFilters}
-                  className="text-mint-600 text-xs hover:underline flex items-center"
-                  style={{ color: '#36B37E' }}
-                >
-                  Xóa tất cả bộ lọc
-                </button>
+              <div className="mt-4 p-3 bg-mint-50 rounded-lg flex items-center justify-between">
+                <span className="text-mint-700 font-medium">
+                  Đã chọn {selectedConversations.length} cuộc trò chuyện
+                </span>
+                <Button onClick={handleBulkDelete} color="red" size="sm" icon={<BiTrash />}>
+                  Xóa đã chọn
+                </Button>
               </div>
             )}
           </div>
 
-          {/* Loading state */}
+          {/* Content */}
           {isLoadingConversations ? (
-            <div className="flex flex-col items-center justify-center p-12">
-              <Loader type="spinner" size="lg" color="mint" text="Đang tải dữ liệu..." />
+            <div className="p-12 text-center">
+              <Loader type="spinner" color="mint" text="Đang tải dữ liệu..." />
             </div>
           ) : currentItems.length > 0 ? (
             <>
-              {/* History list */}
+              {/* Table */}
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th scope="col" className="sticky top-0 px-3 py-3">
+                      <th className="px-3 py-3">
                         <input
                           type="checkbox"
-                          className="h-4 w-4 text-mint-600 focus:ring-mint-500 border-gray-300 rounded transition-all duration-200"
                           checked={currentItems.length > 0 && currentItems.every(item => selectedConversations.includes(item.id))}
-                          onChange={handleSelectAllOnPage}
+                          onChange={(e) => {
+                            const allIds = e.target.checked ? currentItems.map(item => item.id) : [];
+                            selectConversations(allIds);
+                          }}
+                          className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
                         />
                       </th>
-                      <th scope="col" className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tiêu đề
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange('date')}
-                      >
-                        <div className="flex items-center">
-                          <span>Thời gian</span>
-                          {sortBy === 'date' && (
-                            <BiSortAlt2 className={`ml-1 transition-transform duration-200 ${sortOrder === 'asc' ? 'transform rotate-180' : ''}`} />
-                          )}
-                        </div>
-                      </th>
-                      <th
-                        scope="col"
-                        className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
-                        onClick={() => handleSortChange('age')}
-                      >
-                        <div className="flex items-center">
-                          <span>Độ tuổi</span>
-                          {sortBy === 'age' && (
-                            <BiSortAlt2 className={`ml-1 transition-transform duration-200 ${sortOrder === 'asc' ? 'transform rotate-180' : ''}`} />
-                          )}
-                        </div>
-                      </th>
-                      <th scope="col" className="sticky top-0 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Tin nhắn
-                      </th>
-                      <th scope="col" className="sticky top-0 px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Thao tác
-                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tiêu đề</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thời gian</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Độ tuổi</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {currentItems.map((chat) => (
-                      <tr
-                        key={chat.id}
-                        className="group hover:bg-mint-50 transition-colors duration-150"
-                      >
-                        <td className="px-3 py-4 whitespace-nowrap">
+                      <tr key={chat.id} className="hover:bg-gray-50">
+                        <td className="px-3 py-4">
                           <input
                             type="checkbox"
-                            className="h-4 w-4 text-mint-600 focus:ring-mint-500 border-gray-300 rounded"
                             checked={selectedConversations.includes(chat.id)}
-                            onChange={() => handleSelect(chat.id)}
+                            onChange={() => {
+                              const newSelected = selectedConversations.includes(chat.id)
+                                ? selectedConversations.filter(id => id !== chat.id)
+                                : [...selectedConversations, chat.id];
+                              selectConversations(newSelected);
+                            }}
+                            className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
                           />
                         </td>
                         <td className="px-6 py-4">
                           <div
-                            className="text-base font-medium text-gray-900 hover:text-mint-600 cursor-pointer transition-all duration-150 group-hover:scale-[1.01]"
-                            onClick={() => navigateToChat(chat.id)}
+                            className="text-base font-medium text-gray-900 hover:text-mint-600 cursor-pointer"
+                            onClick={() => navigate(`/chat/${chat.id}`)}
                           >
                             {chat.title}
                           </div>
-                          <div className="text-xs text-gray-500 mt-1 flex items-center">
-                            <BiCalendar className="inline-block mr-1 text-gray-400" />
+                          <div className="text-xs text-gray-500 mt-1">
                             {getRelativeDate(chat.created_at)}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-700">
-                            <BiTime className="mr-1.5 text-mint-500" />
-                            {formatTime(chat.updated_at)}
-                          </div>
-                          <div className="text-xs text-gray-400 mt-1">
-                            {formatDate(chat.updated_at)}
-                          </div>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-700">{formatTime(chat.updated_at)}</div>
+                          <div className="text-xs text-gray-400">{formatDate(chat.updated_at)}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium bg-mint-100 text-mint-800"
-                            style={{ backgroundColor: 'rgba(54, 179, 126, 0.2)', color: '#2E7D6B' }}>
+                        <td className="px-6 py-4">
+                          <span className="px-2 py-1 text-xs font-medium bg-mint-100 text-mint-800 rounded-full">
                             {chat.age_context || 'N/A'} tuổi
-                          </div>
+                          </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center text-sm text-gray-700">
-                            <BiMessageRounded className="mr-1.5 text-mint-500" />
-                            <span className="font-medium">{chat.message_count || 0}</span>
-                            <span className="text-xs text-gray-500 ml-1">tin nhắn</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-end space-x-1">
-                            <Button
-                              onClick={() => navigateToChat(chat.id)}
-                              color="mint"
-                              size="sm"
-                              icon={<BiChat className="mr-1.5" />}
-                            >
-                              Xem
-                            </Button>
-                            {chat.is_archived ? (
-                              <Button
-                                onClick={() => unarchiveConversation(chat.id)}
-                                color="gray"
-                                size="sm"
-                                icon={<BiCheck />}
-                                className="px-2"
-                              />
-                            ) : (
-                              <Button
-                                onClick={() => archiveConversation(chat.id)}
-                                color="gray"
-                                size="sm"
-                                icon={<BiArchiveIn />}
-                                className="px-2"
-                              />
-                            )}
-                            <Button
-                              onClick={() => showDeleteConfirm(() => deleteConversation(chat.id))}
-                              color="red"
-                              size="sm"
-                              icon={<BiTrash />}
-                              className="px-2"
-                            />
-                          </div>
+                        <td className="px-6 py-4 text-right">
+                          <Button
+                            onClick={() => navigate(`/chat/${chat.id}`)}
+                            color="mint"
+                            size="sm"
+                            icon={<BiChat />}
+                          >
+                            Xem
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -631,175 +238,43 @@ const HistoryPage = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
-                  <div className="flex items-center justify-between">
-                    <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                      <div>
-                        <p className="text-sm text-gray-700">
-                          Hiển thị <span className="font-medium">{indexOfFirstItem + 1}</span> đến <span className="font-medium">{Math.min(indexOfLastItem, filteredConversations.length)}</span> trong <span className="font-medium">{filteredConversations.length}</span> kết quả
-                        </p>
-                      </div>
-                      <div>
-                        <nav className="relative z-0 inline-flex rounded-lg shadow-sm -space-x-px overflow-hidden" aria-label="Pagination">
-                          <button
-                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                            disabled={currentPage === 1}
-                            className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 transition-colors duration-200 first:rounded-l-lg"
-                          >
-                            <span className="sr-only">Trang trước</span>
-                            <BiChevronLeft className="h-5 w-5" />
-                          </button>
-
-                          {Array.from({ length: totalPages }, (_, i) => (
-                            <button
-                              key={i + 1}
-                              onClick={() => setCurrentPage(i + 1)}
-                              className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors duration-200
-                               ${currentPage === i + 1
-                                  ? 'z-10 bg-mint-50 border-mint-500 text-mint-600'
-                                  : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                                }`}
-                              style={currentPage === i + 1 ? {
-                                backgroundColor: '#E6F7EF',
-                                borderColor: '#36B37E',
-                                color: '#36B37E',
-                                fontWeight: 'bold'
-                              } : {}}
-                            >
-                              {i + 1}
-                            </button>
-                          ))}
-
-                          <button
-                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                            disabled={currentPage === totalPages}
-                            className="relative inline-flex items-center px-3 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 transition-colors duration-200 last:rounded-r-lg"
-                          >
-                            <span className="sr-only">Trang sau</span>
-                            <BiChevronRight className="h-5 w-5" />
-                          </button>
-                        </nav>
-                      </div>
-                    </div>
+                <div className="px-6 py-3 border-t border-gray-200 flex justify-between items-center">
+                  <div className="text-sm text-gray-700">
+                    Hiển thị {startIndex + 1} đến {Math.min(endIndex, filteredConversations.length)} 
+                    trong {filteredConversations.length} kết quả
+                  </div>
+                  <div className="flex space-x-1">
+                    {[...Array(totalPages)].map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => updatePagination({ page: i + 1 })}
+                        className={`px-3 py-1 text-sm rounded ${
+                          pagination.page === i + 1
+                            ? 'bg-mint-600 text-white'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
             </>
           ) : (
-            // No results
             <div className="py-16 text-center">
-              <div className="flex flex-col items-center">
-                <div className="w-24 h-24 bg-mint-100 rounded-full flex items-center justify-center mb-4">
-                  {activeTab === 'archived' ? (
-                    <BiBookmark className="h-12 w-12 text-mint-500" />
-                  ) : (
-                    <BiMessageRounded className="h-12 w-12 text-mint-500" />
-                  )}
-                </div>
-                {searchTerm || dateFilter !== 'all' || ageFilter !== 'all' ? (
-                  <>
-                    <p className="text-xl font-medium text-gray-700 mb-2">Không tìm thấy cuộc trò chuyện nào phù hợp</p>
-                    <p className="text-gray-500 mb-6 max-w-md">Thử thay đổi các bộ lọc hoặc sử dụng từ khóa tìm kiếm khác</p>
-                    <Button
-                      onClick={clearFilters}
-                      color="mint"
-                      icon={<BiX className="mr-1.5" />}
-                    >
-                      Xóa bộ lọc
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    {activeTab === 'archived' ? (
-                      <>
-                        <p className="text-xl font-medium text-gray-700 mb-2">Không có cuộc trò chuyện nào được lưu trữ</p>
-                        <p className="text-gray-500 mb-6 max-w-md">Bạn có thể lưu trữ các cuộc trò chuyện để tham khảo sau</p>
-                        <Button
-                          onClick={() => setActiveTab('all')}
-                          color="mint"
-                          icon={<BiMessageRounded className="mr-1.5" />}
-                        >
-                          Xem tất cả cuộc trò chuyện
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-xl font-medium text-gray-700 mb-2">Chưa có cuộc trò chuyện nào</p>
-                        <p className="text-gray-500 mb-6 max-w-md">Bắt đầu trò chuyện mới với Nutribot để nhận thông tin hữu ích về dinh dưỡng</p>
-                        <Link to="/chat">
-                          <Button
-                            color="mint"
-                            icon={<BiChat className="mr-1.5" />}
-                          >
-                            Bắt đầu trò chuyện
-                          </Button>
-                        </Link>
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
+              <BiChat className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <p className="text-lg font-medium text-gray-900">Không có cuộc trò chuyện nào</p>
+              <p className="text-gray-500 mb-6">Bắt đầu trò chuyện mới với Nutribot</p>
+              <Link to="/chat">
+                <Button color="mint" icon={<BiChat />}>
+                  Bắt đầu trò chuyện
+                </Button>
+              </Link>
             </div>
           )}
         </div>
       </div>
-
-      {/* Fixed Back to Chat button on mobile */}
-      <div className="sm:hidden fixed bottom-6 right-6">
-        <Link
-          to="/chat"
-          className="p-4 rounded-full bg-mint-600 text-white shadow-lg hover:bg-mint-700 transition-all duration-200 flex items-center justify-center"
-          style={{ backgroundColor: '#36B37E' }}
-        >
-          <BiChat className="text-xl" />
-        </Link>
-      </div>
-
-      {/* CSS để thêm animation */}
-      <style jsx>{`
-       @keyframes fadeIn {
-         from { opacity: 0; transform: translateY(10px); }
-         to { opacity: 1; transform: translateY(0); }
-       }
-       
-       .animate-fadeIn {
-         animation: fadeIn 0.3s ease-out forwards;
-       }
-       
-       @keyframes scaleIn {
-         from { transform: scale(0.95); opacity: 0; }
-         to { transform: scale(1); opacity: 1; }
-       }
-       
-       .animate-scaleIn {
-         animation: scaleIn 0.2s ease-out forwards;
-       }
-       
-       /* Hover effect for buttons */
-       button:hover {
-         transform: translateY(-1px);
-       }
-       
-       /* Custom scrollbar */
-       ::-webkit-scrollbar {
-         width: 8px;
-         height: 8px;
-       }
-       
-       ::-webkit-scrollbar-track {
-         background: #f1f1f1;
-         border-radius: 10px;
-       }
-       
-       ::-webkit-scrollbar-thumb {
-         background: #c5e0d5;
-         border-radius: 10px;
-       }
-       
-       ::-webkit-scrollbar-thumb:hover {
-         background: #36B37E;
-       }
-     `}</style>
     </div>
   );
 };

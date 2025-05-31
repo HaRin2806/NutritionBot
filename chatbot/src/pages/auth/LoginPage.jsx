@@ -2,21 +2,18 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiUser, BiLock } from 'react-icons/bi';
 import { Input, Button } from '../../components/common';
-import useAuth from '../../hooks/useAuth';
-import useToast from '../../hooks/useToast';
+import { useApp } from '../../hooks/useContext';
 import { validateLoginForm } from '../../utils/validators';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const { showLoginSuccess, showError } = useToast();
+  const { login, isLoading } = useApp();
   
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false
   });
-  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -26,7 +23,6 @@ const LoginPage = () => {
       [name]: type === 'checkbox' ? checked : value
     });
     
-    // Clear error when typing
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -38,29 +34,21 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate form
     const formErrors = validateLoginForm(formData);
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
     }
-    
-    setLoading(true);
 
     try {
       const result = await login(formData.email, formData.password, formData.rememberMe);
       
       if (result.success) {
-        showLoginSuccess(() => {
-          navigate('/chat');
-        });
-      } else {
-        showError(result.error || 'Đăng nhập thất bại');
+        // Success message đã được hiển thị trong AuthContext
+        navigate('/chat');
       }
     } catch (error) {
-      showError(error.message || 'Đã có lỗi xảy ra. Vui lòng thử lại.');
-    } finally {
-      setLoading(false);
+      console.error('Login error:', error);
     }
   };
 
@@ -74,7 +62,7 @@ const LoginPage = () => {
     >
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10">
         <div className="text-center mb-8">
-          <h2 className="text-4xl font-extrabold text-gray-900">
+          <h2 className="text-4xl font-extrabold text-gray-900 leading-tight mb-4">
             Chào mừng trở lại!
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -136,9 +124,9 @@ const LoginPage = () => {
             type="submit"
             color="mint"
             fullWidth
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </Button>
         </form>
 

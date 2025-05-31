@@ -12,19 +12,15 @@ const MessageBubble = ({
   onRegenerateResponse,
   onDeleteMessage,
   conversationId,
-  userAge,
-  isEditing: externalIsEditing = false,
-  onEditStart,
-  onEditEnd,
-  isRegenerating = false
+  userAge
 }) => {
-  const [isEditing, setIsEditing] = useState(externalIsEditing);
+  const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
-  const [showVersions, setShowVersions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const textareaRef = useRef(null);
   const menuRef = useRef(null);
+
 
   // Get message ID - handle both _id and id
   const messageId = message._id || message.id;
@@ -52,21 +48,10 @@ const MessageBubble = ({
     }
   }, [isEditing]);
 
-  // Sync external editing state
-  useEffect(() => {
-    setIsEditing(externalIsEditing);
-    if (externalIsEditing) {
-      setEditContent(message.content);
-    }
-  }, [externalIsEditing, message.content]);
-
   const handleEditStart = () => {
     setIsEditing(true);
     setEditContent(message.content);
     setShowMenu(false);
-    if (onEditStart) {
-      onEditStart(messageId);
-    }
   };
 
   const handleEditSave = async () => {
@@ -78,21 +63,19 @@ const MessageBubble = ({
     setIsSubmitting(true);
 
     try {
-      // Chỉ lưu tin nhắn, KHÔNG đợi regenerate
+      // Gọi API edit - chỉ đợi lưu tin nhắn, KHÔNG đợi regenerate
       await onEditMessage(messageId, conversationId, editContent.trim());
 
-      // Reset ngay lập tức sau khi lưu
+      // NGAY LẬP TỨC reset UI edit sau khi lưu thành công
       setIsSubmitting(false);
       setIsEditing(false);
 
-      if (onEditEnd) {
-        onEditEnd();
-      }
+      // Tin nhắn bot sẽ hiển thị typing indicator tự động thông qua useChat logic
 
     } catch (error) {
       console.error('Error editing message:', error);
       setIsSubmitting(false);
-      // Chỉ reset khi có lỗi
+      // Không reset editing state nếu có lỗi, để user có thể thử lại
     }
   };
 
@@ -100,9 +83,6 @@ const MessageBubble = ({
     setIsEditing(false);
     setEditContent(message.content);
     setIsSubmitting(false);
-    if (onEditEnd) {
-      onEditEnd();
-    }
   };
 
   const handleVersionSwitch = async (version) => {
@@ -136,24 +116,29 @@ const MessageBubble = ({
   const hasVersions = message.versions && message.versions.length > 1;
   const currentVersion = message.current_version || 1;
   const totalVersions = message.versions ? message.versions.length : 1;
+  const isRegenerating = !isUser && message.isRegenerating;
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group`}>
       <div
         className={`max-w-[90%] md:max-w-[80%] rounded-2xl shadow-sm relative ${isUser
-          ? 'bg-mint-600 text-white'
-          : 'bg-white text-gray-800 border border-gray-200'
+            ? 'bg-mint-600 text-white'
+            : 'bg-white text-gray-800 border border-gray-200'
           } ${isRegenerating ? 'opacity-75' : ''}`}
         style={{
           backgroundColor: isUser ? '#36B37E' : '#FFFFFF',
         }}
       >
-        {/* Regenerating indicator */}
-        {isRegenerating && !isUser && (
+        {/* Typing indicator overlay cho bot message đang regenerating */}
+        {isRegenerating && (
           <div className="absolute inset-0 bg-white bg-opacity-90 rounded-2xl flex items-center justify-center z-10">
             <div className="flex items-center space-x-2 text-mint-600">
-              <BiRefresh className="w-5 h-5 animate-spin" style={{ color: '#36B37E' }} />
-              <span className="text-sm" style={{ color: '#36B37E' }}>Đang tạo lại phản hồi...</span>
+              <div className="dots">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+              <span className="text-sm" style={{ color: '#36B37E' }}>Đang tạo phản hồi...</span>
             </div>
           </div>
         )}
@@ -161,6 +146,7 @@ const MessageBubble = ({
         {/* Message content */}
         <div className="p-4">
           {isEditing ? (
+            // Edit form - giữ nguyên
             <div>
               <textarea
                 ref={textareaRef}
@@ -218,18 +204,26 @@ const MessageBubble = ({
                 <div className="whitespace-pre-wrap">{message.content}</div>
               ) : (
                 <div className="markdown-content">
-                  <MarkdownRenderer content={message.content} />
-                  {message.sources && message.sources.length > 0 && (
-                    <SourceReference sources={message.sources} />
+                  {/* Chỉ hiển thị content nếu không đang regenerating */}
+                  {!isRegenerating && (
+                    <>
+                      <MarkdownRenderer content={message.content} />
+                      {message.sources && message.sources.length > 0 && (
+                        <SourceReference sources={message.sources} />
+                      )}
+                    </>
                   )}
+
+                  {/* Nếu đang regenerating thì để trống để typing indicator hiển thị */}
+                  {isRegenerating && <div style={{ minHeight: '24px' }}></div>}
                 </div>
               )}
             </>
           )}
         </div>
 
-        {/* Version controls */}
-        {hasVersions && !isEditing && (
+        {/* Version controls - ẩn khi đang regenerating */}
+        {hasVersions && !isEditing && !isRegenerating && (
           <div className="px-4 pb-2">
             <div className="flex items-center justify-between text-xs">
               <span className={isUser ? 'text-mint-200' : 'text-gray-500'}>
@@ -240,8 +234,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.max(1, currentVersion - 1))}
                   disabled={currentVersion <= 1}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                    ? 'hover:bg-mint-700 text-mint-200'
-                    : 'hover:bg-gray-200 text-gray-500'
+                      ? 'hover:bg-mint-700 text-mint-200'
+                      : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản trước"
                 >
@@ -251,8 +245,8 @@ const MessageBubble = ({
                   onClick={() => handleVersionSwitch(Math.min(totalVersions, currentVersion + 1))}
                   disabled={currentVersion >= totalVersions}
                   className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${isUser
-                    ? 'hover:bg-mint-700 text-mint-200'
-                    : 'hover:bg-gray-200 text-gray-500'
+                      ? 'hover:bg-mint-700 text-mint-200'
+                      : 'hover:bg-gray-200 text-gray-500'
                     }`}
                   title="Phiên bản tiếp theo"
                 >
@@ -263,14 +257,14 @@ const MessageBubble = ({
           </div>
         )}
 
-        {/* Timestamp and actions */}
+        {/* Timestamp and actions - ẩn actions khi đang regenerating */}
         <div className="px-4 pb-3 flex items-center justify-between">
           <div className={`text-xs ${isUser ? 'text-mint-200' : 'text-gray-500'}`}>
             {formatTime(message.timestamp)}
             {message.is_edited && <span className="ml-1">(đã chỉnh sửa)</span>}
           </div>
 
-          {/* Action buttons */}
+          {/* Action buttons - ẩn khi đang regenerating */}
           {!isEditing && !isRegenerating && (
             <div className="relative" ref={menuRef}>
               <button
