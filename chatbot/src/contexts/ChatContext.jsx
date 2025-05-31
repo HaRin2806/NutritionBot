@@ -58,8 +58,8 @@ export const ChatProvider = ({ children }) => {
                     <select id="swal-age" class="swal2-input w-full">
                         <option value="">-- Chọn độ tuổi --</option>
                         ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                            `<option value="${age}">${age} tuổi</option>`
-                        ).join('')}
+                    `<option value="${age}">${age} tuổi</option>`
+                ).join('')}
                     </select>
                 `,
                 confirmButtonText: 'Bắt đầu trò chuyện',
@@ -96,14 +96,14 @@ export const ChatProvider = ({ children }) => {
                 if (!refs.current.hasInitializedAge) {
                     refs.current.hasInitializedAge = true;
                     const storedAge = storageService.getUserAge();
-                    
+
                     if (storedAge) {
                         updateState({ userAge: storedAge });
                     } else if (conversations.length > 0) {
                         const lastConversationWithAge = conversations
                             .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
                             .find(conv => conv.age_context);
-                        
+
                         if (lastConversationWithAge?.age_context) {
                             updateState({ userAge: lastConversationWithAge.age_context });
                             storageService.saveUserAge(lastConversationWithAge.age_context);
@@ -119,7 +119,7 @@ export const ChatProvider = ({ children }) => {
         } finally {
             updateState({ isLoadingConversations: false });
         }
-    }, [updateState]);
+    }, []);
 
     const fetchConversationDetail = useCallback(async (id) => {
         if (!id || refs.current.fetchingDetail) return null;
@@ -138,14 +138,13 @@ export const ChatProvider = ({ children }) => {
         } finally {
             refs.current.fetchingDetail = false;
         }
-    }, [updateState]);
+    }, []);
 
-    // SỬA: sendMessage không navigate nữa
     const sendMessage = useCallback(async (messageContent, conversationId = null) => {
         const currentAge = await ensureUserAge();
         if (!currentAge) return { success: false, error: 'Cần thiết lập tuổi' };
 
-        if (state.activeConversation?.age_context && 
+        if (state.activeConversation?.age_context &&
             state.activeConversation.age_context !== currentAge) {
             const result = await Swal.fire({
                 title: 'Độ tuổi không khớp',
@@ -161,32 +160,50 @@ export const ChatProvider = ({ children }) => {
             return { success: false, error: 'Độ tuổi không khớp' };
         }
 
-        const tempMessage = {
-            id: generateTempId(),
+        // Tạo unique IDs với timestamp + random để tránh duplicate
+        const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
+        const tempUserMessage = {
+            _id: `temp_user_${uniqueId}`,
+            id: `temp_user_${uniqueId}`,
             role: 'user',
             content: messageContent,
             timestamp: new Date().toISOString()
         };
 
+        const tempBotMessage = {
+            _id: `temp_bot_${uniqueId}`,
+            id: `temp_bot_${uniqueId}`,
+            role: 'bot',
+            content: '',
+            timestamp: new Date().toISOString(),
+            isRegenerating: true
+        };
+
+        // Thêm temp messages
         if (state.activeConversation) {
             updateState({
                 activeConversation: {
                     ...state.activeConversation,
-                    messages: [...(state.activeConversation.messages || []), tempMessage]
+                    messages: [...(state.activeConversation.messages || []), tempUserMessage, tempBotMessage]
+                }
+            });
+        } else {
+            updateState({
+                activeConversation: {
+                    id: `temp_conv_${uniqueId}`,
+                    messages: [tempUserMessage, tempBotMessage]
                 }
             });
         }
 
-        updateState({ isLoading: true });
-
         try {
             const response = await chatService.sendMessage(messageContent, currentAge, conversationId);
-            
+
             if (response.success) {
                 if (response.conversation_id) {
-                    // CHỈ fetch detail, KHÔNG navigate
+                    // Fetch conversation detail để thay thế temp messages
                     await fetchConversationDetail(response.conversation_id);
-                    // Chỉ navigate nếu đây là conversation mới hoàn toàn
                     if (!conversationId) {
                         navigate(`/chat/${response.conversation_id}`);
                     }
@@ -195,17 +212,18 @@ export const ChatProvider = ({ children }) => {
             }
             throw new Error(response.error);
         } catch (error) {
+            // Xóa temp messages khi có lỗi
             if (state.activeConversation) {
                 updateState({
                     activeConversation: {
                         ...state.activeConversation,
-                        messages: state.activeConversation.messages.filter(m => m.id !== tempMessage.id)
+                        messages: state.activeConversation.messages.filter(m =>
+                            m._id !== tempUserMessage._id && m._id !== tempBotMessage._id
+                        )
                     }
                 });
             }
             return { success: false, error: error.message };
-        } finally {
-            updateState({ isLoading: false });
         }
     }, [state.activeConversation, state.userAge, ensureUserAge, updateState, navigate, fetchConversationDetail]);
 
@@ -284,7 +302,7 @@ export const ChatProvider = ({ children }) => {
                             conversations: state.conversations.map(conv =>
                                 conv.id === conversationId ? { ...conv, title: result.value } : conv
                             ),
-                            activeConversation: state.activeConversation?.id === conversationId 
+                            activeConversation: state.activeConversation?.id === conversationId
                                 ? { ...state.activeConversation, title: result.value }
                                 : state.activeConversation
                         });
@@ -326,7 +344,7 @@ export const ChatProvider = ({ children }) => {
                         activeConversation: {
                             ...state.activeConversation,
                             messages: state.activeConversation.messages.map(msg =>
-                                (msg._id || msg.id) === messageId 
+                                (msg._id || msg.id) === messageId
                                     ? { ...msg, content: newContent, is_edited: true }
                                     : msg
                             )
@@ -393,7 +411,7 @@ export const ChatProvider = ({ children }) => {
             }
 
             if (state.searchTerm) {
-                filtered = filtered.filter(conv => 
+                filtered = filtered.filter(conv =>
                     conv.title.toLowerCase().includes(state.searchTerm.toLowerCase())
                 );
             }
@@ -425,6 +443,8 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
+    const startNewConversation = conversationOperations.create;
+
     const value = {
         ...state,
         fetchConversations,
@@ -432,7 +452,7 @@ export const ChatProvider = ({ children }) => {
         sendMessage,
         ensureUserAge,
         promptUserForAge,
-        startNewConversation: conversationOperations.create,
+        startNewConversation,
         deleteConversation: conversationOperations.delete,
         renameConversation: conversationOperations.rename,
         bulkDeleteConversations: conversationOperations.bulkDelete,

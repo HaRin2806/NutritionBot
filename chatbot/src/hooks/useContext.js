@@ -21,6 +21,7 @@ export const useChat = () => {
   return context;
 };
 
+// Toast and dialog utilities
 export const useToast = () => {
   const showSuccess = (message, timer = 1500) => {
     Swal.fire({
@@ -89,14 +90,24 @@ export const useToast = () => {
   return { showSuccess, showError, showConfirm, showAgePrompt };
 };
 
+// Combined hook for all app functionality
 export const useApp = () => {
   const auth = useAuth();
   const chat = useChat();
   const toast = useToast();
   
   return {
-    // Auth
-    ...auth,
+    // Auth - đơn giản hóa
+    userData: auth.userData,
+    isLoading: auth.isLoading,
+    isVerified: auth.isVerified,
+    login: auth.login,
+    register: auth.register,
+    logout: auth.logout,
+    updateProfile: auth.updateProfile,
+    changePassword: auth.changePassword,
+    isAuthenticated: auth.isAuthenticated,
+    requireAuth: auth.requireAuth,
     
     // Chat  
     ...chat,

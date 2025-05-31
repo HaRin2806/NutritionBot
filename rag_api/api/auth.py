@@ -171,20 +171,36 @@ def logout():
 @jwt_required()
 def verify_token():
     """API endpoint để kiểm tra token có hợp lệ không"""
-    current_user_id = get_jwt_identity()
-    
-    # Kiểm tra user có tồn tại không
-    user = User.find_by_id(current_user_id)
-    if not user:
+    try:
+        current_user_id = get_jwt_identity()
+        print(f"Verifying token for user_id: {current_user_id}")
+        
+        # Kiểm tra user có tồn tại không
+        user = User.find_by_id(current_user_id)
+        if not user:
+            print(f"User not found: {current_user_id}")
+            return jsonify({
+                "success": False,
+                "error": "User không tồn tại"
+            }), 401
+        
+        print(f"Token valid for user: {user.name}")
+        return jsonify({
+            "success": True,
+            "user_id": current_user_id,
+            "user": {
+                "id": str(user.user_id),
+                "name": user.name,
+                "email": user.email,
+                "gender": user.gender
+            }
+        })
+    except Exception as e:
+        print(f"Token verification error: {str(e)}")
         return jsonify({
             "success": False,
-            "error": "User không tồn tại"
+            "error": str(e)
         }), 401
-    
-    return jsonify({
-        "success": True,
-        "user_id": current_user_id
-    })
 
 @auth_routes.route('/profile', methods=['GET'])
 @jwt_required()

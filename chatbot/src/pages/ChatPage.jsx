@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiPlus, BiChat } from 'react-icons/bi';
 import { useApp } from '../hooks/useContext';
@@ -9,8 +9,8 @@ const ChatPage = () => {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const {
-    userData, isLoading: isLoadingAuth, isAuthenticated,
-    activeConversation, conversations, isLoading, isLoadingConversations,
+    userData, isLoading, isAuthenticated,
+    activeConversation, conversations, isLoadingConversations,
     userAge, setUserAge, fetchConversations, fetchConversationDetail,
     sendMessage, startNewConversation, deleteConversation, renameConversation,
     editMessage, switchMessageVersion, regenerateResponse, deleteMessageAndFollowing,
@@ -19,19 +19,47 @@ const ChatPage = () => {
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [conversationsLoaded, setConversationsLoaded] = useState(false);
+  
+  // Single ref to track what's been loaded
+  const loadedRef = useRef({
+    conversations: false,
+    conversationId: null
+  });
+
   const messagesEndRef = useRef(null);
 
-  // SỬA: Auth check đúng logic - phải dùng isAuthenticated()
+  // Simple auth redirect - no complex timing
   useEffect(() => {
-    if (!isLoadingAuth) {
-      if (!isAuthenticated()) {
-        navigate('/login');
-      }
+    // Chỉ redirect khi chắc chắn không có user và không đang loading
+    if (!isLoading && !userData) {
+      navigate('/login');
     }
-  }, [isLoadingAuth, isAuthenticated, navigate]);
+  }, [isLoading, userData, navigate]);
 
-  // Responsive
+  // Load conversations once when user is available
+  useEffect(() => {
+    if (userData && !loadedRef.current.conversations) {
+      loadedRef.current.conversations = true;
+      fetchConversations().catch(error => {
+        console.error('Error loading conversations:', error);
+        loadedRef.current.conversations = false;
+      });
+    }
+  }, [userData, fetchConversations]);
+
+  // Load conversation detail when conversationId changes
+  useEffect(() => {
+    if (userData && conversationId && conversationId !== loadedRef.current.conversationId) {
+      loadedRef.current.conversationId = conversationId;
+      fetchConversationDetail(conversationId).catch(error => {
+        console.error('Error loading conversation detail:', error);
+      });
+    } else if (!conversationId) {
+      loadedRef.current.conversationId = null;
+    }
+  }, [userData, conversationId, fetchConversationDetail]);
+
+  // Responsive handling
   useEffect(() => {
     const handleResize = () => {
       const newIsMobile = window.innerWidth < 768;
@@ -44,22 +72,6 @@ const ChatPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [isSidebarVisible]);
 
-  // Load conversations CHỈ 1 LẦN
-  useEffect(() => {
-    if (userData && !isLoadingAuth && !conversationsLoaded) {
-      fetchConversations().then(() => {
-        setConversationsLoaded(true);
-      });
-    }
-  }, [userData, isLoadingAuth, conversationsLoaded, fetchConversations]);
-
-  // Load conversation detail
-  useEffect(() => {
-    if (conversationId && userData && !isLoadingAuth) {
-      fetchConversationDetail(conversationId);
-    }
-  }, [conversationId, userData, isLoadingAuth, fetchConversationDetail]);
-
   // Auto scroll
   useEffect(() => {
     if (activeConversation?.messages?.length > 0) {
@@ -67,30 +79,32 @@ const ChatPage = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     }
-  }, [activeConversation?.messages]);
+  }, [activeConversation?.messages?.length]);
 
-  const handleNewConversation = async () => {
-    if (!isAuthenticated()) {
-      navigate('/login');
-      return;
-    }
+  // Event handlers
+  const handleNewConversation = useCallback(async () => {
+    if (!isAuthenticated()) return;
 
     try {
       const result = await startNewConversation();
-      if (result.success && isMobile) setIsSidebarVisible(false);
+      if (result.success && isMobile) {
+        setIsSidebarVisible(false);
+      }
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
-  };
+  }, [isAuthenticated, startNewConversation, isMobile]);
 
-  const handleSelectConversation = (id) => {
+  const handleSelectConversation = useCallback((id) => {
     if (id !== activeConversation?.id) {
       navigate(`/chat/${id}`);
     }
-    if (isMobile) setIsSidebarVisible(false);
-  };
+    if (isMobile) {
+      setIsSidebarVisible(false);
+    }
+  }, [activeConversation?.id, navigate, isMobile]);
 
-  const handleDeleteConversation = (id) => {
+  const handleDeleteConversation = useCallback((id) => {
     showConfirm({
       title: 'Xóa cuộc trò chuyện?',
       text: 'Hành động này không thể hoàn tác.',
@@ -99,32 +113,28 @@ const ChatPage = () => {
       if (result.isConfirmed) {
         try {
           await deleteConversation(id);
-          setConversationsLoaded(false);
+          loadedRef.current.conversations = false;
         } catch (error) {
           console.error('Error deleting conversation:', error);
         }
       }
     });
-  };
+  }, [showConfirm, deleteConversation]);
 
-  // SỬA: Không navigate trong sendMessage
-  const handleSendMessage = async (message) => {
-    if (!isAuthenticated()) {
-      navigate('/login');
-      return;
-    }
+  const handleSendMessage = useCallback(async (message) => {
+    if (!isAuthenticated()) return;
 
     try {
-      // CHỈ gửi tin nhắn, KHÔNG navigate
       await sendMessage(message, activeConversation?.id);
     } catch (error) {
       console.error('Error sending message:', error);
     }
-  };
+  }, [isAuthenticated, sendMessage, activeConversation?.id]);
 
-  if (isLoadingAuth) {
+  // Show loading only when explicitly loading
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-gray-50">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-mint-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" 
                style={{ borderColor: '#36B37E', borderTopColor: 'transparent' }}></div>
@@ -132,6 +142,11 @@ const ChatPage = () => {
         </div>
       </div>
     );
+  }
+
+  // Don't render if no user data (will be redirected)
+  if (!userData) {
+    return null;
   }
 
   return (
@@ -147,6 +162,7 @@ const ChatPage = () => {
       />
 
       <div className="flex flex-1 overflow-hidden relative">
+        {/* Sidebar */}
         <div className={`${isSidebarVisible ? 'w-80 translate-x-0' : 'w-0 -translate-x-full'} 
           bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden 
           ${isMobile ? 'fixed inset-0 z-30' : 'relative'}`}>
@@ -163,6 +179,7 @@ const ChatPage = () => {
           />
         </div>
 
+        {/* Mobile overlay */}
         {isMobile && isSidebarVisible && (
           <div
             className="fixed inset-0 z-20 bg-black bg-opacity-30"
@@ -170,6 +187,7 @@ const ChatPage = () => {
           />
         )}
 
+        {/* Main content */}
         <div className="flex-1 flex flex-col">
           {activeConversation ? (
             <>
@@ -179,7 +197,7 @@ const ChatPage = () => {
                   <>
                     <MessageList
                       messages={activeConversation.messages}
-                      isLoading={isLoading}
+                      isLoading={false}
                       onCreateNewChat={handleNewConversation}
                       onEditMessage={editMessage}
                       onSwitchVersion={switchMessageVersion}
@@ -201,7 +219,10 @@ const ChatPage = () => {
                 )}
               </div>
               
-              <ChatInput onSendMessage={handleSendMessage} disabled={isLoading} />
+              <ChatInput 
+                onSendMessage={handleSendMessage} 
+                disabled={false}
+              />
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 flex-col">
