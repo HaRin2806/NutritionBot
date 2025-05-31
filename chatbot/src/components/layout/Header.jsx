@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu } from 'react-icons/bi';
+import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu, BiLeaf } from 'react-icons/bi';
 import { useApp } from '../../hooks/useContext';
 import { Button } from '../common';
 
@@ -8,10 +8,13 @@ const Header = ({
   toggleSidebar, 
   isMobile, 
   isSidebarVisible, 
-  extraButton 
+  extraButton,
+  userAge,
+  setUserAge, // Đây thực tế là handleAgeChange function
+  canEditAge = true
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { userData, userAge, setUserAge, logout, showAgePrompt } = useApp();
+  const { userData, logout } = useApp();
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -25,12 +28,10 @@ const Header = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleAgeChange = () => {
-    showAgePrompt(userAge).then((result) => {
-      if (result.isConfirmed) {
-        setUserAge(result.value);
-      }
-    });
+  const handleAgeClick = () => {
+    if (canEditAge && setUserAge) {
+      setUserAge(); // Gọi handleAgeChange từ ChatPage
+    }
   };
 
   return (
@@ -47,7 +48,8 @@ const Header = ({
         )}
 
         <Link to="/" className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
-          <span className="font-bold text-lg">🥗 Nutribot</span>
+          <BiLeaf className="text-2xl mr-2" />
+          <span className="font-bold text-lg">Nutribot</span>
         </Link>
       </div>
 
@@ -55,12 +57,22 @@ const Header = ({
         {/* Age display */}
         {userAge && (
           <button
-            onClick={handleAgeChange}
-            className="px-3 py-1 bg-mint-100 text-mint-700 rounded-full text-sm hover:bg-mint-200 transition"
-            style={{ backgroundColor: '#E6F7EF', color: '#36B37E' }}
+            onClick={handleAgeClick}
+            disabled={!canEditAge}
+            className={`px-3 py-1 text-mint-700 rounded-full text-sm transition flex items-center ${
+              canEditAge 
+                ? 'bg-mint-100 hover:bg-mint-200 cursor-pointer' 
+                : 'bg-gray-100 text-gray-500 cursor-not-allowed opacity-75'
+            }`}
+            style={{ 
+              backgroundColor: canEditAge ? '#E6F7EF' : '#F3F4F6', 
+              color: canEditAge ? '#36B37E' : '#6B7280' 
+            }}
+            title={canEditAge ? 'Nhấn để thay đổi độ tuổi' : 'Không thể thay đổi độ tuổi khi đã có tin nhắn'}
           >
             <BiUser className="inline mr-1" />
             {userAge} tuổi
+            {canEditAge && <BiChevronDown className="ml-1 w-3 h-3" />}
           </button>
         )}
 

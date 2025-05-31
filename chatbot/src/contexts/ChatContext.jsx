@@ -93,6 +93,7 @@ export const ChatProvider = ({ children }) => {
                 const conversations = response.conversations;
                 updateState({ conversations });
 
+                // Khởi tạo age từ storage hoặc conversation gần nhất
                 if (!refs.current.hasInitializedAge) {
                     refs.current.hasInitializedAge = true;
                     const storedAge = storageService.getUserAge();
@@ -122,12 +123,13 @@ export const ChatProvider = ({ children }) => {
     }, []);
 
     const fetchConversationDetail = useCallback(async (id) => {
-        if (!id || refs.current.fetchingDetail) return null;
+        if (!id) return null;
 
-        refs.current.fetchingDetail = true;
         try {
+            console.log('Fetching conversation detail for:', id);
             const response = await chatService.getConversationDetail(id);
             if (response.success) {
+                console.log('Successfully fetched conversation:', response.conversation.id);
                 updateState({ activeConversation: response.conversation });
                 return response.conversation;
             }
@@ -135,29 +137,16 @@ export const ChatProvider = ({ children }) => {
         } catch (error) {
             console.error("Error fetching conversation detail:", error);
             return null;
-        } finally {
-            refs.current.fetchingDetail = false;
         }
     }, []);
 
     const sendMessage = useCallback(async (messageContent, conversationId = null) => {
-        const currentAge = await ensureUserAge();
-        if (!currentAge) return { success: false, error: 'Cần thiết lập tuổi' };
+        // Sử dụng age từ activeConversation nếu có, hoặc global userAge
+        let currentAge = state.activeConversation?.age_context || state.userAge;
 
-        if (state.activeConversation?.age_context &&
-            state.activeConversation.age_context !== currentAge) {
-            const result = await Swal.fire({
-                title: 'Độ tuổi không khớp',
-                text: 'Tạo cuộc trò chuyện mới?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#36B37E'
-            });
-
-            if (result.isConfirmed) {
-                await startNewConversation();
-            }
-            return { success: false, error: 'Độ tuổi không khớp' };
+        if (!currentAge) {
+            currentAge = await ensureUserAge();
+            if (!currentAge) return { success: false, error: 'Cần thiết lập tuổi' };
         }
 
         // Tạo unique IDs với timestamp + random để tránh duplicate
@@ -338,7 +327,6 @@ export const ChatProvider = ({ children }) => {
     const messageOperations = {
         edit: async (messageId, conversationId, newContent) => {
             try {
-                // Tìm vị trí của user message và bot message tương ứng
                 const currentMessages = state.activeConversation.messages;
                 const userMessageIndex = currentMessages.findIndex(msg =>
                     (msg._id || msg.id) === messageId && msg.role === 'user'
@@ -352,17 +340,13 @@ export const ChatProvider = ({ children }) => {
                 const hasBotMessage = botMessageIndex < currentMessages.length &&
                     currentMessages[botMessageIndex].role === 'bot';
 
-                // Cập nhật UI ngay lập tức
                 const updatedMessages = [...currentMessages];
-
-                // Cập nhật user message
                 updatedMessages[userMessageIndex] = {
                     ...updatedMessages[userMessageIndex],
                     content: newContent,
                     is_edited: true
                 };
 
-                // Nếu có bot message, reset và show typing indicator
                 if (hasBotMessage) {
                     updatedMessages[botMessageIndex] = {
                         ...updatedMessages[botMessageIndex],
@@ -371,7 +355,6 @@ export const ChatProvider = ({ children }) => {
                     };
                 }
 
-                // Cập nhật state NGAY LẬP TỨC
                 updateState({
                     activeConversation: {
                         ...state.activeConversation,
@@ -379,11 +362,11 @@ export const ChatProvider = ({ children }) => {
                     }
                 });
 
-                // Gọi API trong background
-                const response = await chatService.editMessage(messageId, conversationId, newContent, state.userAge);
+                // Sử dụng age từ conversation hiện tại
+                const ageToUse = state.activeConversation.age_context || state.userAge;
+                const response = await chatService.editMessage(messageId, conversationId, newContent, ageToUse);
 
                 if (response.success) {
-                    // Fetch lại conversation detail để có data mới từ server
                     await fetchConversationDetail(conversationId);
                     return { success: true };
                 }
@@ -391,7 +374,6 @@ export const ChatProvider = ({ children }) => {
 
             } catch (error) {
                 console.error("Error editing message:", error);
-                // Nếu có lỗi, fetch lại conversation để khôi phục state
                 await fetchConversationDetail(conversationId);
                 throw error;
             }
@@ -413,7 +395,6 @@ export const ChatProvider = ({ children }) => {
 
         regenerate: async (messageId, conversationId, age) => {
             try {
-                // Tìm user message và bot message tương ứng
                 const currentMessages = state.activeConversation.messages;
                 const userMessageIndex = currentMessages.findIndex(msg =>
                     (msg._id || msg.id) === messageId && msg.role === 'user'
@@ -429,12 +410,11 @@ export const ChatProvider = ({ children }) => {
                     throw new Error('Không tìm thấy tin nhắn bot tương ứng');
                 }
 
-                // Cập nhật UI ngay lập tức - set regenerating flag cho bot message
                 const updatedMessages = [...currentMessages];
                 updatedMessages[botMessageIndex] = {
                     ...updatedMessages[botMessageIndex],
                     isRegenerating: true,
-                    content: '' // Xóa nội dung cũ
+                    content: ''
                 };
 
                 updateState({
@@ -444,17 +424,14 @@ export const ChatProvider = ({ children }) => {
                     }
                 });
 
-                // Gọi API regenerate
                 const response = await chatService.regenerateResponse(messageId, conversationId, age);
                 if (response.success) {
-                    // Fetch lại conversation detail để có data mới
                     await fetchConversationDetail(conversationId);
                     return { success: true };
                 }
                 throw new Error(response.error);
             } catch (error) {
                 console.error("Error regenerating:", error);
-                // Khôi phục state nếu có lỗi
                 await fetchConversationDetail(conversationId);
                 throw error;
             }
