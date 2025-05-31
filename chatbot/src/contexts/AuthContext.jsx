@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [state, setState] = useState({
     userData: null,
-    isLoading: true // ✅ Bắt đầu với loading = true
+    isLoading: true
   });
   
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
 
-  // API calls với error handling
   const apiCall = async (method, url, data = null, showSuccessMessage = false) => {
     try {
       const response = await api[method](url, data);
@@ -48,49 +47,34 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ SỬA: Initialize auth state đúng cách
   useEffect(() => {
     const initAuth = async () => {
-      console.log('🔍 Initializing auth...'); // DEBUG
-      
       const storedUser = storageService.getUserData();
       const token = storageService.getToken();
       
-      console.log('👤 Stored user:', storedUser); // DEBUG
-      console.log('🔑 Token exists:', !!token); // DEBUG
-      
       if (storedUser && token) {
         try {
-          // Set auth header
           api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-          
-          // Verify token
           const response = await api.post('/auth/verify-token');
-          console.log('✅ Token verification:', response.data.success); // DEBUG
           
           if (response.data.success) {
             updateState({ userData: storedUser, isLoading: false });
-            console.log('✅ Auth successful, user:', storedUser.name); // DEBUG
             return;
           }
         } catch (error) {
-          console.error('❌ Token verification failed:', error); // DEBUG
+          console.error('Token verification failed:', error);
         }
         
-        // Clear invalid data
-        console.log('🗑️ Clearing invalid auth data'); // DEBUG
         storageService.clearUserData();
         delete api.defaults.headers.common['Authorization'];
       }
       
-      console.log('🏁 Auth init completed - no user'); // DEBUG
       updateState({ userData: null, isLoading: false });
     };
 
     initAuth();
   }, [updateState]);
 
-  // Auth operations
   const authOperations = {
     login: async (email, password, rememberMe = false) => {
       updateState({ isLoading: true });
@@ -101,16 +85,13 @@ export const AuthProvider = ({ children }) => {
         });
         
         if (response.success) {
-          // Save user data
           const storage = rememberMe ? localStorage : sessionStorage;
           storageService.saveUserData(response.user, response.access_token, storage);
           
-          // Set auth header
           api.defaults.headers.common['Authorization'] = `Bearer ${response.access_token}`;
           
           updateState({ userData: response.user });
           
-          // Success message
           Swal.fire({
             icon: 'success',
             title: 'Đăng nhập thành công!',
@@ -176,7 +157,6 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           console.error('Logout API error:', error);
         } finally {
-          // Always clear data and redirect
           updateState({ userData: null });
           storageService.clearUserData();
           delete api.defaults.headers.common['Authorization'];
@@ -193,7 +173,6 @@ export const AuthProvider = ({ children }) => {
           const updatedUser = { ...state.userData, ...profileData };
           updateState({ userData: updatedUser });
           
-          // Update storage
           const currentUser = storageService.getUserData();
           if (currentUser) {
             const storage = localStorage.getItem('user') ? localStorage : sessionStorage;
@@ -216,63 +195,20 @@ export const AuthProvider = ({ children }) => {
       } catch (error) {
         return { success: false, error: error.message };
       }
-    },
-
-    refreshProfile: async () => {
-      try {
-        const response = await apiCall('get', '/auth/profile');
-        
-        if (response.success) {
-          updateState({ userData: response.user });
-          
-          // Update storage
-          const storage = localStorage.getItem('user') ? localStorage : sessionStorage;
-          storage.setItem('user', JSON.stringify(response.user));
-          
-          return { success: true };
-        }
-        
-        throw new Error(response.error);
-      } catch (error) {
-        return { success: false, error: error.message };
-      }
     }
   };
 
-  // ✅ SỬA: Utility functions đúng logic
   const isAuthenticated = () => !!state.userData;
 
-  // ✅ SỬA: Show login required modal ĐÚNG CÁCH
-  const showLoginRequired = (callback) => {
-    Swal.fire({
-      title: 'Bạn chưa đăng nhập',
-      text: 'Bạn cần đăng nhập để sử dụng tính năng này',
-      icon: 'warning',
-      confirmButtonText: 'Đăng nhập ngay',
-      confirmButtonColor: '#36B37E',
-    }).then((result) => {
-      if (result.isConfirmed && callback) {
-        callback();
-      }
-    });
-  };
-
   const value = {
-    // State
     userData: state.userData,
     isLoading: state.isLoading,
-    
-    // Operations
     login: authOperations.login,
     register: authOperations.register,
     logout: authOperations.logout,
     updateProfile: authOperations.updateProfile,
     changePassword: authOperations.changePassword,
-    refreshProfile: authOperations.refreshProfile,
-    
-    // Utilities
-    isAuthenticated,
-    showLoginRequired // ✅ SỬA: Export đúng tên function
+    isAuthenticated
   };
 
   return (

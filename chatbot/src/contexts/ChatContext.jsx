@@ -9,7 +9,6 @@ import { groupConversationsByTime } from '../utils/dateUtils';
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
-    // Consolidated state
     const [state, setState] = useState({
         activeConversation: null,
         conversations: [],
@@ -35,12 +34,10 @@ export const ChatProvider = ({ children }) => {
         hasInitializedAge: false
     });
 
-    // Unified update function
     const updateState = useCallback((updates) => {
         setState(prev => ({ ...prev, ...updates }));
     }, []);
 
-    // Age management
     const ensureUserAge = useCallback(async () => {
         if (!state.userAge) {
             const storedAge = storageService.getUserAge();
@@ -87,7 +84,6 @@ export const ChatProvider = ({ children }) => {
         });
     }, [updateState]);
 
-    // Conversation management
     const fetchConversations = useCallback(async (includeArchived = false) => {
         try {
             updateState({ isLoadingConversations: true });
@@ -97,7 +93,6 @@ export const ChatProvider = ({ children }) => {
                 const conversations = response.conversations;
                 updateState({ conversations });
 
-                // Age initialization logic
                 if (!refs.current.hasInitializedAge) {
                     refs.current.hasInitializedAge = true;
                     const storedAge = storageService.getUserAge();
@@ -145,12 +140,11 @@ export const ChatProvider = ({ children }) => {
         }
     }, [updateState]);
 
-    // Message operations
+    // SỬA: sendMessage không navigate nữa
     const sendMessage = useCallback(async (messageContent, conversationId = null) => {
         const currentAge = await ensureUserAge();
         if (!currentAge) return { success: false, error: 'Cần thiết lập tuổi' };
 
-        // Age validation logic
         if (state.activeConversation?.age_context && 
             state.activeConversation.age_context !== currentAge) {
             const result = await Swal.fire({
@@ -167,7 +161,6 @@ export const ChatProvider = ({ children }) => {
             return { success: false, error: 'Độ tuổi không khớp' };
         }
 
-        // Optimistic UI update
         const tempMessage = {
             id: generateTempId(),
             role: 'user',
@@ -191,15 +184,17 @@ export const ChatProvider = ({ children }) => {
             
             if (response.success) {
                 if (response.conversation_id) {
+                    // CHỈ fetch detail, KHÔNG navigate
                     await fetchConversationDetail(response.conversation_id);
-                    await fetchConversations();
-                    navigate(`/chat/${response.conversation_id}`);
+                    // Chỉ navigate nếu đây là conversation mới hoàn toàn
+                    if (!conversationId) {
+                        navigate(`/chat/${response.conversation_id}`);
+                    }
                 }
                 return { success: true, response };
             }
             throw new Error(response.error);
         } catch (error) {
-            // Rollback optimistic update
             if (state.activeConversation) {
                 updateState({
                     activeConversation: {
@@ -212,9 +207,8 @@ export const ChatProvider = ({ children }) => {
         } finally {
             updateState({ isLoading: false });
         }
-    }, [state.activeConversation, state.userAge, ensureUserAge, updateState, navigate, fetchConversationDetail, fetchConversations]);
+    }, [state.activeConversation, state.userAge, ensureUserAge, updateState, navigate, fetchConversationDetail]);
 
-    // Unified conversation operations
     const conversationOperations = {
         create: async () => {
             const user = storageService.getUserData();
@@ -229,7 +223,6 @@ export const ChatProvider = ({ children }) => {
             try {
                 const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
                 if (response.success) {
-                    await fetchConversations();
                     if (response.conversation_id) {
                         await fetchConversationDetail(response.conversation_id);
                         navigate(`/chat/${response.conversation_id}`);
@@ -287,7 +280,6 @@ export const ChatProvider = ({ children }) => {
                 try {
                     const response = await chatService.updateConversation(conversationId, { title: result.value });
                     if (response.success) {
-                        // Update both conversations list and active conversation
                         updateState({
                             conversations: state.conversations.map(conv =>
                                 conv.id === conversationId ? { ...conv, title: result.value } : conv
@@ -325,13 +317,11 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // Message editing operations
     const messageOperations = {
         edit: async (messageId, conversationId, newContent) => {
             try {
                 const response = await chatService.editMessage(messageId, conversationId, newContent, state.userAge);
                 if (response.success) {
-                    // Optimistic update for user message
                     updateState({
                         activeConversation: {
                             ...state.activeConversation,
@@ -394,12 +384,10 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // Filtering and search utilities
     const utilities = {
         filterConversations: (conversations) => {
             let filtered = conversations;
 
-            // Apply filters
             if (!state.filters.archived) {
                 filtered = filtered.filter(conv => !conv.is_archived);
             }
@@ -422,7 +410,7 @@ export const ChatProvider = ({ children }) => {
         updateFilters: (newFilters) => {
             updateState({
                 filters: { ...state.filters, ...newFilters },
-                pagination: { ...state.pagination, page: 1 } // Reset page
+                pagination: { ...state.pagination, page: 1 }
             });
         },
 
@@ -437,38 +425,26 @@ export const ChatProvider = ({ children }) => {
         }
     };
 
-    // Context value
     const value = {
-        // State
         ...state,
-        
-        // Core operations
         fetchConversations,
         fetchConversationDetail,
         sendMessage,
         ensureUserAge,
         promptUserForAge,
-        
-        // Conversation operations
         startNewConversation: conversationOperations.create,
         deleteConversation: conversationOperations.delete,
         renameConversation: conversationOperations.rename,
         bulkDeleteConversations: conversationOperations.bulkDelete,
-        
-        // Message operations
         editMessage: messageOperations.edit,
         switchMessageVersion: messageOperations.switchVersion,
         regenerateResponse: messageOperations.regenerate,
         deleteMessageAndFollowing: messageOperations.delete,
-        
-        // Utilities
         filterConversations: utilities.filterConversations,
         groupConversations: utilities.groupConversations,
         updateFilters: utilities.updateFilters,
         updatePagination: utilities.updatePagination,
         selectConversations: utilities.selectConversations,
-        
-        // State updates
         updateState,
         setUserAge: (age) => {
             updateState({ userAge: age });
