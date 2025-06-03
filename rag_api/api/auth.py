@@ -2,8 +2,9 @@ from flask import Blueprint, request, jsonify, make_response
 import re
 import logging
 from models.user_model import User
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, get_jwt
 import datetime
+from functools import wraps
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -20,6 +21,50 @@ def validate_password(password):
     """Kiểm tra mật khẩu có đủ mạnh không"""
     # Ví dụ: mật khẩu ít nhất 6 ký tự
     return len(password) >= 6
+
+def admin_required(resource=None, action="read"):
+    """Decorator kiểm tra quyền admin"""
+    def decorator(f):
+        @wraps(f)
+        @jwt_required()
+        def decorated_function(*args, **kwargs):
+            try:
+                user_id = get_jwt_identity()
+                
+                # Lấy thông tin user
+                user = User.find_by_id(user_id)
+                if not user:
+                    return jsonify({
+                        "success": False,
+                        "error": "User không tồn tại"
+                    }), 403
+                
+                # Kiểm tra có phải admin không
+                if not user.is_admin():
+                    return jsonify({
+                        "success": False,
+                        "error": "Không có quyền truy cập admin"
+                    }), 403
+                
+                # Kiểm tra quyền cụ thể nếu có yêu cầu
+                if resource and not user.has_permission(resource, action):
+                    return jsonify({
+                        "success": False,
+                        "error": f"Không có quyền {action} trên {resource}"
+                    }), 403
+                
+                # Thêm user vào request context
+                request.current_user = user
+                
+                return f(*args, **kwargs)
+            except Exception as e:
+                logger.error(f"Lỗi xác thực admin: {e}")
+                return jsonify({
+                    "success": False,
+                    "error": "Lỗi xác thực"
+                }), 500
+        return decorated_function
+    return decorator
 
 def register_user(name, email, password, gender=None):
     """Đăng ký người dùng mới"""
@@ -57,7 +102,10 @@ def login_user(email, password):
             additional_claims={
                 "name": user.name,
                 "email": user.email,
-                "gender": user.gender
+                "gender": user.gender,
+                "role": user.role,  # Thêm role vào token
+                "permissions": user.permissions,  # Thêm permissions vào token
+                "is_admin": user.is_admin()  # Thêm flag admin
             }
         )
         
@@ -67,7 +115,10 @@ def login_user(email, password):
                 "id": str(user.user_id),
                 "name": user.name,
                 "email": user.email,
-                "gender": user.gender
+                "gender": user.gender,
+                "role": user.role,
+                "permissions": user.permissions,
+                "is_admin": user.is_admin()
             },
             "access_token": access_token,
             "expires_in": 86400  # 24 giờ tính bằng giây
@@ -173,6 +224,8 @@ def verify_token():
     """API endpoint để kiểm tra token có hợp lệ không"""
     try:
         current_user_id = get_jwt_identity()
+        claims = get_jwt()
+        
         print(f"Verifying token for user_id: {current_user_id}")
         
         # Kiểm tra user có tồn tại không
@@ -184,7 +237,7 @@ def verify_token():
                 "error": "User không tồn tại"
             }), 401
         
-        print(f"Token valid for user: {user.name}")
+        print(f"Token valid for user: {user.name} (role: {user.role})")
         return jsonify({
             "success": True,
             "user_id": current_user_id,
@@ -192,7 +245,10 @@ def verify_token():
                 "id": str(user.user_id),
                 "name": user.name,
                 "email": user.email,
-                "gender": user.gender
+                "gender": user.gender,
+                "role": user.role,
+                "permissions": user.permissions,
+                "is_admin": user.is_admin()
             }
         })
     except Exception as e:
@@ -217,8 +273,12 @@ def user_profile():
                 "name": user.name,
                 "email": user.email,
                 "gender": user.gender,
+                "role": user.role,
+                "permissions": user.permissions,
+                "is_admin": user.is_admin(),
                 "created_at": user.created_at.isoformat() if user.created_at else None,
-                "updated_at": user.updated_at.isoformat() if user.updated_at else None
+                "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+                "last_login": user.last_login.isoformat() if user.last_login else None
             }
             
             return jsonify({
@@ -318,6 +378,87 @@ def update_password():
             
     except Exception as e:
         logger.error(f"Lỗi đổi mật khẩu: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+# === ADMIN ENDPOINTS ===
+
+@auth_routes.route('/admin/create-admin', methods=['POST'])
+@admin_required(resource="users", action="write")
+def create_new_admin():
+    """API endpoint để tạo admin mới (chỉ admin hiện tại)"""
+    try:
+        data = request.json
+        current_user = request.current_user
+        
+        name = data.get('name')
+        email = data.get('email')
+        password = data.get('password')
+        gender = data.get('gender')
+        
+        # Validate dữ liệu
+        if not name or not email or not password:
+            return jsonify({
+                "success": False,
+                "error": "Vui lòng nhập đầy đủ thông tin"
+            }), 400
+        
+        if not validate_email(email):
+            return jsonify({
+                "success": False,
+                "error": "Email không hợp lệ"
+            }), 400
+        
+        if not validate_password(password):
+            return jsonify({
+                "success": False,
+                "error": "Mật khẩu phải có ít nhất 6 ký tự"
+            }), 400
+        
+        # Tạo admin mới
+        success, result = User.create_admin(name, email, password, gender)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Tạo admin mới thành công",
+                "user_id": result["user_id"]
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi tạo admin mới: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@auth_routes.route('/init-admin', methods=['POST'])
+def init_admin():
+    """API endpoint để khởi tạo admin mặc định"""
+    try:
+        success, result = User.create_default_admin()
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Khởi tạo admin thành công",
+                "data": result
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": result
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"Lỗi khởi tạo admin: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)

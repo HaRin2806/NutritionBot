@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu, BiLeaf } from 'react-icons/bi';
+import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu, BiLeaf, BiShield } from 'react-icons/bi';
 import { useApp } from '../../hooks/useContext';
 import { Button } from '../common';
 
@@ -54,6 +54,17 @@ const Header = ({
       </div>
 
       <div className="flex items-center space-x-4">
+        {/* Admin Badge */}
+        {userData?.is_admin && (
+          <Link
+            to="/admin/dashboard"
+            className="flex items-center px-3 py-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full text-sm hover:from-purple-600 hover:to-purple-700 transition-all shadow-sm"
+          >
+            <BiShield className="w-4 h-4 mr-1" />
+            Admin
+          </Link>
+        )}
+
         {/* Age display */}
         {userAge && (
           <button
@@ -89,6 +100,21 @@ const Header = ({
 
           {isMenuOpen && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
+              {/* Admin Panel Access */}
+              {userData?.is_admin && (
+                <>
+                  <Link
+                    to="/admin/dashboard"
+                    className="flex items-center px-4 py-2 text-sm text-purple-700 hover:bg-purple-50"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <BiShield className="mr-2" />
+                    Admin Panel
+                  </Link>
+                  <hr className="my-1 border-gray-200" />
+                </>
+              )}
+              
               <Link
                 to="/settings"
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50"

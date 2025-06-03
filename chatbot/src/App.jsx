@@ -9,6 +9,18 @@ import RegisterPage from './pages/auth/RegisterPage';
 import HistoryPage from './pages/HistoryPage';
 import LandingPage from './pages/LandingPage';
 import SettingsPage from './pages/SettingsPage';
+
+// Admin Components
+import AdminLayout from './components/admin/AdminLayout';
+import {
+  AdminDashboard,
+  AdminUsers,
+  AdminDocuments,
+  AdminConversations,
+  AdminAnalytics,
+  AdminSettings
+} from './pages/admin';
+
 import storageService from './services/storageService';
 import config from './config';
 import './styles/global.css';
@@ -45,12 +57,31 @@ function App() {
       <AuthProvider>
         <ChatProvider>
           <Routes>
-            <Route path="/chat/:conversationId?" element={<ChatPage />} />
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            
+            {/* User Routes */}
+            <Route path="/chat/:conversationId?" element={<ChatPage />} />
             <Route path="/history" element={<HistoryPage />} />
-            <Route path="/" element={<LandingPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/*" element={
+              <AdminLayout>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="documents" element={<AdminDocuments />} />
+                  <Route path="conversations" element={<AdminConversations />} />
+                  <Route path="analytics" element={<AdminAnalytics />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                  {/* Redirect /admin to /admin/dashboard */}
+                  <Route path="" element={<AdminDashboard />} />
+                </Routes>
+              </AdminLayout>
+            } />
           </Routes>
         </ChatProvider>
       </AuthProvider>
