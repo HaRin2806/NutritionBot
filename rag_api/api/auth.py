@@ -30,6 +30,14 @@ def admin_required(resource=None, action="read"):
         def decorated_function(*args, **kwargs):
             try:
                 user_id = get_jwt_identity()
+                claims = get_jwt()
+                
+                # Kiểm tra xem có phải admin token không
+                if not claims.get("is_admin"):
+                    return jsonify({
+                        "success": False,
+                        "error": "Không có quyền truy cập admin"
+                    }), 403
                 
                 # Lấy thông tin user
                 user = User.find_by_id(user_id)

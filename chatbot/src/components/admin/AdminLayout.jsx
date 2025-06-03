@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   BiHome, BiUser, BiFile, BiMessageSquareDetail, 
@@ -6,10 +6,12 @@ import {
   BiLogOut
 } from 'react-icons/bi';
 import { useApp } from '../../hooks/useContext';
+import { Loader } from '../common';
+import adminService from '../../services/adminService';
 
-const AdminSidebar = ({ isOpen, onClose, isMobile }) => {
+const AdminSidebar = ({ isOpen, onClose, isMobile, adminData }) => {
   const location = useLocation();
-  const { userData, logout } = useApp();
+  const navigate = useNavigate();
 
   const menuItems = [
     {
@@ -45,6 +47,19 @@ const AdminSidebar = ({ isOpen, onClose, isMobile }) => {
   ];
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    try {
+      await adminService.adminLogout();
+      // Clear admin data from localStorage
+      localStorage.removeItem('admin_token');
+      localStorage.removeItem('admin_data');
+      navigate('/');
+    } catch (error) {
+      console.error('Admin logout error:', error);
+      navigate('/');
+    }
+  };
 
   return (
     <>
@@ -92,12 +107,12 @@ const AdminSidebar = ({ isOpen, onClose, isMobile }) => {
           <div className="flex items-center">
             <div className="w-10 h-10 bg-mint-600 rounded-full flex items-center justify-center">
               <span className="text-white font-medium">
-                {userData?.name?.charAt(0)?.toUpperCase() || 'A'}
+                {adminData?.name?.charAt(0)?.toUpperCase() || 'A'}
               </span>
             </div>
             <div className="ml-3">
-              <p className="text-white font-medium">{userData?.name || 'Admin'}</p>
-              <p className="text-gray-400 text-sm">{userData?.email}</p>
+              <p className="text-white font-medium">{adminData?.name || 'Admin'}</p>
+              <p className="text-gray-400 text-sm">{adminData?.email}</p>
             </div>
           </div>
         </div>
@@ -140,7 +155,7 @@ const AdminSidebar = ({ isOpen, onClose, isMobile }) => {
           </Link>
           
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="w-full flex items-center px-4 py-3 text-gray-300 hover:bg-red-800 hover:text-white rounded-lg transition-colors"
           >
             <BiLogOut className="w-5 h-5 mr-3" />
@@ -152,7 +167,7 @@ const AdminSidebar = ({ isOpen, onClose, isMobile }) => {
   );
 };
 
-const AdminHeader = ({ onToggleSidebar, isMobile }) => {
+const AdminHeader = ({ onToggleSidebar, isMobile, adminData }) => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -187,12 +202,14 @@ const AdminHeader = ({ onToggleSidebar, isMobile }) => {
 
 const AdminLayout = ({ children }) => {
   const navigate = useNavigate();
-  const { userData, isLoading } = useApp();
+  const { userData, showError } = useApp();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [adminData, setAdminData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Handle resize
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
@@ -205,25 +222,67 @@ const AdminLayout = ({ children }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Redirect if not admin
-  React.useEffect(() => {
-    if (!isLoading && (!userData || !userData.is_admin)) {
-      navigate('/');
-    }
-  }, [userData, isLoading, navigate]);
+  // Verify admin auth and load admin data
+  useEffect(() => {
+    const verifyAdminAuth = async () => {
+      try {
+        setIsLoading(true);
+        
+        // Check if we have admin token
+        const adminToken = localStorage.getItem('admin_token');
+        if (!adminToken) {
+          // Try to verify current user token for admin
+          if (userData?.is_admin) {
+            // User is admin, allow access
+            setAdminData(userData);
+            setIsLoading(false);
+            return;
+          } else {
+            // Not admin, redirect
+            navigate('/');
+            return;
+          }
+        }
+
+        // Verify admin token
+        const response = await adminService.verifyAdminToken();
+        if (response.success) {
+          setAdminData(response.admin);
+          localStorage.setItem('admin_data', JSON.stringify(response.admin));
+        } else {
+          localStorage.removeItem('admin_token');
+          localStorage.removeItem('admin_data');
+          navigate('/');
+        }
+      } catch (error) {
+        console.error('Admin auth verification failed:', error);
+        
+        // Check if regular user is admin
+        if (userData?.is_admin) {
+          setAdminData(userData);
+        } else {
+          showError('Không có quyền truy cập admin');
+          navigate('/');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verifyAdminAuth();
+  }, [userData, navigate, showError]);
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-mint-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Đang tải...</p>
+          <Loader type="spinner" color="mint" text="Đang xác thực..." />
         </div>
       </div>
     );
   }
 
-  if (!userData?.is_admin) {
+  if (!adminData) {
     return null;
   }
 
@@ -235,6 +294,7 @@ const AdminLayout = ({ children }) => {
           isOpen={!isMobile || sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           isMobile={isMobile}
+          adminData={adminData}
         />
       </div>
 
@@ -243,6 +303,7 @@ const AdminLayout = ({ children }) => {
         <AdminHeader
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           isMobile={isMobile}
+          adminData={adminData}
         />
         
         <main className="flex-1 overflow-y-auto">

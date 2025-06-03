@@ -1,6 +1,83 @@
 import api from './api';
 
 const adminService = {
+  // === ADMIN AUTH ===
+  adminLogin: async (email, password, rememberMe = false) => {
+    try {
+      const response = await api.post('/admin/auth/login', {
+        email,
+        password,
+        rememberMe
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  adminLogout: async () => {
+    try {
+      const response = await api.post('/admin/auth/logout');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  verifyAdminToken: async () => {
+    try {
+      const response = await api.post('/admin/auth/verify-token');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  getAdminProfile: async () => {
+    try {
+      const response = await api.get('/admin/auth/profile');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  updateAdminProfile: async (profileData) => {
+    try {
+      const response = await api.put('/admin/auth/profile', profileData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  changeAdminPassword: async (passwordData) => {
+    try {
+      const response = await api.post('/admin/auth/change-password', passwordData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  createAdmin: async (adminData) => {
+    try {
+      const response = await api.post('/admin/auth/create-admin', adminData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
+  initSuperAdmin: async () => {
+    try {
+      const response = await api.post('/admin/auth/init-super-admin');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
+
   // === DASHBOARD APIs ===
   getOverviewStats: async () => {
     try {
@@ -271,25 +348,6 @@ const adminService = {
       const response = await api.get('/admin/documents/export', {
         params: { format }
       });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  // === AUTH APIs (sử dụng auth hiện tại với role check) ===
-  createAdmin: async (adminData) => {
-    try {
-      const response = await api.post('/auth/admin/create-admin', adminData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  initDefaultAdmin: async () => {
-    try {
-      const response = await api.post('/auth/init-admin');
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
