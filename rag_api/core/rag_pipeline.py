@@ -1,321 +1,264 @@
-from typing import Dict, List, Any, Optional
-import google.generativeai as genai
 import logging
+import google.generativeai as genai
+from core.embedding_model import get_embedding_model
+from config import GEMINI_API_KEY, HUMAN_PROMPT_TEMPLATE, SYSTEM_PROMPT, TOP_K_RESULTS, TEMPERATURE, MAX_OUTPUT_TOKENS
 import os
-from dotenv import load_dotenv
-from core.data_processor import DataProcessor
-from core.embedding_model import get_embedding_model, EmbeddingModel
-
-# Tải biến môi trường
-load_dotenv()
+import re
 
 # Cấu hình logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Cấu hình từ biến môi trường
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-TOP_K_RESULTS = int(os.getenv("TOP_K_RESULTS", "5"))
-TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))
-MAX_OUTPUT_TOKENS = int(os.getenv("MAX_OUTPUT_TOKENS", "4096"))
-
-# Prompt template
-SYSTEM_PROMPT = """Bạn là một trợ lý AI chuyên về dinh dưỡng và an toàn thực phẩm dành cho học sinh Việt Nam. 
-Tên của bạn là Nutribot.
-
-Bạn có nhiệm vụ:
-1. Cung cấp thông tin chính xác, đầy đủ và dễ hiểu về dinh dưỡng, an toàn thực phẩm dựa trên tài liệu của Bộ Giáo dục và Đào tạo
-2. Điều chỉnh cách trả lời phù hợp với độ tuổi của người dùng
-3. Trả lời ngắn gọn, súc tích nhưng vẫn đảm bảo đầy đủ thông tin
-4. Sử dụng ngôn ngữ thân thiện, dễ hiểu với học sinh
-
-Khi trả lời:
-- Hãy sử dụng thông tin từ các tài liệu tham khảo được cung cấp
-- Nếu có bảng biểu trong tài liệu tham khảo, hãy đưa ra nội dung đầy đủ của bảng đó như thông tin bạn nhận được và giữ nguyên định dạng bảng đó khi trả lời
-- Nếu có hình ảnh trong tài liệu tham khảo, hãy giữ nguyên đường dẫn hình ảnh khi trả lời
-- Nếu câu hỏi không liên quan đến dinh dưỡng hoặc không có trong tài liệu, hãy lịch sự giải thích rằng bạn chỉ có thể tư vấn về các vấn đề dinh dưỡng và an toàn thực phẩm
-- Luôn trích dẫn nguồn của thông tin khi trả lời
-
-Đối với các câu hỏi không liên quan hoặc nhạy cảm:
-- Bạn sẽ không đưa ra lời khuyên y tế cụ thể cho các bệnh lý nặng
-- Bạn sẽ không đưa ra thông tin về các chế độ ăn kiêng khắc nghiệt hoặc nguy hiểm
-- Bạn sẽ không nhận và xử lý thông tin cá nhân nhạy cảm của người dùng ngoài tuổi tác
-"""
-
-HUMAN_PROMPT_TEMPLATE = """
-Câu hỏi: {query}
-
-Độ tuổi người dùng: {age} tuổi
-
-Tài liệu tham khảo:
-{contexts}
-
-Dựa vào thông tin trong tài liệu tham khảo và ngữ cảnh cuộc trò chuyện (nếu có), hãy trả lời câu hỏi một cách chi tiết, dễ hiểu và phù hợp với độ tuổi của người dùng. Nếu trong tài liệu có bảng biểu hoặc hình ảnh, hãy giữ nguyên và đưa vào câu trả lời. Nhớ trích dẫn nguồn thông tin.
-
-Nếu câu hỏi hiện tại có liên quan đến các cuộc trò chuyện trước đó, hãy cố gắng duy trì sự nhất quán trong câu trả lời.
-"""
-
-# Cấu hình Gemini API
+# Cấu hình Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 
 class RAGPipeline:
-    def __init__(self, data_processor: DataProcessor = None, embedding_model: EmbeddingModel = None):
-        """
-        Khởi tạo RAG Pipeline
+    def __init__(self):
+        """Khởi tạo RAG Pipeline chỉ với embedding model"""
+        logger.info("Khởi tạo RAG Pipeline")
         
-        Args:
-            data_processor: Đối tượng xử lý dữ liệu
-            embedding_model: Đối tượng mô hình embedding
-        """
-        self.data_processor = data_processor
-        self.embedding_model = embedding_model or get_embedding_model()
+        # SỬA: Chỉ khởi tạo embedding model, không khởi tạo DataProcessor
+        self.embedding_model = get_embedding_model()
         
-        # Khởi tạo mô hình Gemini
-        self.generation_model = genai.GenerativeModel(
-            # gemini-2.0-flash
-            # gemini-2.0-pro-exp-02-05
-            model_name="gemini-2.0-flash",
-            generation_config={
-                "temperature": TEMPERATURE,
-                "max_output_tokens": MAX_OUTPUT_TOKENS,
-                "top_p": 0.95,
-            }
-        )
-        logger.info("Đã khởi tạo RAG Pipeline")
+        # Khởi tạo Gemini model
+        self.gemini_model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        
+        logger.info("RAG Pipeline đã sẵn sàng")
     
-    def process_query(self, query: str, age: int = None, top_k: int = TOP_K_RESULTS, conversation_context=None) -> Dict[str, Any]:
+    def generate_response(self, query, age=1):
         """
-        Xử lý câu hỏi và trả về kết quả
+        Generate response cho user query sử dụng RAG
         
         Args:
-            query: Câu hỏi của người dùng
-            age: Độ tuổi của người dùng
-            top_k: Số lượng kết quả tối đa
-            conversation_context: Ngữ cảnh cuộc hội thoại (tối đa 3 cặp hỏi đáp gần nhất)
-            
+            query (str): Câu hỏi của người dùng
+            age (int): Tuổi của người dùng (1-19)
+        
         Returns:
-            Kết quả xử lý RAG bao gồm câu trả lời và thông tin bổ sung
+            dict: Response data with success status
         """
         try:
-            logger.info(f"Xử lý câu hỏi: '{query}', độ tuổi: {age}")
+            logger.info(f"Bắt đầu generate response cho query: {query[:50]}... (age: {age})")
             
-            # Tiền xử lý truy vấn
-            if self.data_processor:
-                processed_query = self.data_processor.preprocess_query(query)
-            else:
-                processed_query = query.strip()
-                
-            logger.info(f"Câu hỏi sau khi xử lý: '{processed_query}'")
+            # SỬA: Chỉ search trong ChromaDB, không load lại dữ liệu
+            logger.info("Đang tìm kiếm thông tin liên quan...")
+            search_results = self.embedding_model.search(query, top_k=TOP_K_RESULTS)
             
-            # Tìm kiếm các items liên quan (văn bản, bảng, hình ảnh)
-            results_by_type = self.embedding_model.search_by_content_types(
-                processed_query, 
-                age=age, 
-                content_types=["text", "table", "figure"], 
-                top_k=top_k
-            )
-            
-            # Gộp các kết quả
-            relevant_items = []
-            relevant_items.extend(results_by_type.get("text", []))
-            relevant_items.extend(results_by_type.get("table", []))
-            relevant_items.extend(results_by_type.get("figure", []))
-            
-            # Sắp xếp theo độ liên quan
-            relevant_items.sort(key=lambda x: x.get("relevance_score", 0), reverse=True)
-            
-            # Giới hạn số lượng kết quả
-            relevant_items = relevant_items[:top_k]
-            
-            logger.info(f"Tìm thấy {len(relevant_items)} items liên quan")
-            
-            # Nếu không tìm thấy kết quả nào phù hợp
-            if not relevant_items:
-                logger.warning("Không tìm thấy thông tin liên quan trong tài liệu")
+            if not search_results or len(search_results) == 0:
+                logger.warning("Không tìm thấy thông tin liên quan")
                 return {
-                    "answer": "Tôi không tìm thấy thông tin liên quan đến câu hỏi của bạn trong tài liệu. "
-                            "Xin vui lòng hỏi câu hỏi khác về dinh dưỡng và an toàn thực phẩm.",
-                    "contexts": [],
-                    "sources": [],
-                    "query": query,
-                    "success": True
+                    "success": True,
+                    "response": "Xin lỗi, tôi không tìm thấy thông tin liên quan đến câu hỏi của bạn trong tài liệu.",
+                    "sources": []
                 }
             
-            # Định dạng ngữ cảnh từ các items
+            # Chuẩn bị contexts từ kết quả tìm kiếm
             contexts = []
             sources = []
             
-            for item in relevant_items:
-                context_item = {
-                    "id": item["id"],
-                    "content": item["content"],
-                    "metadata": item["metadata"],
-                    "relevance_score": item["relevance_score"]
-                }
-                contexts.append(context_item)
+            for result in search_results:
+                # Lấy thông tin từ metadata
+                metadata = result.get('metadata', {})
+                content = result.get('document', '')
                 
-                # Thêm nguồn dữ liệu
-                source_item = {
-                    "id": item["id"],
-                    "title": item["metadata"].get("title", ""),
-                    "content_type": item["metadata"].get("content_type", "text"),
-                    "pages": item["metadata"].get("pages", "")
+                # Thêm context
+                contexts.append({
+                    "content": content,
+                    "metadata": metadata
+                })
+                
+                # Thêm source reference
+                source_info = {
+                    "title": metadata.get('title', metadata.get('chapter', 'Tài liệu dinh dưỡng')),
+                    "pages": metadata.get('pages'),
+                    "content_type": metadata.get('content_type', 'text')
                 }
-                sources.append(source_item)
+                
+                if source_info not in sources:
+                    sources.append(source_info)
             
-            # Định dạng ngữ cảnh cho RAG
-            formatted_contexts = self._format_context_for_rag(
-                [{"id": c["id"], 
-                "title": c["metadata"].get("title", ""), 
-                "content": c["content"],
-                "content_type": c["metadata"].get("content_type", "text")
-                } for c in contexts]
+            # Format contexts cho prompt
+            formatted_contexts = self._format_contexts(contexts)
+            
+            # Tạo prompt với age context
+            full_prompt = self._create_prompt_with_age_context(query, age, formatted_contexts)
+            
+            # Generate response với Gemini
+            logger.info("Đang tạo phản hồi với Gemini...")
+            response = self.gemini_model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=TEMPERATURE,
+                    max_output_tokens=MAX_OUTPUT_TOKENS
+                )
             )
             
-            # Tạo prompt cho Gemini
-            age_text = f"{age} tuổi" if age is not None else "chưa xác định"
+            if not response or not response.text:
+                logger.error("Gemini không trả về response")
+                return {
+                    "success": False,
+                    "error": "Không thể tạo phản hồi"
+                }
             
-            # Thêm ngữ cảnh cuộc hội thoại vào prompt nếu có
-            conversation_context_text = ""
-            if conversation_context and len(conversation_context) > 0:
-                conversation_context_text = "Cuộc trò chuyện trước đó:\n\n"
-                for i, exchange in enumerate(conversation_context, 1):
-                    conversation_context_text += f"Người dùng: {exchange['user']}\n"
-                    conversation_context_text += f"Nutribot: {exchange['bot']}\n\n"
+            response_text = response.text.strip()
             
-            # Tạo prompt hoàn chỉnh với System prompt, conversation context và human prompt
-            combined_prompt = f"{SYSTEM_PROMPT}\n\n"
+            # Post-process response để xử lý hình ảnh
+            response_text = self._process_image_links(response_text)
             
-            if conversation_context_text:
-                combined_prompt += f"{conversation_context_text}\n"
+            logger.info("Đã tạo phản hồi thành công")
             
-            combined_prompt += f"{HUMAN_PROMPT_TEMPLATE.format(query=query, age=age_text, contexts=formatted_contexts)}"
-            
-            # Debug log
-            logger.debug(f"Prompt tổng hợp: {combined_prompt[:200]}...")
-            
-            # Gọi Gemini API
-            logger.info("Gửi yêu cầu đến Gemini API")
-            response = self.generation_model.generate_content(combined_prompt)
-            
-            logger.info("Đã nhận phản hồi từ Gemini API")
-            
-            # Định dạng kết quả trả về
             return {
-                "answer": response.text,
-                "contexts": contexts,
-                "sources": sources,
-                "query": query,
-                "success": True
+                "success": True,
+                "response": response_text,
+                "sources": sources[:3]  # Giới hạn 3 sources để không quá dài
             }
             
         except Exception as e:
-            logger.error(f"Lỗi khi xử lý truy vấn: {str(e)}", exc_info=True)
+            logger.error(f"Lỗi generate response: {str(e)}")
             return {
-                "answer": "Rất tiếc, đã xảy ra lỗi khi xử lý câu hỏi của bạn. Vui lòng thử lại sau.",
-                "contexts": [],
-                "sources": [],
-                "query": query,
                 "success": False,
-                "error": str(e)
-            }    
-
-    def _format_context_for_rag(self, items: List[Dict[str, Any]]) -> str:
-        """Định dạng các items để đưa vào ngữ cảnh cho mô hình RAG"""
-        if self.data_processor:
-            return self.data_processor.format_context_for_rag(items)
-        
-        # Fallback nếu không có data_processor
-        formatted_contexts = []
-        
-        for i, item in enumerate(items, 1):
-            item_id = item.get("id", "")
-            title = item.get("title", "")
-            content = item.get("content", "")
-            content_type = item.get("content_type", "text")
-            
-            # Nếu là bảng, thêm tiêu đề "Bảng:"
-            if content_type == "table":
-                title = f"Bảng: {title}"
-            # Nếu là hình, thêm tiêu đề "Hình:"
-            elif content_type == "figure":
-                title = f"Hình: {title}"
-            
-            formatted_context = f"[{i}] {title}\n\n{content}\n\n"
-            formatted_contexts.append(formatted_context)
-        
-        return "\n".join(formatted_contexts)
+                "error": f"Lỗi tạo phản hồi: {str(e)}"
+            }
     
-    def enhance_answer_with_figures(self, answer: str, figures: List[Dict[str, Any]]) -> str:
-        """
-        Nâng cao câu trả lời bằng cách thêm các hình ảnh liên quan
+    def _format_contexts(self, contexts):
+        """Format contexts thành string cho prompt"""
+        formatted = []
         
-        Args:
-            answer: Câu trả lời từ mô hình ngôn ngữ
-            figures: Danh sách các hình ảnh liên quan
+        for i, context in enumerate(contexts, 1):
+            content = context['content']
+            metadata = context['metadata']
             
-        Returns:
-            Câu trả lời được nâng cao với các hình ảnh liên quan
-        """
-        # Nếu không có hình ảnh nào liên quan, trả về câu trả lời nguyên gốc
-        if not figures:
-            return answer
+            # Thêm thông tin metadata
+            context_str = f"[Tài liệu {i}]"
+            if metadata.get('title'):
+                context_str += f" - {metadata['title']}"
+            if metadata.get('pages'):
+                context_str += f" (Trang {metadata['pages']})"
             
-        # Tạo phần trích dẫn hình ảnh
-        figure_references = "\n\n### Hình ảnh liên quan:\n\n"
+            context_str += f"\n{content}\n"
+            formatted.append(context_str)
         
-        for i, figure in enumerate(figures, 1):
-            figure_id = figure.get("id", "")
-            figure_title = figure.get("metadata", {}).get("title", f"Hình {i}")
-            figure_path = figure.get("metadata", {}).get("image_path", "")
-            
-            if not figure_path:
-                continue
-                
-            figure_reference = f"**{figure_title}**\n\n![{figure_title}]({figure_path})\n\n"
-            figure_references += figure_reference
-            
-        # Thêm các hình ảnh vào câu trả lời
-        enhanced_answer = f"{answer}\n\n{figure_references}" if figures else answer
-        return enhanced_answer
+        return "\n".join(formatted)
     
-    def get_follow_up_questions(self, query: str, answer: str, age: int = None) -> List[str]:
-        """
-        Tạo các câu hỏi tiếp theo dựa trên câu hỏi và câu trả lời hiện tại
+    def _create_prompt_with_age_context(self, query, age, contexts):
+        """Tạo prompt với age context"""
+        # Xác định age group
+        if age <= 3:
+            age_guidance = "Sử dụng ngôn ngữ đơn giản, dễ hiểu cho phụ huynh có con nhỏ."
+        elif age <= 6:
+            age_guidance = "Tập trung vào dinh dưỡng cho trẻ mầm non, ngôn ngữ phù hợp với phụ huynh."
+        elif age <= 12:
+            age_guidance = "Nội dung phù hợp cho trẻ tiểu học, có thể giải thích đơn giản cho trẻ hiểu."
+        elif age <= 15:
+            age_guidance = "Thông tin chi tiết hơn, phù hợp cho học sinh trung học cơ sở."
+        else:
+            age_guidance = "Thông tin đầy đủ, chi tiết cho học sinh trung học phổ thông."
         
-        Args:
-            query: Câu hỏi hiện tại
-            answer: Câu trả lời hiện tại
-            age: Độ tuổi của người dùng
-            
-        Returns:
-            Danh sách các câu hỏi tiếp theo gợi ý
-        """
-        follow_up_prompt = f"""
-Dựa trên câu hỏi và câu trả lời dưới đây về dinh dưỡng và an toàn thực phẩm, 
-hãy đề xuất 3 câu hỏi tiếp theo mà người dùng có thể quan tâm. 
-Các câu hỏi phải liên quan đến chủ đề dinh dưỡng và an toàn thực phẩm.
+        # Tạo system prompt với age context
+        age_aware_system_prompt = f"""{SYSTEM_PROMPT}
 
-Câu hỏi: {query}
-
-Câu trả lời: {answer}
-
-Độ tuổi người dùng: {age if age is not None else 'không xác định'} tuổi
-
-Chỉ trả về 3 câu hỏi tiếp theo, mỗi câu một dòng, không đánh số, không có tiền tố hoặc hậu tố.
+QUAN TRỌNG - Hướng dẫn theo độ tuổi:
+Người dùng hiện tại {age} tuổi. {age_guidance}
+- Điều chỉnh ngôn ngữ và nội dung cho phù hợp
+- Đưa ra lời khuyên cụ thể cho độ tuổi này
+- Tránh thông tin quá phức tạp hoặc không phù hợp
 """
         
+        # Tạo human prompt
+        human_prompt = HUMAN_PROMPT_TEMPLATE.format(
+            query=query,
+            age=age,
+            contexts=contexts
+        )
+        
+        return f"{age_aware_system_prompt}\n\n{human_prompt}"
+    
+    def _process_image_links(self, response_text):
+        """Xử lý các đường dẫn hình ảnh trong response"""
         try:
-            # Gọi Gemini API
-            response = self.generation_model.generate_content(follow_up_prompt)
-            follow_up_text = response.text.strip()
+            # Tìm các pattern như figures/filename hoặc hình X.Y
+            image_patterns = [
+                r'figures/([^)\s]+)',
+                r'hình\s+(\d+\.?\d*)',
+                r'Hình\s+(\d+\.?\d*)'
+            ]
             
-            # Tách thành danh sách câu hỏi
-            follow_up_questions = [q.strip() for q in follow_up_text.split('\n') if q.strip()]
+            for pattern in image_patterns:
+                matches = re.finditer(pattern, response_text, re.IGNORECASE)
+                for match in matches:
+                    # Có thể thêm logic xử lý hình ảnh ở đây
+                    pass
             
-            # Giới hạn số lượng câu hỏi
-            return follow_up_questions[:3]
+            return response_text
             
         except Exception as e:
-            logger.error(f"Lỗi khi tạo câu hỏi tiếp theo: {str(e)}")
-            return []
+            logger.error(f"Lỗi xử lý image links: {e}")
+            return response_text
+    
+    def generate_follow_up_questions(self, query, answer, age=1):
+        """
+        Tạo câu hỏi gợi ý dựa trên query và answer
+        
+        Args:
+            query (str): Câu hỏi gốc
+            answer (str): Câu trả lời đã được tạo
+            age (int): Tuổi người dùng
+        
+        Returns:
+            dict: Response data với danh sách câu hỏi gợi ý
+        """
+        try:
+            logger.info("Đang tạo câu hỏi follow-up...")
+            
+            follow_up_prompt = f"""
+Dựa trên cuộc hội thoại sau, hãy tạo 3-5 câu hỏi gợi ý phù hợp cho người dùng {age} tuổi về chủ đề dinh dưỡng:
+
+Câu hỏi gốc: {query}
+Câu trả lời: {answer}
+
+Hãy tạo các câu hỏi:
+1. Liên quan trực tiếp đến chủ đề
+2. Phù hợp với độ tuổi {age}
+3. Thực tế và hữu ích
+4. Ngắn gọn, dễ hiểu
+
+Trả về danh sách câu hỏi, mỗi câu một dòng, không đánh số.
+"""
+            
+            response = self.gemini_model.generate_content(
+                follow_up_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.7,
+                    max_output_tokens=500
+                )
+            )
+            
+            if not response or not response.text:
+                return {
+                    "success": False,
+                    "error": "Không thể tạo câu hỏi gợi ý"
+                }
+            
+            # Parse response thành list câu hỏi
+            questions = []
+            lines = response.text.strip().split('\n')
+            
+            for line in lines:
+                line = line.strip()
+                if line and not line.startswith('#') and len(line) > 10:
+                    # Loại bỏ số thứ tự nếu có
+                    line = re.sub(r'^\d+[\.\)]\s*', '', line)
+                    questions.append(line)
+            
+            # Giới hạn 5 câu hỏi
+            questions = questions[:5]
+            
+            return {
+                "success": True,
+                "questions": questions
+            }
+            
+        except Exception as e:
+            logger.error(f"Lỗi tạo follow-up questions: {str(e)}")
+            return {
+                "success": False,
+                "error": f"Lỗi tạo câu hỏi gợi ý: {str(e)}"
+            }

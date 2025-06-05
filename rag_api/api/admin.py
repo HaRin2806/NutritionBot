@@ -641,3 +641,49 @@ def get_analytics_overview():
             "success": False,
             "error": str(e)
         }), 500
+
+@admin_routes.route('/users/<user_id>', methods=['PUT'])
+@require_admin
+def update_user(user_id):
+    """Cập nhật thông tin người dùng"""
+    try:
+        data = request.json
+        
+        user = User.find_by_id(user_id)
+        if not user:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy người dùng"
+            }), 404
+        
+        # Cập nhật thông tin
+        if 'name' in data:
+            user.name = data['name']
+        
+        if 'gender' in data:
+            user.gender = data['gender']
+        
+        if 'role' in data:
+            user.role = data['role']
+        
+        # Lưu thay đổi
+        user.save()
+        
+        return jsonify({
+            "success": True,
+            "message": "Cập nhật người dùng thành công",
+            "user": {
+                "id": str(user.user_id),
+                "name": user.name,
+                "email": user.email,
+                "gender": user.gender,
+                "role": user.role
+            }
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi cập nhật user: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500

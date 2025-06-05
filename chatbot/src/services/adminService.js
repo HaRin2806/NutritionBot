@@ -55,6 +55,15 @@ const adminService = {
       throw error.response?.data || error;
     }
   },
+  
+  updateUser: async (userId, userData) => {
+    try {
+      const response = await api.put(`/admin/users/${userId}`, userData);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error;
+    }
+  },
 
   deleteUser: async (userId) => {
     try {
