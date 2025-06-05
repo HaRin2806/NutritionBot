@@ -1,85 +1,14 @@
 import api from './api';
 
+// Helper function to get auth headers
+const getAuthHeaders = () => ({
+  'Authorization': `Bearer ${localStorage.getItem('access_token') || sessionStorage.getItem('access_token')}`,
+  'Content-Type': 'application/json'
+});
+
 const adminService = {
-  // === ADMIN AUTH ===
-  adminLogin: async (email, password, rememberMe = false) => {
-    try {
-      const response = await api.post('/admin/auth/login', {
-        email,
-        password,
-        rememberMe
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  adminLogout: async () => {
-    try {
-      const response = await api.post('/admin/auth/logout');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  verifyAdminToken: async () => {
-    try {
-      const response = await api.post('/admin/auth/verify-token');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  getAdminProfile: async () => {
-    try {
-      const response = await api.get('/admin/auth/profile');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  updateAdminProfile: async (profileData) => {
-    try {
-      const response = await api.put('/admin/auth/profile', profileData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  changeAdminPassword: async (passwordData) => {
-    try {
-      const response = await api.post('/admin/auth/change-password', passwordData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  createAdmin: async (adminData) => {
-    try {
-      const response = await api.post('/admin/auth/create-admin', adminData);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  initSuperAdmin: async () => {
-    try {
-      const response = await api.post('/admin/auth/init-super-admin');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  // === DASHBOARD APIs ===
-  getOverviewStats: async () => {
+  // === STATS & DASHBOARD ===
+  getStats: async () => {
     try {
       const response = await api.get('/admin/stats/overview');
       return response.data;
@@ -90,7 +19,7 @@ const adminService = {
 
   getUserStats: async () => {
     try {
-      const response = await api.get('/admin/stats/users');
+      const response = await api.get('/admin/users/stats/summary');
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -106,44 +35,11 @@ const adminService = {
     }
   },
 
-  getSystemStats: async () => {
-    try {
-      const response = await api.get('/admin/stats/system');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  getRecentActivities: async (limit = 20) => {
-    try {
-      const response = await api.get('/admin/recent-activities', {
-        params: { limit }
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  getSystemAlerts: async () => {
-    try {
-      const response = await api.get('/admin/alerts');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  // === USER MANAGEMENT APIs ===
+  // === USER MANAGEMENT ===
   getAllUsers: async (page = 1, perPage = 20, filters = {}) => {
     try {
       const response = await api.get('/admin/users', {
-        params: {
-          page,
-          per_page: perPage,
-          ...filters
-        }
+        params: { page, per_page: perPage, ...filters }
       });
       return response.data;
     } catch (error) {
@@ -154,15 +50,6 @@ const adminService = {
   getUserDetail: async (userId) => {
     try {
       const response = await api.get(`/admin/users/${userId}`);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  updateUser: async (userId, userData) => {
-    try {
-      const response = await api.put(`/admin/users/${userId}`, userData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -180,82 +67,17 @@ const adminService = {
 
   bulkDeleteUsers: async (userIds) => {
     try {
-      const response = await api.post('/admin/users/bulk-delete', {
-        user_ids: userIds
-      });
+      const response = await api.post('/admin/users/bulk-delete', { user_ids: userIds });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
     }
   },
 
-  getUserConversations: async (userId, page = 1, perPage = 20) => {
-    try {
-      const response = await api.get(`/admin/users/${userId}/conversations`, {
-        params: { page, per_page: perPage }
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  deleteUserConversation: async (userId, conversationId) => {
-    try {
-      const response = await api.delete(`/admin/users/${userId}/conversations/${conversationId}`);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  exportUsers: async (format = 'json', includeStats = false) => {
-    try {
-      const response = await api.get('/admin/users/export', {
-        params: {
-          format,
-          include_stats: includeStats
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  getUsersSummaryStats: async () => {
-    try {
-      const response = await api.get('/admin/users/stats/summary');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  searchUsers: async (searchParams) => {
-    try {
-      const response = await api.get('/admin/users/search', {
-        params: searchParams
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  // === DOCUMENT MANAGEMENT APIs ===
+  // === DOCUMENT MANAGEMENT ===
   getAllDocuments: async () => {
     try {
       const response = await api.get('/admin/documents');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  getDocumentDetail: async (docId) => {
-    try {
-      const response = await api.get(`/admin/documents/${docId}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -266,16 +88,12 @@ const adminService = {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      
-      // Thêm metadata
       Object.keys(metadata).forEach(key => {
         formData.append(key, metadata[key]);
       });
 
       const response = await api.post('/admin/documents/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       return response.data;
     } catch (error) {
@@ -303,9 +121,7 @@ const adminService = {
 
   bulkDeleteDocuments: async (docIds) => {
     try {
-      const response = await api.post('/admin/documents/bulk-delete', {
-        doc_ids: docIds
-      });
+      const response = await api.post('/admin/documents/bulk-delete', { doc_ids: docIds });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
@@ -314,40 +130,17 @@ const adminService = {
 
   rebuildEmbeddings: async (force = false) => {
     try {
-      const response = await api.post('/admin/documents/embeddings/rebuild', {
-        force
-      });
+      const response = await api.post('/admin/documents/embeddings/rebuild', { force });
       return response.data;
     } catch (error) {
       throw error.response?.data || error;
     }
   },
 
-  getEmbeddingsStats: async () => {
+  // === ADMIN AUTH ===
+  createAdmin: async (adminData) => {
     try {
-      const response = await api.get('/admin/documents/embeddings/stats');
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  searchDocuments: async (query, type = 'all', limit = 50) => {
-    try {
-      const response = await api.get('/admin/documents/search', {
-        params: { q: query, type, limit }
-      });
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error;
-    }
-  },
-
-  exportDocuments: async (format = 'json') => {
-    try {
-      const response = await api.get('/admin/documents/export', {
-        params: { format }
-      });
+      const response = await api.post('/admin/auth/create-admin', adminData);
       return response.data;
     } catch (error) {
       throw error.response?.data || error;

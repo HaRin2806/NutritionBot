@@ -5,6 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 import datetime
+from api.admin import admin_routes
 
 # Cấu hình logging
 logging.basicConfig(
@@ -45,11 +46,6 @@ from api.chat import chat_routes
 from api.data import data_routes
 from api.history import history_routes
 
-# Đăng ký các API endpoints cho admin
-from api.admin_auth import admin_auth_routes
-from api.admin_dashboard import admin_dashboard_routes
-from api.admin_users import admin_users_routes
-from api.admin_documents import admin_documents_routes
 
 # Đăng ký các blueprint cho user
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
@@ -58,10 +54,7 @@ app.register_blueprint(data_routes, url_prefix='/api')
 app.register_blueprint(history_routes, url_prefix='/api')
 
 # Đăng ký các blueprint cho admin
-app.register_blueprint(admin_auth_routes, url_prefix='/api/admin/auth')
-app.register_blueprint(admin_dashboard_routes, url_prefix='/api/admin')
-app.register_blueprint(admin_users_routes, url_prefix='/api/admin')
-app.register_blueprint(admin_documents_routes, url_prefix='/api/admin')
+app.register_blueprint(admin_routes, url_prefix='/api/admin')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

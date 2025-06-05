@@ -19,64 +19,45 @@ def validate_email(email):
 
 def validate_password(password):
     """Kiểm tra mật khẩu có đủ mạnh không"""
-    # Ví dụ: mật khẩu ít nhất 6 ký tự
     return len(password) >= 6
 
-def admin_required(resource=None, action="read"):
-    """Decorator kiểm tra quyền admin"""
-    def decorator(f):
-        @wraps(f)
-        @jwt_required()
-        def decorated_function(*args, **kwargs):
-            try:
-                user_id = get_jwt_identity()
-                claims = get_jwt()
-                
-                # Kiểm tra xem có phải admin token không
-                if not claims.get("is_admin"):
-                    return jsonify({
-                        "success": False,
-                        "error": "Không có quyền truy cập admin"
-                    }), 403
-                
-                # Lấy thông tin user
-                user = User.find_by_id(user_id)
-                if not user:
-                    return jsonify({
-                        "success": False,
-                        "error": "User không tồn tại"
-                    }), 403
-                
-                # Kiểm tra có phải admin không
-                if not user.is_admin():
-                    return jsonify({
-                        "success": False,
-                        "error": "Không có quyền truy cập admin"
-                    }), 403
-                
-                # Kiểm tra quyền cụ thể nếu có yêu cầu
-                if resource and not user.has_permission(resource, action):
-                    return jsonify({
-                        "success": False,
-                        "error": f"Không có quyền {action} trên {resource}"
-                    }), 403
-                
-                # Thêm user vào request context
-                request.current_user = user
-                
-                return f(*args, **kwargs)
-            except Exception as e:
-                logger.error(f"Lỗi xác thực admin: {e}")
+# SỬA: Decorator đơn giản hơn để check admin
+def require_admin(f):
+    """Decorator đơn giản để kiểm tra admin"""
+    @wraps(f)
+    @jwt_required()
+    def decorated_function(*args, **kwargs):
+        try:
+            user_id = get_jwt_identity()
+            user = User.find_by_id(user_id)
+            
+            if not user:
                 return jsonify({
                     "success": False,
-                    "error": "Lỗi xác thực"
-                }), 500
-        return decorated_function
-    return decorator
+                    "error": "User không tồn tại"
+                }), 403
+            
+            # Kiểm tra có phải admin không
+            if not user.is_admin():
+                return jsonify({
+                    "success": False,
+                    "error": "Không có quyền truy cập admin"
+                }), 403
+            
+            # Thêm user vào request context
+            request.current_user = user
+            return f(*args, **kwargs)
+            
+        except Exception as e:
+            logger.error(f"Lỗi xác thực admin: {e}")
+            return jsonify({
+                "success": False,
+                "error": "Lỗi xác thực"
+            }), 500
+    return decorated_function
 
 def register_user(name, email, password, gender=None):
     """Đăng ký người dùng mới"""
-    # Kiểm tra dữ liệu đầu vào
     if not name or not email or not password:
         return False, "Vui lòng nhập đầy đủ thông tin"
     
@@ -86,7 +67,6 @@ def register_user(name, email, password, gender=None):
     if not validate_password(password):
         return False, "Mật khẩu phải có ít nhất 6 ký tự"
     
-    # Đăng ký người dùng
     success, result = User.register(name, email, password, gender)
     if success:
         return True, {"user_id": result}
@@ -111,9 +91,9 @@ def login_user(email, password):
                 "name": user.name,
                 "email": user.email,
                 "gender": user.gender,
-                "role": user.role,  # Thêm role vào token
-                "permissions": user.permissions,  # Thêm permissions vào token
-                "is_admin": user.is_admin()  # Thêm flag admin
+                "role": user.role,
+                "permissions": user.permissions,
+                "is_admin": user.is_admin()
             }
         )
         
@@ -129,7 +109,7 @@ def login_user(email, password):
                 "is_admin": user.is_admin()
             },
             "access_token": access_token,
-            "expires_in": 86400  # 24 giờ tính bằng giây
+            "expires_in": 86400
         }
     else:
         return False, result
@@ -168,7 +148,7 @@ def register():
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
-    """API endpoint để đăng nhập và thiết lập JWT cookie"""
+    """API endpoint để đăng nhập"""
     try:
         data = request.json
         
@@ -181,7 +161,6 @@ def login():
         if success:
             access_token = result.get("access_token")
             
-            # Tạo response với cookie
             response = make_response(jsonify({
                 "success": True,
                 "user_id": result.get("user_id"),
@@ -190,8 +169,7 @@ def login():
                 "expires_in": result.get("expires_in")
             }))
             
-            # Thiết lập cookie JWT
-            cookie_max_age = 86400 if remember_me else None  # 24h hoặc session cookie
+            cookie_max_age = 86400 if remember_me else None
             response.set_cookie(
                 'access_token_cookie',
                 access_token,
@@ -199,7 +177,7 @@ def login():
                 httponly=True,
                 path='/api',
                 samesite='Lax',
-                secure=False  # Set True khi triển khai HTTPS
+                secure=False
             )
             
             return response
@@ -218,7 +196,7 @@ def login():
 
 @auth_routes.route('/logout', methods=['POST'])
 def logout():
-    """API endpoint để đăng xuất (xóa cookie JWT)"""
+    """API endpoint để đăng xuất"""
     response = make_response(jsonify({
         "success": True,
         "message": "Đăng xuất thành công"
@@ -232,20 +210,14 @@ def verify_token():
     """API endpoint để kiểm tra token có hợp lệ không"""
     try:
         current_user_id = get_jwt_identity()
-        claims = get_jwt()
         
-        print(f"Verifying token for user_id: {current_user_id}")
-        
-        # Kiểm tra user có tồn tại không
         user = User.find_by_id(current_user_id)
         if not user:
-            print(f"User not found: {current_user_id}")
             return jsonify({
                 "success": False,
                 "error": "User không tồn tại"
             }), 401
         
-        print(f"Token valid for user: {user.name} (role: {user.role})")
         return jsonify({
             "success": True,
             "user_id": current_user_id,
@@ -260,7 +232,6 @@ def verify_token():
             }
         })
     except Exception as e:
-        print(f"Token verification error: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
@@ -272,7 +243,6 @@ def user_profile():
     """API endpoint để lấy thông tin người dùng"""
     try:
         user_id = get_jwt_identity()
-            
         user = User.find_by_id(user_id)
         
         if user:
@@ -321,14 +291,12 @@ def update_profile():
                 "error": "Không tìm thấy người dùng"
             }), 404
         
-        # Cập nhật thông tin
         if 'name' in data:
             user.name = data['name']
         
         if 'gender' in data:
             user.gender = data['gender']
         
-        # Lưu thông tin đã cập nhật
         user.save()
         
         return jsonify({
@@ -361,21 +329,18 @@ def update_password():
                 "error": "Không tìm thấy người dùng"
             }), 404
         
-        # Kiểm tra mật khẩu hiện tại
         if not User.check_password(user.password, current_password):
             return jsonify({
                 "success": False,
                 "error": "Mật khẩu hiện tại không chính xác"
             }), 400
         
-        # Kiểm tra mật khẩu mới
         if not validate_password(new_password):
             return jsonify({
                 "success": False,
                 "error": "Mật khẩu mới phải có ít nhất 6 ký tự"
             }), 400
         
-        # Cập nhật mật khẩu
         user.password = User.hash_password(new_password)
         user.save()
         
@@ -391,57 +356,127 @@ def update_password():
             "error": str(e)
         }), 500
 
-# === ADMIN ENDPOINTS ===
+# === ADMIN ENDPOINTS - SỬA LẠI ĐỂ SỬ DỤNG CHUNG TOKEN ===
 
-@auth_routes.route('/admin/create-admin', methods=['POST'])
-@admin_required(resource="users", action="write")
-def create_new_admin():
-    """API endpoint để tạo admin mới (chỉ admin hiện tại)"""
+@auth_routes.route('/admin/stats/overview', methods=['GET'])
+@require_admin
+def get_admin_overview_stats():
+    """API endpoint để lấy thống kê tổng quan cho admin"""
     try:
-        data = request.json
-        current_user = request.current_user
+        from models.conversation_model import get_db
         
-        name = data.get('name')
-        email = data.get('email')
-        password = data.get('password')
-        gender = data.get('gender')
+        db = get_db()
         
-        # Validate dữ liệu
-        if not name or not email or not password:
-            return jsonify({
-                "success": False,
-                "error": "Vui lòng nhập đầy đủ thông tin"
-            }), 400
+        # Đếm tổng conversations
+        total_conversations = db.conversations.count_documents({})
         
-        if not validate_email(email):
-            return jsonify({
-                "success": False,
-                "error": "Email không hợp lệ"
-            }), 400
+        # Conversations trong 24h qua
+        day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+        recent_conversations = db.conversations.count_documents({
+            "created_at": {"$gte": day_ago}
+        })
         
-        if not validate_password(password):
-            return jsonify({
-                "success": False,
-                "error": "Mật khẩu phải có ít nhất 6 ký tự"
-            }), 400
+        # Đếm tổng tin nhắn
+        pipeline = [
+            {"$project": {"message_count": {"$size": "$messages"}}},
+            {"$group": {"_id": None, "total_messages": {"$sum": "$message_count"}}}
+        ]
+        message_result = list(db.conversations.aggregate(pipeline))
+        total_messages = message_result[0]["total_messages"] if message_result else 0
         
-        # Tạo admin mới
-        success, result = User.create_admin(name, email, password, gender)
+        # Mock users data (có thể thay bằng query thực tế)
+        total_users = db.users.count_documents({}) if hasattr(db, 'users') else 1
         
-        if success:
-            return jsonify({
-                "success": True,
-                "message": "Tạo admin mới thành công",
-                "user_id": result["user_id"]
-            })
-        else:
-            return jsonify({
-                "success": False,
-                "error": result
-            }), 400
-            
+        return jsonify({
+            "success": True,
+            "stats": {
+                "users": {
+                    "total": total_users,
+                    "new_today": 0
+                },
+                "conversations": {
+                    "total": total_conversations,
+                    "recent": recent_conversations
+                },
+                "data": {
+                    "total_chunks": total_messages,
+                    "total_tables": 0,
+                    "total_figures": 0,
+                    "total_items": total_messages,
+                    "embeddings": 0
+                },
+                "admins": {
+                    "total": 1
+                }
+            }
+        })
+        
     except Exception as e:
-        logger.error(f"Lỗi tạo admin mới: {str(e)}")
+        logger.error(f"Lỗi lấy thống kê admin: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@auth_routes.route('/admin/recent-activities', methods=['GET'])
+@require_admin
+def get_admin_recent_activities():
+    """API endpoint để lấy hoạt động gần đây cho admin"""
+    try:
+        limit = int(request.args.get('limit', 10))
+        
+        from models.conversation_model import get_db
+        db = get_db()
+        
+        # Lấy conversations gần đây
+        recent_conversations = list(db.conversations.find(
+            {},
+            {"title": 1, "created_at": 1, "updated_at": 1}
+        ).sort("updated_at", -1).limit(limit))
+        
+        activities = []
+        for conv in recent_conversations:
+            activities.append({
+                "type": "conversation_created",
+                "title": "Cuộc hội thoại mới",
+                "description": conv.get("title", "Cuộc hội thoại"),
+                "timestamp": conv.get("updated_at", datetime.datetime.now()).isoformat()
+            })
+        
+        return jsonify({
+            "success": True,
+            "activities": activities
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi lấy hoạt động gần đây: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@auth_routes.route('/admin/alerts', methods=['GET'])
+@require_admin
+def get_admin_system_alerts():
+    """API endpoint để lấy cảnh báo hệ thống cho admin"""
+    try:
+        # Mock alerts - có thể thay bằng logic thực tế
+        alerts = [
+            {
+                "type": "info",
+                "title": "Hệ thống hoạt động bình thường",
+                "message": "Tất cả các dịch vụ đang chạy ổn định",
+                "severity": "low"
+            }
+        ]
+        
+        return jsonify({
+            "success": True,
+            "alerts": alerts
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi lấy cảnh báo hệ thống: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
