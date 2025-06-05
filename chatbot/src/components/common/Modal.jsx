@@ -57,9 +57,9 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Overlay */}
+        {/* Overlay với blur effect */}
         <div 
-          className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+          className="fixed inset-0 transition-opacity backdrop-blur-md bg-white bg-opacity-10"
           aria-hidden="true"
         ></div>
 
@@ -74,7 +74,7 @@ const Modal = ({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                className="text-gray-400 hover:text-gray-500 focus:outline-none transition-colors"
               >
                 <BiX className="w-6 h-6" />
               </button>

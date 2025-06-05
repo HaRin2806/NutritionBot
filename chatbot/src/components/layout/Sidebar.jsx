@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { BiPlus, BiHistory, BiSearch, BiX } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { formatTime, groupConversationsByTime } from '../../utils/dateUtils';
@@ -17,6 +17,7 @@ const Sidebar = ({
   onCloseSidebar = () => { },
 }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
+  const conversationRefs = useRef({});
 
   const filteredConversations = conversations.filter(
     conv => conv.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -24,15 +25,49 @@ const Sidebar = ({
 
   const groupedConversations = groupConversationsByTime(filteredConversations);
 
+  // SỬA: Scroll đến conversation được select
+  useEffect(() => {
+    if (activeConversation?.id && conversationRefs.current[activeConversation.id]) {
+      const element = conversationRefs.current[activeConversation.id];
+      const container = element.closest('.overflow-y-auto');
+      
+      if (container && element) {
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        
+        // Kiểm tra xem element có nằm trong viewport của container không
+        const isVisible = (
+          elementRect.top >= containerRect.top &&
+          elementRect.bottom <= containerRect.bottom
+        );
+        
+        if (!isVisible) {
+          // Scroll để element nằm ở giữa container
+          const scrollTop = element.offsetTop - container.offsetTop - (container.clientHeight / 2) + (element.clientHeight / 2);
+          container.scrollTo({
+            top: Math.max(0, scrollTop),
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+  }, [activeConversation?.id]);
+
   const renderConversationItem = (conversation) => (
     <div
       key={conversation.id}
+      ref={el => {
+        if (el) {
+          conversationRefs.current[conversation.id] = el;
+        }
+      }}
       onClick={() => {
         onSelectConversation(conversation.id);
         if (isMobile) onCloseSidebar();
       }}
-      className={`px-4 py-3 flex items-center justify-between cursor-pointer transition rounded-md mx-2 ${activeConversation?.id === conversation.id ? 'bg-mint-100' : 'hover:bg-gray-50'
-        }`}
+      className={`px-4 py-3 flex items-center justify-between cursor-pointer transition rounded-md mx-2 ${
+        activeConversation?.id === conversation.id ? 'bg-mint-100' : 'hover:bg-gray-50'
+      }`}
       style={{ backgroundColor: activeConversation?.id === conversation.id ? '#E6F7EF' : '' }}
     >
       <div className="flex-1 min-w-0">

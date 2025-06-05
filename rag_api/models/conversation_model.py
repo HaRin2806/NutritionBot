@@ -143,7 +143,7 @@ class Conversation:
         return message["_id"]
 
     def edit_message(self, message_id, new_content):
-        """Chỉnh sửa tin nhắn và tạo version mới, đồng thời đánh dấu cần regenerate bot response"""
+        """Chỉnh sửa tin nhắn và xóa tất cả tin nhắn sau nó, tạo version mới"""
         try:
             # Tìm tin nhắn cần chỉnh sửa
             message_index = None
@@ -163,25 +163,29 @@ class Conversation:
             
             timestamp = datetime.datetime.now()
             
-            # Tạo version mới
-            new_version = len(message["versions"]) + 1
+            # Tạo version mới cho tin nhắn được edit
+            new_version = len(message.get("versions", [])) + 1
             new_version_data = {
                 "content": new_content,
                 "timestamp": timestamp,
                 "version": new_version
             }
             
-            # Thêm version mới vào danh sách
+            # Cập nhật tin nhắn với version mới
+            if "versions" not in message:
+                message["versions"] = [{
+                    "content": message["content"],
+                    "timestamp": message.get("timestamp", timestamp),
+                    "version": 1
+                }]
+            
             message["versions"].append(new_version_data)
             message["current_version"] = new_version
             message["content"] = new_content  # Cập nhật content hiện tại
             message["is_edited"] = True
             
-            # Đánh dấu bot message tiếp theo cần được regenerate
-            bot_message_index = message_index + 1
-            if bot_message_index < len(self.messages) and self.messages[bot_message_index]["role"] == "bot":
-                self.messages[bot_message_index]["needs_regeneration"] = True
-                logger.info(f"Đã đánh dấu bot message cần regenerate: {self.messages[bot_message_index]['_id']}")
+            # QUAN TRỌNG: Xóa tất cả tin nhắn sau tin nhắn được edit
+            self.messages = self.messages[:message_index + 1]
             
             # Cập nhật thời gian của cuộc hội thoại
             self.updated_at = timestamp
@@ -189,11 +193,62 @@ class Conversation:
             # Lưu thay đổi vào database
             self.save()
             
+            logger.info(f"Đã chỉnh sửa tin nhắn {message_id} và xóa {len(self.messages) - message_index - 1} tin nhắn sau nó")
+            
             return True, "Đã chỉnh sửa tin nhắn thành công"
             
         except Exception as e:
             logger.error(f"Lỗi khi chỉnh sửa tin nhắn: {e}")
             return False, f"Lỗi khi chỉnh sửa tin nhắn: {str(e)}"
+
+    def regenerate_bot_response_after_edit(self, user_message_id, new_response, sources=None):
+        """Thêm phản hồi bot mới sau khi edit tin nhắn user"""
+        try:
+            # Tìm tin nhắn user vừa được edit
+            user_message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(user_message_id):
+                    user_message_index = i
+                    break
+            
+            if user_message_index is None:
+                return False, "Không tìm thấy tin nhắn user"
+            
+            # Thêm phản hồi bot mới ngay sau tin nhắn user
+            timestamp = datetime.datetime.now()
+            bot_message = {
+                "_id": ObjectId(),
+                "role": "bot",
+                "content": new_response,
+                "timestamp": timestamp,
+                "versions": [{
+                    "content": new_response,
+                    "timestamp": timestamp,
+                    "version": 1
+                }],
+                "current_version": 1,
+                "parent_message_id": self.messages[user_message_index]["_id"],
+                "is_edited": False
+            }
+            
+            if sources:
+                bot_message["sources"] = sources
+                bot_message["versions"][0]["sources"] = sources
+            
+            # Thêm bot message vào cuộc hội thoại
+            self.messages.append(bot_message)
+            
+            # Cập nhật thời gian
+            self.updated_at = timestamp
+            
+            # Lưu thay đổi
+            self.save()
+            
+            return True, "Đã tạo phản hồi mới"
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi tạo phản hồi mới: {e}")
+            return False, f"Lỗi: {str(e)}"
 
     def switch_message_version(self, message_id, version_number):
         """Chuyển đổi version của tin nhắn"""

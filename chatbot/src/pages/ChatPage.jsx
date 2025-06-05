@@ -207,7 +207,7 @@ const ChatPage = () => {
     }
   }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, startNewConversation, isMobile]);
 
-  // SỬA: Xử lý chọn conversation
+  // SỬA: Xử lý chọn conversation với scroll
   const handleSelectConversation = useCallback((id) => {
     console.log('Selecting conversation:', id, 'current active:', activeConversation?.id);
 

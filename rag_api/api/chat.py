@@ -142,7 +142,6 @@ def generate_follow_up_questions():
         }), 500
 
 # === MESSAGE EDITING ENDPOINTS ===
-
 @chat_routes.route('/messages/<message_id>/edit', methods=['PUT'])
 @jwt_required()
 def edit_message(message_id):
@@ -187,10 +186,16 @@ def edit_message(message_id):
                 "error": "Không tìm thấy tin nhắn"
             }), 404
         
-        # Cập nhật tin nhắn và tạo lại phản hồi
-        conversation.edit_message(message_id, new_content)
+        # SỬA: Cập nhật tin nhắn và xóa tất cả tin nhắn sau nó
+        success, result_message = conversation.edit_message(message_id, new_content)
         
-        # SỬA: Sử dụng RAG Pipeline để generate response mới
+        if not success:
+            return jsonify({
+                "success": False,
+                "error": result_message
+            }), 400
+        
+        # SỬA: Tạo phản hồi mới với RAG Pipeline
         pipeline = get_rag_pipeline()
         response_data = pipeline.generate_response(new_content, age)
         
@@ -198,15 +203,37 @@ def edit_message(message_id):
             bot_response = response_data.get("response", "Xin lỗi, tôi không thể trả lời câu hỏi này.")
             sources = response_data.get("sources", [])
             
-            # Cập nhật phản hồi bot
-            conversation.regenerate_bot_response_after_edit(message_id, bot_response, sources)
+            # Thêm phản hồi bot mới
+            success, bot_message = conversation.regenerate_bot_response_after_edit(message_id, bot_response, sources)
             
-            # Trả về conversation đã cập nhật
-            updated_conversation = Conversation.find_by_id(conversation_id)
-            return jsonify({
-                "success": True,
-                "conversation": updated_conversation.to_dict()
-            })
+            if success:
+                # Trả về conversation đã cập nhật
+                updated_conversation = Conversation.find_by_id(conversation_id)
+                return jsonify({
+                    "success": True,
+                    "message": "Đã chỉnh sửa tin nhắn và tạo phản hồi mới",
+                    "conversation": {
+                        "id": str(updated_conversation.conversation_id),
+                        "messages": [
+                            {
+                                "id": str(msg["_id"]),
+                                "role": msg["role"],
+                                "content": msg["content"],
+                                "timestamp": msg["timestamp"].isoformat(),
+                                "sources": msg.get("sources", []),
+                                "is_edited": msg.get("is_edited", False),
+                                "versions": msg.get("versions", []),
+                                "current_version": msg.get("current_version", 1)
+                            }
+                            for msg in updated_conversation.messages
+                        ]
+                    }
+                })
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": f"Đã chỉnh sửa tin nhắn nhưng không thể tạo phản hồi: {bot_message}"
+                }), 500
         else:
             return jsonify({
                 "success": False,

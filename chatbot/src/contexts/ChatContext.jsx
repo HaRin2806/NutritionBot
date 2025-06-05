@@ -336,37 +336,39 @@ export const ChatProvider = ({ children }) => {
                     throw new Error('Không tìm thấy tin nhắn user');
                 }
 
-                const botMessageIndex = userMessageIndex + 1;
-                const hasBotMessage = botMessageIndex < currentMessages.length &&
-                    currentMessages[botMessageIndex].role === 'bot';
-
-                const updatedMessages = [...currentMessages];
-                updatedMessages[userMessageIndex] = {
-                    ...updatedMessages[userMessageIndex],
+                // SỬA: Xóa tất cả tin nhắn sau tin nhắn được edit (bao gồm cả bot response)
+                const messagesBeforeEdit = currentMessages.slice(0, userMessageIndex + 1);
+                
+                // Cập nhật tin nhắn user
+                messagesBeforeEdit[userMessageIndex] = {
+                    ...messagesBeforeEdit[userMessageIndex],
                     content: newContent,
                     is_edited: true
                 };
 
-                if (hasBotMessage) {
-                    updatedMessages[botMessageIndex] = {
-                        ...updatedMessages[botMessageIndex],
-                        isRegenerating: true,
-                        content: ''
-                    };
-                }
+                // Thêm temp bot message với loading state
+                const tempBotMessage = {
+                    _id: `temp_bot_${Date.now()}`,
+                    id: `temp_bot_${Date.now()}`,
+                    role: 'bot',
+                    content: '',
+                    timestamp: new Date().toISOString(),
+                    isRegenerating: true
+                };
 
                 updateState({
                     activeConversation: {
                         ...state.activeConversation,
-                        messages: updatedMessages
+                        messages: [...messagesBeforeEdit, tempBotMessage]
                     }
                 });
 
-                // Sử dụng age từ conversation hiện tại
+                // Gọi API edit message - API sẽ tự động regenerate response
                 const ageToUse = state.activeConversation.age_context || state.userAge;
                 const response = await chatService.editMessage(messageId, conversationId, newContent, ageToUse);
 
                 if (response.success) {
+                    // Reload conversation để lấy dữ liệu mới từ server
                     await fetchConversationDetail(conversationId);
                     return { success: true };
                 }
@@ -374,6 +376,7 @@ export const ChatProvider = ({ children }) => {
 
             } catch (error) {
                 console.error("Error editing message:", error);
+                // Revert về trạng thái cũ nếu có lỗi
                 await fetchConversationDetail(conversationId);
                 throw error;
             }
@@ -396,20 +399,15 @@ export const ChatProvider = ({ children }) => {
         regenerate: async (messageId, conversationId, age) => {
             try {
                 const currentMessages = state.activeConversation.messages;
-                const userMessageIndex = currentMessages.findIndex(msg =>
-                    (msg._id || msg.id) === messageId && msg.role === 'user'
+                const botMessageIndex = currentMessages.findIndex(msg =>
+                    (msg._id || msg.id) === messageId && msg.role === 'bot'
                 );
 
-                if (userMessageIndex === -1) {
-                    throw new Error('Không tìm thấy tin nhắn user');
+                if (botMessageIndex === -1) {
+                    throw new Error('Không tìm thấy tin nhắn bot');
                 }
 
-                const botMessageIndex = userMessageIndex + 1;
-                if (botMessageIndex >= currentMessages.length ||
-                    currentMessages[botMessageIndex].role !== 'bot') {
-                    throw new Error('Không tìm thấy tin nhắn bot tương ứng');
-                }
-
+                // Cập nhật state để hiển thị loading
                 const updatedMessages = [...currentMessages];
                 updatedMessages[botMessageIndex] = {
                     ...updatedMessages[botMessageIndex],

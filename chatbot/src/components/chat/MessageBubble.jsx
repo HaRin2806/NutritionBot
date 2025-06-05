@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { BiEdit, BiCheck, BiX, BiChevronLeft, BiChevronRight, BiRefresh, BiTrash, BiDotsVerticalRounded } from 'react-icons/bi';
 import { formatTime } from '../../utils/dateUtils';
 import MarkdownRenderer from '../markdown/MarkdownRenderer';
-import SourceReference from './SourceReference';
+import SourceReference from '../chat/SourceReference';
 
 const MessageBubble = ({
   message,
@@ -47,6 +47,11 @@ const MessageBubble = ({
     }
   }, [isEditing]);
 
+  // Reset edit content when message changes
+  useEffect(() => {
+    setEditContent(message.content);
+  }, [message.content]);
+
   const handleEditStart = () => {
     setIsEditing(true);
     setEditContent(message.content);
@@ -62,13 +67,13 @@ const MessageBubble = ({
     setIsSubmitting(true);
 
     try {
-      setIsSubmitting(false);
+      await onEditMessage(messageId, conversationId, editContent.trim());
       setIsEditing(false);
-      onEditMessage(messageId, conversationId, editContent.trim());
     } catch (error) {
       console.error('Error editing message:', error);
+      // Không cần revert editContent vì onEditMessage sẽ reload conversation
+    } finally {
       setIsSubmitting(false);
-      setIsEditing(true);
     }
   };
 
@@ -125,7 +130,7 @@ const MessageBubble = ({
           backgroundColor: isUser ? '#36B37E' : '#FFFFFF',
         }}
       >
-        {/* SỬA: Typing indicator cho bot message */}
+        {/* Typing indicator cho bot message */}
         {isRegenerating ? (
           <div className="p-4">
             <div className="flex items-center space-x-2">
