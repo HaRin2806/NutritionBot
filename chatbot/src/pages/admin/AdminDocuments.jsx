@@ -4,9 +4,9 @@ import {
     BiSearch, BiFilter, BiCog, BiData, BiX, BiCheck, BiCloudUpload,
     BiChat
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader, Button, Input, Modal } from '../../components/common';
-import adminService from '../../services/adminService';
+import { adminService } from '../../services/index';
 
 const DocumentCard = ({ document, onView, onDelete, onProcess, isSelected, onSelect }) => {
     const getStatusColor = (status) => {

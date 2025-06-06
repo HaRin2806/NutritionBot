@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BiEdit, BiCheck, BiX, BiChevronLeft, BiChevronRight, BiRefresh, BiTrash, BiDotsVerticalRounded } from 'react-icons/bi';
-import { formatTime } from '../../utils/dateUtils';
+import { formatTime } from '../../utils/index';
 import MarkdownRenderer from '../markdown/MarkdownRenderer';
 import SourceReference from '../chat/SourceReference';
 

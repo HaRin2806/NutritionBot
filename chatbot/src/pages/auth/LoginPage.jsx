@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiUser, BiLock } from 'react-icons/bi';
 import { Input, Button } from '../../components/common';
-import { useApp } from '../../hooks/useContext';
-import { validateLoginForm } from '../../utils/validators';
+import { useApp } from '../../contexts/AppContext';
+import { validateLoginForm } from '../../utils/index';
 
 const LoginPage = () => {
   const navigate = useNavigate();

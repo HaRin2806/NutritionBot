@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiPlus, BiChat } from 'react-icons/bi';
-import { useApp } from '../hooks/useContext';
+import { useApp } from '../contexts/AppContext';
 import { Header, Sidebar } from '../components/layout';
 import { MessageList, ChatInput } from '../components/chat';
-import storageService from '../services/storageService';
+import { storageService } from '../services';
 
 const ChatPage = () => {
   const { conversationId } = useParams();

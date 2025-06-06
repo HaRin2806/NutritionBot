@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield, BiMoon, BiSun } from 'react-icons/bi';
-import { useApp } from '../hooks/useContext';
+import { useApp } from '../contexts/AppContext';
 import { Header } from '../components/layout';
-import { Button, Input } from '../components/common';
+import { Button, Input, Modal } from '../components/base/index.jsx';
 import config from '../config';
 
 const SettingsPage = () => {

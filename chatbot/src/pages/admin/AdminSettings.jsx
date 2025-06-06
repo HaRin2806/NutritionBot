@@ -3,9 +3,9 @@ import {
     BiCog, BiSave, BiRefresh, BiShield, BiUser, BiKey,
     BiServer, BiData, BiCloud, BiMailSend, BiLock
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader, Button, Input, Modal } from '../../components/common';
-import adminService from '../../services/adminService';
+import { adminService } from '../../services/index';
 
 const SettingCard = ({ title, description, children, icon }) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6">

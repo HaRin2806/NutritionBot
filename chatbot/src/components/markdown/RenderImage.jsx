@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { processImagePath } from '../../utils/formatters';
+import { processImagePath } from '../../utils/index';
 
 const RenderImage = ({ src, alt }) => {
   const [loading, setLoading] = useState(true);

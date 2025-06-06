@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { 
   BiMessageSquareDetail, BiRefresh, BiUser, BiData, BiShield 
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader } from '../../components/common';
-import api from '../../services/api';
+import api from '../../services/baseApi';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();

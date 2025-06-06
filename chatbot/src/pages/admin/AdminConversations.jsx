@@ -3,9 +3,9 @@ import {
   BiMessageSquareDetail, BiSearch, BiTrash, BiUser,
   BiFilter, BiRefresh, BiDownload, BiCalendar, BiChat
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader, Button, Input, Modal } from '../../components/common';
-import adminService from '../../services/adminService';
+import { adminService } from '../../services/index';
 
 const ConversationCard = ({ conversation, onView, onDelete, isSelected, onSelect }) => (
   <div className={`bg-white rounded-lg border-2 p-4 hover:shadow-md transition-all ${

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiArchive, BiEdit, BiRefresh } from 'react-icons/bi';
-import { useApp } from '../hooks/useContext';
+import { useApp } from '../contexts/AppContext';
 import { Header } from '../components/layout';
-import { Button, Loader } from '../components/common';
-import { formatDate, formatTime, getRelativeDate } from '../utils/dateUtils';
-import chatService from '../services/chatService';
+import { Loader } from '../components/common';  
+import { Button, Input, Modal } from '../components/base/index.jsx';
+import { formatDate, formatTime, getRelativeDate } from '../utils/index';
+import { chatService, adminService } from '../services';
 
 const HistoryPage = () => {
   const navigate = useNavigate();

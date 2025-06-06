@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu, BiLeaf, BiShield } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Button } from '../common';
 
 const Header = ({ 

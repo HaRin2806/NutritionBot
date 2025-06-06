@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BiLeaf, BiMessageDetail, BiShield, BiUser, BiRocket } from 'react-icons/bi';
-import { Button } from '../components/common';
-import { useApp } from '../hooks/useContext';
+import { Button, Input, Modal } from '../components/base';
+import { useApp } from '../contexts/AppContext';
 
 const LandingPage = () => {
   const { userData } = useApp();

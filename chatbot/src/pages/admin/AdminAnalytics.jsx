@@ -3,9 +3,9 @@ import {
     BiBarChart, BiTrendingUp, BiUser, BiMessageSquareDetail,
     BiRefresh, BiDownload, BiCalendar, BiFilter
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader, Button } from '../../components/common';
-import adminService from '../../services/adminService';
+import { adminService } from '../../services/index';
 
 const MetricCard = ({ title, value, change, trend, icon, color }) => (
     <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">

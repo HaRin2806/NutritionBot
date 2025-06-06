@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BiSearch, BiPlus, BiHistory, BiX } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-import { formatTime, groupConversationsByTime } from '../../utils/dateUtils';
+import { formatTime, groupConversationsByTime } from '../../utils/index';
 import { Loader } from '../common';
 import ConversationItem from './ConversationItem';
 

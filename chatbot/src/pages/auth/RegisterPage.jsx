@@ -6,13 +6,13 @@ import {
   BiEnvelope,
   BiChevronDown
 } from 'react-icons/bi';
-import { Input, Button } from '../../components/common';
-import { useApp } from '../../hooks/useContext'; // ✅ Import mới
-import { validateRegisterForm } from '../../utils/validators';
+import { Input, Button } from '../../components/base/index.jsx';
+import { useApp } from '../../contexts/AppContext.jsx';
+import { validateRegisterForm } from '../../utils/index';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register, isLoading } = useApp(); // ✅ Dùng useApp thay vì useAuth
+  const { register, isLoading } = useApp();
   
   const [formData, setFormData] = useState({
     fullName: '',

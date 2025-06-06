@@ -3,9 +3,9 @@ import {
   BiUser, BiSearch, BiTrash, BiEdit, BiRefresh, BiInfoCircle,
   BiMessageSquareDetail, BiCheck
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader, Button, Input, Modal } from '../../components/common';
-import adminService from '../../services/adminService';
+import { adminService } from '../../services/index';
 
 const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
   <div className={`bg-white rounded-lg border-2 p-4 hover:shadow-md transition-all ${isSelected ? 'border-mint-300 bg-mint-50' : 'border-gray-200'

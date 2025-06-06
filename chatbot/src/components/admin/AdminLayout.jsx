@@ -4,7 +4,7 @@ import {
   BiHome, BiUser, BiFile, BiMessageSquareDetail, 
   BiCog, BiBarChart, BiMenu, BiX, BiLeaf, BiShield, BiLogOut
 } from 'react-icons/bi';
-import { useApp } from '../../hooks/useContext';
+import { useApp } from '../../contexts/AppContext';
 import { Loader } from '../common';
 
 const AdminLayout = ({ children }) => {
