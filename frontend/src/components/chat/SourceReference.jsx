@@ -1,28 +1,72 @@
-import React from 'react';
-import { BiInfoCircle } from 'react-icons/bi';
+import React, { useState } from 'react';
+import { BiBookOpen, BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
-const SourceReference = ({ sources }) => {
-  if (!sources || sources.length === 0) return null;
+const SourceReference = ({ sources = [], darkMode = false, themeConfig = {} }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!sources || sources.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="mt-2 p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm">
-      <div className="flex items-center mb-2">
-        <BiInfoCircle className="text-mint-600 mr-1" style={{ color: '#36B37E' }} />
-        <span className="font-medium">Nguồn tham khảo:</span>
-      </div>
-      <ul className="space-y-1 ml-1">
-        {sources.map((source, index) => (
-          <li key={index} className="flex items-start">
-            <span className="text-xs text-gray-500 mr-1">[{index + 1}]</span>
-            <span className="text-gray-700">
-              {source.title}
-              {source.pages && <span className="text-gray-500 ml-1">(Trang {source.pages})</span>}
-              {source.content_type === 'table' && <span className="ml-1 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs rounded">Bảng</span>}
-              {source.content_type === 'figure' && <span className="ml-1 px-1.5 py-0.5 bg-green-100 text-green-700 text-xs rounded">Hình</span>}
-            </span>
-          </li>
-        ))}
-      </ul>
+    <div className={`mt-4 border-t pt-3 ${
+      darkMode ? 'border-gray-600' : 'border-gray-200'
+    }`}>
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={`flex items-center text-sm font-medium transition-colors hover:opacity-80 ${
+          darkMode ? 'text-gray-300' : 'text-gray-700'
+        }`}
+        style={{ color: themeConfig?.primary || '#36B37E' }}
+      >
+        <BiBookOpen className="w-4 h-4 mr-2" />
+        <span>Nguồn tham khảo ({sources.length})</span>
+        {isExpanded ? (
+          <BiChevronUp className="w-4 h-4 ml-1" />
+        ) : (
+          <BiChevronDown className="w-4 h-4 ml-1" />
+        )}
+      </button>
+
+      {isExpanded && (
+        <div className="mt-2 space-y-2">
+          {sources.map((source, index) => (
+            <div
+              key={index}
+              className={`p-3 rounded-lg border text-sm ${
+                darkMode 
+                  ? 'bg-gray-800 border-gray-600 text-gray-300'
+                  : 'bg-gray-50 border-gray-200 text-gray-700'
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="font-medium mb-1" style={{ color: themeConfig?.primary || '#36B37E' }}>
+                    [{index + 1}] {source.title}
+                  </div>
+                  {source.content && (
+                    <div className={`text-xs leading-relaxed ${
+                      darkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      {source.content.length > 200 
+                        ? `${source.content.substring(0, 200)}...` 
+                        : source.content
+                      }
+                    </div>
+                  )}
+                  {source.page && (
+                    <div className={`text-xs mt-1 font-medium ${
+                      darkMode ? 'text-gray-500' : 'text-gray-400'
+                    }`}>
+                      Trang {source.page}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

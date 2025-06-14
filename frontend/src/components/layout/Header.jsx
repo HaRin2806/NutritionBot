@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { BiUser, BiChevronDown, BiCog, BiHistory, BiLogOut, BiMenu, BiLeaf, BiShield } from 'react-icons/bi';
 import { useApp } from '../../contexts/AppContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { Button } from '../common';
 
 const Header = ({ 
@@ -15,6 +16,7 @@ const Header = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { userData, logout } = useApp();
+  const { darkMode, currentThemeConfig } = useTheme();
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -35,19 +37,31 @@ const Header = ({
   };
 
   return (
-    <div className="p-3 bg-white border-b border-gray-200 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+    <div className={`p-3 border-b flex justify-between items-center sticky top-0 z-10 shadow-sm transition-colors duration-300 ${
+      darkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-200'
+    }`}>
       <div className="flex items-center space-x-4">
         {isMobile && !isSidebarVisible && (
           <button
             onClick={toggleSidebar}
-            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-            style={{ color: '#36B37E' }}
+            className={`p-2 rounded-full transition-colors ${
+              darkMode 
+                ? 'text-gray-300 hover:text-white hover:bg-gray-700' 
+                : 'hover:bg-gray-100'
+            }`}
+            style={{ color: currentThemeConfig?.primary }}
           >
             {extraButton || <BiMenu className="text-xl" />}
           </button>
         )}
 
-        <Link to="/" className="flex items-center text-mint-600" style={{ color: '#36B37E' }}>
+        <Link 
+          to="/" 
+          className="flex items-center"
+          style={{ color: currentThemeConfig?.primary || '#36B37E' }}
+        >
           <BiLeaf className="text-2xl mr-2" />
           <span className="font-bold text-lg">Nutribot</span>
         </Link>
@@ -70,20 +84,22 @@ const Header = ({
           <button
             onClick={handleAgeClick}
             disabled={!canEditAge}
-            className={`px-3 py-1 text-mint-700 rounded-full text-sm transition flex items-center ${
+            className={`px-3 py-1 rounded-full text-sm transition flex items-center ${
               canEditAge 
-                ? 'bg-mint-100 hover:bg-mint-200 cursor-pointer' 
-                : 'bg-gray-100 text-gray-500 cursor-not-allowed opacity-75'
+                ? `${darkMode ? 'hover:opacity-80' : 'hover:opacity-90'} cursor-pointer` 
+                : 'cursor-not-allowed opacity-75'
             }`}
             style={{ 
-              backgroundColor: canEditAge ? '#E6F7EF' : '#F3F4F6', 
-              color: canEditAge ? '#36B37E' : '#6B7280' 
+              backgroundColor: canEditAge 
+                ? (currentThemeConfig?.light || '#E6F7EF')
+                : (darkMode ? '#374151' : '#F3F4F6'), 
+              color: canEditAge 
+                ? (currentThemeConfig?.primary || '#36B37E')
+                : (darkMode ? '#9CA3AF' : '#6B7280')
             }}
-            title={canEditAge ? 'Nhấn để thay đổi độ tuổi' : 'Không thể thay đổi độ tuổi khi đã có tin nhắn'}
+            title={canEditAge ? "Nhấn để thay đổi độ tuổi" : "Không thể thay đổi độ tuổi khi đang có tin nhắn"}
           >
-            <BiUser className="inline mr-1" />
             {userAge} tuổi
-            {canEditAge && <BiChevronDown className="ml-1 w-3 h-3" />}
           </button>
         )}
 
@@ -91,57 +107,74 @@ const Header = ({
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center text-sm font-medium text-gray-700 hover:text-mint-600 focus:outline-none"
+            className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+              darkMode 
+                ? 'text-gray-300 hover:text-white hover:bg-gray-700'
+                : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+            }`}
           >
-            <span className="hidden sm:block mr-1">{userData?.name || 'Tài khoản'}</span>
-            <BiUser className="text-2xl sm:ml-1" />
-            <BiChevronDown className={`transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+            <div 
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold"
+              style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
+            >
+              {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            <span className="hidden sm:block font-medium">
+              {userData?.name || 'Người dùng'}
+            </span>
+            <BiChevronDown className={`w-4 h-4 transition-transform ${
+              isMenuOpen ? 'rotate-180' : ''
+            }`} />
           </button>
 
+          {/* Dropdown menu */}
           {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
-              {/* Admin Panel Access */}
-              {userData?.is_admin && (
-                <>
-                  <Link
-                    to="/admin/dashboard"
-                    className="flex items-center px-4 py-2 text-sm text-purple-700 hover:bg-purple-50"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <BiShield className="mr-2" />
-                    Admin Panel
-                  </Link>
-                  <hr className="my-1 border-gray-200" />
-                </>
-              )}
-              
-              <Link
-                to="/settings"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BiCog className="mr-2" />
-                Cài đặt
-              </Link>
-              <Link
-                to="/history"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-mint-50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <BiHistory className="mr-2" />
-                Lịch sử
-              </Link>
-              <hr className="my-1 border-gray-200" />
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  logout();
-                }}
-                className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-              >
-                <BiLogOut className="mr-2" />
-                Đăng xuất
-              </button>
+            <div className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-20 border ${
+              darkMode 
+                ? 'bg-gray-800 border-gray-700' 
+                : 'bg-white border-gray-200'
+            }`}>
+              <div className="py-1">
+                <Link
+                  to="/history"
+                  className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                    darkMode 
+                      ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <BiHistory className="w-4 h-4 mr-3" />
+                  Lịch sử
+                </Link>
+                <Link
+                  to="/settings"
+                  className={`flex items-center px-4 py-2 text-sm transition-colors ${
+                    darkMode 
+                      ? 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <BiCog className="w-4 h-4 mr-3" />
+                  Cài đặt
+                </Link>
+                <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} my-1`} />
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center px-4 py-2 text-sm transition-colors ${
+                    darkMode 
+                      ? 'text-red-400 hover:bg-red-900/20'
+                      : 'text-red-600 hover:bg-red-50'
+                  }`}
+                >
+                  <BiLogOut className="w-4 h-4 mr-3" />
+                  Đăng xuất
+                </button>
+              </div>
             </div>
           )}
         </div>

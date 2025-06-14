@@ -1,8 +1,13 @@
-// pages/SettingsPage.jsx - VERSION ĐÃ SỬA
+// frontend/src/pages/SettingsPage.jsx - FULL VERSION
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield, BiMoon, BiSun } from 'react-icons/bi';
+import { 
+  BiUser, BiLock, BiPalette, BiCheckCircle, BiEdit, BiShield, 
+  BiMoon, BiSun, BiSave, BiX, BiCamera, BiPhone, BiMailSend,
+  BiKey, BiShow, BiHide, BiArrowBack 
+} from 'react-icons/bi';
 import { useApp } from '../contexts/AppContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Header } from '../components/layout';
 import { Button, Input, Modal } from '../components/base/index.jsx';
 import config from '../config';
@@ -16,23 +21,19 @@ const SettingsPage = () => {
     changePassword,
     requireAuth,
     showSuccess,
-    showError
+    showError,
+    showConfirm
   } = useApp();
   
+  const { theme, darkMode, updateTheme, toggleDarkMode, currentThemeConfig } = useTheme();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [userAge, setUserAge] = useState(null);
-
-  // Theme state
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'mint';
-  });
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('darkMode') === 'true';
-  });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [profileData, setProfileData] = useState({
     fullName: '',
@@ -43,13 +44,11 @@ const SettingsPage = () => {
   });
 
   const [formData, setFormData] = useState({ ...profileData });
-
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
   });
-
   const [errors, setErrors] = useState({});
 
   // Auth check
@@ -75,53 +74,30 @@ const SettingsPage = () => {
     }
   }, [userData]);
 
-  // Apply theme
-  useEffect(() => {
-    document.documentElement.className = '';
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    }
-    
-    // Apply theme colors if config.themes exists
-    if (config.themes) {
-      const root = document.documentElement;
-      const themeColors = config.themes[theme];
-      if (themeColors) {
-        root.style.setProperty('--color-primary', themeColors.primary);
-        root.style.setProperty('--color-primary-light', themeColors.light);
-        root.style.setProperty('--color-primary-dark', themeColors.dark);
-      }
-    }
-  }, [theme, darkMode]);
-
   const handleProfileChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
+    setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
-    setPasswordData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
+    setPasswordData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
+  };
+
+  const handleThemeChange = (newTheme) => {
+    updateTheme(newTheme);
+    showSuccess(`Đã chuyển sang theme ${newTheme}!`);
+  };
+
+  const handleDarkModeToggle = () => {
+    toggleDarkMode();
+    showSuccess(`Đã ${!darkMode ? 'bật' : 'tắt'} chế độ tối!`);
   };
 
   // Validate profile form
@@ -188,15 +164,13 @@ const SettingsPage = () => {
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      showError('Đã có lỗi xảy ra khi cập nhật thông tin');
+      showError('Có lỗi xảy ra khi cập nhật thông tin');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSavePassword = async (e) => {
-    e.preventDefault();
-
+  const handleChangePassword = async () => {
     if (!validatePasswordForm()) {
       return;
     }
@@ -204,450 +178,516 @@ const SettingsPage = () => {
     setIsLoading(true);
 
     try {
-      const result = await changePassword({
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword
-      });
+      const result = await changePassword(
+        passwordData.currentPassword,
+        passwordData.newPassword
+      );
 
       if (result.success) {
-        showSuccess('Mật khẩu đã được cập nhật thành công');
         setPasswordData({
           currentPassword: '',
           newPassword: '',
           confirmPassword: ''
         });
         setErrors({});
+        showSuccess('Mật khẩu đã được thay đổi thành công');
       } else {
-        showError(result.error || 'Không thể cập nhật mật khẩu');
+        showError(result.error || 'Không thể thay đổi mật khẩu');
       }
     } catch (error) {
       console.error('Error changing password:', error);
-      showError('Đã có lỗi xảy ra khi đổi mật khẩu');
+      showError('Có lỗi xảy ra khi thay đổi mật khẩu');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        showError('Kích thước file không được vượt quá 5MB');
-        return;
-      }
-      
-      if (!file.type.startsWith('image/')) {
-        showError('Vui lòng chọn file hình ảnh');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({
-          ...prev,
-          avatar: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
+  const handleLogout = async () => {
+    const result = await showConfirm({
+      title: 'Đăng xuất',
+      text: 'Bạn có chắc chắn muốn đăng xuất?',
+      icon: 'question'
+    });
+    
+    if (result.isConfirmed) {
+      logout();
+      navigate('/login');
     }
   };
 
-  const handleThemeChange = (newTheme) => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-  };
+  const renderProfileTab = () => (
+    <div className="space-y-8">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Thông tin cá nhân</h3>
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className="flex items-center px-4 py-2 rounded-lg transition-all hover:shadow-lg"
+            style={{ 
+              backgroundColor: isEditing ? '#ef4444' : currentThemeConfig?.primary,
+              color: 'white'
+            }}
+          >
+            {isEditing ? <BiX className="mr-2" /> : <BiEdit className="mr-2" />}
+            {isEditing ? 'Hủy' : 'Chỉnh sửa'}
+          </button>
+        </div>
 
-  const handleDarkModeToggle = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
-  };
+        {/* Avatar Section */}
+        <div className="flex items-center mb-8">
+          <div className="relative">
+            <div 
+              className="w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg"
+              style={{ backgroundColor: currentThemeConfig?.primary }}
+            >
+              {userData?.name?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            {isEditing && (
+              <button className="absolute -bottom-2 -right-2 p-2 bg-white dark:bg-gray-700 rounded-full shadow-lg border-2 border-gray-200 dark:border-gray-600 hover:shadow-xl transition-all">
+                <BiCamera className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+              </button>
+            )}
+          </div>
+          <div className="ml-6">
+            <h4 className="text-xl font-semibold text-gray-800 dark:text-white">
+              {userData?.name || 'Người dùng'}
+            </h4>
+            <p className="text-gray-500 dark:text-gray-400">
+              {userData?.email}
+            </p>
+          </div>
+        </div>
+
+        {/* Form Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiUser className="inline mr-2" />
+              Họ và tên
+            </label>
+            <Input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleProfileChange}
+              disabled={!isEditing}
+              error={errors.fullName}
+              className="w-full"
+              placeholder="Nhập họ và tên"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiMailSend className="inline mr-2" />
+              Email
+            </label>
+            <Input
+              type="email"
+              name="email"
+              value={formData.email}
+              disabled={true}
+              className="w-full bg-gray-100 dark:bg-gray-700"
+              placeholder="Email"
+            />
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              Email không thể thay đổi
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiPhone className="inline mr-2" />
+              Số điện thoại
+            </label>
+            <Input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleProfileChange}
+              disabled={!isEditing}
+              className="w-full"
+              placeholder="Nhập số điện thoại"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Giới tính
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleProfileChange}
+              disabled={!isEditing}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 transition-all"
+              style={{ 
+                focusRingColor: currentThemeConfig?.primary,
+                borderColor: errors.gender ? '#ef4444' : undefined
+              }}
+            >
+              <option value="">Chọn giới tính</option>
+              <option value="male">Nam</option>
+              <option value="female">Nữ</option>
+              <option value="other">Khác</option>
+            </select>
+          </div>
+        </div>
+
+        {isEditing && (
+          <div className="flex justify-end mt-8 space-x-4">
+            <button
+              onClick={() => {
+                setFormData(profileData);
+                setIsEditing(false);
+                setErrors({});
+              }}
+              className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+            >
+              Hủy
+            </button>
+            <Button
+              onClick={handleSaveProfile}
+              disabled={isLoading}
+              className="px-6 py-3 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
+              style={{ backgroundColor: currentThemeConfig?.primary }}
+            >
+              {isLoading ? (
+                <div className="flex items-center">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Đang lưu...
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <BiSave className="mr-2" />
+                  Lưu thay đổi
+                </div>
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderPasswordTab = () => (
+    <div className="space-y-8">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-8">Thay đổi mật khẩu</h3>
+        
+        <div className="max-w-md space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiKey className="inline mr-2" />
+              Mật khẩu hiện tại
+            </label>
+            <div className="relative">
+              <Input
+                type={showCurrentPassword ? "text" : "password"}
+                name="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handlePasswordChange}
+                error={errors.currentPassword}
+                className="w-full pr-12"
+                placeholder="Nhập mật khẩu hiện tại"
+              />
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {showCurrentPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiKey className="inline mr-2" />
+              Mật khẩu mới
+            </label>
+            <div className="relative">
+              <Input
+                type={showNewPassword ? "text" : "password"}
+                name="newPassword"
+                value={passwordData.newPassword}
+                onChange={handlePasswordChange}
+                error={errors.newPassword}
+                className="w-full pr-12"
+                placeholder="Nhập mật khẩu mới"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {showNewPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <BiKey className="inline mr-2" />
+              Xác nhận mật khẩu mới
+            </label>
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handlePasswordChange}
+                error={errors.confirmPassword}
+                className="w-full pr-12"
+                placeholder="Nhập lại mật khẩu mới"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {showConfirmPassword ? <BiHide /> : <BiShow />}
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-4">
+            <Button
+              onClick={handleChangePassword}
+              disabled={isLoading}
+              className="w-full py-3 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
+              style={{ backgroundColor: currentThemeConfig?.primary }}
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Đang thay đổi...
+                </div>
+              ) : (
+                'Thay đổi mật khẩu'
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAppearanceTab = () => (
+    <div className="space-y-8">
+      <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-8">Tùy chỉnh giao diện</h3>
+        
+        {/* Dark Mode Toggle */}
+        <div className="mb-10">
+          <h4 className="font-semibold text-lg text-gray-800 dark:text-white mb-4">Chế độ hiển thị</h4>
+          <div className="flex items-center justify-between p-6 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-600/50 border border-gray-200/50 dark:border-gray-600/50">
+            <div className="flex items-center space-x-4">
+              <div 
+                className="p-3 rounded-full"
+                style={{ backgroundColor: currentThemeConfig?.light }}
+              >
+                {darkMode ? <BiMoon className="w-6 h-6 text-blue-600" /> : <BiSun className="w-6 h-6 text-yellow-600" />}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900 dark:text-white text-lg">
+                  {darkMode ? 'Chế độ tối' : 'Chế độ sáng'}
+                </p>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {darkMode ? 'Giao diện tối, dễ nhìn trong môi trường ít ánh sáng' : 'Giao diện sáng, phù hợp cho ban ngày'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleDarkModeToggle}
+              className={`relative inline-flex items-center h-8 rounded-full w-14 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-offset-2 shadow-lg ${
+                darkMode ? 'shadow-blue-500/25' : 'shadow-gray-300/50'
+              }`}
+              style={{ 
+                backgroundColor: darkMode ? currentThemeConfig?.primary : '#e5e7eb',
+                focusRingColor: `${currentThemeConfig?.primary}40`
+              }}
+            >
+              <span
+                className={`inline-block w-6 h-6 transform bg-white rounded-full transition-transform duration-300 shadow-lg ${
+                  darkMode ? 'translate-x-7' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        {/* Theme Colors */}
+        <div>
+          <h4 className="font-semibold text-lg text-gray-800 dark:text-white mb-6">Màu sắc chủ đạo</h4>
+          <div className="grid grid-cols-5 gap-6">
+            {Object.entries(config.themes).map(([colorKey, colorConfig]) => (
+              <div
+                key={colorKey}
+                className={`relative cursor-pointer rounded-2xl p-6 h-24 flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-2xl ${
+                  theme === colorKey ? 'ring-4 ring-offset-4 dark:ring-offset-gray-800 scale-110 shadow-2xl' : 'hover:shadow-lg'
+                }`}
+                style={{
+                  background: `linear-gradient(135deg, ${colorConfig.primary} 0%, ${colorConfig.dark || colorConfig.primary} 100%)`,
+                  ringColor: theme === colorKey ? colorConfig.primary : 'transparent',
+                }}
+                onClick={() => handleThemeChange(colorKey)}
+              >
+                {theme === colorKey && (
+                  <BiCheckCircle className="w-8 h-8 text-white drop-shadow-lg animate-pulse" />
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-600 dark:text-gray-400 mt-4 text-center">
+            Chọn màu chủ đạo cho giao diện ứng dụng
+          </p>
+          
+          {/* Theme Preview */}
+          <div className="mt-8 p-6 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600">
+            <h5 className="font-medium text-gray-800 dark:text-white mb-4">Xem trước theme hiện tại</h5>
+            <div className="flex items-center space-x-4">
+              <div 
+                className="w-12 h-12 rounded-lg shadow-lg"
+                style={{ backgroundColor: currentThemeConfig?.primary }}
+              />
+              <div 
+                className="w-12 h-12 rounded-lg shadow-lg"
+                style={{ backgroundColor: currentThemeConfig?.light }}
+              />
+              <div 
+                className="w-12 h-12 rounded-lg shadow-lg"
+                style={{ backgroundColor: currentThemeConfig?.dark }}
+              />
+              <div className="ml-4">
+                <p className="font-medium text-gray-800 dark:text-white">Theme: {theme}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Primary: {currentThemeConfig?.primary}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'profile':
-        if (isLoadingAuth) {
-          return (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <div className="spinner mx-auto mb-4"></div>
-                <p className="text-gray-600">Đang tải...</p>
-              </div>
-            </div>
-          );
-        }
-
-        return (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">Thông tin cá nhân</h3>
-              <Button
-                onClick={() => {
-                  if (isEditing) {
-                    setFormData({ ...profileData });
-                    setErrors({});
-                  }
-                  setIsEditing(!isEditing);
-                }}
-                color={isEditing ? "gray" : "mint"}
-                outline={true}
-                icon={<BiEdit className="mr-1" />}
-              >
-                {isEditing ? 'Hủy' : 'Chỉnh sửa'}
-              </Button>
-            </div>
-
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex flex-col items-center">
-                <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 mb-3">
-                  {(formData.avatar || profileData.avatar) ? (
-                    <img
-                      src={formData.avatar || profileData.avatar}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-mint-100 text-mint-600 dark:bg-mint-900 dark:text-mint-300" 
-                         style={{ backgroundColor: darkMode ? '#1a4d3a' : '#E6F7EF', color: darkMode ? '#86efac' : '#36B37E' }}>
-                      <BiUser className="w-16 h-16" />
-                    </div>
-                  )}
-                </div>
-                {isEditing && (
-                  <div className="mt-2">
-                    <label
-                      htmlFor="avatar-upload"
-                      className="bg-mint-100 text-mint-700 px-3 py-2 rounded-md text-sm cursor-pointer hover:bg-mint-200 dark:bg-mint-900 dark:text-mint-300 dark:hover:bg-mint-800"
-                      style={{ backgroundColor: darkMode ? '#1a4d3a' : '#E6F7EF', color: darkMode ? '#86efac' : '#36B37E' }}
-                    >
-                      Thay đổi ảnh
-                    </label>
-                    <input
-                      id="avatar-upload"
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleAvatarChange}
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1">
-                {isEditing ? (
-                  <div className="space-y-4">
-                    <Input
-                      label="Họ và tên"
-                      name="fullName"
-                      type="text"
-                      value={formData.fullName}
-                      onChange={handleProfileChange}
-                      error={errors.fullName}
-                      required
-                    />
-
-                    <Input
-                      label="Email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleProfileChange}
-                      error={errors.email}
-                      disabled
-                      helpText="Email không thể thay đổi"
-                    />
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                        Giới tính
-                      </label>
-                      <select
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleProfileChange}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      >
-                        <option value="">Chọn giới tính</option>
-                        <option value="male">Nam</option>
-                        <option value="female">Nữ</option>
-                        <option value="other">Khác</option>
-                      </select>
-                    </div>
-
-                    <Input
-                      label="Số điện thoại"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleProfileChange}
-                    />
-
-                    <div className="pt-3">
-                      <Button
-                        onClick={handleSaveProfile}
-                        color="mint"
-                        disabled={isLoading}
-                        className="mr-2"
-                      >
-                        {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
-                      </Button>
-
-                      <Button
-                        onClick={() => {
-                          setFormData({ ...profileData });
-                          setIsEditing(false);
-                          setErrors({});
-                        }}
-                        color="gray"
-                        outline
-                      >
-                        Hủy
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Họ và tên</p>
-                      <p className="text-gray-800 dark:text-white font-medium">{profileData.fullName}</p>
-                    </div>
-                    <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                      <p className="text-gray-800 dark:text-white font-medium">{profileData.email}</p>
-                    </div>
-                    <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Giới tính</p>
-                      <p className="text-gray-800 dark:text-white font-medium">
-                        {profileData.gender === 'male' ? 'Nam' : 
-                         profileData.gender === 'female' ? 'Nữ' : 
-                         profileData.gender === 'other' ? 'Khác' : 'Chưa cập nhật'}
-                      </p>
-                    </div>
-                    <div className="border-b border-gray-200 dark:border-gray-700 pb-3">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Số điện thoại</p>
-                      <p className="text-gray-800 dark:text-white font-medium">{profileData.phone || 'Chưa cập nhật'}</p>
-                    </div>
-                    <div className="pt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Tài khoản được tạo</p>
-                      <p className="text-gray-800 dark:text-white font-medium">
-                        {userData?.created_at ? new Date(userData.created_at).toLocaleDateString('vi-VN') : 'N/A'}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
+        return renderProfileTab();
       case 'password':
-        return (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-6">Thay đổi mật khẩu</h3>
-            <form onSubmit={handleSavePassword} className="space-y-4">
-              <Input
-                label="Mật khẩu hiện tại"
-                name="currentPassword"
-                type="password"
-                value={passwordData.currentPassword}
-                onChange={handlePasswordChange}
-                error={errors.currentPassword}
-                required
-              />
-
-              <Input
-                label="Mật khẩu mới"
-                name="newPassword"
-                type="password"
-                value={passwordData.newPassword}
-                onChange={handlePasswordChange}
-                error={errors.newPassword}
-                helpText="Mật khẩu phải có ít nhất 6 ký tự"
-                required
-              />
-
-              <Input
-                label="Xác nhận mật khẩu mới"
-                name="confirmPassword"
-                type="password"
-                value={passwordData.confirmPassword}
-                onChange={handlePasswordChange}
-                error={errors.confirmPassword}
-                required
-              />
-
-              <div className="pt-3">
-                <Button
-                  type="submit"
-                  color="mint"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Đang cập nhật...' : 'Cập nhật mật khẩu'}
-                </Button>
-              </div>
-            </form>
-          </div>
-        );
-
+        return renderPasswordTab();
       case 'appearance':
-        return (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-6">Tùy chỉnh giao diện</h3>
-            <div className="space-y-6">
-              {/* Dark Mode Toggle */}
-              <div>
-                <h4 className="font-medium text-gray-800 dark:text-white mb-3">Chế độ hiển thị</h4>
-                <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg">
-                  <div className="flex items-center">
-                    {darkMode ? <BiMoon className="w-5 h-5 mr-2 text-blue-500" /> : <BiSun className="w-5 h-5 mr-2 text-yellow-500" />}
-                    <div>
-                      <p className="font-medium text-gray-900 dark:text-white">
-                        {darkMode ? 'Chế độ tối' : 'Chế độ sáng'}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {darkMode ? 'Giao diện tối, dễ nhìn trong môi trường ít ánh sáng' : 'Giao diện sáng, phù hợp cho ban ngày'}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleDarkModeToggle}
-                    className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-mint-500 focus:ring-offset-2 ${
-                      darkMode ? 'bg-mint-600' : 'bg-gray-200'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${
-                        darkMode ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* Theme Colors */}
-              {config.themes && (
-                <div>
-                  <h4 className="font-medium text-gray-800 dark:text-white mb-3">Màu sắc chủ đạo</h4>
-                  <div className="grid grid-cols-5 gap-4">
-                    {Object.keys(config.themes).map(color => (
-                      <div
-                        key={color}
-                        className={`cursor-pointer rounded-lg p-4 h-16 flex items-center justify-center transition-all ${
-                          theme === color ? 'ring-2 ring-offset-2 dark:ring-offset-gray-800' : 'hover:opacity-80'
-                        }`}
-                        style={{
-                          backgroundColor: config.themes[color].primary,
-                          color: 'white',
-                          ringColor: theme === color ? config.themes[color].primary : 'transparent',
-                        }}
-                        onClick={() => handleThemeChange(color)}
-                      >
-                        {theme === color && <BiCheckCircle className="w-6 h-6" />}
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    Chọn màu chủ đạo cho giao diện ứng dụng
-                  </p>
-                </div>
-              )}
-
-              <div className="pt-3">
-                <Button
-                  color="mint"
-                  onClick={() => showSuccess('Cài đặt giao diện đã được lưu!')}
-                >
-                  Lưu cài đặt
-                </Button>
-              </div>
-            </div>
-          </div>
-        );
-
+        return renderAppearanceTab();
       default:
-        return null;
+        return renderProfileTab();
     }
   };
 
+  if (isLoadingAuth || !userData) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="text-center">
+          <div 
+            className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+            style={{ borderColor: currentThemeConfig?.primary }}
+          />
+          <p className="text-gray-600 dark:text-gray-400">Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`min-h-screen transition-colors duration-200 ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`} 
-         style={{ backgroundColor: darkMode ? '#111827' : '#F7FFFA' }}>
-      {/* Header */}
-      <Header
-        userData={userData}
-        userAge={userAge}
-        setUserAge={setUserAge}
-      />
+    <div 
+      className="min-h-screen transition-all duration-300"
+      style={{
+        background: darkMode 
+          ? 'linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%)'
+          : `linear-gradient(135deg, ${currentThemeConfig?.light}20 0%, #ffffff 50%, #f8fafc 100%)`
+      }}
+    >
+      <Header userData={userData} />
+      
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Back button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center mb-6 px-4 py-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-800/50 transition-all"
+        >
+          <BiArrowBack  className="mr-2" />
+          Quay lại
+        </button>
 
-      <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Cài đặt tài khoản</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar */}
-          <div className="md:col-span-1">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-              <nav className="flex flex-col">
-                <button
-                  className={`px-4 py-3 text-left flex items-center space-x-2 transition-colors ${
-                    activeTab === 'profile' 
-                      ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700 dark:bg-mint-900 dark:text-mint-300' 
-                      : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                  onClick={() => setActiveTab('profile')}
-                  style={activeTab === 'profile' ? { 
-                    backgroundColor: darkMode ? '#1a4d3a' : '#E6F7EF', 
-                    borderLeftColor: '#36B37E', 
-                    color: darkMode ? '#86efac' : '#36B37E' 
-                  } : {}}
-                >
-                  <BiUser className="flex-shrink-0" />
-                  <span>Thông tin cá nhân</span>
-                </button>
-                <button
-                  className={`px-4 py-3 text-left flex items-center space-x-2 transition-colors ${
-                    activeTab === 'password' 
-                      ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700 dark:bg-mint-900 dark:text-mint-300' 
-                      : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                  onClick={() => setActiveTab('password')}
-                  style={activeTab === 'password' ? { 
-                    backgroundColor: darkMode ? '#1a4d3a' : '#E6F7EF', 
-                    borderLeftColor: '#36B37E', 
-                    color: darkMode ? '#86efac' : '#36B37E' 
-                  } : {}}
-                >
-                  <BiLock className="flex-shrink-0" />
-                  <span>Mật khẩu</span>
-                </button>
-                <button
-                  className={`px-4 py-3 text-left flex items-center space-x-2 transition-colors ${
-                    activeTab === 'appearance' 
-                      ? 'bg-mint-50 border-l-4 border-mint-600 text-mint-700 dark:bg-mint-900 dark:text-mint-300' 
-                      : 'text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                  onClick={() => setActiveTab('appearance')}
-                  style={activeTab === 'appearance' ? { 
-                    backgroundColor: darkMode ? '#1a4d3a' : '#E6F7EF', 
-                    borderLeftColor: '#36B37E', 
-                    color: darkMode ? '#86efac' : '#36B37E' 
-                  } : {}}
-                >
-                  <BiPalette className="flex-shrink-0" />
-                  <span>Giao diện</span>
-                </button>
-                <button
-                  onClick={logout}
-                  className="px-4 py-3 text-left flex items-center space-x-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
-                >
-                  <BiShield className="flex-shrink-0" />
-                  <span>Đăng xuất</span>
-                </button>
-              </nav>
+          <div className="lg:col-span-1">
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 sticky top-8">
+              <div className="p-6">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-6">Cài đặt</h2>
+                <nav className="space-y-2">
+                  <button
+                    className={`w-full px-4 py-3 text-left flex items-center space-x-3 rounded-xl transition-all duration-200 ${
+                      activeTab === 'profile' 
+                        ? 'text-white shadow-lg transform scale-105' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                    }`}
+                    onClick={() => setActiveTab('profile')}
+                    style={activeTab === 'profile' ? { 
+                      background: `linear-gradient(135deg, ${currentThemeConfig?.primary} 0%, ${currentThemeConfig?.dark} 100%)`
+                    } : {}}
+                  >
+                    <BiUser className="flex-shrink-0 w-5 h-5" />
+                    <span className="font-medium">Hồ sơ</span>
+                  </button>
+                  
+                  <button
+                    className={`w-full px-4 py-3 text-left flex items-center space-x-3 rounded-xl transition-all duration-200 ${
+                      activeTab === 'password' 
+                        ? 'text-white shadow-lg transform scale-105' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                    }`}
+                    onClick={() => setActiveTab('password')}
+                    style={activeTab === 'password' ? { 
+                      background: `linear-gradient(135deg, ${currentThemeConfig?.primary} 0%, ${currentThemeConfig?.dark} 100%)`
+                    } : {}}
+                  >
+                    <BiLock className="flex-shrink-0 w-5 h-5" />
+                    <span className="font-medium">Mật khẩu</span>
+                  </button>
+                  
+                  <button
+                    className={`w-full px-4 py-3 text-left flex items-center space-x-3 rounded-xl transition-all duration-200 ${
+                      activeTab === 'appearance' 
+                        ? 'text-white shadow-lg transform scale-105' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700/50'
+                    }`}
+                    onClick={() => setActiveTab('appearance')}
+                    style={activeTab === 'appearance' ? { 
+                      background: `linear-gradient(135deg, ${currentThemeConfig?.primary} 0%, ${currentThemeConfig?.dark} 100%)`
+                    } : {}}
+                  >
+                    <BiPalette className="flex-shrink-0 w-5 h-5" />
+                    <span className="font-medium">Giao diện</span>
+                  </button>
+                  
+                  <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full px-4 py-3 text-left flex items-center space-x-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200"
+                    >
+                      <BiShield className="flex-shrink-0 w-5 h-5" />
+                      <span className="font-medium">Đăng xuất</span>
+                    </button>
+                  </div>
+                </nav>
+              </div>
             </div>
           </div>
 
           {/* Main content */}
-          <div className="md:col-span-3">
+          <div className="lg:col-span-3">
             {renderTabContent()}
           </div>
         </div>

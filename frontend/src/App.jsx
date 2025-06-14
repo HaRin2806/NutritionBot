@@ -1,13 +1,15 @@
+// frontend/src/App.jsx - CORRECTED VERSION
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// ✅ THAY ĐỔI 1: Sử dụng AppProvider unified thay vì AuthProvider + ChatProvider riêng biệt
+// Existing AppProvider
 import { AppProvider } from './contexts/AppContext';
+// Add ThemeProvider
+import { ThemeProvider } from './contexts/ThemeContext';
 
-// ✅ THAY ĐỔI 2: Import từ services consolidated
 import { storageService } from './services';
 
-// Pages - giữ nguyên
+// Pages - theo đúng cấu trúc hiện tại
 import ChatPage from './pages/ChatPage';
 import { LoginPage, RegisterPage } from './pages/auth';
 import HistoryPage from './pages/HistoryPage';
@@ -29,7 +31,7 @@ import config from './config';
 import './styles/global.css';
 
 function App() {
-  // ✅ THAY ĐỔI 3: Đơn giản hóa setup - baseApi đã handle axios interceptors
+  // Setup axios interceptors - giữ nguyên logic hiện tại
   useEffect(() => {
     const token = storageService.getToken();
     
@@ -43,35 +45,36 @@ function App() {
 
   return (
     <Router>
-      {/* ✅ THAY ĐỔI 4: AppProvider thay thế cho AuthProvider + ChatProvider */}
-      <AppProvider>
-        <Routes>
-          {/* Public Routes - giữ nguyên */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          
-          {/* User Routes - giữ nguyên */}
-          <Route path="/chat/:conversationId?" element={<ChatPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          
-          {/* Admin Routes - giữ nguyên */}
-          <Route path="/admin/*" element={
-            <AdminLayout>
-              <Routes>
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="documents" element={<AdminDocuments />} />
-                <Route path="conversations" element={<AdminConversations />} />
-                <Route path="analytics" element={<AdminAnalytics />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="" element={<AdminDashboard />} />
-              </Routes>
-            </AdminLayout>
-          } />
-        </Routes>
-      </AppProvider>
+      <ThemeProvider>
+        <AppProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            
+            {/* User Routes */}
+            <Route path="/chat/:conversationId?" element={<ChatPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/*" element={
+              <AdminLayout>
+                <Routes>
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="documents" element={<AdminDocuments />} />
+                  <Route path="conversations" element={<AdminConversations />} />
+                  <Route path="analytics" element={<AdminAnalytics />} />
+                  <Route path="settings" element={<AdminSettings />} />
+                  <Route path="" element={<AdminDashboard />} />
+                </Routes>
+              </AdminLayout>
+            } />
+          </Routes>
+        </AppProvider>
+      </ThemeProvider>
     </Router>
   );
 }

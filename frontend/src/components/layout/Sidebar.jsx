@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { BiPlus, BiHistory, BiSearch, BiX } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
-// import { formatTime, groupConversationsByTime } from '../../utils/dateUtils';
+import { useTheme } from '../../contexts/ThemeContext';
 import { formatTime, groupConversationsByTime } from '../../utils/index';
 import { Loader } from '../common';
 import ConversationItem from '../chat/ConversationItem';
@@ -10,7 +10,7 @@ const Sidebar = ({
   conversations = [],
   activeConversation,
   onSelectConversation,
-  onCreateNewConversation,
+  onNewConversation,
   onDeleteConversation,
   onRenameConversation,
   isLoading = false,
@@ -18,6 +18,7 @@ const Sidebar = ({
   onCloseSidebar = () => { },
 }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
+  const { darkMode, currentThemeConfig } = useTheme();
   const conversationRefs = useRef({});
 
   const filteredConversations = conversations.filter(
@@ -26,7 +27,6 @@ const Sidebar = ({
 
   const groupedConversations = groupConversationsByTime(filteredConversations);
 
-  // SỬA: Scroll đến conversation được select
   useEffect(() => {
     if (activeConversation?.id && conversationRefs.current[activeConversation.id]) {
       const element = conversationRefs.current[activeConversation.id];
@@ -36,14 +36,12 @@ const Sidebar = ({
         const containerRect = container.getBoundingClientRect();
         const elementRect = element.getBoundingClientRect();
         
-        // Kiểm tra xem element có nằm trong viewport của container không
         const isVisible = (
           elementRect.top >= containerRect.top &&
           elementRect.bottom <= containerRect.bottom
         );
         
         if (!isVisible) {
-          // Scroll để element nằm ở giữa container
           const scrollTop = element.offsetTop - container.offsetTop - (container.clientHeight / 2) + (element.clientHeight / 2);
           container.scrollTo({
             top: Math.max(0, scrollTop),
@@ -66,146 +64,130 @@ const Sidebar = ({
         onSelectConversation(conversation.id);
         if (isMobile) onCloseSidebar();
       }}
-      className={`px-4 py-3 flex items-center justify-between cursor-pointer transition rounded-md mx-2 ${
-        activeConversation?.id === conversation.id ? 'bg-mint-100' : 'hover:bg-gray-50'
+      className={`px-4 py-3 cursor-pointer transition-all rounded-md mx-2 ${
+        activeConversation?.id === conversation.id 
+          ? '' // Style sẽ được set inline
+          : `${darkMode ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-50 text-gray-700'}`
       }`}
-      style={{ backgroundColor: activeConversation?.id === conversation.id ? '#E6F7EF' : '' }}
+      style={{ 
+        backgroundColor: activeConversation?.id === conversation.id 
+          ? (currentThemeConfig?.light || '#E6F7EF')
+          : undefined,
+        color: activeConversation?.id === conversation.id 
+          ? (currentThemeConfig?.primary || '#36B37E')
+          : undefined
+      }}
     >
-      <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-gray-800 truncate">{conversation.title}</h3>
-        <div className="text-xs text-gray-500">{formatTime(conversation.updated_at)}</div>
+      <div className="flex items-center justify-between">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate">
+            {conversation.title}
+          </p>
+          <div className="flex items-center mt-1 text-xs opacity-75">
+            <span>{formatTime(conversation.updated_at)}</span>
+            {conversation.age_context && (
+              <>
+                <span className="mx-1">•</span>
+                <span>{conversation.age_context} tuổi</span>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-      <ConversationItem
-        conversation={conversation}
-        onDelete={onDeleteConversation}
-        onRename={onRenameConversation}
-      />
     </div>
   );
 
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-800">Trò chuyện</h2>
-        <div className="flex space-x-2">
-          {isMobile && (
-            <button
-              onClick={onCloseSidebar}
-              className="p-2 text-mint-600 hover:bg-mint-50 rounded-full transition"
-            >
-              <BiX className="text-xl" />
-            </button>
-          )}
-          <Link
-            to="/history"
-            className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-full transition"
-            style={{ color: '#36B37E' }}
-          >
-            <BiHistory className="text-lg" />
-          </Link>
-          <button
-            onClick={onCreateNewConversation}
-            className="p-2 bg-mint-600 text-white rounded-full hover:bg-mint-700 transition shadow-sm"
-            style={{ backgroundColor: '#36B37E' }}
-          >
-            <BiPlus className="text-lg" />
-          </button>
-        </div>
+      <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <button
+          onClick={onNewConversation}
+          className="w-full flex items-center justify-center px-4 py-3 rounded-lg font-medium text-white transition-colors hover:opacity-90"
+          style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
+        >
+          <BiPlus className="w-5 h-5 mr-2" />
+          Cuộc trò chuyện mới
+        </button>
       </div>
 
       {/* Search */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="relative w-full">
+      <div className="p-4">
+        <div className="relative">
+          <BiSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
+            darkMode ? 'text-gray-400' : 'text-gray-500'
+          }`} />
           <input
             type="text"
-            placeholder="Tìm kiếm..."
-            className="w-full py-2 pl-8 pr-3 border border-mint-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-mint-500"
+            placeholder="Tìm kiếm cuộc trò chuyện..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 ${
+              darkMode 
+                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
+                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500'
+            }`}
+            style={{ 
+              focusRingColor: `${currentThemeConfig?.primary}40` 
+            }}
           />
-          <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <BiX />
-            </button>
-          )}
         </div>
       </div>
 
-      {/* Conversation list */}
+      {/* Conversations list */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="p-4 text-center">
-            <Loader type="dots" color="mint" text="Đang tải..." />
+          <div className="flex items-center justify-center py-8">
+            <Loader size="sm" />
           </div>
         ) : filteredConversations.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">
-            {searchTerm ? (
-              <>
-                <p>Không tìm thấy cuộc trò chuyện</p>
-                <button
-                  onClick={() => setSearchTerm('')}
-                  className="mt-2 text-mint-600 hover:underline text-sm"
-                >
-                  Xóa bộ lọc
-                </button>
-              </>
-            ) : (
-              <>
-                <p>Chưa có cuộc trò chuyện nào</p>
-                <button
-                  onClick={onCreateNewConversation}
-                  className="mt-2 text-mint-600 hover:underline text-sm"
-                >
-                  Bắt đầu trò chuyện
-                </button>
-              </>
+          <div className="text-center py-8 px-4">
+            <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              {searchTerm ? 'Không tìm thấy cuộc trò chuyện nào' : 'Chưa có cuộc trò chuyện nào'}
+            </p>
+            {!searchTerm && (
+              <button
+                onClick={onNewConversation}
+                className="mt-2 text-sm hover:underline"
+                style={{ color: currentThemeConfig?.primary || '#36B37E' }}
+              >
+                Bắt đầu trò chuyện
+              </button>
             )}
           </div>
         ) : (
-          <div className="space-y-4 py-2">
-            {/* Groups */}
-            {groupedConversations.today.length > 0 && (
-              <div>
-                <h3 className="px-4 pt-2 text-xs font-semibold text-gray-500 uppercase mb-1">
-                  Hôm nay
-                </h3>
-                {groupedConversations.today.map(renderConversationItem)}
-              </div>
-            )}
-
-            {groupedConversations.yesterday.length > 0 && (
-              <div>
-                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase mb-1">
-                  Hôm qua
-                </h3>
-                {groupedConversations.yesterday.map(renderConversationItem)}
-              </div>
-            )}
-
-            {groupedConversations.last7Days.length > 0 && (
-              <div>
-                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase mb-1">
-                  7 ngày qua
-                </h3>
-                {groupedConversations.last7Days.map(renderConversationItem)}
-              </div>
-            )}
-
-            {groupedConversations.older.length > 0 && (
-              <div>
-                <h3 className="px-4 text-xs font-semibold text-gray-500 uppercase mb-1">
-                  Cũ hơn
-                </h3>
-                {groupedConversations.older.map(renderConversationItem)}
-              </div>
-            )}
+          <div className="space-y-1">
+            {Object.entries(groupedConversations).map(([period, convs]) => (
+              convs.length > 0 && (
+                <div key={period}>
+                  <div className={`px-4 py-2 text-xs font-medium uppercase tracking-wide ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
+                    {period}
+                  </div>
+                  {convs.map(renderConversationItem)}
+                </div>
+              )
+            ))}
           </div>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className={`p-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <Link
+          to="/history"
+          className={`flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${
+            darkMode 
+              ? 'hover:bg-gray-700 hover:text-white'
+              : 'hover:bg-gray-100 hover:text-gray-900'
+          }`}
+          style={{ color: currentThemeConfig?.primary || '#36B37E' }}
+          onClick={() => isMobile && onCloseSidebar()}
+        >
+          <BiHistory className="w-4 h-4 mr-3" />
+          Xem tất cả lịch sử
+        </Link>
       </div>
     </div>
   );

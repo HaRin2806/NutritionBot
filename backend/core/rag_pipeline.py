@@ -16,11 +16,10 @@ class RAGPipeline:
         """Khởi tạo RAG Pipeline chỉ với embedding model"""
         logger.info("Khởi tạo RAG Pipeline")
         
-        # SỬA: Chỉ khởi tạo embedding model, không khởi tạo DataProcessor
         self.embedding_model = get_embedding_model()
         
         # Khởi tạo Gemini model
-        self.gemini_model = genai.GenerativeModel('gemini-2.0-flash-exp')
+        self.gemini_model = genai.GenerativeModel('gemini-2.0-flash')
         
         logger.info("RAG Pipeline đã sẵn sàng")
     

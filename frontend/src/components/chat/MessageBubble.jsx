@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { BiEdit, BiCheck, BiX, BiChevronLeft, BiChevronRight, BiRefresh, BiTrash, BiDotsVerticalRounded } from 'react-icons/bi';
-import { formatTime } from '../../utils/index';
+import { 
+  BiEdit, BiTrash, BiRefresh, BiDotsVerticalRounded, 
+  BiChevronLeft, BiChevronRight, BiCheck, BiX 
+} from 'react-icons/bi';
+import { useTheme } from '../../contexts/ThemeContext';
+import { formatTime } from '../../utils';
 import MarkdownRenderer from '../markdown/MarkdownRenderer';
-import SourceReference from '../chat/SourceReference';
+import SourceReference from './SourceReference';
 
 const MessageBubble = ({
   message,
@@ -12,19 +16,21 @@ const MessageBubble = ({
   onRegenerateResponse,
   onDeleteMessage,
   conversationId,
-  userAge
+  userAge,
+  isEditing,
+  onEditStart,
+  onEditEnd,
+  isRegenerating
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(message.content);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const textareaRef = useRef(null);
+  const [editContent, setEditContent] = useState(message.content || '');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { darkMode, currentThemeConfig } = useTheme();
   const menuRef = useRef(null);
+  const textareaRef = useRef(null);
 
-  // Get message ID - handle both _id and id
   const messageId = message._id || message.id;
 
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -33,10 +39,12 @@ const MessageBubble = ({
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    setEditContent(message.content || '');
+  }, [message.content]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -47,38 +55,27 @@ const MessageBubble = ({
     }
   }, [isEditing]);
 
-  // Reset edit content when message changes
-  useEffect(() => {
-    setEditContent(message.content);
-  }, [message.content]);
-
   const handleEditStart = () => {
-    setIsEditing(true);
-    setEditContent(message.content);
+    onEditStart(messageId);
     setShowMenu(false);
   };
 
-  const handleEditSave = async () => {
-    if (!editContent.trim() || editContent === message.content) {
-      handleEditCancel();
-      return;
-    }
+  const handleEditSubmit = async () => {
+    if (!editContent.trim() || isSubmitting) return;
 
     setIsSubmitting(true);
-
     try {
       await onEditMessage(messageId, conversationId, editContent.trim());
-      setIsEditing(false);
+      onEditEnd();
     } catch (error) {
       console.error('Error editing message:', error);
-      // Không cần revert editContent vì onEditMessage sẽ reload conversation
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleEditCancel = () => {
-    setIsEditing(false);
+    onEditEnd();
     setEditContent(message.content);
     setIsSubmitting(false);
   };
@@ -115,19 +112,22 @@ const MessageBubble = ({
   const currentVersion = message.current_version || 1;
   const totalVersions = message.versions ? message.versions.length : 1;
 
-  // Kiểm tra xem tin nhắn này có đang được regenerate hay không
-  const isRegenerating = !isUser && message.isRegenerating;
-
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group mb-4`}>
       <div
-        className={`max-w-[90%] md:max-w-[80%] rounded-2xl shadow-sm relative ${
+        className={`max-w-[90%] md:max-w-[80%] rounded-2xl shadow-sm relative transition-colors border ${
           isUser
-            ? 'bg-mint-600 text-white'
-            : 'bg-white text-gray-800 border border-gray-200'
+            ? 'text-white border-transparent'
+            : darkMode 
+              ? 'bg-gray-700 text-gray-100 border-gray-600' 
+              : 'bg-white text-gray-800 border-gray-200'
         }`}
         style={{
-          backgroundColor: isUser ? '#36B37E' : '#FFFFFF',
+          backgroundColor: isUser 
+            ? (currentThemeConfig?.primary || '#36B37E') 
+            : darkMode 
+              ? '#374151' // FIXED: Darker background for better contrast
+              : '#ffffff',
         }}
       >
         {/* Typing indicator cho bot message */}
@@ -139,7 +139,10 @@ const MessageBubble = ({
                 <div className="dot"></div>
                 <div className="dot"></div>
               </div>
-              <span className="text-mint-600 text-sm font-medium ml-2" style={{ color: '#36B37E' }}>
+              <span 
+                className="text-sm font-medium ml-2"
+                style={{ color: currentThemeConfig?.primary || '#36B37E' }}
+              >
                 Đang tạo phản hồi...
               </span>
             </div>
@@ -149,19 +152,25 @@ const MessageBubble = ({
             {/* Message content */}
             <div className="p-4">
               {isEditing ? (
-                // Edit form
-                <div>
+                <div className="space-y-3">
                   <textarea
                     ref={textareaRef}
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-mint-500 focus:border-transparent text-gray-800"
-                    style={{ minHeight: '60px', borderColor: '#36B37E' }}
+                    className={`w-full p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 ${
+                      darkMode 
+                        ? 'bg-gray-800 border-gray-600 text-white'
+                        : 'bg-gray-50 border-gray-200 text-gray-900'
+                    }`}
+                    style={{ 
+                      focusRingColor: `${currentThemeConfig?.primary}40`,
+                      minHeight: '80px'
+                    }}
                     disabled={isSubmitting}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                         e.preventDefault();
-                        handleEditSave();
+                        handleEditSubmit();
                       } else if (e.key === 'Escape') {
                         e.preventDefault();
                         handleEditCancel();
@@ -169,20 +178,24 @@ const MessageBubble = ({
                     }}
                     placeholder="Nhập nội dung tin nhắn..."
                   />
-                  <div className="flex justify-end mt-2 space-x-2">
+                  <div className="flex justify-end space-x-2">
                     <button
                       onClick={handleEditCancel}
                       disabled={isSubmitting}
-                      className="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300 disabled:opacity-50 transition-colors flex items-center"
+                      className={`px-3 py-1 text-sm rounded transition-colors flex items-center ${
+                        darkMode
+                          ? 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
                     >
                       <BiX className="w-4 h-4 mr-1" />
                       Hủy
                     </button>
                     <button
-                      onClick={handleEditSave}
-                      disabled={isSubmitting || !editContent.trim() || editContent === message.content}
-                      className="px-3 py-1 text-sm bg-mint-600 text-white rounded hover:bg-mint-700 disabled:opacity-50 transition-colors flex items-center"
-                      style={{ backgroundColor: '#36B37E' }}
+                      onClick={handleEditSubmit}
+                      disabled={isSubmitting || !editContent.trim()}
+                      className="px-3 py-1 text-sm text-white rounded transition-colors disabled:opacity-50 flex items-center"
+                      style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
                     >
                       {isSubmitting ? (
                         <>
@@ -197,7 +210,7 @@ const MessageBubble = ({
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs opacity-75">
                     Nhấn Ctrl+Enter để lưu, Esc để hủy
                   </p>
                 </div>
@@ -206,10 +219,14 @@ const MessageBubble = ({
                   {isUser ? (
                     <div className="whitespace-pre-wrap">{message.content}</div>
                   ) : (
-                    <div className="markdown-content">
+                    <div className={`markdown-content ${darkMode ? 'dark' : ''}`}>
                       <MarkdownRenderer content={message.content} />
                       {message.sources && message.sources.length > 0 && (
-                        <SourceReference sources={message.sources} />
+                        <SourceReference 
+                          sources={message.sources} 
+                          darkMode={darkMode}
+                          themeConfig={currentThemeConfig}
+                        />
                       )}
                     </div>
                   )}
@@ -217,33 +234,41 @@ const MessageBubble = ({
               )}
             </div>
 
-            {/* Version controls */}
+            {/* Version selector */}
             {hasVersions && !isEditing && (
-              <div className="px-4 pb-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className={isUser ? 'text-mint-200' : 'text-gray-500'}>
-                    Phiên bản {currentVersion} / {totalVersions}
+              <div className={`px-4 pb-2 border-t ${
+                isUser 
+                  ? 'border-white border-opacity-20' 
+                  : (darkMode ? 'border-gray-600' : 'border-gray-200')
+              }`}>
+                <div className="flex items-center justify-between mt-2">
+                  <span className={`text-xs ${
+                    isUser 
+                      ? 'text-white text-opacity-80' 
+                      : (darkMode ? 'text-gray-400' : 'text-gray-500')
+                  }`}>
+                    Phiên bản {currentVersion}/{totalVersions}
                   </span>
                   <div className="flex items-center space-x-1">
                     <button
-                      onClick={() => handleVersionSwitch(Math.max(1, currentVersion - 1))}
+                      onClick={() => handleVersionSwitch(currentVersion - 1)}
                       disabled={currentVersion <= 1}
                       className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
-                          ? 'hover:bg-mint-700 text-mint-200'
-                          : 'hover:bg-gray-200 text-gray-500'
+                          ? 'hover:bg-white hover:bg-opacity-20 text-white'
+                          : (darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-500')
                       }`}
                       title="Phiên bản trước"
                     >
                       <BiChevronLeft className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleVersionSwitch(Math.min(totalVersions, currentVersion + 1))}
+                      onClick={() => handleVersionSwitch(currentVersion + 1)}
                       disabled={currentVersion >= totalVersions}
                       className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
-                          ? 'hover:bg-mint-700 text-mint-200'
-                          : 'hover:bg-gray-200 text-gray-500'
+                          ? 'hover:bg-white hover:bg-opacity-20 text-white'
+                          : (darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-500')
                       }`}
                       title="Phiên bản tiếp theo"
                     >
@@ -256,7 +281,11 @@ const MessageBubble = ({
 
             {/* Timestamp and actions */}
             <div className="px-4 pb-3 flex items-center justify-between">
-              <div className={`text-xs ${isUser ? 'text-mint-200' : 'text-gray-500'}`}>
+              <div className={`text-xs ${
+                isUser 
+                  ? 'text-white text-opacity-70' 
+                  : (darkMode ? 'text-gray-400' : 'text-gray-500')
+              }`}>
                 {formatTime(message.timestamp)}
                 {message.is_edited && <span className="ml-1">(đã chỉnh sửa)</span>}
               </div>
@@ -266,8 +295,12 @@ const MessageBubble = ({
                 <div className="relative" ref={menuRef}>
                   <button
                     onClick={() => setShowMenu(!showMenu)}
-                    className={`opacity-0 group-hover:opacity-100 transition-all duration-200 p-1 rounded hover:bg-opacity-20 hover:bg-gray-500 ${
-                      isUser ? 'text-mint-200 hover:text-white' : 'text-gray-400 hover:text-gray-600'
+                    className={`opacity-0 group-hover:opacity-100 transition-all duration-200 p-1 rounded ${
+                      isUser
+                        ? 'hover:bg-white hover:bg-opacity-20 text-white text-opacity-70 hover:text-white'
+                        : (darkMode 
+                          ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-300'
+                          : 'hover:bg-gray-200 text-gray-400 hover:text-gray-600')
                     }`}
                     title="Tùy chọn"
                   >
@@ -275,11 +308,19 @@ const MessageBubble = ({
                   </button>
 
                   {showMenu && (
-                    <div className="absolute right-0 bottom-full mb-1 w-44 bg-white rounded-md shadow-lg z-20 py-1 border border-gray-200">
+                    <div className={`absolute right-0 bottom-full mb-1 w-44 rounded-md shadow-lg z-20 py-1 border ${
+                      darkMode 
+                        ? 'bg-gray-800 border-gray-700'
+                        : 'bg-white border-gray-200'
+                    }`}>
                       {isUser && (
                         <button
                           onClick={handleEditStart}
-                          className="flex items-center w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          className={`flex items-center w-full text-left px-3 py-2 text-sm transition-colors ${
+                            darkMode
+                              ? 'text-gray-300 hover:bg-gray-700'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
                         >
                           <BiEdit className="mr-2 w-4 h-4" />
                           Chỉnh sửa tin nhắn
@@ -289,7 +330,11 @@ const MessageBubble = ({
                       {!isUser && (
                         <button
                           onClick={handleRegenerate}
-                          className="flex items-center w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          className={`flex items-center w-full text-left px-3 py-2 text-sm transition-colors ${
+                            darkMode
+                              ? 'text-gray-300 hover:bg-gray-700'
+                              : 'text-gray-700 hover:bg-gray-100'
+                          }`}
                         >
                           <BiRefresh className="mr-2 w-4 h-4" />
                           Tạo lại phản hồi
@@ -298,7 +343,11 @@ const MessageBubble = ({
 
                       <button
                         onClick={handleDelete}
-                        className="flex items-center w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        className={`flex items-center w-full text-left px-3 py-2 text-sm transition-colors ${
+                          darkMode
+                            ? 'text-red-400 hover:bg-red-900/20'
+                            : 'text-red-600 hover:bg-red-50'
+                        }`}
                       >
                         <BiTrash className="mr-2 w-4 h-4" />
                         Xóa từ đây trở đi

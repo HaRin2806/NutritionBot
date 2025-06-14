@@ -4,6 +4,10 @@
   color: #333;
 }
 
+.markdown-content.dark {
+  color: #e5e7eb;
+}
+
 .markdown-content h1,
 .markdown-content h2,
 .markdown-content h3,
@@ -16,10 +20,23 @@
   color: #111827;
 }
 
+.markdown-content.dark h1,
+.markdown-content.dark h2,
+.markdown-content.dark h3,
+.markdown-content.dark h4,
+.markdown-content.dark h5,
+.markdown-content.dark h6 {
+  color: #f3f4f6;
+}
+
 .markdown-content h1 {
   font-size: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.5rem;
+}
+
+.markdown-content.dark h1 {
+  border-bottom-color: #4b5563;
 }
 
 .markdown-content h2 {
@@ -77,18 +94,37 @@
   border: 1px solid #BBEADD;
 }
 
+.markdown-content.dark table th {
+  background-color: #374151;
+  color: #86efac;
+  border-color: #4b5563;
+}
+
 .markdown-content table td {
   padding: 0.75rem 1rem;
   border: 1px solid #E5E7EB;
   vertical-align: top;
 }
 
+.markdown-content.dark table td {
+  border-color: #4b5563;
+  color: #e5e7eb;
+}
+
 .markdown-content table tr:nth-child(even) {
   background-color: #F9FFFC;
 }
 
+.markdown-content.dark table tr:nth-child(even) {
+  background-color: #1f2937;
+}
+
 .markdown-content table tr:hover {
   background-color: #F0FFF8;
+}
+
+.markdown-content.dark table tr:hover {
+  background-color: #374151;
 }
 
 /* Định dạng cho khối code */
@@ -114,6 +150,12 @@
   font-size: 0.85rem;
 }
 
+.markdown-content.dark p code,
+.markdown-content.dark li code {
+  background-color: #374151;
+  color: #93c5fd;
+}
+
 /* Định dạng cho trích dẫn */
 .markdown-content blockquote {
   border-left: 4px solid #36B37E;
@@ -126,6 +168,12 @@
   border-radius: 0.5rem;
 }
 
+.markdown-content.dark blockquote {
+  background-color: #1f2937;
+  color: #9ca3af;
+  border-left-color: #86efac;
+}
+
 /* Định dạng cho hình ảnh */
 .markdown-content img {
   max-width: 100%;
@@ -135,10 +183,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.markdown-content.dark img {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* Định dạng cho liên kết */
 .markdown-content a {
   color: #36B37E;
   text-decoration: none;
+}
+
+.markdown-content.dark a {
+  color: #86efac;
 }
 
 .markdown-content a:hover {
@@ -152,23 +208,8 @@
   margin: 1.5rem 0;
 }
 
-/* Định dạng cho nút hiển thị nguồn */
-.source-button {
-  display: inline-flex;
-  align-items: center;
-  background-color: #EFF6FF;
-  color: #2563EB;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all 0.2s;
-  margin-top: 0.5rem;
-  cursor: pointer;
-}
-
-.source-button:hover {
-  background-color: #DBEAFE;
+.markdown-content.dark hr {
+  border-top-color: #4b5563;
 }
 
 /* Responsive */

@@ -2,13 +2,15 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BiPlus, BiChat } from 'react-icons/bi';
 import { useApp } from '../contexts/AppContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Header, Sidebar } from '../components/layout';
 import { MessageList, ChatInput } from '../components/chat';
-import { storageService } from '../services';
 
 const ChatPage = () => {
   const { conversationId } = useParams();
   const navigate = useNavigate();
+  const { theme, darkMode, currentThemeConfig } = useTheme();
+  
   const {
     userData, isLoading, isAuthenticated,
     activeConversation, conversations, isLoadingConversations,
@@ -18,7 +20,7 @@ const ChatPage = () => {
     showConfirm, showAgePrompt
   } = useApp();
 
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [currentConversationAge, setCurrentConversationAge] = useState(null);
 
@@ -30,6 +32,25 @@ const ChatPage = () => {
   });
 
   const messagesEndRef = useRef(null);
+
+  // FIXED: Define canEditAge FIRST
+  const canEditAge = useCallback(() => {
+    return !activeConversation || activeConversation.messages?.length === 0;
+  }, [activeConversation]);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(newIsMobile);
+      if (!newIsMobile) {
+        setIsSidebarVisible(true);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Simple auth redirect
   useEffect(() => {
@@ -49,7 +70,7 @@ const ChatPage = () => {
     }
   }, [userData, fetchConversations]);
 
-  // SỬA: Load conversation detail khi conversationId thay đổi
+  // Load conversation detail khi conversationId thay đổi
   useEffect(() => {
     const loadConversationDetail = async () => {
       if (!userData) return;
@@ -94,138 +115,89 @@ const ChatPage = () => {
     if (activeConversation) {
       const conversationAge = activeConversation.age_context;
       console.log('Setting conversation age:', conversationAge, 'for conversation:', activeConversation.id);
-
-      // CHỈ set currentConversationAge, KHÔNG set userAge để tránh re-render loop
       setCurrentConversationAge(conversationAge);
-
-      // Chỉ cập nhật storage age nếu khác với age hiện tại
-      const currentStoredAge = storageService.getUserAge();
-      if (conversationAge && conversationAge !== currentStoredAge) {
-        storageService.saveUserAge(conversationAge);
-      }
-    } else {
-      setCurrentConversationAge(null);
     }
   }, [activeConversation]);
 
-  // Responsive handling
+  // Auto scroll to bottom
   useEffect(() => {
-    const handleResize = () => {
-      const newIsMobile = window.innerWidth < 768;
-      setIsMobile(newIsMobile);
-      if (!newIsMobile) setIsSidebarVisible(true);
-      else if (newIsMobile && isSidebarVisible) setIsSidebarVisible(false);
-    };
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeConversation?.messages]);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isSidebarVisible]);
-
-  // Auto scroll
-  useEffect(() => {
-    if (activeConversation?.messages?.length > 0) {
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    }
-  }, [activeConversation?.messages?.length]);
-
-  // Kiểm tra xem có thể chỉnh sửa độ tuổi không
-  const canEditAge = useCallback(() => {
-    return !activeConversation || !activeConversation.messages || activeConversation.messages.length === 0;
-  }, [activeConversation]);
-
-  // Xử lý thay đổi độ tuổi
+  // FIXED: Now canEditAge is defined before handleAgeChange
   const handleAgeChange = useCallback(async () => {
+    // Nếu không thể edit age (có tin nhắn), return
     if (!canEditAge()) {
-      showConfirm({
-        title: 'Không thể thay đổi độ tuổi',
-        text: 'Bạn chỉ có thể thay đổi độ tuổi khi bắt đầu cuộc trò chuyện mới.',
-        icon: 'info',
-        showCancelButton: false,
-        confirmButtonText: 'Đã hiểu'
-      });
       return;
     }
 
-    const result = await showAgePrompt(currentConversationAge || userAge);
-    if (result.isConfirmed) {
-      const newAge = result.value;
-      setCurrentConversationAge(newAge);
+    try {
+      const result = await showAgePrompt(currentConversationAge || userAge);
+      if (result.isConfirmed) {
+        const newAge = result.value;
+        setUserAge(newAge);
+        setCurrentConversationAge(newAge);
 
-      // Cập nhật global userAge và storage
-      setUserAge(newAge);
+        // Nếu có cuộc trò chuyện hiện tại nhưng chưa có tin nhắn, cập nhật age_context
+        if (activeConversation && (!activeConversation.messages || activeConversation.messages.length === 0)) {
+          try {
+            const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+            await fetch(`http://localhost:5000/api/conversations/${activeConversation.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                age_context: newAge
+              })
+            });
 
-      // Nếu có cuộc trò chuyện hiện tại nhưng chưa có tin nhắn, cập nhật age_context
-      if (activeConversation && (!activeConversation.messages || activeConversation.messages.length === 0)) {
-        try {
-          const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-          await fetch(`http://localhost:5000/api/conversations/${activeConversation.id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-              age_context: newAge
-            })
-          });
-
-          // Reload conversation detail để có dữ liệu mới
-          loadedRef.current.conversationId = null; // Reset để force reload
-          await fetchConversationDetail(activeConversation.id);
-        } catch (error) {
-          console.error('Error updating conversation age context:', error);
+            // Reload conversation detail để có dữ liệu mới
+            loadedRef.current.conversationId = null;
+            await fetchConversationDetail(activeConversation.id);
+          } catch (error) {
+            console.error('Error updating conversation age context:', error);
+          }
         }
       }
+    } catch (error) {
+      console.error('Error changing age:', error);
     }
-  }, [canEditAge, currentConversationAge, userAge, showAgePrompt, showConfirm, setUserAge, activeConversation, fetchConversationDetail]);
+  }, [canEditAge, currentConversationAge, userAge, showAgePrompt, setUserAge, activeConversation, fetchConversationDetail]);
 
-  // Event handlers
+  // Handle new conversation - không popup 2 lần
   const handleNewConversation = useCallback(async () => {
     if (!isAuthenticated()) return;
 
     try {
+      // Sử dụng tuổi hiện tại nếu có, không thì mới hỏi
       let ageToUse = currentConversationAge || userAge;
+      
+      // Chỉ hỏi tuổi nếu chưa có tuổi nào
       if (!ageToUse) {
         const result = await showAgePrompt();
         if (result.isConfirmed) {
           ageToUse = result.value;
           setUserAge(ageToUse);
-          setCurrentConversationAge(ageToUse);
         } else {
           return;
         }
       }
 
-      const result = await startNewConversation();
-      if (result.success && isMobile) {
-        setIsSidebarVisible(false);
+      const conversation = await startNewConversation(ageToUse);
+      if (conversation) {
+        navigate(`/chat/${conversation.id}`);
+        setCurrentConversationAge(ageToUse);
       }
     } catch (error) {
       console.error('Error creating conversation:', error);
     }
-  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, startNewConversation, isMobile]);
+  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, startNewConversation, navigate]);
 
-  // SỬA: Xử lý chọn conversation với scroll
-  const handleSelectConversation = useCallback((id) => {
-    console.log('Selecting conversation:', id, 'current active:', activeConversation?.id);
-
-    if (id !== activeConversation?.id) {
-      // Reset loading state trước khi navigate
-      loadedRef.current.conversationId = null;
-      loadedRef.current.isLoadingDetail = false;
-
-      navigate(`/chat/${id}`);
-    }
-    if (isMobile) {
-      setIsSidebarVisible(false);
-    }
-  }, [activeConversation?.id, navigate, isMobile]);
-
-  const handleDeleteConversation = useCallback((id) => {
-    showConfirm({
-      title: 'Xóa cuộc trò chuyện?',
+  const handleDeleteConversation = useCallback(async (id) => {
+    await showConfirm({
+      title: 'Xóa cuộc hội thoại',
       text: 'Hành động này không thể hoàn tác.',
       icon: 'warning'
     }).then(async (result) => {
@@ -233,12 +205,15 @@ const ChatPage = () => {
         try {
           await deleteConversation(id);
           loadedRef.current.conversations = false;
+          if (id === activeConversation?.id) {
+            navigate('/chat');
+          }
         } catch (error) {
           console.error('Error deleting conversation:', error);
         }
       }
     });
-  }, [showConfirm, deleteConversation]);
+  }, [showConfirm, deleteConversation, activeConversation?.id, navigate]);
 
   const handleSendMessage = useCallback(async (message) => {
     if (!isAuthenticated()) return;
@@ -266,11 +241,18 @@ const ChatPage = () => {
   // Show loading only when explicitly loading
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
+      <div className={`flex items-center justify-center h-screen transition-colors duration-300 ${
+        darkMode ? 'bg-gray-900' : 'bg-gray-50'
+      }`}>
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-mint-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"
-            style={{ borderColor: '#36B37E', borderTopColor: 'transparent' }}></div>
-          <p className="text-gray-600">Đang tải...</p>
+          <div 
+            className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
+            style={{ 
+              borderColor: currentThemeConfig?.primary || '#36B37E', 
+              borderTopColor: 'transparent' 
+            }}
+          />
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Đang tải...</p>
         </div>
       </div>
     );
@@ -289,7 +271,9 @@ const ChatPage = () => {
   });
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className={`flex flex-col h-screen transition-colors duration-300 ${
+      darkMode ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
       <Header
         userData={userData}
         userAge={currentConversationAge || userAge}
@@ -304,16 +288,32 @@ const ChatPage = () => {
       <div className="flex flex-1 overflow-hidden relative">
         {/* Sidebar */}
         <div className={`${isSidebarVisible ? 'w-80 translate-x-0' : 'w-0 -translate-x-full'} 
-          bg-white border-r border-gray-200 flex flex-col shadow-lg transition-all duration-300 overflow-hidden 
-          ${isMobile ? 'fixed inset-0 z-30' : 'relative'}`}>
+          ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} 
+          border-r flex flex-col shadow-lg transition-all duration-300 overflow-hidden 
+          ${isMobile ? 'absolute inset-y-0 left-0 z-40' : 'relative'}`}>
+          
+          {/* Mobile close button */}
+          {isMobile && isSidebarVisible && (
+            <div className="flex justify-end p-4">
+              <button
+                onClick={() => setIsSidebarVisible(false)}
+                className={`p-2 rounded-lg transition-colors ${
+                  darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                }`}
+              >
+                <BiPlus className="w-5 h-5 rotate-45" />
+              </button>
+            </div>
+          )}
+
           <Sidebar
             conversations={conversations}
             activeConversation={activeConversation}
-            onSelectConversation={handleSelectConversation}
-            onCreateNewConversation={handleNewConversation}
+            isLoading={isLoadingConversations}
+            onNewConversation={handleNewConversation}
+            onSelectConversation={(id) => navigate(`/chat/${id}`)}
             onDeleteConversation={handleDeleteConversation}
             onRenameConversation={renameConversation}
-            isLoading={isLoadingConversations}
             isMobile={isMobile}
             onCloseSidebar={() => setIsSidebarVisible(false)}
           />
@@ -322,17 +322,21 @@ const ChatPage = () => {
         {/* Mobile overlay */}
         {isMobile && isSidebarVisible && (
           <div
-            className="fixed inset-0 z-20 bg-black bg-opacity-30"
+            className="absolute inset-0 bg-black bg-opacity-20 z-30"
             onClick={() => setIsSidebarVisible(false)}
           />
         )}
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col">
+        {/* Main chat area */}
+        <div className="flex-1 flex flex-col min-w-0 relative">
           {activeConversation ? (
             <>
-              <div className="flex-1 overflow-y-auto"
-                style={{ backgroundColor: '#F7FFFA' }}>
+              <div 
+                className="flex-1 overflow-y-auto transition-colors duration-300"
+                style={{ 
+                  backgroundColor: darkMode ? '#1f2937' : (currentThemeConfig?.light || '#F7FFFA')
+                }}
+              >
                 {activeConversation.messages?.length > 0 ? (
                   <>
                     <MessageList
@@ -350,13 +354,24 @@ const ChatPage = () => {
                   </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center">
-                    <BiChat className="text-4xl mb-4 text-mint-500" style={{ color: '#36B37E' }} />
-                    <p className="text-lg mb-2 text-gray-700">Bắt đầu cuộc trò chuyện mới</p>
-                    <p className="text-gray-500 mb-4 text-center max-w-md px-4">
+                    <BiChat 
+                      className="text-4xl mb-4" 
+                      style={{ color: currentThemeConfig?.primary || '#36B37E' }} 
+                    />
+                    <p className={`text-lg mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Bắt đầu cuộc trò chuyện mới
+                    </p>
+                    <p className={`mb-4 text-center max-w-md px-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                       Hãy nhập câu hỏi vào ô bên dưới để bắt đầu trò chuyện với Nutribot
                     </p>
                     {(currentConversationAge || userAge) && (
-                      <div className="mb-4 px-4 py-2 bg-mint-100 text-mint-700 rounded-full text-sm">
+                      <div 
+                        className="mb-4 px-4 py-2 rounded-full text-sm"
+                        style={{ 
+                          backgroundColor: currentThemeConfig?.light || '#E6F7EF',
+                          color: currentThemeConfig?.primary || '#36B37E'
+                        }}
+                      >
                         Độ tuổi hiện tại: {currentConversationAge || userAge} tuổi
                       </div>
                     )}
@@ -370,13 +385,20 @@ const ChatPage = () => {
               />
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-500 flex-col">
-              <BiChat className="text-7xl mb-6" style={{ color: '#36B37E' }} />
-              <p className="text-xl mb-4">Chưa có cuộc trò chuyện nào</p>
+            <div className={`flex-1 flex items-center justify-center flex-col ${
+              darkMode ? 'text-gray-400' : 'text-gray-500'
+            }`}>
+              <BiChat 
+                className="text-7xl mb-6" 
+                style={{ color: currentThemeConfig?.primary || '#36B37E' }} 
+              />
+              <p className={`text-xl mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                Chưa có cuộc trò chuyện nào
+              </p>
               <button
                 onClick={handleNewConversation}
-                className="px-6 py-3 bg-mint-600 text-white rounded-lg hover:bg-mint-700 transition flex items-center"
-                style={{ backgroundColor: '#36B37E' }}
+                className="px-6 py-3 text-white rounded-lg transition-colors hover:opacity-90 flex items-center"
+                style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
               >
                 <BiPlus className="mr-2" />
                 Bắt đầu cuộc trò chuyện mới

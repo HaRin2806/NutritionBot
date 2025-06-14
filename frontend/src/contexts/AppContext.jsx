@@ -6,7 +6,6 @@ import { createTitleFromMessage } from '../utils/index';
 
 const AppContext = createContext();
 
-// Custom hook để sử dụng context
 export const useApp = () => {
   const context = useContext(AppContext);
   if (!context) {
@@ -15,64 +14,120 @@ export const useApp = () => {
   return context;
 };
 
-// Toast utilities
-const useToast = () => ({
-  showSuccess: (message, timer = 1500) => Swal.fire({
-    icon: 'success',
-    title: 'Thành công',
-    text: message,
-    confirmButtonColor: '#36B37E',
-    timer,
-    showConfirmButton: timer > 2000
-  }),
+// Toast utilities with theme support
+const useToast = () => {
+  // Get current theme from localStorage
+  const getCurrentTheme = () => {
+    const theme = localStorage.getItem('theme') || 'mint';
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    
+    const themes = {
+      mint: { primary: '#36B37E', light: '#E6F7EF', dark: '#2FAB76' },
+      blue: { primary: '#2563EB', light: '#EFF6FF', dark: '#1D4ED8' },
+      purple: { primary: '#8B5CF6', light: '#F5F3FF', dark: '#7C3AED' },
+      pink: { primary: '#EC4899', light: '#FCE7F3', dark: '#DB2777' },
+      orange: { primary: '#F97316', light: '#FFF7ED', dark: '#EA580C' }
+    };
 
-  showError: (message) => Swal.fire({
-    icon: 'error',
-    title: 'Lỗi',
-    text: message,
-    confirmButtonColor: '#36B37E'
-  }),
+    return {
+      currentTheme: themes[theme] || themes.mint,
+      darkMode
+    };
+  };
 
-  showConfirm: async (options = {}) => {
-    const {
-      title = 'Xác nhận',
-      text = 'Bạn có chắc chắn?',
-      confirmButtonText = 'Xác nhận',
-      cancelButtonText = 'Hủy',
-      icon = 'question'
-    } = options;
+  return {
+    showSuccess: (message, timer = 1500) => {
+      const { currentTheme, darkMode } = getCurrentTheme();
+      return Swal.fire({
+        icon: 'success',
+        title: 'Thành công',
+        text: message,
+        confirmButtonColor: currentTheme.primary,
+        background: darkMode ? '#1f2937' : '#ffffff',
+        color: darkMode ? '#f3f4f6' : '#111827',
+        timer,
+        showConfirmButton: timer > 2000
+      });
+    },
 
-    return Swal.fire({
-      title, text, icon,
-      showCancelButton: true,
-      confirmButtonColor: '#36B37E',
-      cancelButtonColor: '#d33',
-      confirmButtonText,
-      cancelButtonText
-    });
-  },
+    showError: (message) => {
+      const { currentTheme, darkMode } = getCurrentTheme();
+      return Swal.fire({
+        icon: 'error',
+        title: 'Lỗi',
+        text: message,
+        confirmButtonColor: currentTheme.primary,
+        background: darkMode ? '#1f2937' : '#ffffff',
+        color: darkMode ? '#f3f4f6' : '#111827'
+      });
+    },
 
-  showAgePrompt: (currentAge = null) => Swal.fire({
-    title: 'Thiết lập độ tuổi',
-    html: `
-      <select id="swal-age" class="swal2-input">
-        ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-          `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
-        ).join('')}
-      </select>
-    `,
-    confirmButtonText: 'Lưu',
-    confirmButtonColor: '#36B37E',
-    allowOutsideClick: false,
-    preConfirm: () => {
-      const age = parseInt(document.getElementById('swal-age').value);
-      if (isNaN(age) || age < 1 || age > 19) {
-        Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
-      }
-      return age;
+    showConfirm: async (options = {}) => {
+      const {
+        title = 'Xác nhận',
+        text = 'Bạn có chắc chắn?',
+        confirmButtonText = 'Xác nhận',
+        cancelButtonText = 'Hủy',
+        icon = 'question'
+      } = options;
+
+      const { currentTheme, darkMode } = getCurrentTheme();
+      
+      return Swal.fire({
+        title, text, icon,
+        showCancelButton: true,
+        confirmButtonColor: currentTheme.primary,
+        cancelButtonColor: '#d33',
+        confirmButtonText,
+        cancelButtonText,
+        background: darkMode ? '#1f2937' : '#ffffff',
+        color: darkMode ? '#f3f4f6' : '#111827'
+      });
+    },
+
+    showAgePrompt: (currentAge = null) => {
+      const { currentTheme, darkMode } = getCurrentTheme();
+      
+      return Swal.fire({
+        title: 'Thiết lập độ tuổi',
+        html: `
+          <select id="swal-age" class="swal2-input" style="
+            background-color: ${darkMode ? '#374151' : '#ffffff'};
+            color: ${darkMode ? '#ffffff' : '#111827'};
+            border: 1px solid ${darkMode ? '#4b5563' : '#d1d5db'};
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            font-size: 1rem;
+            width: 100%;
+          ">
+            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+              `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
+            ).join('')}
+          </select>
+        `,
+        confirmButtonText: 'Lưu',
+        confirmButtonColor: currentTheme.primary,
+        background: darkMode ? '#1f2937' : '#ffffff',
+        color: darkMode ? '#f3f4f6' : '#111827',
+        allowOutsideClick: false,
+        didOpen: () => {
+          const popup = Swal.getPopup();
+          if (darkMode) {
+            popup.style.backgroundColor = '#1f2937';
+            popup.style.color = '#f3f4f6';
+          }
+        },
+        preConfirm: () => {
+          const age = parseInt(document.getElementById('swal-age').value);
+          if (isNaN(age) || age < 1 || age > 19) {
+            Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+          }
+          return age;
+        }
+      });
     }
-  })
-});
+  };
+};
 
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
@@ -87,7 +142,7 @@ export const AppProvider = ({ children }) => {
       // Auth state
       userData: storedUser,
       isLoading: false,
-      isVerified: !storedUser, // True if no user to verify
+      isVerified: !storedUser,
       
       // Chat state
       activeConversation: null,
@@ -203,7 +258,7 @@ export const AppProvider = ({ children }) => {
           const currentUser = storageService.getUserData();
           if (currentUser) {
             const storage = localStorage.getItem('user') ? localStorage : sessionStorage;
-            storage.setItem('user', JSON.stringify(updatedUser));
+            storageService.saveUserData(updatedUser, storageService.getToken(), storage);
           }
           
           return { success: true };
@@ -215,10 +270,15 @@ export const AppProvider = ({ children }) => {
       }
     },
 
-    changePassword: async (passwordData) => {
+    changePassword: async (currentPassword, newPassword) => {
       try {
-        const response = await authService.changePassword(passwordData);
-        return { success: response.success };
+        const response = await authService.changePassword(currentPassword, newPassword);
+        
+        if (response.success) {
+          return { success: true };
+        }
+        
+        throw new Error(response.error);
       } catch (error) {
         return { success: false, error: error.message };
       }
@@ -227,39 +287,25 @@ export const AppProvider = ({ children }) => {
 
   // Chat operations
   const chatOps = {
-    fetchConversations: async (includeArchived = false) => {
+    fetchConversations: async () => {
+      if (state.isLoadingConversations) return;
+
       try {
         updateState({ isLoadingConversations: true });
-        const response = await chatService.getConversations(includeArchived);
-
+        const response = await chatService.getConversations();
+        
         if (response.success) {
-          const conversations = response.conversations;
-          updateState({ conversations });
-
-          // Initialize age from storage or latest conversation
-          if (!refs.current.hasInitializedAge) {
-            refs.current.hasInitializedAge = true;
-            const storedAge = storageService.getUserAge();
-
-            if (storedAge) {
-              updateState({ userAge: storedAge });
-            } else if (conversations.length > 0) {
-              const lastConversationWithAge = conversations
-                .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
-                .find(conv => conv.age_context);
-
-              if (lastConversationWithAge?.age_context) {
-                updateState({ userAge: lastConversationWithAge.age_context });
-                storageService.saveUserAge(lastConversationWithAge.age_context);
-              }
-            }
-          }
-          return conversations;
+          updateState({ 
+            conversations: response.conversations || [],
+            isLoadingConversations: false 
+          });
         }
-        return [];
       } catch (error) {
         console.error("Error fetching conversations:", error);
-        return [];
+        updateState({ 
+          conversations: [],
+          isLoadingConversations: false 
+        });
       } finally {
         updateState({ isLoadingConversations: false });
       }
@@ -358,14 +404,13 @@ export const AppProvider = ({ children }) => {
       }
     },
 
-    // Conversation management
-    startNewConversation: async () => {
+    startNewConversation: async (ageToUse = null) => {
       if (!state.userData?.id) {
         navigate('/login');
         return { success: false };
       }
 
-      let currentAge = state.userAge;
+      let currentAge = ageToUse || state.userAge;
       if (!currentAge) {
         const result = await toast.showAgePrompt();
         if (result.isConfirmed) {
@@ -381,8 +426,8 @@ export const AppProvider = ({ children }) => {
         const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
         if (response.success) {
           if (response.conversation_id) {
-            await chatOps.fetchConversationDetail(response.conversation_id);
-            navigate(`/chat/${response.conversation_id}`);
+            const conversation = await chatOps.fetchConversationDetail(response.conversation_id);
+            return conversation;
           }
           return { success: true };
         }
@@ -393,112 +438,62 @@ export const AppProvider = ({ children }) => {
       }
     },
 
-    deleteConversation: async (conversationId) => {
+    deleteConversation: async (id) => {
       try {
-        const response = await chatService.deleteConversation(conversationId);
+        const response = await chatService.deleteConversation(id);
         if (response.success) {
-          const updatedConversations = state.conversations.filter(c => c.id !== conversationId);
-          updateState({ conversations: updatedConversations });
-
-          if (state.activeConversation?.id === conversationId) {
-            if (updatedConversations.length > 0) {
-              await chatOps.fetchConversationDetail(updatedConversations[0].id);
-              navigate(`/chat/${updatedConversations[0].id}`);
-            } else {
-              updateState({ activeConversation: null });
-              navigate('/chat');
-            }
-          }
+          updateState({
+            conversations: state.conversations.filter(c => c.id !== id),
+            activeConversation: state.activeConversation?.id === id ? null : state.activeConversation
+          });
           return { success: true };
         }
         throw new Error(response.error);
       } catch (error) {
         console.error("Error deleting conversation:", error);
-        return { success: false, error: error.message };
+        throw error;
       }
     },
 
-    renameConversation: async (conversationId, currentTitle) => {
-      const result = await Swal.fire({
-        title: 'Đổi tên cuộc trò chuyện',
-        input: 'text',
-        inputValue: currentTitle,
-        showCancelButton: true,
-        confirmButtonColor: '#36B37E',
-        preConfirm: (title) => {
-          if (!title.trim()) {
-            Swal.showValidationMessage('Tên không được để trống');
-          }
-          return title;
-        }
-      });
-
-      if (result.isConfirmed) {
-        try {
-          const response = await chatService.updateConversation(conversationId, { title: result.value });
-          if (response.success) {
-            updateState({
-              conversations: state.conversations.map(conv =>
-                conv.id === conversationId ? { ...conv, title: result.value } : conv
-              ),
-              activeConversation: state.activeConversation?.id === conversationId
-                ? { ...state.activeConversation, title: result.value }
-                : state.activeConversation
-            });
-            return { success: true };
-          }
-          throw new Error(response.error);
-        } catch (error) {
-          console.error("Error renaming conversation:", error);
-          return { success: false };
-        }
-      }
-      return { success: false, cancelled: true };
-    },
-
-    // Message operations
-    editMessage: async (messageId, conversationId, newContent) => {
+    renameConversation: async (id, newTitle) => {
       try {
-        const currentMessages = state.activeConversation.messages;
-        const userMessageIndex = currentMessages.findIndex(msg =>
-          (msg._id || msg.id) === messageId && msg.role === 'user'
-        );
-
-        if (userMessageIndex === -1) {
-          throw new Error('Không tìm thấy tin nhắn user');
-        }
-
-        const messagesBeforeEdit = currentMessages.slice(0, userMessageIndex + 1);
-        messagesBeforeEdit[userMessageIndex] = {
-          ...messagesBeforeEdit[userMessageIndex],
-          content: newContent,
-          is_edited: true
-        };
-
-        const tempBotMessage = {
-          _id: `temp_bot_${Date.now()}`,
-          role: 'bot',
-          content: '',
-          timestamp: new Date().toISOString(),
-          isRegenerating: true
-        };
-
-        updateState({
-          activeConversation: {
-            ...state.activeConversation,
-            messages: [...messagesBeforeEdit, tempBotMessage]
-          }
-        });
-
-        const ageToUse = state.activeConversation.age_context || state.userAge;
-        const response = await chatService.editMessage(messageId, conversationId, newContent, ageToUse);
-
+        const response = await chatService.updateConversation(id, { title: newTitle });
         if (response.success) {
-          await chatOps.fetchConversationDetail(conversationId);
+          await chatOps.fetchConversations();
           return { success: true };
         }
         throw new Error(response.error);
+      } catch (error) {
+        console.error("Error renaming conversation:", error);
+        throw error;
+      }
+    },
 
+    editMessage: async (messageId, conversationId, newContent) => {
+      try {
+        const tempEdit = { ...state.activeConversation };
+        const messageIndex = tempEdit.messages.findIndex(m => 
+          (m._id || m.id) === messageId
+        );
+        
+        if (messageIndex !== -1) {
+          tempEdit.messages[messageIndex] = {
+            ...tempEdit.messages[messageIndex],
+            content: newContent,
+            isEditing: true
+          };
+          
+          updateState({ activeConversation: tempEdit });
+
+          const ageToUse = state.activeConversation.age_context || state.userAge;
+          const response = await chatService.editMessage(messageId, conversationId, newContent, ageToUse);
+
+          if (response.success) {
+            await chatOps.fetchConversationDetail(conversationId);
+            return { success: true };
+          }
+          throw new Error(response.error);
+        }
       } catch (error) {
         console.error("Error editing message:", error);
         await chatOps.fetchConversationDetail(conversationId);

@@ -43,19 +43,24 @@ export const groupConversationsByTime = (conversations) => {
   const yesterday = today - 86400000;
   const last7Days = today - 86400000 * 7;
 
-  const groups = { today: [], yesterday: [], last7Days: [], older: [] };
+  const groups = {
+    'Hôm nay': [],
+    'Hôm qua': [],
+    '7 ngày qua': [],
+    'Cũ hơn': []
+  };
 
   conversations.forEach(conversation => {
     const conversationDate = new Date(conversation.updated_at).getTime();
 
     if (conversationDate >= today) {
-      groups.today.push(conversation);
+      groups['Hôm nay'].push(conversation);
     } else if (conversationDate >= yesterday) {
-      groups.yesterday.push(conversation);
+      groups['Hôm qua'].push(conversation);
     } else if (conversationDate >= last7Days) {
-      groups.last7Days.push(conversation);
+      groups['7 ngày qua'].push(conversation);
     } else {
-      groups.older.push(conversation);
+      groups['Cũ hơn'].push(conversation);
     }
   });
 
