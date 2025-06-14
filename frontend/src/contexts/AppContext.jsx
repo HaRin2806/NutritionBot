@@ -382,8 +382,9 @@ export const AppProvider = ({ children }) => {
           if (response.conversation_id) {
             await chatOps.fetchConversationDetail(response.conversation_id);
 
+            await chatOps.fetchConversations();
+
             if (!conversationId) {
-              await chatOps.fetchConversations();
               navigate(`/chat/${response.conversation_id}`);
             }
           }
@@ -429,6 +430,7 @@ export const AppProvider = ({ children }) => {
         if (response.success) {
           if (response.conversation_id) {
             const conversation = await chatOps.fetchConversationDetail(response.conversation_id);
+            await chatOps.fetchConversations();
             return conversation;
           }
           return { success: true };

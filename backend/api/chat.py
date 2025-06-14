@@ -51,9 +51,6 @@ def chat():
         
         logger.info(f"Nhận tin nhắn từ user {user_id}: {message[:50]}...")
         
-        # Biến để track conversation mới
-        is_new_conversation = False
-        
         # Xử lý conversation
         if conversation_id:
             conversation = Conversation.find_by_id(conversation_id)
@@ -63,15 +60,13 @@ def chat():
                     "error": "Không tìm thấy cuộc trò chuyện"
                 }), 404
         else:
-            # Tạo conversation mới với tiêu đề tạm thời
-            temp_title = create_title_from_message(message)
+            final_title = create_title_from_message(message, 50)
             conversation = Conversation.create(
                 user_id=user_id,
-                title=temp_title,
+                title=final_title,
                 age_context=age
             )
-            is_new_conversation = True
-            logger.info(f"Tạo conversation mới: {conversation.conversation_id}")
+            logger.info(f"Tạo conversation mới với title: '{final_title}'")
         
         # Thêm tin nhắn của user
         conversation.add_message("user", message)
@@ -89,13 +84,6 @@ def chat():
             
             # Thêm tin nhắn bot vào conversation
             conversation.add_message("bot", bot_response, sources=sources)
-            
-            # Nếu là conversation mới, tạo tiêu đề tốt hơn từ tin nhắn đầu tiên
-            if is_new_conversation:
-                better_title = create_title_from_message(message, 60)
-                conversation.title = better_title
-                conversation.save()
-                logger.info(f"Đã cập nhật tiêu đề conversation: {better_title}")
             
             logger.info(f"Đã generate response thành công cho conversation {conversation.conversation_id}")
             
