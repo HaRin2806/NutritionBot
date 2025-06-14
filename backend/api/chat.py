@@ -59,6 +59,11 @@ def chat():
                     "success": False,
                     "error": "Không tìm thấy cuộc trò chuyện"
                 }), 404
+            
+            if len(conversation.messages) == 0:
+                final_title = create_title_from_message(message, 50)
+                conversation.title = final_title
+                logger.info(f"Cập nhật title cho conversation {conversation_id}: '{final_title}'")
         else:
             final_title = create_title_from_message(message, 50)
             conversation = Conversation.create(
