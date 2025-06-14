@@ -34,7 +34,7 @@ const ChatInput = ({ onSendMessage, disabled = false, placeholder = "Hãy hỏi 
     <div className={`border-t p-4 transition-colors ${
       darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
     }`}>
-      <form onSubmit={handleSubmit} className="flex items-end space-x-3">
+      <form onSubmit={handleSubmit} className="flex items-center space-x-3">
         <div className="flex-1 relative">
           <textarea
             ref={textareaRef}
@@ -45,15 +45,16 @@ const ChatInput = ({ onSendMessage, disabled = false, placeholder = "Hãy hỏi 
             onCompositionEnd={() => setIsComposing(false)}
             placeholder={placeholder}
             disabled={disabled}
-            className={`w-full resize-none rounded-lg border px-4 py-3 focus:outline-none focus:ring-2 transition-colors ${
+            className={`w-full resize-none rounded-lg px-4 py-3 focus:outline-none focus:ring-2 transition-all ${
               darkMode 
-                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
-                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500'
+                ? 'bg-gray-700 text-white placeholder-gray-400 border border-gray-600'
+                : 'bg-gray-50 text-gray-900 placeholder-gray-500 border border-gray-200'
             }`}
             style={{ 
-              focusRingColor: `${currentThemeConfig?.primary}40`,
-              minHeight: '52px', // FIXED: Match button height
-              maxHeight: '120px'
+              '--tw-ring-color': `${currentThemeConfig?.primary}40`,
+              minHeight: '52px',
+              maxHeight: '120px',
+              borderColor: darkMode ? '#4B5563' : '#E5E7EB'
             }}
           />
         </div>
@@ -61,14 +62,14 @@ const ChatInput = ({ onSendMessage, disabled = false, placeholder = "Hãy hỏi 
         <button
           type="submit"
           disabled={disabled || !message.trim()}
-          className={`flex-shrink-0 p-3 rounded-lg text-white transition-all duration-200 ${
+          className={`flex-shrink-0 p-3 rounded-lg text-white transition-all duration-200 flex items-center justify-center ${
             disabled || !message.trim()
               ? 'opacity-50 cursor-not-allowed'
               : 'hover:opacity-90 hover:shadow-lg'
           }`}
           style={{ 
             backgroundColor: currentThemeConfig?.primary || '#36B37E',
-            height: '52px', // FIXED: Explicit height to match textarea min-height
+            height: '52px',
             width: '52px'
           }}
         >

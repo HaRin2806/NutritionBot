@@ -20,7 +20,7 @@ const useToast = () => {
   const getCurrentTheme = () => {
     const theme = localStorage.getItem('theme') || 'mint';
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    
+
     const themes = {
       mint: { primary: '#36B37E', light: '#E6F7EF', dark: '#2FAB76' },
       blue: { primary: '#2563EB', light: '#EFF6FF', dark: '#1D4ED8' },
@@ -72,7 +72,7 @@ const useToast = () => {
       } = options;
 
       const { currentTheme, darkMode } = getCurrentTheme();
-      
+
       return Swal.fire({
         title, text, icon,
         showCancelButton: true,
@@ -87,7 +87,7 @@ const useToast = () => {
 
     showAgePrompt: (currentAge = null) => {
       const { currentTheme, darkMode } = getCurrentTheme();
-      
+
       return Swal.fire({
         title: 'Thiết lập độ tuổi',
         html: `
@@ -101,8 +101,8 @@ const useToast = () => {
             width: 100%;
           ">
             ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-              `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
-            ).join('')}
+          `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
+        ).join('')}
           </select>
         `,
         confirmButtonText: 'Lưu',
@@ -132,24 +132,24 @@ const useToast = () => {
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const toast = useToast();
-  
+
   // Unified state
   const [state, setState] = useState(() => {
     const storedUser = storageService.getUserData();
     const token = storageService.getToken();
-    
+
     return {
       // Auth state
       userData: storedUser,
       isLoading: false,
       isVerified: !storedUser,
-      
+
       // Chat state
       activeConversation: null,
       conversations: [],
       isLoadingConversations: false,
       userAge: storageService.getUserAge(),
-      
+
       // UI state
       selectedConversations: [],
       searchTerm: '',
@@ -167,47 +167,47 @@ export const AppProvider = ({ children }) => {
   const authOps = {
     login: async (email, password, rememberMe = false) => {
       updateState({ isLoading: true });
-      
+
       try {
         const response = await authService.login(email, password, rememberMe);
-        
+
         if (response.success) {
           const storage = rememberMe ? localStorage : sessionStorage;
           storageService.saveUserData(response.user, response.access_token, storage);
-          
+
           updateState({
             userData: response.user,
             isLoading: false,
             isVerified: true
           });
-          
+
           toast.showSuccess('Đăng nhập thành công!');
           return { success: true };
         }
-        
+
         throw new Error(response.error);
       } catch (error) {
         updateState({ isLoading: false });
-        
+
         const errorMessage = error.response?.data?.error || 'Email hoặc mật khẩu không chính xác';
-        
+
         setTimeout(() => {
           toast.showError(errorMessage);
         }, 100);
-        
+
         return { success: false, error: errorMessage };
       }
     },
 
     register: async (userData) => {
       updateState({ isLoading: true });
-      
+
       try {
         const response = await authService.register(userData);
-        
+
         if (response.success) {
           updateState({ isLoading: false });
-          
+
           Swal.fire({
             title: 'Đăng ký thành công!',
             text: 'Bạn đã tạo tài khoản thành công.',
@@ -217,10 +217,10 @@ export const AppProvider = ({ children }) => {
           }).then(() => {
             navigate('/login');
           });
-          
+
           return { success: true };
         }
-        
+
         throw new Error(response.error);
       } catch (error) {
         updateState({ isLoading: false });
@@ -250,20 +250,20 @@ export const AppProvider = ({ children }) => {
     updateProfile: async (profileData) => {
       try {
         const response = await authService.updateProfile(profileData);
-        
+
         if (response.success) {
           const updatedUser = { ...state.userData, ...profileData };
           updateState({ userData: updatedUser });
-          
+
           const currentUser = storageService.getUserData();
           if (currentUser) {
             const storage = localStorage.getItem('user') ? localStorage : sessionStorage;
             storageService.saveUserData(updatedUser, storageService.getToken(), storage);
           }
-          
+
           return { success: true };
         }
-        
+
         throw new Error(response.error);
       } catch (error) {
         return { success: false, error: error.message };
@@ -273,11 +273,11 @@ export const AppProvider = ({ children }) => {
     changePassword: async (currentPassword, newPassword) => {
       try {
         const response = await authService.changePassword(currentPassword, newPassword);
-        
+
         if (response.success) {
           return { success: true };
         }
-        
+
         throw new Error(response.error);
       } catch (error) {
         return { success: false, error: error.message };
@@ -293,18 +293,18 @@ export const AppProvider = ({ children }) => {
       try {
         updateState({ isLoadingConversations: true });
         const response = await chatService.getConversations();
-        
+
         if (response.success) {
-          updateState({ 
+          updateState({
             conversations: response.conversations || [],
-            isLoadingConversations: false 
+            isLoadingConversations: false
           });
         }
       } catch (error) {
         console.error("Error fetching conversations:", error);
-        updateState({ 
+        updateState({
           conversations: [],
-          isLoadingConversations: false 
+          isLoadingConversations: false
         });
       } finally {
         updateState({ isLoadingConversations: false });
@@ -381,7 +381,9 @@ export const AppProvider = ({ children }) => {
         if (response.success) {
           if (response.conversation_id) {
             await chatOps.fetchConversationDetail(response.conversation_id);
+
             if (!conversationId) {
+              await chatOps.fetchConversations();
               navigate(`/chat/${response.conversation_id}`);
             }
           }
@@ -472,17 +474,17 @@ export const AppProvider = ({ children }) => {
     editMessage: async (messageId, conversationId, newContent) => {
       try {
         const tempEdit = { ...state.activeConversation };
-        const messageIndex = tempEdit.messages.findIndex(m => 
+        const messageIndex = tempEdit.messages.findIndex(m =>
           (m._id || m.id) === messageId
         );
-        
+
         if (messageIndex !== -1) {
           tempEdit.messages[messageIndex] = {
             ...tempEdit.messages[messageIndex],
             content: newContent,
             isEditing: true
           };
-          
+
           updateState({ activeConversation: tempEdit });
 
           const ageToUse = state.activeConversation.age_context || state.userAge;
@@ -618,14 +620,14 @@ export const AppProvider = ({ children }) => {
   const value = {
     // State
     ...state,
-    
+
     // Auth operations
     login: authOps.login,
     register: authOps.register,
     logout: authOps.logout,
     updateProfile: authOps.updateProfile,
     changePassword: authOps.changePassword,
-    
+
     // Chat operations
     fetchConversations: chatOps.fetchConversations,
     fetchConversationDetail: chatOps.fetchConversationDetail,
@@ -637,12 +639,12 @@ export const AppProvider = ({ children }) => {
     switchMessageVersion: chatOps.switchMessageVersion,
     regenerateResponse: chatOps.regenerateResponse,
     deleteMessageAndFollowing: chatOps.deleteMessageAndFollowing,
-    
+
     // Helpers
     isAuthenticated: helpers.isAuthenticated,
     requireAuth: helpers.requireAuth,
     setUserAge: helpers.setUserAge,
-    
+
     // Toast
     ...toast
   };

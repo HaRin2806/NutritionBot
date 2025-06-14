@@ -34,6 +34,9 @@ export const chatService = {
   deleteConversation: (id) => baseApi.delete(`/conversations/${id}`, { conversation_id: id }),
   archiveConversation: (id) => baseApi.post(`/conversations/${id}/archive`),
   unarchiveConversation: (id) => baseApi.post(`/conversations/${id}/unarchive`),
+  
+  generateTitle: (conversationId) => baseApi.post(`/conversations/${conversationId}/generate-title`),
+  
   bulkDeleteConversations: (ids) => baseApi.post('/conversations/bulk-delete', { conversation_ids: ids }),
 
   // Message operations

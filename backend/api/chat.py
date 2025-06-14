@@ -23,6 +23,14 @@ def get_rag_pipeline():
         rag_pipeline = RAGPipeline()
     return rag_pipeline
 
+# Hàm tạo tiêu đề từ tin nhắn
+def create_title_from_message(message, max_length=50):
+    """Tạo tiêu đề cuộc trò chuyện từ tin nhắn đầu tiên của người dùng"""
+    message = message.strip().replace('\n', ' ')
+    if len(message) <= max_length:
+        return message
+    return message[:max_length-3] + "..."
+
 @chat_routes.route('/chat', methods=['POST'])
 @jwt_required()
 def chat():
@@ -43,6 +51,9 @@ def chat():
         
         logger.info(f"Nhận tin nhắn từ user {user_id}: {message[:50]}...")
         
+        # Biến để track conversation mới
+        is_new_conversation = False
+        
         # Xử lý conversation
         if conversation_id:
             conversation = Conversation.find_by_id(conversation_id)
@@ -52,18 +63,20 @@ def chat():
                     "error": "Không tìm thấy cuộc trò chuyện"
                 }), 404
         else:
-            # Tạo conversation mới
+            # Tạo conversation mới với tiêu đề tạm thời
+            temp_title = create_title_from_message(message)
             conversation = Conversation.create(
                 user_id=user_id,
-                title=message[:50] + "..." if len(message) > 50 else message,
+                title=temp_title,
                 age_context=age
             )
+            is_new_conversation = True
             logger.info(f"Tạo conversation mới: {conversation.conversation_id}")
         
         # Thêm tin nhắn của user
         conversation.add_message("user", message)
         
-        # SỬA: Chỉ sử dụng RAG Pipeline để generate response, không khởi tạo DataProcessor
+        # Sử dụng RAG Pipeline để generate response
         pipeline = get_rag_pipeline()
         
         # Generate response sử dụng RAG
@@ -76,6 +89,13 @@ def chat():
             
             # Thêm tin nhắn bot vào conversation
             conversation.add_message("bot", bot_response, sources=sources)
+            
+            # Nếu là conversation mới, tạo tiêu đề tốt hơn từ tin nhắn đầu tiên
+            if is_new_conversation:
+                better_title = create_title_from_message(message, 60)
+                conversation.title = better_title
+                conversation.save()
+                logger.info(f"Đã cập nhật tiêu đề conversation: {better_title}")
             
             logger.info(f"Đã generate response thành công cho conversation {conversation.conversation_id}")
             
@@ -117,7 +137,7 @@ def generate_follow_up_questions():
                 "error": "Thiếu thông tin cần thiết"
             }), 400
         
-        # SỬA: Sử dụng RAG Pipeline thay vì khởi tạo DataProcessor
+        # Sử dụng RAG Pipeline thay vì khởi tạo DataProcessor
         pipeline = get_rag_pipeline()
         
         # Generate follow-up questions
@@ -186,7 +206,7 @@ def edit_message(message_id):
                 "error": "Không tìm thấy tin nhắn"
             }), 404
         
-        # SỬA: Cập nhật tin nhắn và xóa tất cả tin nhắn sau nó
+        # Cập nhật tin nhắn và xóa tất cả tin nhắn sau nó
         success, result_message = conversation.edit_message(message_id, new_content)
         
         if not success:
@@ -195,7 +215,7 @@ def edit_message(message_id):
                 "error": result_message
             }), 400
         
-        # SỬA: Tạo phản hồi mới với RAG Pipeline
+        # Tạo phản hồi mới với RAG Pipeline
         pipeline = get_rag_pipeline()
         response_data = pipeline.generate_response(new_content, age)
         
@@ -232,7 +252,7 @@ def edit_message(message_id):
             else:
                 return jsonify({
                     "success": False,
-                    "error": f"Đã chỉnh sửa tin nhắn nhưng không thể tạo phản hồi: {bot_message}"
+                    "error": bot_message
                 }), 500
         else:
             return jsonify({
