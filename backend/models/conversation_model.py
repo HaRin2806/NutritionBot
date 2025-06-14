@@ -48,13 +48,26 @@ class Conversation:
     def to_dict(self):
         """Convert conversation object sang dictionary cho JSON serialization"""
         try:
+            def safe_datetime_to_string(dt_obj):
+                """Safely convert datetime object to ISO string"""
+                if dt_obj is None:
+                    return None
+                # Nếu đã là string, return nguyên
+                if isinstance(dt_obj, str):
+                    return dt_obj
+                # Nếu là datetime object, convert sang string
+                if hasattr(dt_obj, 'isoformat'):
+                    return dt_obj.isoformat()
+                # Fallback: convert to string
+                return str(dt_obj)
+            
             result = {
                 "id": str(self.conversation_id),
                 "user_id": str(self.user_id),
                 "title": self.title,
                 "age_context": self.age_context,
-                "created_at": self.created_at.isoformat() if self.created_at else None,
-                "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+                "created_at": safe_datetime_to_string(self.created_at), 
+                "updated_at": safe_datetime_to_string(self.updated_at), 
                 "is_archived": self.is_archived,
                 "messages": []
             }
@@ -65,7 +78,7 @@ class Conversation:
                     "_id": str(message["_id"]),
                     "role": message["role"],
                     "content": message["content"],
-                    "timestamp": message["timestamp"].isoformat() if hasattr(message["timestamp"], 'isoformat') else str(message["timestamp"]),
+                    "timestamp": safe_datetime_to_string(message.get("timestamp")),
                     "current_version": message.get("current_version", 1),
                     "is_edited": message.get("is_edited", False)
                 }
@@ -76,7 +89,7 @@ class Conversation:
                     for version in message["versions"]:
                         version_data = {
                             "content": version["content"],
-                            "timestamp": version["timestamp"].isoformat() if hasattr(version["timestamp"], 'isoformat') else str(version["timestamp"]),
+                            "timestamp": safe_datetime_to_string(version.get("timestamp")),
                             "version": version["version"]
                         }
                         
@@ -124,14 +137,38 @@ class Conversation:
         """Tạo đối tượng Conversation từ dictionary"""
         if not conversation_dict:
             return None
+        
+        def safe_string_to_datetime(dt_string):
+            """Safely convert string to datetime object"""
+            if dt_string is None:
+                return None
+            # Nếu đã là datetime object, return nguyên
+            if hasattr(dt_string, 'isoformat'):
+                return dt_string
+            # Nếu là string, parse thành datetime
+            if isinstance(dt_string, str):
+                try:
+                    # Parse ISO format string
+                    return datetime.datetime.fromisoformat(dt_string.replace('Z', '+00:00'))
+                except (ValueError, AttributeError):
+                    # Fallback: try parsing other common formats
+                    try:
+                        return datetime.datetime.strptime(dt_string, "%Y-%m-%d %H:%M:%S.%f")
+                    except ValueError:
+                        try:
+                            return datetime.datetime.strptime(dt_string, "%Y-%m-%d %H:%M:%S")
+                        except ValueError:
+                            logger.warning(f"Cannot parse datetime: {dt_string}")
+                            return datetime.datetime.now()
+            return datetime.datetime.now()
             
         return cls(
             conversation_id=conversation_dict.get("_id"),
             user_id=conversation_dict.get("user_id"),
             title=conversation_dict.get("title"),
             age_context=conversation_dict.get("age_context"),
-            created_at=conversation_dict.get("created_at"),
-            updated_at=conversation_dict.get("updated_at"),
+            created_at=safe_string_to_datetime(conversation_dict.get("created_at")), 
+            updated_at=safe_string_to_datetime(conversation_dict.get("updated_at")), 
             is_archived=conversation_dict.get("is_archived", False),
             messages=conversation_dict.get("messages", [])
         )

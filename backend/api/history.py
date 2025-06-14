@@ -97,6 +97,19 @@ def get_conversation_detail(conversation_id):
     try:
         user_id = get_jwt_identity()
         
+        def safe_datetime_to_string(dt_obj):
+            """Safely convert datetime object to ISO string"""
+            if dt_obj is None:
+                return None
+            # Nếu đã là string, return nguyên
+            if isinstance(dt_obj, str):
+                return dt_obj
+            # Nếu là datetime object, convert sang string
+            if hasattr(dt_obj, 'isoformat'):
+                return dt_obj.isoformat()
+            # Fallback: convert to string
+            return str(dt_obj)
+        
         # Lấy thông tin cuộc hội thoại
         conversation = Conversation.find_by_id(conversation_id)
         
@@ -113,12 +126,11 @@ def get_conversation_detail(conversation_id):
                 "error": "Bạn không có quyền truy cập cuộc hội thoại này"
             }), 403
         
-        # Chuẩn bị dữ liệu phản hồi
         conversation_data = {
             "id": str(conversation.conversation_id),
             "title": conversation.title,
-            "created_at": conversation.created_at.isoformat(),
-            "updated_at": conversation.updated_at.isoformat(),
+            "created_at": safe_datetime_to_string(conversation.created_at),
+            "updated_at": safe_datetime_to_string(conversation.updated_at), 
             "age_context": conversation.age_context,
             "is_archived": conversation.is_archived,
             "messages": []
@@ -130,7 +142,7 @@ def get_conversation_detail(conversation_id):
                 "_id": str(message["_id"]),
                 "role": message["role"],
                 "content": message["content"],
-                "timestamp": message["timestamp"].isoformat(),
+                "timestamp": safe_datetime_to_string(message.get("timestamp")),
                 "current_version": message.get("current_version", 1),
                 "is_edited": message.get("is_edited", False) 
             }
@@ -140,7 +152,7 @@ def get_conversation_detail(conversation_id):
                 for version in message["versions"]:
                     version_data = {
                         "content": version["content"],
-                        "timestamp": version["timestamp"].isoformat() if hasattr(version["timestamp"], 'isoformat') else str(version["timestamp"]),
+                        "timestamp": safe_datetime_to_string(version.get("timestamp")),
                         "version": version["version"]
                     }
                     
@@ -158,7 +170,7 @@ def get_conversation_detail(conversation_id):
                 # Nếu không có versions, tạo default version
                 message_data["versions"] = [{
                     "content": message["content"],
-                    "timestamp": message["timestamp"].isoformat(),
+                    "timestamp": safe_datetime_to_string(message.get("timestamp")),
                     "version": 1
                 }]
             
