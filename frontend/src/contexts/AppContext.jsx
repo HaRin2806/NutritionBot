@@ -96,7 +96,7 @@ const useToast = () => {
             color: ${darkMode ? '#ffffff' : '#111827'};
             border: 1px solid ${darkMode ? '#4b5563' : '#d1d5db'};
             border-radius: 0.5rem;
-            padding: 0.75rem;
+            padding: 0.5rem;
             font-size: 1rem;
             width: 100%;
           ">
