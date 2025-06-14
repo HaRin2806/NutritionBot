@@ -31,6 +31,23 @@ const MessageBubble = ({
 
   const messageId = message._id || message.id;
 
+  // ✅ SỬA: Logic version tốt hơn
+  const hasVersions = message.versions && Array.isArray(message.versions) && message.versions.length > 1;
+  const currentVersion = message.current_version || 1;
+  const totalVersions = message.versions ? message.versions.length : 1;
+
+  // ✅ THÊM: Debug log để kiểm tra data
+  useEffect(() => {
+    console.log('MessageBubble Debug:', {
+      messageId,
+      hasVersions,
+      currentVersion,
+      totalVersions,
+      versions: message.versions,
+      isEditing
+    });
+  }, [message, hasVersions, currentVersion, totalVersions, isEditing]);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -81,6 +98,7 @@ const MessageBubble = ({
   };
 
   const handleVersionSwitch = async (version) => {
+    console.log('Switching to version:', version, 'for message:', messageId);
     try {
       await onSwitchVersion(messageId, conversationId, version);
     } catch (error) {
@@ -108,10 +126,6 @@ const MessageBubble = ({
     }
   };
 
-  const hasVersions = message.versions && message.versions.length > 1;
-  const currentVersion = message.current_version || 1;
-  const totalVersions = message.versions ? message.versions.length : 1;
-
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group mb-4`}>
       <div
@@ -126,7 +140,7 @@ const MessageBubble = ({
           backgroundColor: isUser 
             ? (currentThemeConfig?.primary || '#36B37E') 
             : darkMode 
-              ? '#374151' // FIXED: Darker background for better contrast
+              ? '#374151'
               : '#ffffff',
         }}
       >
@@ -159,30 +173,17 @@ const MessageBubble = ({
                     onChange={(e) => setEditContent(e.target.value)}
                     className={`w-full p-3 rounded-lg border resize-none focus:outline-none focus:ring-2 ${
                       darkMode 
-                        ? 'bg-gray-800 border-gray-600 text-white'
-                        : 'bg-gray-50 border-gray-200 text-gray-900'
+                        ? 'bg-gray-800 border-gray-600 text-white focus:ring-blue-500' 
+                        : 'bg-gray-50 border-gray-300 text-gray-900 focus:ring-blue-500'
                     }`}
-                    style={{ 
-                      focusRingColor: `${currentThemeConfig?.primary}40`,
-                      minHeight: '80px'
-                    }}
-                    disabled={isSubmitting}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                        e.preventDefault();
-                        handleEditSubmit();
-                      } else if (e.key === 'Escape') {
-                        e.preventDefault();
-                        handleEditCancel();
-                      }
-                    }}
-                    placeholder="Nhập nội dung tin nhắn..."
+                    placeholder="Nhập tin nhắn..."
+                    rows={3}
                   />
                   <div className="flex justify-end space-x-2">
                     <button
                       onClick={handleEditCancel}
                       disabled={isSubmitting}
-                      className={`px-3 py-1 text-sm rounded transition-colors flex items-center ${
+                      className={`flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
                         darkMode
                           ? 'bg-gray-600 text-gray-300 hover:bg-gray-500'
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -194,25 +195,20 @@ const MessageBubble = ({
                     <button
                       onClick={handleEditSubmit}
                       disabled={isSubmitting || !editContent.trim()}
-                      className="px-3 py-1 text-sm text-white rounded transition-colors disabled:opacity-50 flex items-center"
-                      style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
+                      className={`flex items-center px-3 py-1.5 text-sm rounded-md transition-colors ${
+                        isSubmitting || !editContent.trim()
+                          ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
                     >
                       {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1"></div>
-                          Đang lưu...
-                        </>
+                        <div className="w-4 h-4 mr-1 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       ) : (
-                        <>
-                          <BiCheck className="w-4 h-4 mr-1" />
-                          Lưu
-                        </>
+                        <BiCheck className="w-4 h-4 mr-1" />
                       )}
+                      {isSubmitting ? 'Đang lưu...' : 'Lưu'}
                     </button>
                   </div>
-                  <p className="text-xs opacity-75">
-                    Nhấn Ctrl+Enter để lưu, Esc để hủy
-                  </p>
                 </div>
               ) : (
                 <>
@@ -234,43 +230,64 @@ const MessageBubble = ({
               )}
             </div>
 
-            {/* Version selector */}
+            {/* ✅ SỬA: Version selector - đặt ở vị trí riêng biệt, rõ ràng */}
             {hasVersions && !isEditing && (
-              <div className={`px-4 pb-2 border-t ${
+              <div className={`px-4 py-3 border-t ${
                 isUser 
                   ? 'border-white border-opacity-20' 
                   : (darkMode ? 'border-gray-600' : 'border-gray-200')
               }`}>
-                <div className="flex items-center justify-between mt-2">
-                  <span className={`text-xs ${
-                    isUser 
-                      ? 'text-white text-opacity-80' 
-                      : (darkMode ? 'text-gray-400' : 'text-gray-500')
-                  }`}>
-                    Phiên bản {currentVersion}/{totalVersions}
-                  </span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-xs font-medium ${
+                      isUser 
+                        ? 'text-white text-opacity-90' 
+                        : (darkMode ? 'text-gray-300' : 'text-gray-600')
+                    }`}>
+                      Phiên bản {currentVersion}/{totalVersions}
+                    </span>
+                    {message.is_edited && (
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        isUser 
+                          ? 'bg-white bg-opacity-20 text-white' 
+                          : (darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-100 text-gray-600')
+                      }`}>
+                        Đã sửa
+                      </span>
+                    )}
+                  </div>
+                  
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => handleVersionSwitch(currentVersion - 1)}
                       disabled={currentVersion <= 1}
-                      className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                      className={`p-1.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white hover:bg-opacity-20 text-white'
-                          : (darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-500')
+                          : (darkMode ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200' : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700')
                       }`}
                       title="Phiên bản trước"
                     >
                       <BiChevronLeft className="w-4 h-4" />
                     </button>
+                    
+                    <span className={`text-xs px-2 py-1 rounded min-w-[20px] text-center ${
+                      isUser 
+                        ? 'bg-white bg-opacity-20 text-white' 
+                        : (darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-100 text-gray-600')
+                    }`}>
+                      {currentVersion}
+                    </span>
+                    
                     <button
                       onClick={() => handleVersionSwitch(currentVersion + 1)}
                       disabled={currentVersion >= totalVersions}
-                      className={`p-1 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                      className={`p-1.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white hover:bg-opacity-20 text-white'
-                          : (darkMode ? 'hover:bg-gray-600 text-gray-400' : 'hover:bg-gray-200 text-gray-500')
+                          : (darkMode ? 'hover:bg-gray-600 text-gray-400 hover:text-gray-200' : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700')
                       }`}
-                      title="Phiên bản tiếp theo"
+                      title="Phiên bản sau"
                     >
                       <BiChevronRight className="w-4 h-4" />
                     </button>

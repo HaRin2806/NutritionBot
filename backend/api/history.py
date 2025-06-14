@@ -124,14 +124,43 @@ def get_conversation_detail(conversation_id):
             "messages": []
         }
         
-        # Chuẩn bị danh sách tin nhắn
         for message in conversation.messages:
             message_data = {
                 "id": str(message["_id"]),
+                "_id": str(message["_id"]),
                 "role": message["role"],
                 "content": message["content"],
-                "timestamp": message["timestamp"].isoformat()
+                "timestamp": message["timestamp"].isoformat(),
+                "current_version": message.get("current_version", 1),
+                "is_edited": message.get("is_edited", False) 
             }
+            
+            if "versions" in message and message["versions"]:
+                message_data["versions"] = []
+                for version in message["versions"]:
+                    version_data = {
+                        "content": version["content"],
+                        "timestamp": version["timestamp"].isoformat() if hasattr(version["timestamp"], 'isoformat') else str(version["timestamp"]),
+                        "version": version["version"]
+                    }
+                    
+                    # Thêm sources cho version nếu có
+                    if "sources" in version:
+                        version_data["sources"] = version["sources"]
+                    
+                    # Thêm metadata cho version nếu có  
+                    if "metadata" in version:
+                        version_data["metadata"] = version["metadata"]
+                    
+                    # conversation_snapshot chỉ dùng để restore, không cần trả về frontend
+                    message_data["versions"].append(version_data)
+            else:
+                # Nếu không có versions, tạo default version
+                message_data["versions"] = [{
+                    "content": message["content"],
+                    "timestamp": message["timestamp"].isoformat(),
+                    "version": 1
+                }]
             
             # Thêm sources nếu có
             if "sources" in message:

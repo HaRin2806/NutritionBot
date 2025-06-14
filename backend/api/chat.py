@@ -305,7 +305,7 @@ def regenerate_response(message_id):
                 "error": "Không tìm thấy tin nhắn người dùng tương ứng"
             }), 404
         
-        # SỬA: Sử dụng RAG Pipeline để generate response mới
+        # Sử dụng RAG Pipeline để generate response mới
         pipeline = get_rag_pipeline()
         response_data = pipeline.generate_response(user_message, age)
         
@@ -313,15 +313,20 @@ def regenerate_response(message_id):
             bot_response = response_data.get("response", "Xin lỗi, tôi không thể trả lời câu hỏi này.")
             sources = response_data.get("sources", [])
             
-            # Cập nhật phản hồi bot với version mới
-            conversation.regenerate_response(message_id, bot_response, sources)
+            success, result_message = conversation.regenerate_response(message_id, bot_response, sources)
             
-            # Trả về conversation đã cập nhật
-            updated_conversation = Conversation.find_by_id(conversation_id)
-            return jsonify({
-                "success": True,
-                "conversation": updated_conversation.to_dict()
-            })
+            if success:
+                # Trả về conversation đã cập nhật
+                updated_conversation = Conversation.find_by_id(conversation_id)
+                return jsonify({
+                    "success": True,
+                    "conversation": updated_conversation.to_dict()
+                })
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": result_message
+                }), 400
         else:
             return jsonify({
                 "success": False,
