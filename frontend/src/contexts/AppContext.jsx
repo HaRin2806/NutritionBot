@@ -147,19 +147,32 @@ export const AppProvider = ({ children }) => {
     };
   });
 
+  // ✅ SỬA: Sử dụng useRef để track việc đã load conversations chưa
+  const conversationsLoadedRef = useRef(false);
+
   const updateState = useCallback((updates) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
 
-  // Conversation management functions
+  // ✅ SỬA: Cải thiện fetchConversations để luôn lấy được data mới nhất
   const fetchConversations = useCallback(async (force = false) => {
-    if (!state.userData) return;
+    if (!state.userData) {
+      console.log('❌ No userData, skipping fetchConversations');
+      return { success: false, conversations: [] };
+    }
+
+    // Nếu đã load và không force, skip
+    if (conversationsLoadedRef.current && !force) {
+      console.log('✅ Conversations already loaded and not forcing, skipping');
+      return { success: true, conversations: state.conversations };
+    }
 
     try {
       updateState({ isLoadingConversations: true });
-      console.log('Fetching conversations from API...');
+      console.log('🔄 fetchConversations: Starting to load conversations...');
       
-      const response = await chatService.getConversations();
+      // ✅ SỬA: Sử dụng getAllConversations để lấy tất cả
+      const response = await chatService.getAllConversations(false); // false = không lấy archived
       
       if (response.success) {
         const conversations = response.conversations || [];
@@ -167,40 +180,44 @@ export const AppProvider = ({ children }) => {
           conversations,
           isLoadingConversations: false
         });
-        console.log('Loaded conversations:', conversations.length);
+        
+        conversationsLoadedRef.current = true;
+        console.log(`✅ fetchConversations: Loaded ${conversations.length} conversations`);
+        
         return { success: true, conversations };
       } else {
         updateState({
           conversations: [],
           isLoadingConversations: false
         });
+        console.error('❌ fetchConversations failed:', response.error);
         return { success: false, conversations: [] };
       }
     } catch (error) {
-      console.error("Error fetching conversations:", error);
+      console.error("❌ fetchConversations error:", error);
       updateState({
         conversations: [],
         isLoadingConversations: false
       });
       return { success: false, conversations: [] };
     }
-  }, [state.userData, updateState]);
+  }, [state.userData, updateState, state.conversations]);
 
   const fetchConversationDetail = useCallback(async (id) => {
     if (!id) return null;
 
     try {
-      console.log('Fetching conversation detail:', id);
+      console.log('🔄 fetchConversationDetail:', id);
       const response = await chatService.getConversationDetail(id);
       
       if (response.success) {
         updateState({ activeConversation: response.conversation });
-        console.log('Loaded conversation detail:', response.conversation.id);
+        console.log('✅ fetchConversationDetail: Loaded conversation detail:', response.conversation.id);
         return response.conversation;
       }
       return null;
     } catch (error) {
-      console.error("Error fetching conversation detail:", error);
+      console.error("❌ fetchConversationDetail error:", error);
       return null;
     }
   }, [updateState]);
@@ -222,6 +239,9 @@ export const AppProvider = ({ children }) => {
             isLoading: false,
             isVerified: true
           });
+
+          // ✅ SỬA: Reset conversations loaded flag khi login
+          conversationsLoadedRef.current = false;
 
           toast.showSuccess('Đăng nhập thành công!');
           return { success: true };
@@ -282,7 +302,8 @@ export const AppProvider = ({ children }) => {
         } catch (error) {
           console.error('Logout API error:', error);
         } finally {
-          updateState({ userData: null, isLoading: false, isVerified: true });
+          updateState({ userData: null, isLoading: false, isVerified: true, conversations: [] });
+          conversationsLoadedRef.current = false; // ✅ SỬA: Reset flag
           storageService.clearUserData();
           navigate('/login');
         }
@@ -327,6 +348,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  // ✅ SỬA: Cải thiện sendMessage để đảm bảo conversations được reload
   const sendMessage = useCallback(async (messageContent, conversationId = null) => {
     let currentAge = state.activeConversation?.age_context || state.userAge;
 
@@ -378,9 +400,14 @@ export const AppProvider = ({ children }) => {
 
       if (response.success) {
         if (response.conversation_id) {
-          await fetchConversationDetail(response.conversation_id);
+          // ✅ SỬA: Force reload conversations để đảm bảo có conversation mới
+          console.log('🔄 Message sent, forcing conversations reload...');
+          conversationsLoadedRef.current = false; // Reset flag để force load
           await fetchConversations(true);
-          console.log('Message sent and conversations reloaded');
+          
+          await fetchConversationDetail(response.conversation_id);
+          
+          console.log('✅ Message sent and data reloaded');
 
           if (!conversationId) {
             navigate(`/chat/${response.conversation_id}`);
@@ -404,6 +431,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [state.activeConversation, state.userAge, toast, updateState, navigate, fetchConversationDetail, fetchConversations]);
 
+  // ✅ SỬA: Cải thiện startNewConversation
   const startNewConversation = useCallback(async (ageToUse = null) => {
     if (!state.userData?.id) {
       navigate('/login');
@@ -423,19 +451,25 @@ export const AppProvider = ({ children }) => {
     }
 
     try {
+      console.log('🔄 Creating new conversation...');
       const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
-      if (response.success) {
-        if (response.conversation_id) {
-          const conversation = await fetchConversationDetail(response.conversation_id);
-          await fetchConversations(true);
-          console.log('New conversation created and list updated');
-          return conversation;
-        }
-        return { success: true };
+      
+      if (response.success && response.conversation_id) {
+        console.log(`✅ Created conversation: ${response.conversation_id}`);
+        
+        // ✅ SỬA: Force reload conversations
+        conversationsLoadedRef.current = false;
+        await fetchConversations(true);
+        
+        const conversation = await fetchConversationDetail(response.conversation_id);
+        
+        console.log('✅ New conversation ready:', conversation?.id);
+        return conversation;
       }
-      throw new Error(response.error);
+      
+      throw new Error(response.error || 'Failed to create conversation');
     } catch (error) {
-      console.error("Error creating conversation:", error);
+      console.error("❌ Error creating conversation:", error);
       return { success: false, error: error.message };
     }
   }, [state.userData, state.userAge, navigate, toast, updateState, fetchConversationDetail, fetchConversations]);
@@ -448,6 +482,10 @@ export const AppProvider = ({ children }) => {
           conversations: state.conversations.filter(c => c.id !== id),
           activeConversation: state.activeConversation?.id === id ? null : state.activeConversation
         });
+        
+        // ✅ SỬA: Force reload conversations sau khi delete
+        conversationsLoadedRef.current = false;
+        
         return { success: true };
       }
       throw new Error(response.error);
@@ -609,11 +647,13 @@ export const AppProvider = ({ children }) => {
           } else {
             storageService.clearUserData();
             updateState({ userData: null, isVerified: true });
+            conversationsLoadedRef.current = false; // ✅ SỬA: Reset flag
           }
         } catch (error) {
           console.error('Token verification failed:', error);
           storageService.clearUserData();
           updateState({ userData: null, isVerified: true });
+          conversationsLoadedRef.current = false; // ✅ SỬA: Reset flag
         }
       }
     };

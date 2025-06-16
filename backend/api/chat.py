@@ -154,7 +154,6 @@ def generate_follow_up_questions():
             "error": f"Lỗi máy chủ: {str(e)}"
         }), 500
 
-# === MESSAGE EDITING ENDPOINTS ===
 @chat_routes.route('/messages/<message_id>/edit', methods=['PUT'])
 @jwt_required()
 def edit_message(message_id):
@@ -220,12 +219,12 @@ def edit_message(message_id):
             success, bot_message = conversation.regenerate_bot_response_after_edit(message_id, bot_response, sources)
             
             if success:
-                # ✅ Trả về conversation đã cập nhật với xử lý timestamp an toàn
+                # Trả về conversation đã cập nhật với xử lý timestamp an toàn
                 updated_conversation = Conversation.find_by_id(conversation_id)
                 return jsonify({
                     "success": True,
                     "message": "Đã chỉnh sửa tin nhắn và tạo phản hồi mới",
-                    "conversation": updated_conversation.to_dict()  # ✅ Sử dụng to_dict() đã được sửa
+                    "conversation": updated_conversation.to_dict()
                 })
             else:
                 return jsonify({
@@ -341,6 +340,8 @@ def switch_message_version(message_id, version):
                 "error": "Thiếu conversation_id"
             }), 400
         
+        logger.info(f"Switching message {message_id} to version {version} in conversation {conversation_id}")
+        
         # Tìm conversation
         conversation = Conversation.find_by_id(conversation_id)
         if not conversation or str(conversation.user_id) != user_id:
@@ -353,12 +354,14 @@ def switch_message_version(message_id, version):
         success = conversation.switch_message_version(message_id, version)
         
         if success:
+            logger.info(f"Successfully switched message {message_id} to version {version}")
             updated_conversation = Conversation.find_by_id(conversation_id)
             return jsonify({
                 "success": True,
                 "conversation": updated_conversation.to_dict()
             })
         else:
+            logger.error(f"Failed to switch message {message_id} to version {version}")
             return jsonify({
                 "success": False,
                 "error": "Không thể chuyển đổi version"

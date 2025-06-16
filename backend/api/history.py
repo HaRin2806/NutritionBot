@@ -33,11 +33,13 @@ def get_conversations():
         
         # Lấy tham số phân trang từ query string
         page = int(request.args.get('page', 1))
-        per_page = int(request.args.get('per_page', 10))
+        per_page = int(request.args.get('per_page', 50))  # ✅ TĂNG default per_page
         include_archived = request.args.get('include_archived', 'false').lower() == 'true'
         
         # Tính toán offset
         skip = (page - 1) * per_page
+        
+        logger.info(f"🔍 Getting conversations for user {user_id}, page {page}, per_page {per_page}, include_archived {include_archived}")
         
         # Lấy danh sách cuộc hội thoại
         conversations = Conversation.find_by_user(
@@ -52,6 +54,8 @@ def get_conversations():
             user_id=user_id,
             include_archived=include_archived
         )
+        
+        logger.info(f"📊 Found {len(conversations)} conversations, total: {total_count}")
         
         # Chuẩn bị dữ liệu phản hồi
         result = []
@@ -71,6 +75,8 @@ def get_conversations():
                 "message_count": message_count
             })
         
+        logger.info(f"✅ Returning {len(result)} conversations")
+        
         # Tạo phản hồi với thông tin phân trang
         return jsonify({
             "success": True,
@@ -84,7 +90,7 @@ def get_conversations():
         })
         
     except Exception as e:
-        logger.error(f"Lỗi khi lấy danh sách cuộc hội thoại: {str(e)}")
+        logger.error(f"❌ Lỗi khi lấy danh sách cuộc hội thoại: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
@@ -216,14 +222,14 @@ def create_conversation():
         title = data.get('title', 'Cuộc trò chuyện mới')
         age_context = data.get('age_context')
         
-        conversation = Conversation(
-            user_id=ObjectId(user_id) if ObjectId.is_valid(user_id) else None,
+        # ✅ SỬA: Sử dụng Conversation.create thay vì khởi tạo trực tiếp
+        conversation_id = Conversation.create(
+            user_id=user_id,
             title=title,
             age_context=age_context
         )
         
-        # Lưu cuộc hội thoại vào database
-        conversation_id = conversation.save()
+        logger.info(f"✅ Created new conversation {conversation_id} for user {user_id}")
         
         return jsonify({
             "success": True,
@@ -232,7 +238,7 @@ def create_conversation():
         })
         
     except Exception as e:
-        logger.error(f"Lỗi khi tạo cuộc hội thoại mới: {str(e)}")
+        logger.error(f"❌ Lỗi khi tạo cuộc hội thoại mới: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
@@ -275,6 +281,8 @@ def update_conversation(conversation_id):
         # Lưu thay đổi
         conversation.save()
         
+        logger.info(f"✅ Updated conversation {conversation_id}")
+        
         return jsonify({
             "success": True,
             "message": "Đã cập nhật thông tin cuộc hội thoại"
@@ -313,6 +321,8 @@ def delete_conversation(conversation_id):
         # Xóa cuộc hội thoại
         conversation.delete()
         
+        logger.info(f"✅ Deleted conversation {conversation_id}")
+        
         return jsonify({
             "success": True,
             "message": "Đã xóa cuộc hội thoại"
@@ -349,7 +359,8 @@ def archive_conversation(conversation_id):
             }), 403
         
         # Lưu trữ cuộc hội thoại
-        conversation.archive()
+        conversation.is_archived = True
+        conversation.save()
         
         return jsonify({
             "success": True,
@@ -387,7 +398,8 @@ def unarchive_conversation(conversation_id):
             }), 403
         
         # Hủy lưu trữ cuộc hội thoại
-        conversation.unarchive()
+        conversation.is_archived = False
+        conversation.save()
         
         return jsonify({
             "success": True,

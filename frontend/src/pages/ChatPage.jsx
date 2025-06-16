@@ -27,7 +27,8 @@ const ChatPage = () => {
 
   const loadedRef = useRef({
     conversationId: null,
-    isLoadingDetail: false
+    isLoadingDetail: false,
+    conversationsLoaded: false // ✅ THÊM: Track việc đã load conversations chưa
   });
 
   const messagesEndRef = useRef(null);
@@ -58,13 +59,26 @@ const ChatPage = () => {
     }
   }, [isLoading, userData, navigate]);
 
-  // Load conversations from context whenever userData changes
+  // ✅ SỬA: Load conversations với logic tốt hơn
   useEffect(() => {
-    if (userData && !isLoadingConversations && conversations.length === 0) {
-      console.log('Loading conversations from context...');
-      fetchConversations(true);
-    }
-  }, [userData, fetchConversations, isLoadingConversations, conversations.length]);
+    const loadConversations = async () => {
+      if (userData && !isLoadingConversations && !loadedRef.current.conversationsLoaded) {
+        console.log('🔄 ChatPage: Loading conversations for first time...');
+        
+        loadedRef.current.conversationsLoaded = true;
+        const result = await fetchConversations(false); // false = không force, để context tự quyết định
+        
+        if (result.success) {
+          console.log(`✅ ChatPage: Loaded ${result.conversations.length} conversations`);
+        } else {
+          console.error('❌ ChatPage: Failed to load conversations');
+          loadedRef.current.conversationsLoaded = false; // Reset on failure
+        }
+      }
+    };
+
+    loadConversations();
+  }, [userData, fetchConversations, isLoadingConversations]);
 
   // Load conversation detail when conversationId changes
   useEffect(() => {
@@ -85,14 +99,14 @@ const ChatPage = () => {
         return;
       }
 
-      console.log('Loading conversation detail for:', conversationId);
+      console.log('🔄 Loading conversation detail for:', conversationId);
       loadedRef.current.isLoadingDetail = true;
       loadedRef.current.conversationId = conversationId;
 
       try {
         await fetchConversationDetail(conversationId);
       } catch (error) {
-        console.error('Error loading conversation detail:', error);
+        console.error('❌ Error loading conversation detail:', error);
         loadedRef.current.conversationId = null;
       } finally {
         loadedRef.current.isLoadingDetail = false;
@@ -106,7 +120,7 @@ const ChatPage = () => {
   useEffect(() => {
     if (activeConversation) {
       const conversationAge = activeConversation.age_context;
-      console.log('Setting conversation age:', conversationAge, 'for conversation:', activeConversation.id);
+      console.log('📝 Setting conversation age:', conversationAge, 'for conversation:', activeConversation.id);
       setCurrentConversationAge(conversationAge);
     }
   }, [activeConversation]);
@@ -145,15 +159,16 @@ const ChatPage = () => {
             loadedRef.current.conversationId = null;
             await fetchConversationDetail(activeConversation.id);
           } catch (error) {
-            console.error('Error updating conversation age context:', error);
+            console.error('❌ Error updating conversation age context:', error);
           }
         }
       }
     } catch (error) {
-      console.error('Error changing age:', error);
+      console.error('❌ Error changing age:', error);
     }
   }, [canEditAge, currentConversationAge, userAge, showAgePrompt, setUserAge, activeConversation, fetchConversationDetail]);
 
+  // ✅ SỬA: Cải thiện handleNewConversation
   const handleNewConversation = useCallback(async () => {
     if (!isAuthenticated()) return;
 
@@ -170,18 +185,22 @@ const ChatPage = () => {
         }
       }
 
+      console.log('🔄 ChatPage: Creating new conversation...');
       const conversation = await startNewConversation(ageToUse);
+      
       if (conversation && conversation.id) {
-        console.log('New conversation created:', conversation.id);
-        // Reload conversations to ensure sidebar updates
-        await fetchConversations(true);
+        console.log('✅ ChatPage: New conversation created:', conversation.id);
+        
+        // ✅ SỬA: Reset conversations loaded flag để force reload sidebar
+        loadedRef.current.conversationsLoaded = false;
+        
         navigate(`/chat/${conversation.id}`);
         setCurrentConversationAge(ageToUse);
       }
     } catch (error) {
-      console.error('Error creating conversation:', error);
+      console.error('❌ ChatPage: Error creating conversation:', error);
     }
-  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, startNewConversation, navigate, fetchConversations]);
+  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, startNewConversation, navigate]);
 
   const handleDeleteConversation = useCallback(async (id) => {
     const result = await showConfirm({
@@ -193,16 +212,21 @@ const ChatPage = () => {
     if (result.isConfirmed) {
       try {
         await deleteConversation(id);
+        
+        // ✅ SỬA: Reset flag để force reload conversations
+        loadedRef.current.conversationsLoaded = false;
         await fetchConversations(true);
+        
         if (id === activeConversation?.id) {
           navigate('/chat');
         }
       } catch (error) {
-        console.error('Error deleting conversation:', error);
+        console.error('❌ Error deleting conversation:', error);
       }
     }
   }, [showConfirm, deleteConversation, activeConversation?.id, navigate, fetchConversations]);
 
+  // ✅ SỬA: Cải thiện handleSendMessage
   const handleSendMessage = useCallback(async (message) => {
     if (!isAuthenticated()) return;
 
@@ -220,39 +244,44 @@ const ChatPage = () => {
     }
 
     try {
+      console.log('🔄 ChatPage: Sending message...');
       const result = await sendMessage(message, activeConversation?.id);
+      
       if (result.success) {
-        // Reload conversations to ensure sidebar updates
-        await fetchConversations(true);
+        console.log('✅ ChatPage: Message sent successfully');
+        // ✅ SỬA: Reset flag để đảm bảo sidebar được update
+        loadedRef.current.conversationsLoaded = false;
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('❌ ChatPage: Error sending message:', error);
     }
-  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, sendMessage, activeConversation?.id, fetchConversations]);
+  }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, sendMessage, activeConversation?.id]);
 
   const handleRenameConversation = useCallback(async (id, newTitle) => {
     try {
       await renameConversation(id, newTitle);
+      // Force reload conversations để update sidebar
+      loadedRef.current.conversationsLoaded = false;
       await fetchConversations(true);
     } catch (error) {
-      console.error('Error renaming conversation:', error);
+      console.error('❌ Error renaming conversation:', error);
     }
   }, [renameConversation, fetchConversations]);
 
   // Enhanced switch version handler
   const handleSwitchVersion = useCallback(async (messageId, conversationId, version) => {
     try {
-      console.log('Switching version:', version, 'for message:', messageId);
+      console.log('🔄 Switching version:', version, 'for message:', messageId);
       const result = await switchMessageVersion(messageId, conversationId, version);
       
       if (result.success) {
         // Force reload conversation detail to get updated state
         loadedRef.current.conversationId = null;
         await fetchConversationDetail(conversationId);
-        console.log('Version switched and conversation reloaded');
+        console.log('✅ Version switched and conversation reloaded');
       }
     } catch (error) {
-      console.error('Error switching version:', error);
+      console.error('❌ Error switching version:', error);
     }
   }, [switchMessageVersion, fetchConversationDetail]);
 
@@ -279,13 +308,14 @@ const ChatPage = () => {
     return null;
   }
 
-  console.log('ChatPage render:', {
+  console.log('📊 ChatPage render:', {
     conversationId,
     activeConversationId: activeConversation?.id,
     messagesLength: activeConversation?.messages?.length,
     currentAge: currentConversationAge,
     conversationsLength: conversations?.length || 0,
-    isLoadingConversations
+    isLoadingConversations,
+    conversationsLoaded: loadedRef.current.conversationsLoaded
   });
 
   return (

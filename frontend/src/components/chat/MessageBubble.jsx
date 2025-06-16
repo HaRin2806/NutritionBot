@@ -25,28 +25,31 @@ const MessageBubble = ({
   const [showMenu, setShowMenu] = useState(false);
   const [editContent, setEditContent] = useState(message.content || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVersionSwitching, setIsVersionSwitching] = useState(false);
   const { darkMode, currentThemeConfig } = useTheme();
   const menuRef = useRef(null);
   const textareaRef = useRef(null);
 
   const messageId = message._id || message.id;
 
-  // ✅ SỬA: Logic version tốt hơn
-  const hasVersions = message.versions && Array.isArray(message.versions) && message.versions.length > 1;
+  // Logic version - chỉ hiển thị version control cho user messages có multiple versions
+  const hasVersions = isUser && message.versions && Array.isArray(message.versions) && message.versions.length > 1;
   const currentVersion = message.current_version || 1;
   const totalVersions = message.versions ? message.versions.length : 1;
 
-  // ✅ THÊM: Debug log để kiểm tra data
+  // Debug log để kiểm tra data
   useEffect(() => {
-    console.log('MessageBubble Debug:', {
-      messageId,
-      hasVersions,
-      currentVersion,
-      totalVersions,
-      versions: message.versions,
-      isEditing
-    });
-  }, [message, hasVersions, currentVersion, totalVersions, isEditing]);
+    if (isUser) {
+      console.log('User MessageBubble Debug:', {
+        messageId,
+        hasVersions,
+        currentVersion,
+        totalVersions,
+        versions: message.versions?.map(v => ({ version: v.version, content: v.content.substring(0, 50) + '...', followingCount: v.following_messages?.length || 0 })),
+        role: message.role
+      });
+    }
+  }, [message, hasVersions, currentVersion, totalVersions, isUser]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -98,11 +101,18 @@ const MessageBubble = ({
   };
 
   const handleVersionSwitch = async (version) => {
+    if (isVersionSwitching) return;
+    
     console.log('Switching to version:', version, 'for message:', messageId);
+    
+    setIsVersionSwitching(true);
     try {
       await onSwitchVersion(messageId, conversationId, version);
+      console.log('Version switch completed successfully');
     } catch (error) {
       console.error('Error switching version:', error);
+    } finally {
+      setIsVersionSwitching(false);
     }
   };
 
@@ -125,6 +135,9 @@ const MessageBubble = ({
       }
     }
   };
+
+  const canSwitchToPrevious = currentVersion > 1;
+  const canSwitchToNext = currentVersion < totalVersions;
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} message-animation group mb-4`}>
@@ -230,7 +243,7 @@ const MessageBubble = ({
               )}
             </div>
 
-            {/* ✅ SỬA: Version selector - đặt ở vị trí riêng biệt, rõ ràng */}
+            {/* Version selector - chỉ hiển thị cho user messages có multiple versions */}
             {hasVersions && !isEditing && (
               <div className={`px-4 py-3 border-t ${
                 isUser 
@@ -255,12 +268,21 @@ const MessageBubble = ({
                         Đã sửa
                       </span>
                     )}
+                    {isVersionSwitching && (
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        isUser 
+                          ? 'bg-white bg-opacity-20 text-white' 
+                          : (darkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-100 text-gray-600')
+                      }`}>
+                        Đang chuyển...
+                      </span>
+                    )}
                   </div>
                   
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => handleVersionSwitch(currentVersion - 1)}
-                      disabled={currentVersion <= 1}
+                      disabled={!canSwitchToPrevious || isVersionSwitching}
                       className={`p-1.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white hover:bg-opacity-20 text-white'
@@ -281,7 +303,7 @@ const MessageBubble = ({
                     
                     <button
                       onClick={() => handleVersionSwitch(currentVersion + 1)}
-                      disabled={currentVersion >= totalVersions}
+                      disabled={!canSwitchToNext || isVersionSwitching}
                       className={`p-1.5 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white hover:bg-opacity-20 text-white'

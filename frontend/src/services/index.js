@@ -5,33 +5,79 @@ export const chatService = {
   sendMessage: (message, age, conversationId) => 
     baseApi.post('/chat', { message, age, ...(conversationId && { conversation_id: conversationId }) }),
 
-  getConversations: (includeArchived = false, page = 1, perPage = 50) => 
-    baseApi.get('/conversations', { include_archived: includeArchived, page, per_page: perPage }),
-
-  getAllConversations: async (includeArchived = false) => {
-    let allConversations = [];
-    let page = 1;
-    const perPage = 50;
-    let hasMore = true;
-
-    while (hasMore) {
-      const response = await chatService.getConversations(includeArchived, page, perPage);
-      if (response.success) {
-        allConversations = [...allConversations, ...response.conversations];
-        hasMore = page < response.pagination.pages;
-        page++;
-      } else {
-        hasMore = false;
-      }
-    }
-
-    return { success: true, conversations: allConversations, total: allConversations.length };
+  // ✅ SỬA: Tăng per_page mặc định và fix logic
+  getConversations: (includeArchived = false, page = 1, perPage = 100) => {
+    console.log(`🔄 API Call: getConversations(includeArchived: ${includeArchived}, page: ${page}, perPage: ${perPage})`);
+    return baseApi.get('/conversations', { include_archived: includeArchived, page, per_page: perPage });
   },
 
-  getConversationDetail: (id) => baseApi.get(`/conversations/${id}`),
-  createConversation: (title, ageContext) => baseApi.post('/conversations', { title, age_context: ageContext }),
-  updateConversation: (id, data) => baseApi.put(`/conversations/${id}`, data),
-  deleteConversation: (id) => baseApi.delete(`/conversations/${id}`, { conversation_id: id }),
+  // ✅ SỬA: Cải thiện logic getAllConversations
+  getAllConversations: async (includeArchived = false) => {
+    console.log(`🔄 getAllConversations: Starting with includeArchived=${includeArchived}`);
+    
+    let allConversations = [];
+    let page = 1;
+    const perPage = 100; // Tăng size để giảm số lần gọi API
+    let hasMore = true;
+
+    try {
+      while (hasMore) {
+        console.log(`🔄 Loading page ${page}...`);
+        const response = await chatService.getConversations(includeArchived, page, perPage);
+        
+        if (response.success && response.conversations) {
+          const newConversations = response.conversations;
+          allConversations = [...allConversations, ...newConversations];
+          
+          console.log(`📄 Page ${page}: Got ${newConversations.length} conversations, total so far: ${allConversations.length}`);
+          
+          // Check if we have more pages
+          const pagination = response.pagination;
+          if (pagination && page < pagination.pages) {
+            page++;
+          } else {
+            hasMore = false;
+          }
+          
+          // Safety check: if we got less than perPage, probably last page
+          if (newConversations.length < perPage) {
+            hasMore = false;
+          }
+        } else {
+          console.error(`❌ Error on page ${page}:`, response.error);
+          hasMore = false;
+        }
+      }
+
+      console.log(`✅ getAllConversations completed: ${allConversations.length} total conversations`);
+      return { success: true, conversations: allConversations, total: allConversations.length };
+
+    } catch (error) {
+      console.error('❌ getAllConversations error:', error);
+      return { success: false, conversations: allConversations, error: error.message };
+    }
+  },
+
+  getConversationDetail: (id) => {
+    console.log(`🔄 Getting conversation detail: ${id}`);
+    return baseApi.get(`/conversations/${id}`);
+  },
+
+  createConversation: (title, ageContext) => {
+    console.log(`🔄 Creating conversation: ${title}, age: ${ageContext}`);
+    return baseApi.post('/conversations', { title, age_context: ageContext });
+  },
+
+  updateConversation: (id, data) => {
+    console.log(`🔄 Updating conversation ${id}:`, data);
+    return baseApi.put(`/conversations/${id}`, data);
+  },
+
+  deleteConversation: (id) => {
+    console.log(`🔄 Deleting conversation: ${id}`);
+    return baseApi.delete(`/conversations/${id}`, { conversation_id: id });
+  },
+
   archiveConversation: (id) => baseApi.post(`/conversations/${id}/archive`),
   unarchiveConversation: (id) => baseApi.post(`/conversations/${id}/unarchive`),
   
@@ -50,7 +96,7 @@ export const chatService = {
     baseApi.delete(`/messages/${messageId}`, { conversation_id: conversationId }),
 };
 
-// Auth Service - tối ưu từ AuthContext
+// Auth Service - giữ nguyên
 export const authService = {
   login: (email, password, rememberMe) => baseApi.post('/auth/login', { email, password, rememberMe }),
   register: (userData) => baseApi.post('/auth/register', userData),
@@ -60,7 +106,7 @@ export const authService = {
   changePassword: (passwordData) => baseApi.post('/auth/change-password', passwordData),
 };
 
-// Admin Service - tối ưu từ adminService.js
+// Admin Service - giữ nguyên
 export const adminService = {
   // Stats & Dashboard
   getStats: () => baseApi.get('/admin/stats/overview'),
@@ -110,18 +156,18 @@ export const storageService = {
   },
   
   saveUserAge: (age) => {
-    console.log('Lưu tuổi vào storage:', age);
+    console.log('💾 Saving age to storage:', age);
     localStorage.setItem('user_age', age.toString());
   },
   
   getUserAge: () => {
     const age = localStorage.getItem('user_age');
-    console.log('Lấy tuổi từ storage:', age);
+    console.log('📖 Getting age from storage:', age);
     return age ? parseInt(age, 10) : null;
   },
 
   clearUserAge: () => {
-    console.log('Xóa tuổi khỏi storage');
+    console.log('🗑️ Clearing age from storage');
     localStorage.removeItem('user_age');
   }
 };
