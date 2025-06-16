@@ -35,14 +35,34 @@ def get_chunk_file_path(chunk_id):
 
 # Hàm để đọc nội dung từ file chunk tương ứng với chunk_id
 def read_chunk_file(chunk_id):
-    chunk_file_path = get_chunk_file_path(chunk_id)
-    
-    if chunk_file_path and os.path.exists(chunk_file_path):
-        with open(chunk_file_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    else:
-        print(f"Warning: File for chunk_id {chunk_id} not found.")
+    # Đặc biệt xử lý cho phụ lục - thử cả chunks và tables
+    if chunk_id.startswith('phuluc'):
+        # Thử tìm trong chunks trước
+        chunks_path = os.path.join(base_dir, 'phuluc', 'chunks', f"{chunk_id}.md")
+        if os.path.exists(chunks_path):
+            with open(chunks_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        
+        # Nếu không có trong chunks, thử tìm trong tables
+        tables_path = os.path.join(base_dir, 'phuluc', 'tables', f"{chunk_id}.md")
+        if os.path.exists(tables_path):
+            with open(tables_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        
+        # Nếu không tìm thấy ở cả hai nơi
+        print(f"Warning: File for chunk_id {chunk_id} not found in both chunks and tables.")
         return f"[Content for {chunk_id} not found]"
+    
+    # Xử lý bình thường cho các bài khác
+    else:
+        chunk_file_path = get_chunk_file_path(chunk_id)
+        
+        if chunk_file_path and os.path.exists(chunk_file_path):
+            with open(chunk_file_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        else:
+            print(f"Warning: File for chunk_id {chunk_id} not found.")
+            return f"[Content for {chunk_id} not found]"
 
 # Duyệt qua các mục trong data và thay thế chunk_id trong các trường 'positive' và 'negative'
 for item in data:

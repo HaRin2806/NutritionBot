@@ -14,7 +14,6 @@ export const useApp = () => {
   return context;
 };
 
-// Toast utilities với theme support
 const useToast = () => {
   const getCurrentTheme = () => {
     const theme = localStorage.getItem('theme') || 'mint';
@@ -132,24 +131,16 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  // Unified state
   const [state, setState] = useState(() => {
     const storedUser = storageService.getUserData();
-    const token = storageService.getToken();
-
     return {
-      // Auth state
       userData: storedUser,
       isLoading: false,
       isVerified: !storedUser,
-
-      // Chat state
       activeConversation: null,
       conversations: [],
       isLoadingConversations: false,
       userAge: storageService.getUserAge(),
-
-      // UI state
       selectedConversations: [],
       searchTerm: '',
       filters: { date: 'all', age: 'all', archived: false }
@@ -160,74 +151,59 @@ export const AppProvider = ({ children }) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
 
-  // ✅ SỬA: Tạo stable functions mà không có dependencies phức tạp
-  const stableFunctions = useRef({});
+  // Conversation management functions
+  const fetchConversations = useCallback(async (force = false) => {
+    if (!state.userData) return;
 
-  // ✅ SỬA: Tạo functions một lần và cache chúng
-  if (!stableFunctions.current.fetchConversations) {
-    stableFunctions.current.fetchConversations = async (force = false) => {
-      try {
-        updateState({ isLoadingConversations: true });
-        console.log('🔄 Fetching conversations...');
-        const response = await chatService.getConversations();
-
-        if (response.success) {
-          updateState({
-            conversations: response.conversations || [],
-            isLoadingConversations: false
-          });
-          console.log('✅ Loaded conversations:', response.conversations?.length || 0);
-        }
-      } catch (error) {
-        console.error("Error fetching conversations:", error);
+    try {
+      updateState({ isLoadingConversations: true });
+      console.log('Fetching conversations from API...');
+      
+      const response = await chatService.getConversations();
+      
+      if (response.success) {
+        const conversations = response.conversations || [];
         updateState({
-          conversations: [],
+          conversations,
           isLoadingConversations: false
         });
-      }
-    };
-
-    stableFunctions.current.fetchAllConversations = async (includeArchived = true) => {
-      try {
-        updateState({ isLoadingConversations: true });
-        console.log('🔄 Fetching all conversations...');
-        const response = await chatService.getAllConversations(includeArchived);
-
-        if (response.success) {
-          updateState({
-            conversations: response.conversations || [],
-            isLoadingConversations: false
-          });
-          console.log('✅ Loaded all conversations:', response.conversations?.length || 0);
-          return { success: true, conversations: response.conversations || [] };
-        }
-        return { success: false, conversations: [] };
-      } catch (error) {
-        console.error("Error fetching all conversations:", error);
+        console.log('Loaded conversations:', conversations.length);
+        return { success: true, conversations };
+      } else {
         updateState({
           conversations: [],
           isLoadingConversations: false
         });
         return { success: false, conversations: [] };
       }
-    };
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      updateState({
+        conversations: [],
+        isLoadingConversations: false
+      });
+      return { success: false, conversations: [] };
+    }
+  }, [state.userData, updateState]);
 
-    stableFunctions.current.fetchConversationDetail = async (id) => {
-      if (!id) return null;
+  const fetchConversationDetail = useCallback(async (id) => {
+    if (!id) return null;
 
-      try {
-        const response = await chatService.getConversationDetail(id);
-        if (response.success) {
-          updateState({ activeConversation: response.conversation });
-          return response.conversation;
-        }
-        return null;
-      } catch (error) {
-        console.error("Error fetching conversation detail:", error);
-        return null;
+    try {
+      console.log('Fetching conversation detail:', id);
+      const response = await chatService.getConversationDetail(id);
+      
+      if (response.success) {
+        updateState({ activeConversation: response.conversation });
+        console.log('Loaded conversation detail:', response.conversation.id);
+        return response.conversation;
       }
-    };
-  }
+      return null;
+    } catch (error) {
+      console.error("Error fetching conversation detail:", error);
+      return null;
+    }
+  }, [updateState]);
 
   // Auth operations
   const authOps = {
@@ -351,7 +327,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // ✅ SỬA: Đơn giản hóa chat operations
   const sendMessage = useCallback(async (messageContent, conversationId = null) => {
     let currentAge = state.activeConversation?.age_context || state.userAge;
 
@@ -366,7 +341,6 @@ export const AppProvider = ({ children }) => {
       }
     }
 
-    // Create temp messages
     const uniqueId = `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
     const tempUserMessage = {
       _id: `temp_user_${uniqueId}`,
@@ -383,7 +357,6 @@ export const AppProvider = ({ children }) => {
       isRegenerating: true
     };
 
-    // Add temp messages
     if (state.activeConversation) {
       updateState({
         activeConversation: {
@@ -405,12 +378,9 @@ export const AppProvider = ({ children }) => {
 
       if (response.success) {
         if (response.conversation_id) {
-          // Reload conversation detail trước
-          await stableFunctions.current.fetchConversationDetail(response.conversation_id);
-
-          // Reload conversations
-          await stableFunctions.current.fetchConversations(true);
-          console.log('✅ Reloaded conversations after message');
+          await fetchConversationDetail(response.conversation_id);
+          await fetchConversations(true);
+          console.log('Message sent and conversations reloaded');
 
           if (!conversationId) {
             navigate(`/chat/${response.conversation_id}`);
@@ -420,7 +390,6 @@ export const AppProvider = ({ children }) => {
       }
       throw new Error(response.error);
     } catch (error) {
-      // Remove temp messages on error
       if (state.activeConversation) {
         updateState({
           activeConversation: {
@@ -433,7 +402,7 @@ export const AppProvider = ({ children }) => {
       }
       return { success: false, error: error.message };
     }
-  }, [state.activeConversation, state.userAge, toast, updateState, navigate]);
+  }, [state.activeConversation, state.userAge, toast, updateState, navigate, fetchConversationDetail, fetchConversations]);
 
   const startNewConversation = useCallback(async (ageToUse = null) => {
     if (!state.userData?.id) {
@@ -457,10 +426,9 @@ export const AppProvider = ({ children }) => {
       const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
       if (response.success) {
         if (response.conversation_id) {
-          // Load conversation detail và reload conversations
-          const conversation = await stableFunctions.current.fetchConversationDetail(response.conversation_id);
-          await stableFunctions.current.fetchConversations(true);
-          console.log('✅ Created new conversation and reloaded list');
+          const conversation = await fetchConversationDetail(response.conversation_id);
+          await fetchConversations(true);
+          console.log('New conversation created and list updated');
           return conversation;
         }
         return { success: true };
@@ -470,7 +438,7 @@ export const AppProvider = ({ children }) => {
       console.error("Error creating conversation:", error);
       return { success: false, error: error.message };
     }
-  }, [state.userData, state.userAge, navigate, toast, updateState]);
+  }, [state.userData, state.userAge, navigate, toast, updateState, fetchConversationDetail, fetchConversations]);
 
   const deleteConversation = useCallback(async (id) => {
     try {
@@ -487,13 +455,12 @@ export const AppProvider = ({ children }) => {
       console.error("Error deleting conversation:", error);
       throw error;
     }
-  }, [state.conversations, state.activeConversation]);
+  }, [state.conversations, state.activeConversation, updateState]);
 
   const renameConversation = useCallback(async (id, newTitle) => {
     try {
       const response = await chatService.updateConversation(id, { title: newTitle });
       if (response.success) {
-        // Update local state
         updateState({
           conversations: state.conversations.map(conv =>
             conv.id === id ? { ...conv, title: newTitle } : conv
@@ -506,9 +473,8 @@ export const AppProvider = ({ children }) => {
       console.error("Error renaming conversation:", error);
       throw error;
     }
-  }, [state.conversations]);
+  }, [state.conversations, updateState]);
 
-  // Other operations - simplified
   const editMessage = useCallback(async (messageId, conversationId, newContent) => {
     try {
       const tempEdit = { ...state.activeConversation };
@@ -529,23 +495,26 @@ export const AppProvider = ({ children }) => {
         const response = await chatService.editMessage(messageId, conversationId, newContent, ageToUse);
 
         if (response.success) {
-          await stableFunctions.current.fetchConversationDetail(conversationId);
+          await fetchConversationDetail(conversationId);
           return { success: true };
         }
         throw new Error(response.error);
       }
     } catch (error) {
       console.error("Error editing message:", error);
-      await stableFunctions.current.fetchConversationDetail(conversationId);
+      await fetchConversationDetail(conversationId);
       throw error;
     }
-  }, [state.activeConversation, state.userAge]);
+  }, [state.activeConversation, state.userAge, updateState, fetchConversationDetail]);
 
   const switchMessageVersion = useCallback(async (messageId, conversationId, version) => {
     try {
+      console.log('Switching to version:', version, 'for message:', messageId);
       const response = await chatService.switchMessageVersion(messageId, conversationId, version);
+      
       if (response.success) {
-        await stableFunctions.current.fetchConversationDetail(conversationId);
+        await fetchConversationDetail(conversationId);
+        console.log('Version switched successfully');
         return { success: true };
       }
       throw new Error(response.error);
@@ -553,7 +522,7 @@ export const AppProvider = ({ children }) => {
       console.error("Error switching version:", error);
       throw error;
     }
-  }, []);
+  }, [fetchConversationDetail]);
 
   const regenerateResponse = useCallback(async (messageId, conversationId, age) => {
     try {
@@ -582,22 +551,22 @@ export const AppProvider = ({ children }) => {
 
       const response = await chatService.regenerateResponse(messageId, conversationId, age);
       if (response.success) {
-        await stableFunctions.current.fetchConversationDetail(conversationId);
+        await fetchConversationDetail(conversationId);
         return { success: true };
       }
       throw new Error(response.error);
     } catch (error) {
       console.error("Error regenerating:", error);
-      await stableFunctions.current.fetchConversationDetail(conversationId);
+      await fetchConversationDetail(conversationId);
       throw error;
     }
-  }, [state.activeConversation]);
+  }, [state.activeConversation, updateState, fetchConversationDetail]);
 
   const deleteMessageAndFollowing = useCallback(async (messageId, conversationId) => {
     try {
       const response = await chatService.deleteMessageAndFollowing(messageId, conversationId);
       if (response.success) {
-        await stableFunctions.current.fetchConversationDetail(conversationId);
+        await fetchConversationDetail(conversationId);
         return { success: true };
       }
       throw new Error(response.error);
@@ -605,9 +574,8 @@ export const AppProvider = ({ children }) => {
       console.error("Error deleting message:", error);
       throw error;
     }
-  }, []);
+  }, [fetchConversationDetail]);
 
-  // Helpers
   const helpers = {
     isAuthenticated: () => !!state.userData,
     requireAuth: (callback) => {
@@ -631,7 +599,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Token verification effect
   useEffect(() => {
     const verifyToken = async () => {
       if (state.userData && !state.isVerified) {
@@ -652,23 +619,17 @@ export const AppProvider = ({ children }) => {
     };
 
     verifyToken();
-  }, [state.userData, state.isVerified]);
+  }, [state.userData, state.isVerified, updateState]);
 
   const value = {
-    // State
     ...state,
-
-    // Auth operations
     login: authOps.login,
     register: authOps.register,
     logout: authOps.logout,
     updateProfile: authOps.updateProfile,
     changePassword: authOps.changePassword,
-
-    // ✅ SỬA: Cung cấp stable functions
-    fetchConversations: stableFunctions.current.fetchConversations,
-    fetchAllConversations: stableFunctions.current.fetchAllConversations,
-    fetchConversationDetail: stableFunctions.current.fetchConversationDetail,
+    fetchConversations,
+    fetchConversationDetail,
     sendMessage,
     startNewConversation,
     deleteConversation,
@@ -677,13 +638,9 @@ export const AppProvider = ({ children }) => {
     switchMessageVersion,
     regenerateResponse,
     deleteMessageAndFollowing,
-
-    // Helpers
     isAuthenticated: helpers.isAuthenticated,
     requireAuth: helpers.requireAuth,
     setUserAge: helpers.setUserAge,
-
-    // Toast
     ...toast
   };
 
