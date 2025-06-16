@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiArchive, BiEdit, BiRefresh } from 'react-icons/bi';
 import { useApp } from '../contexts/AppContext';
@@ -13,11 +13,12 @@ const HistoryPage = () => {
   const {
     userData, isLoading: isLoadingAuth, requireAuth,
     userAge, setUserAge,
+    // ✅ SỬA: Chỉ lấy state, không dùng functions
+    conversations, isLoadingConversations,
+    deleteConversation, renameConversation,
     showConfirm, showSuccess, showError
   } = useApp();
 
-  const [localConversations, setLocalConversations] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [selectedConversations, setSelectedConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +27,11 @@ const HistoryPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
 
+  // ✅ SỬA: Sử dụng local state để track loading
+  const [localConversations, setLocalConversations] = useState([]);
+  const [localLoading, setLocalLoading] = useState(false);
+  const loadedRef = useRef(false);
+
   // Auth check
   useEffect(() => {
     if (!isLoadingAuth && !userData) {
@@ -33,29 +39,40 @@ const HistoryPage = () => {
     }
   }, [userData, isLoadingAuth, requireAuth, navigate]);
 
-  // Load ALL conversations
+  // ✅ SỬA: Gọi trực tiếp API service thay vì qua context
   useEffect(() => {
-    const loadAllConversations = async () => {
-      if (userData && !isLoadingAuth) {
+    const loadConversations = async () => {
+      if (userData && !isLoadingAuth && !loadedRef.current) {
         try {
-          setIsLoading(true);
-          const result = await chatService.getAllConversations(true); // Load cả archived
-          if (result.success) {
-            setLocalConversations(result.conversations);
+          loadedRef.current = true;
+          setLocalLoading(true);
+          
+          console.log('🔄 HistoryPage: Loading all conversations directly from API...');
+          
+          // ✅ Gọi trực tiếp chatService thay vì qua context
+          const response = await chatService.getAllConversations(true);
+          
+          if (response.success) {
+            setLocalConversations(response.conversations || []);
+            console.log('✅ Loaded conversations:', response.conversations?.length || 0);
+          } else {
+            setLocalConversations([]);
           }
         } catch (error) {
           console.error('Error loading conversations:', error);
           showError('Không thể tải lịch sử trò chuyện');
+          setLocalConversations([]);
+          loadedRef.current = false; // Reset on error
         } finally {
-          setIsLoading(false);
+          setLocalLoading(false);
         }
       }
     };
 
-    loadAllConversations();
-  }, [userData, isLoadingAuth]);
+    loadConversations();
+  }, [userData, isLoadingAuth, showError]); // ✅ Không có function dependencies
 
-  // Filter conversations
+  // ✅ SỬA: Dùng localConversations thay vì conversations từ context
   const filteredConversations = localConversations.filter(conv => {
     // Filter by archive status
     if (!showArchived && conv.is_archived) return false;
@@ -100,6 +117,21 @@ const HistoryPage = () => {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredConversations.slice(startIndex, endIndex);
 
+  // ✅ SỬA: Helper function để reload conversations
+  const reloadConversations = async () => {
+    try {
+      setLocalLoading(true);
+      const response = await chatService.getAllConversations(true);
+      if (response.success) {
+        setLocalConversations(response.conversations || []);
+      }
+    } catch (error) {
+      console.error('Error reloading conversations:', error);
+    } finally {
+      setLocalLoading(false);
+    }
+  };
+
   // Handle individual conversation actions
   const handleDeleteConversation = async (conversationId) => {
     const result = await showConfirm({
@@ -109,8 +141,9 @@ const HistoryPage = () => {
 
     if (result.isConfirmed) {
       try {
-        await chatService.deleteConversation(conversationId);
-        setLocalConversations(prev => prev.filter(c => c.id !== conversationId));
+        await deleteConversation(conversationId);
+        // ✅ SỬA: Reload local conversations
+        await reloadConversations();
         showSuccess('Đã xóa cuộc trò chuyện');
       } catch (error) {
         console.error('Error deleting conversation:', error);
@@ -129,7 +162,8 @@ const HistoryPage = () => {
 
     if (result.isConfirmed && result.value) {
       try {
-        await chatService.updateConversation(conversationId, { title: result.value });
+        await renameConversation(conversationId, result.value);
+        // ✅ SỬA: Update local state thay vì reload API
         setLocalConversations(prev =>
           prev.map(conv =>
             conv.id === conversationId
@@ -155,13 +189,8 @@ const HistoryPage = () => {
         showSuccess('Đã lưu trữ cuộc trò chuyện');
       }
 
-      setLocalConversations(prev =>
-        prev.map(conv =>
-          conv.id === conversationId
-            ? { ...conv, is_archived: !isCurrentlyArchived }
-            : conv
-        )
-      );
+      // ✅ SỬA: Reload conversations
+      await reloadConversations();
     } catch (error) {
       console.error('Error archiving conversation:', error);
       showError('Không thể thực hiện thao tác này');
@@ -181,8 +210,9 @@ const HistoryPage = () => {
       try {
         const deleteResult = await chatService.bulkDeleteConversations(selectedConversations);
         if (deleteResult.success) {
-          setLocalConversations(prev => prev.filter(c => !selectedConversations.includes(c.id)));
           setSelectedConversations([]);
+          // ✅ SỬA: Reload conversations
+          await reloadConversations();
           showSuccess(`Đã xóa ${deleteResult.deleted_count} cuộc trò chuyện`);
         }
       } catch (error) {
@@ -199,6 +229,14 @@ const HistoryPage = () => {
       </div>
     );
   }
+
+  console.log('📊 HistoryPage render:', {
+    localConversationsLength: localConversations?.length || 0,
+    filteredLength: filteredConversations?.length || 0,
+    localLoading,
+    showArchived,
+    loadedRef: loadedRef.current
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -343,7 +381,7 @@ const HistoryPage = () => {
           </div>
 
           {/* Content */}
-          {isLoading ? (
+          {localLoading ? (
             <div className="p-12 text-center">
               <Loader type="spinner" color="mint" text="Đang tải dữ liệu..." />
             </div>
