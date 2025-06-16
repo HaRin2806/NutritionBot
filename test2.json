@@ -528,7 +528,7 @@
     "age_group": "1-2"
   },
   {
-    "question": "Nếu con tôi không chịu uống sữa công thức thì có thể thay bằng gì để đủ 930-1000 calo mỗi ngày?",
+    "question": "Nếu con tôi không chịu uống sữa công thức thì có thể thay bằng gì để đủ 930-1000 kcal mỗi ngày?",
     "positive": "bai1_muc3_1_3_1-2tuoi",
     "negative": "bai1_muc3_2_3_3-5tuoi",
     "age_group": "1-2"
@@ -582,7 +582,7 @@
     "age_group": "3-5"
   },
   {
-    "question": "Con tôi cần 1300 calo mỗi ngày nhưng chỉ chịu ăn 1000 calo, có cách nào tăng đậm độ năng lượng không?",
+    "question": "Con tôi cần 1300 kcal mỗi ngày nhưng chỉ chịu ăn 1000 kcal, có cách nào tăng đậm độ năng lượng không?",
     "positive": "bai1_muc3_2_3_3-5tuoi",
     "negative": "bai1_muc3_1_3_1-2tuoi",
     "age_group": "3-5"
@@ -642,7 +642,7 @@
     "age_group": "6-11"
   },
   {
-    "question": "Con tôi 8 tuổi cần 1800 calo nhưng hoạt động thể lực nặng, có cần tăng lên 2000 calo không?",
+    "question": "Con tôi 8 tuổi cần 1800 kcal nhưng hoạt động thể lực nặng, có cần tăng lên 2000 kcal không?",
     "positive": "bai1_muc3_3_3_1_6-11tuoi",
     "negative": "bai1_muc3_2_3_3-5tuoi",
     "age_group": "6-11"
@@ -702,7 +702,7 @@
     "age_group": "12-14"
   },
   {
-    "question": "Con tôi hoạt động thể lực nặng cần 2400 calo, nhưng chỉ ăn được 2000 calo có ảnh hưởng gì không?",
+    "question": "Con tôi hoạt động thể lực nặng cần 2400 kcal, nhưng chỉ ăn được 2000 kcal có ảnh hưởng gì không?",
     "positive": "bai1_muc3_4_3_1_12-14tuoi",
     "negative": "bai1_muc3_3_3_1_6-11tuoi",
     "age_group": "12-14"
@@ -750,7 +750,7 @@
     "age_group": "15-19"
   },
   {
-    "question": "Con tôi 18 tuổi hoạt động thể lực nặng cần 2800 calo, có phải cao hơn người lớn không?",
+    "question": "Con tôi 18 tuổi hoạt động thể lực nặng cần 2800 kcal, có phải cao hơn người lớn không?",
     "positive": "bai1_muc3_5_3_1_15-19tuoi",
     "negative": "bai1_muc3_4_3_1_12-14tuoi",
     "age_group": "15-19"
@@ -918,7 +918,7 @@
     "age_group": "6-11"
   },
   {
-    "question": "Con tôi 9 tuổi cần 1900 calo hoạt động trung bình, tăng lên nặng cần bao nhiêu calo?",
+    "question": "Con tôi 9 tuổi cần 1900 kcal hoạt động trung bình, tăng lên nặng cần bao nhiêu kcal?",
     "positive": "bai1_muc3_3_3_1_6-11tuoi",
     "negative": "bai1_muc3_2_3_3-5tuoi",
     "age_group": "6-11"
@@ -948,7 +948,7 @@
     "age_group": "12-14"
   },
   {
-    "question": "Con tôi 14 tuổi hoạt động nhẹ cần 2100 calo, có ít hơn người lớn không?",
+    "question": "Con tôi 14 tuổi hoạt động nhẹ cần 2100 kcal, có ít hơn người lớn không?",
     "positive": "bai1_muc3_4_3_1_12-14tuoi",
     "negative": "bai1_muc3_3_3_1_6-11tuoi",
     "age_group": "12-14"
@@ -966,25 +966,7 @@
     "age_group": "15-19"
   },
   {
-    "question": "Con tôi 16 tuổi tuyến giáp tăng cường hoạt động, có cần bổ sung i ốt đặc biệt không?",
-    "positive": "bai1_muc3_5_1_15-19tuoi",
-    "negative": "bai1_muc3_4_1_12-14tuoi",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Con tôi 16 tuổi tuyến giáp tăng cường hoạt động, có cần bổ sung iot đặc biệt không?",
-    "positive": "bai1_muc3_5_1_15-19tuoi",
-    "negative": "bai1_muc3_4_1_12-14tuoi",
-    "age_group": "15-19"
-  },
-  {
     "question": "Con trai tôi 17 tuổi cơ bắp săn chắc, có phải do hormone tăng trưởng hoạt động tốt?",
-    "positive": "bai1_muc3_5_1_15-19tuoi",
-    "negative": "bai1_muc3_3_1_6-11tuoi",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Con trai tôi 17 tuổi cơ bắp săn chắc, có phải do hóc môn tăng trưởng hoạt động tốt?",
     "positive": "bai1_muc3_5_1_15-19tuoi",
     "negative": "bai1_muc3_3_1_6-11tuoi",
     "age_group": "15-19"
@@ -1002,7 +984,7 @@
     "age_group": "15-19"
   },
   {
-    "question": "Con trai tôi 17 tuổi hoạt động nặng cần 2800 calo, có cao hơn con gái cùng tuổi không?",
+    "question": "Con tôi 17 tuổi nam hoạt động nặng cần 2800 kcal, có cao hơn con gái cùng tuổi không?",
     "positive": "bai1_muc3_5_3_1_15-19tuoi",
     "negative": "bai1_muc3_4_3_1_12-14tuoi",
     "age_group": "15-19"
@@ -1044,12 +1026,6 @@
     "age_group": "0-5"
   },
   {
-    "question": "Con tôi Z-score 2.5- có nghĩa là sao, có nghiêm trọng không?",
-    "positive": "bai2_muc4_1",
-    "negative": "bai1_muc2_2",
-    "age_group": "0-5"
-  },
-  {
     "question": "Nếu con tôi vừa gầy còm vừa còi cọc thì thuộc loại suy dinh dưỡng nào?",
     "positive": "bai2_muc4_2",
     "negative": "bai1_muc3_3_2_6-11tuoi",
@@ -1069,12 +1045,6 @@
   },
   {
     "question": "Con tôi 12 tuổi BMI Z-score +2.1 có cần can thiệp gấp không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai2_muc4_1",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Con tôi 12 tuổi BMI Z-score 2.1+ có cần can thiệp gấp không?",
     "positive": "bai2_muc5_1",
     "negative": "bai2_muc4_1",
     "age_group": "5-19"
@@ -2338,5 +2308,2885 @@
     "positive": "bai2_muc4_4",
     "negative": "bai1_muc2_1",
     "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 3 tuổi mà không chịu ăn đa dạng thực phẩm, có cách nào để tập cho con ăn nhiều loại đồ ăn hơn không?",
+    "positive": "bai3_muc3_2_4",
+    "negative": "bai4_muc2_2_1_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Làm sao để thay thế nguyên liệu trong thực đơn khi không có sẵn một số loại rau củ?",
+    "positive": "bai3_muc3_2_5",
+    "negative": "bai3_muc4_4_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 18 tháng tuổi nên ăn bao nhiêu bữa ở trường và mỗi bữa cung cấp bao nhiêu phần trăm năng lượng?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai3_muc4_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao việc tổ chức bữa ăn học đường lại quan trọng đối với sự phát triển của học sinh?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 24 tháng, nên ăn bao nhiêu gram rau củ mỗi ngày ở trường?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai3_muc3_1_2",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Hoạt động thể lực là gì và gồm những yếu tố chính nào?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 2 tuổi nên hoạt động thể lực bao nhiêu phút mỗi ngày và có những hạn chế gì?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai3_muc3_3_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Học sinh tiểu học nên tham gia những hoạt động thể lực nào để tăng cường sức khỏe?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai4_muc3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Ngộ độc thực phẩm là gì và có bao nhiêu loại ngộ độc thực phẩm?",
+    "positive": "bai4_muc2_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Các con đường nào mà vi sinh vật có thể lây nhiễm vào thực phẩm?",
+    "positive": "bai4_muc2_2_1",
+    "negative": "bai3_muc3_1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Trẻ mầm non nên sử dụng tối đa bao nhiêu gram muối mỗi ngày?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_4",
+    "age_group": "1-6"
+  },
+  {
+    "question": "Bữa ăn học đường cần có tối thiểu bao nhiêu loại thực phẩm và từ bao nhiêu nhóm thực phẩm?",
+    "positive": "bai3_muc3_1_1",
+    "negative": "bai4_muc2_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi cần bao nhiêu calo mỗi ngày và bữa trưa ở trường nên cung cấp bao nhiêu phần trăm?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_3_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Làm thế nào để xây dựng khẩu phần ăn đạt tiêu chuẩn dinh dưỡng cho trẻ?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tỷ lệ protein động vật so với tổng protein nên đạt bao nhiêu phần trăm đối với trẻ 4 tuổi?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_8",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Các yếu tố nào cần đảm bảo để đánh giá khẩu phần ăn đạt tiêu chuẩn?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc3_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 3-4 tuổi nên hoạt động thể lực bao nhiêu phút mỗi ngày và có những lưu ý gì về thời gian xem màn hình?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai3_muc3_2_1",
+    "age_group": "3-4"
+  },
+  {
+    "question": "Học sinh THCS và THPT cần tuân theo những nguyên tắc nào khi tăng cường hoạt động thể lực?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai4_muc4_2_2",
+    "age_group": "12-19"
+  },
+  {
+    "question": "Bếp ăn trường học được phân loại như thế nào theo quy mô phục vụ?",
+    "positive": "bai4_muc3_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Điều kiện nào cần đảm bảo về cơ sở vật chất để tổ chức bếp ăn an toàn?",
+    "positive": "bai4_muc4_1_1",
+    "negative": "bai3_muc3_3_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Kiểm thực ba bước gồm những bước nào và thực hiện khi nào?",
+    "positive": "bai4_muc4_1_7",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Lưu mẫu thức ăn cần đảm bảo những yêu cầu gì về dụng cụ và thời gian?",
+    "positive": "bai4_muc4_1_8",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 10 tuổi đang thừa cân, nên chọn mức năng lượng như thế nào cho bữa ăn ở trường?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai4_muc4_3_1_b",
+    "age_group": "10-11"
+  },
+  {
+    "question": "Trẻ từ 5-17 tuổi nên hoạt động thể lực ít nhất bao nhiêu phút mỗi ngày?",
+    "positive": "bai3_muc4_2_2",
+    "negative": "bai4_muc4_1_1_c",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Các loại hoạt động thể lực nào phù hợp với trẻ mầm non?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "1-6"
+  },
+  {
+    "question": "Học sinh có thể tham gia những hình thức tập luyện nào để tăng cường hoạt động thể lực?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "12-19"
+  },
+  {
+    "question": "Ngộ độc thực phẩm do hóa chất có đặc điểm gì khác biệt so với ngộ độc do vi sinh vật?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Những loại thực phẩm nào dễ bị nhiễm hóa chất gây ngộ độc?",
+    "positive": "bai4_muc2_2_2_2",
+    "negative": "bai3_muc3_3_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Khi nào thì không được hủy mẫu thức ăn lưu trong bếp ăn trường học?",
+    "positive": "bai4_muc4_1_8_c",
+    "negative": "bai3_muc3_1_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Căng-tin trường học nên bán những loại thực phẩm nào và hạn chế bán gì?",
+    "positive": "bai4_muc4_3_2",
+    "negative": "bai3_muc5_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 48 tháng tuổi nặng 15kg, chiều cao 105cm nên ăn như thế nào ở trường?",
+    "positive": "bai3_muc3_3_7",
+    "negative": "bai4_muc4_1_9",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Tại vùng khó khăn, thực đơn bữa ăn học đường cần đáp ứng tối thiểu những tiêu chuẩn gì?",
+    "positive": "bai3_muc3_1_4",
+    "negative": "bai4_muc2_2_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực phẩm có độc tố tự nhiên gây ngộ độc có những đặc điểm gì?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc4_3_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Những ai có vai trò gì trong việc đảm bảo an toàn thực phẩm ở trường học?",
+    "positive": "bai4_muc1_2",
+    "negative": "bai3_muc3_2_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 6 tuổi cần bao nhiêu calo mỗi ngày và nên phân bổ như thế nào cho các bữa ăn?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc4_1_2",
+    "age_group": "6-7"
+  },
+  {
+    "question": "Cách nào để tính toán định lượng thực phẩm đã sơ chế cho từng món ăn?",
+    "positive": "bai3_muc3_2_4",
+    "negative": "bai4_muc4_1_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 36 tháng tuổi ở trường nên ăn bao nhiêu bữa và mỗi bữa cần cung cấp năng lượng như thế nào?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_4_2",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Các bước xây dựng khẩu phần thực đơn bao gồm những gì?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai4_muc2_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Học sinh tiểu học nên có định lượng rau củ quả khoảng bao nhiêu gram mỗi bữa trưa?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai4_muc2_2_4_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Ngộ độc do thức ăn bị biến chất có những nguyên nhân và đặc điểm gì?",
+    "positive": "bai4_muc2_2_4",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 1 tuổi nên hoạt động thể lực như thế nào và có hạn chế gì về xem màn hình?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc5",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Điều kiện về con người trong bếp ăn trường học cần đảm bảo gì?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Trẻ mầm non và tiểu học cần tuân theo nguyên tắc nào khi tăng cường hoạt động thể lực?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai4_muc4_3",
+    "age_group": "1-11"
+  },
+  {
+    "question": "Học sinh cần lưu ý gì khi lựa chọn thức ăn đường phố xung quanh trường?",
+    "positive": "bai4_muc5",
+    "negative": "bai3_muc3_2_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 8 tuổi, bữa trưa ở trường nên cung cấp từ bao nhiêu đến bao nhiêu calo?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_2_2",
+    "age_group": "8-9"
+  },
+  {
+    "question": "Cách thay thế rau lá khác nhau trong thực đơn dựa trên mức năng lượng tương đương?",
+    "positive": "bai3_muc3_2_5",
+    "negative": "bai4_muc4_1_1_a_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ từ 3-5 tuổi ở trường nên có thực đơn như thế nào và ăn bao nhiêu phần trăm năng lượng cả ngày?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_1_a_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Các tác nhân sinh học nào hay gây ngộ độc thực phẩm?",
+    "positive": "bai4_muc2_2_1_2",
+    "negative": "bai3_muc4_4_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Quy trình chế biến nấu nướng theo nguyên lý một chiều là gì?",
+    "positive": "bai4_muc4_1_3",
+    "negative": "bai3_muc3_3_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 12 tuổi cần hoạt động thể lực bao nhiêu và tham gia những hoạt động nào?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai4_muc4_1_1_b",
+    "age_group": "12-19"
+  },
+  {
+    "question": "Các điều kiện về thiết bị và dụng cụ chế biến nấu nướng cần đảm bảo gì?",
+    "positive": "bai4_muc4_1_1_b",
+    "negative": "bai3_muc5_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao cần hạn chế sử dụng đường và muối trong bữa ăn học đường?",
+    "positive": "bai3_muc3_1_3",
+    "negative": "bai4_muc4_1_1_c_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 14 tuổi nên ăn bao nhiêu calo mỗi ngày và phân bổ ra sao cho bữa trưa?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc6",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Những mối nguy thực phẩm nào thường gặp tại bếp ăn trường học?",
+    "positive": "bai4_muc3_3",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Khẩu phần ăn cân đối hợp lý cần đủ những yếu tố nào?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_1_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 5 tuổi nên tham gia hoạt động thể lực như thế nào mỗi ngày?",
+    "positive": "bai3_muc4_2_2",
+    "negative": "bai4_muc4_3_1_b",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Trường học cần đảm bảo điều kiện gì về cơ sở vật chất để tổ chức bữa ăn?",
+    "positive": "bai3_muc3_3_6",
+    "negative": "bai4_muc2_2_1_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Ngộ độc thực phẩm do vi sinh vật có đặc điểm và thời gian ủ bệnh như thế nào?",
+    "positive": "bai4_muc2_2_1_3",
+    "negative": "bai3_muc4_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 17 tuổi cần bao nhiêu calo mỗi ngày và bữa trưa chiếm bao nhiêu phần trăm?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Các bước kiểm thực trong quá trình chế biến thức ăn bao gồm những gì?",
+    "positive": "bai4_muc4_1_7_2",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Hướng dẫn nào để tăng cường hoạt động thể lực hàng ngày cho học sinh?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ nhà trẻ ăn ở trường nên được phân bổ năng lượng như thế nào cho các bữa?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc2_2_2",
+    "age_group": "1-3"
+  },
+  {
+    "question": "Điều kiện về nhân lực cần thiết để tổ chức hoạt động thể lực trong trường?",
+    "positive": "bai3_muc4_6",
+    "negative": "bai4_muc4_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Các con đường nào hóa chất có thể xâm nhập vào thực phẩm gây ngộ độc?",
+    "positive": "bai4_muc2_2_2",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 11 tuổi, bữa phụ ở trường nên cung cấp bao nhiêu calo?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_3_2",
+    "age_group": "10-11"
+  },
+  {
+    "question": "Việc kiểm soát nguyên liệu đầu vào trong bếp ăn trường học cần làm gì?",
+    "positive": "bai4_muc4_1_2",
+    "negative": "bai3_muc4_3_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao thực phẩm chứa độc tố tự nhiên lại nguy hiểm và khó chẩn đoán?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc3_3_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Những loại thực phẩm nào chứa độc tố tự nhiên mà trẻ dễ bị ngộ độc?",
+    "positive": "bai4_muc2_2_3",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 9 tuổi nên ăn bao nhiêu gram muối tối đa mỗi ngày?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_8",
+    "age_group": "8-9"
+  },
+  {
+    "question": "Kho bảo quản thực phẩm trong trường học cần đảm bảo những điều kiện gì?",
+    "positive": "bai4_muc4_1_4",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tỷ lệ protein động vật so với tổng protein của trẻ 7 tuổi nên đạt bao nhiêu?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc2_2_2_3",
+    "age_group": "6-9"
+  },
+  {
+    "question": "Học sinh THPT nên tham gia những hình thức tập luyện nào để tăng cường thể lực?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bảo quản thực phẩm sau khi nấu chín cần tuân theo nguyên tắc gì?",
+    "positive": "bai4_muc4_1_4_2",
+    "negative": "bai3_muc3_1_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Điều kiện về cơ sở vật chất cần thiết để tăng cường hoạt động thể lực trong trường?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai4_muc4_1_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 13 tuổi, thực đơn bữa chính nên có bao nhiêu loại rau củ và thực phẩm đạm?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_9",
+    "age_group": "12-14"
+  },
+  {
+   "question": "Trường học cần có hệ thống sổ sách ghi chép gì để đảm bảo an toàn thực phẩm?",
+   "positive": "bai4_muc4_1_9",
+   "negative": "bai3_muc4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 16 tuổi cần bao nhiêu calo mỗi ngày và nên phân bổ như thế nào?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_1_1_a_3",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Kiểm soát nơi ăn trong trường học cần đảm bảo những yêu cầu gì?",
+   "positive": "bai4_muc4_1_6",
+   "negative": "bai3_muc3_2_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Vận chuyển thực phẩm đến trường học cần tuân theo những quy định nào?",
+   "positive": "bai4_muc4_1_5",
+   "negative": "bai3_muc4_3_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Các yếu tố chính của hoạt động thể lực mà phụ huynh cần biết là gì?",
+   "positive": "bai3_muc4_1",
+   "negative": "bai4_muc4_3",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Những thực phẩm nào dễ gây ngộ độc do bị biến chất và tại sao?",
+   "positive": "bai4_muc2_2_4_2",
+   "negative": "bai3_muc3_1_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 4 tuổi, tỷ lệ các chất sinh năng lượng trong khẩu phần nên như thế nào?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Nguyên tắc kết hợp hệ thống với trọng điểm trong hoạt động thể lực nghĩa là gì?",
+   "positive": "bai3_muc4_3_3",
+   "negative": "bai4_muc4_1_8_c",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Bữa ăn học đường của trẻ mẫu giáo cần đáp ứng bao nhiêu phần trăm năng lượng cả ngày?",
+   "positive": "bai3_muc3_3_2",
+   "negative": "bai4_muc2_2_1",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Những hóa chất nào thường gây ngộ độc thực phẩm và từ đâu?",
+   "positive": "bai4_muc2_2_2_2",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao cần sử dụng thực phẩm giàu vi chất dinh dưỡng trong bữa ăn học đường?",
+   "positive": "bai3_muc3_1_3",
+   "negative": "bai4_muc4_1_1",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi gần 2 tuổi, nên cho con ăn thực đơn như thế nào ở trường?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc3_1",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Vai trò của Ban Giám hiệu trong việc đảm bảo an toàn thực phẩm là gì?",
+   "positive": "bai4_muc1_2_2",
+   "negative": "bai3_muc5_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Học sinh tiểu học và THCS nên có định lượng rau củ quả bao nhiêu gram mỗi bữa?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_c_2",
+   "age_group": "6-14"
+ },
+ {
+   "question": "Tại sao cần che đậy và bao gói kỹ thực phẩm đã chín trong căng-tin?",
+   "positive": "bai4_muc4_3",
+   "negative": "bai3_muc3_2_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Nguyên tắc kết hợp vai trò chủ đạo của giáo viên với tính tích cực của học sinh nghĩa là gì?",
+   "positive": "bai3_muc4_3_2",
+   "negative": "bai4_muc2_2_4",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Con tôi 18 tháng, bữa phụ ở trường nên là gì và cung cấp bao nhiêu năng lượng?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_4_2",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Những vi khuẩn nào thường gây ngộ độc thực phẩm trong bếp ăn trường học?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc3_3_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Cách nào để phân biệt ngộ độc do thức ăn biến chất với các loại ngộ độc khác?",
+   "positive": "bai4_muc2_2_4_2",
+   "negative": "bai3_muc4_4_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 19 tuổi học THPT, cần bao nhiêu calo và hoạt động thể lực như thế nào?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Tại sao trẻ em lại dễ mắc các vấn đề về đường tiêu hóa do thực phẩm không an toàn?",
+   "positive": "bai4_muc1_1",
+   "negative": "bai3_muc3_2_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những điều kiện nào cần đảm bảo về nhân sự trong bếp ăn trường học?",
+   "positive": "bai3_muc3_3_6",
+   "negative": "bai4_muc2_2_3",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi sắp 3 tuổi, nên chuyển sang thực đơn như thế nào ở trường?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_a_2",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Nguyên tắc kết hợp trực quan, tư duy với thực tiễn trong hoạt động thể lực có ý nghĩa gì?",
+   "positive": "bai3_muc4_3_3",
+   "negative": "bai4_muc4_3_1_b",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Mẫu thức ăn lưu cần được lấy khi nào và bảo quản ở nhiệt độ bao nhiêu?",
+   "positive": "bai4_muc4_1_8",
+   "negative": "bai3_muc3_1_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những thực phẩm nào không được bán trong căng-tin trường học?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc4_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 7 tuổi, bữa trưa và bữa phụ ở trường nên cung cấp bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc5",
+   "age_group": "6-7"
+ },
+ {
+   "question": "Tại sao cần hạn chế sử dụng thực phẩm đóng gói và chế biến sẵn cho trẻ nhỏ?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_7_2",
+   "age_group": "2-5"
+ },
+ {
+   "question": "Vai trò của nhân viên y tế trường học trong đảm bảo an toàn thực phẩm là gì?",
+   "positive": "bai4_muc1_2_3",
+   "negative": "bai3_muc4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những loại hoạt động thể lực nào học sinh nên tham gia hàng ngày?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_6",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi 30 tháng, cần ăn bao nhiêu gram rau sống sạch mỗi ngày ở trường?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_b",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Trẻ em từ 1-5 tuổi nên có tỷ lệ protein động vật chiếm bao nhiêu phần trăm tổng protein?",
+   "positive": "bai3_muc3_1_2",
+   "negative": "bai4_muc2_2_3_2",
+   "age_group": "1-5"
+ },
+ {
+   "question": "Những biện pháp nào để ngăn ngừa ô nhiễm chéo trong bếp ăn trường học?",
+   "positive": "bai4_muc4_1_1_a_2",
+   "negative": "bai3_muc4_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 22 tháng, thực đơn ở trường nên có những món gì và lưu ý gì?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_3",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Tại sao cần phải rửa bát đĩa qua 4 khâu khác nhau trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_b",
+   "negative": "bai3_muc3_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Nguyên tắc kết hợp lượng vận động và nghỉ ngơi hợp lý có ý nghĩa gì?",
+   "positive": "bai3_muc4_3_2",
+   "negative": "bai4_muc2_2_1_3",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Những thực phẩm nào nên khuyến khích bán trong căng-tin trường học?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc3_1_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi sắp 36 tháng, có cần thay đổi thực đơn ở trường không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_8_c",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần kiểm tra nguyên liệu thực phẩm trước khi nhập vào bếp ăn?",
+   "positive": "bai4_muc4_1_7",
+   "negative": "bai3_muc4_4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Học sinh trên 10 tuổi nên có tỷ lệ protein động vật như thế nào?",
+   "positive": "bai3_muc3_1_2",
+   "negative": "bai4_muc4_1_2",
+   "age_group": "10-19"
+ },
+ {
+   "question": "Những yêu cầu nào về vệ sinh cá nhân đối với người chế biến thực phẩm?",
+   "positive": "bai4_muc4_1_1_c_2",
+   "negative": "bai3_muc3_3_7",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 6 tháng sắp vào nhà trẻ, cần chuẩn bị gì về dinh dưỡng?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_9",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Tại sao ngộ độc do hóa chất có thời gian ủ bệnh ngắn hơn ngộ độc do vi sinh vật?",
+   "positive": "bai4_muc2_2_2_3",
+   "negative": "bai3_muc4_3_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trường học tiểu học có thể tổ chức thêm những bữa ăn nào ngoài bữa trưa?",
+   "positive": "bai3_muc3_3_2",
+   "negative": "bai4_muc2_2_4_2",
+   "age_group": "6-11"
+ },
+ {
+   "question": "Những loại nấm mốc nào trong thực phẩm có thể gây ngộ độc?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc3_2_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 42 tháng, nên ăn món tráng miệng gì và có cần thiết không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_3",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Tại sao cần có thớt riêng cho thực phẩm sống và chín?",
+   "positive": "bai4_muc4_1_1_b",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Nguyên tắc kết hợp thống nhất yêu cầu với đối xử cá biệt nghĩa là gì?",
+   "positive": "bai3_muc4_3_2",
+   "negative": "bai4_muc4_2",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Những triệu chứng nào giúp nhận biết ngộ độc thực phẩm do thức ăn biến chất?",
+   "positive": "bai4_muc2_2_4_2",
+   "negative": "bai3_muc3_1_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 20 tháng còn bú sữa mẹ, ở trường nên ăn như thế nào?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_4",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Tại sao cần hạn chế thời gian xem màn hình cho trẻ 3-4 tuổi?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc4_1_5",
+   "age_group": "3-4"
+ },
+ {
+   "question": "Những kim loại nặng nào thường gây ngộ độc thực phẩm?",
+   "positive": "bai4_muc2_2_2_2",
+   "negative": "bai3_muc4_4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 8 tuổi, bữa phụ ở trường nên cung cấp từ bao nhiêu đến bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "8-9"
+ },
+ {
+   "question": "Tại sao trẻ nhỏ không nên uống nước ngọt có ga?",
+   "positive": "bai3_muc3_1_3",
+   "negative": "bai4_muc4_1_1_c",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Những điều kiện nào về hệ thống thông gió trong bếp ăn trường học?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc5_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi gần 12 tuổi, sắp chuyển cấp có cần thay đổi dinh dưỡng không?",
+   "positive": "bai3_muc3_3_3",
+   "negative": "bai4_muc3_3",
+   "age_group": "10-14"
+ },
+ {
+   "question": "Những hoạt động aerobic nào phù hợp với trẻ em?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_7",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Tại sao ngộ độc do độc tố tự nhiên có tỷ lệ tử vong cao?",
+   "positive": "bai4_muc2_2_3_2",
+   "negative": "bai3_muc3_2_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 26 tháng tuổi, thực đơn ở trường có khác gì so với trẻ 18 tháng không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_a_3",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Những yêu cầu nào về hệ thống chiếu sáng trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc4_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 14 tuổi, bữa phụ ở trường nên cung cấp bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc2_2_2",
+   "age_group": "12-14"
+ },
+ {
+   "question": "Những ký sinh trùng nào thường gây ngộ độc thực phẩm?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc4_3_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 5 tuổi sắp vào lớp 1, cần chuẩn bị gì về dinh dưỡng?",
+   "positive": "bai3_muc3_3_2",
+   "negative": "bai4_muc4_3_1_b",
+   "age_group": "5-7"
+ },
+ {
+   "question": "Tại sao cần che đậy thực phẩm để tránh côn trùng và động vật?",
+   "positive": "bai4_muc2_2_1",
+   "negative": "bai3_muc4_4_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Hoạt động làm mạnh khối xương bao gồm những gì?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_8",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi 45 tháng, có cần tăng lượng rau củ trong bữa ăn không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_2",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Những phụ gia thực phẩm nào có thể gây ngộ độc nếu dùng sai?",
+   "positive": "bai4_muc2_2_2_2",
+   "negative": "bai3_muc3_3_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao không nên để thực phẩm sống và chín lẫn với nhau?",
+   "positive": "bai4_muc4_1_3",
+   "negative": "bai3_muc4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 11 tuổi, cần hoạt động thể lực bao nhiêu phút mỗi ngày?",
+   "positive": "bai3_muc4_2_2",
+   "negative": "bai4_muc5",
+   "age_group": "5-17"
+ },
+ {
+   "question": "Những vi-rút nào thường gây ngộ độc thực phẩm trong trường học?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc3_2_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 33 tháng tuổi nên ăn bao nhiêu bữa ở trường và tổng năng lượng là bao nhiêu?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_6",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Hoạt động làm mạnh khối cơ gồm những bài tập nào?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_4_2",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi 21 tháng vẫn ăn cháo dự phòng, có bình thường không?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc2_2_4",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Những thực phẩm nào thuộc nhóm giàu chất béo bão hòa nên hạn chế?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc4_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao cần phân bố đều hoạt động thể lực trong suốt cả ngày?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc4_1_1",
+   "age_group": "1-4"
+ },
+ {
+   "question": "Con tôi 18 tuổi, bữa trưa ở trường nên cung cấp bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Những chất độc nào được tạo ra khi thực phẩm có chất đạm bị biến chất?",
+   "positive": "bai4_muc2_2_4",
+   "negative": "bai3_muc3_3_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao phòng chia thức ăn phải được coi như phòng vô trùng?",
+   "positive": "bai4_muc4_1_4_2",
+   "negative": "bai3_muc4_4_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 15 tuổi tham gia CLB thể thao, có đủ hoạt động thể lực không?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc4_3_2",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Những yêu cầu nào về cửa ra vào và cửa sổ trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc3_2_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 32 tháng, có thể thay sữa bằng món ăn khác trong bữa phụ không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_7_2",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Con tôi 2 tuổi không chịu ngồi yên lâu, có ảnh hưởng đến sức khỏe không?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc2_2_3",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Những loại aflatoxin trong ngũ cốc có thể gây hại gì cho trẻ?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc4_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ THCS nên ăn bao nhiêu gram rau củ quả trong bữa trưa ở trường?",
+   "positive": "bai3_muc3_3_3",
+   "negative": "bai4_muc4_1_8_c",
+   "age_group": "12-14"
+ },
+ {
+   "question": "Tại sao cần có hộp bảo vệ cho đèn chiếu sáng trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 23 tháng, thực đơn bữa chính buổi chiều nên có những gì?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_3",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Nguyên tắc kết hợp củng cố với nâng cao trong hoạt động thể lực nghĩa là gì?",
+   "positive": "bai3_muc4_3_2",
+   "negative": "bai4_muc2_2_2_3",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Những chất độc nào được sinh ra khi ngũ cốc bị mốc biến chất?",
+   "positive": "bai4_muc2_2_4",
+   "negative": "bai3_muc3_3_7",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 17 tuổi, bữa phụ ở trường nên cung cấp từ bao nhiêu đến bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_1_9",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Tại sao cần kiểm tra hạn sử dụng của thực phẩm đóng gói?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc3_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 28 tháng tuổi có cần tập ăn cơm hay vẫn ăn cháo?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_3",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Những điều kiện nào về trần nhà trong bếp ăn trường học?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc4_4_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 4 tuổi nên ngủ bao nhiêu giờ mỗi ngày để đảm bảo sức khỏe?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc4_2",
+   "age_group": "3-4"
+ },
+ {
+   "question": "Những loại thuỷ sản nào dễ nhiễm kim loại nặng gây ngộ độc?",
+   "positive": "bai4_muc2_2_2_2",
+   "negative": "bai3_muc3_1_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao trẻ em cần uống đủ nước chín hàng ngày?",
+   "positive": "bai3_muc3_1_3",
+   "negative": "bai4_muc4_1_4",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi 35 tháng, thực đơn 2-8 tuần không lặp lại có nghĩa là gì?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_5",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Những yêu cầu nào về sàn nhà trong khu vực chế biến thức ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc5_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Tại sao trẻ 1 tuổi không nên xem truyền hình hay video?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc4_1_6",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Những triệu chứng nào giúp nhận biết ngộ độc do hóa chất?",
+   "positive": "bai4_muc2_2_2_3",
+   "negative": "bai3_muc4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 10 tuổi, tỷ lệ các chất sinh năng lượng trong khẩu phần nên như thế nào?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc3_1",
+   "age_group": "10-11"
+ },
+ {
+   "question": "Tại sao cần có cống rãnh thoát nước kín trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc3_2_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 19 tháng tuổi có thể ăn cơm nát thay vì cháo không?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc2_2_1",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Những hoạt động nào giúp tăng cường phát triển khối xương cho trẻ?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_7",
+   "age_group": "1-19"
+ },
+ {
+   "question": "Con tôi 13 tuổi, bữa trưa ở trường nên cung cấp bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "12-14"
+ },
+ {
+   "question": "Tại sao không được ăn uống, nhai kẹo trong khu vực chế biến thức ăn?",
+   "positive": "bai4_muc4_1_1_c_2",
+   "negative": "bai3_muc3_1_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những chất glyxerin và axit béo tự do được tạo ra từ đâu?",
+   "positive": "bai4_muc2_2_4",
+   "negative": "bai3_muc4_3_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 31 tháng, có thể bỏ bữa phụ không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_8",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần có phòng thay quần áo riêng trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc4_4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 16 tuổi tham gia các câu lạc bộ thể thao có đủ không?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc5",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Những kim loại nào thường gây ô nhiễm từ dụng cụ chế biến?",
+   "positive": "bai4_muc2_2_2_2",
+   "negative": "bai3_muc3_3_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 24 tháng, thực đơn có khác gì so với khi 18 tháng không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_b",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần kiểm tra thiết bị đóng gói trong căng-tin trường học?",
+   "positive": "bai4_muc4_3",
+   "negative": "bai3_muc4_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Hoạt động chạy tiếp sức giúp rèn luyện kỹ năng gì cho trẻ mầm non?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_1_2",
+   "age_group": "1-6"
+ },
+ {
+   "question": "Con tôi 12 tuổi sắp lên THPT, có cần tăng hoạt động thể lực không?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc2_2_4_2",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Tại sao trẻ 3 tuổi không nên xem màn hình quá 1 giờ mỗi ngày?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc4_1_4_2",
+   "age_group": "3-4"
+ },
+ {
+   "question": "Những loại độc tố nấm nào thường có trong các loại hạt?",
+   "positive": "bai4_muc2_2_1_2",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 27 tháng, có cần hạn chế thực phẩm chế biến sẵn không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_c",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần có dụng cụ chứa chất thải kín trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc3_2_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những bài tập yoga nào phù hợp với học sinh tiểu học?",
+   "positive": "bai3_muc4_4_2",
+   "negative": "bai4_muc4_3_1_b",
+   "age_group": "6-11"
+ },
+ {
+   "question": "Con tôi 9 tuổi, bữa trưa ở trường nên cung cấp từ bao nhiêu đến bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_1_1_a_2",
+   "age_group": "8-9"
+ },
+ {
+   "question": "Tại sao cần tránh chọn đồ hộp có vỏ ngoài bị phồng hoặc móp?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 34 tháng tuổi nên ăn bao nhiêu loại rau củ trong bữa trưa?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_6",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Những điều kiện nào về nhà vệ sinh trong khu vực bếp ăn?",
+   "positive": "bai4_muc4_1_1_a_3",
+   "negative": "bai3_muc5_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 6 tuổi có cần tham gia hoạt động làm mạnh khối cơ không?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc2_2_3_2",
+   "age_group": "5-17"
+ },
+ {
+   "question": "Tại sao không được đeo trang sức khi chế biến thức ăn?",
+   "positive": "bai4_muc4_1_1_c_2",
+   "negative": "bai3_muc3_3_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những chất độc nào có trong măng độc và sắn độc?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc4_4_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 29 tháng, thực đơn có cần món tráng miệng không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_9",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần có máy điều hoà không khí trong kho bảo quản?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những trò chơi vận động nào giúp phát triển phản xạ cho trẻ mầm non?",
+   "positive": "bai3_muc4_4_1",
+   "negative": "bai4_muc4_2",
+   "age_group": "1-6"
+ },
+ {
+   "question": "Con tôi 25 tháng, có thể ăn pizza hoặc hamburger ở trường không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_3_2",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần phải khám sức khỏe định kỳ cho nhân viên bếp ăn?",
+   "positive": "bai4_muc4_1_1_c",
+   "negative": "bai3_muc3_2_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những hoạt động nào giúp trẻ 2 tuổi phát triển toàn diện về thể chất?",
+   "positive": "bai3_muc4_2",
+   "negative": "bai4_muc3_3",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Con tôi 15 tuổi ăn nhiều snack và bánh quy, có ảnh hưởng gì không?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc4_2_2",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Tại sao cần có lưới thép cho cửa sổ kho bảo quản thực phẩm?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc3_3_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 30 tháng tuổi nên ăn sữa hay chế phẩm sữa trong bữa phụ?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_7_2",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Những bệnh ngoài da nào khiến người ta không được chế biến thức ăn?",
+   "positive": "bai4_muc4_1_1_c",
+   "negative": "bai3_muc4_4_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 7 tuổi nên tham gia hoạt động thể thao ít nhất mấy ngày một tuần?",
+   "positive": "bai3_muc4_2_2",
+   "negative": "bai4_muc4_1_5",
+   "age_group": "5-17"
+ },
+ {
+   "question": "Tại sao cần kiểm tra nhãn mác thực phẩm trước khi mua?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc3_1_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những loại tetrodotoxin có trong loại hải sản nào?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc4_3_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 26 tháng, có cần ăn đủ 4 nhóm chất dinh dưỡng không?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_3",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao cần phải để thực phẩm cách mặt sàn ít nhất 20cm?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc3_2_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 14 tuổi nên tham gia những hoạt động thể thao nào ngoài giờ học?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Con tôi 8 tuổi uống nhiều nước ngọt có ga, có hại không?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc3_1_3",
+   "age_group": "8-9"
+ },
+ {
+   "question": "Tại sao cần có máy ghi nhiệt độ và độ ẩm trong kho?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những muscarin trong nấm độc gây triệu chứng gì?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc3_3_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 33 tháng, nên hạn chế thực phẩm có nhiều đường và muối không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_a_3",
+   "age_group": "2-3"
+ },
+ {
+   "question": "Tại sao người mắc bệnh són đái không được làm việc trong bếp ăn?",
+   "positive": "bai4_muc4_1_1_c",
+   "negative": "bai3_muc4_5",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những bài tập khởi động nào phù hợp với học sinh tiểu học?",
+   "positive": "bai3_muc4_4_2",
+   "negative": "bai4_muc4_3",
+   "age_group": "6-11"
+ },
+ {
+   "question": "Con tôi 11 tuổi, bữa phụ ở trường nên cung cấp từ bao nhiêu đến bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc5",
+   "age_group": "10-11"
+ },
+ {
+   "question": "Tại sao cần chọn cơ sở thức ăn đường phố có thiết kế chống bụi bẩn?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc3_2_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những mytilotoxin trong nhuyễn thể có thể gây hại gì?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc4_4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 36 tháng, thực đơn có cần quả chín tráng miệng không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_8",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Tại sao không được để các hàng không phải thực phẩm vào kho?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc3_3_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 13 tuổi tham gia ngày hội thể thao có đủ hoạt động không?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc4_1_6",
+   "age_group": "12-19"
+ },
+ {
+   "question": "Con tôi 16 tuổi thích ăn hamburger và pizza, có nên hạn chế không?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc4_1",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Những solamin trong mầm khoai tây có độc tính như thế nào?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc4_3_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 20 tháng, bữa chính buổi trưa nên có món canh không?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_4_2",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Tại sao người bán hàng thức ăn đường phố phải mang trang phục sạch sẽ?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc3_2_3",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những hoạt động thể dục buổi sáng nào phù hợp với học sinh THCS?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc4_1_7",
+   "age_group": "12-14"
+ },
+ {
+   "question": "Con tôi 6 tuổi, bữa phụ ở trường nên cung cấp bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_2",
+   "age_group": "6-7"
+ },
+ {
+   "question": "Tại sao cần có chế độ khử trùng tẩy uế kho định kỳ?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những glucozit sinh axit xyanhidric có trong loại đậu nào?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc3_3_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 37 tháng, có thể bỏ bữa ăn chính buổi chiều không?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_1_b",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Tại sao thức ăn đường phố phải để cách mặt đất ít nhất 60cm?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc4_4_2",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 18 tuổi nên tham gia bao nhiêu phút hoạt động aerobic mỗi tuần?",
+   "positive": "bai3_muc4_2_2",
+   "negative": "bai4_muc4_3_1_b",
+   "age_group": "5-17"
+ },
+ {
+   "question": "Tại sao cần có chế độ xuất nhập kho nghiêm ngặt?",
+   "positive": "bai4_muc4_1_4",
+   "negative": "bai3_muc3_2_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những axit xyanhydric trong sắn và măng có tác hại gì?",
+   "positive": "bai4_muc2_2_3",
+   "negative": "bai3_muc4_6",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 21 tháng, có nên cho ăn bún hoặc phở trong bữa chính không?",
+   "positive": "bai3_muc3_3_4",
+   "negative": "bai4_muc4_1_9",
+   "age_group": "1-2"
+ },
+ {
+   "question": "Tại sao người chế biến thức ăn không được để móng tay dài?",
+   "positive": "bai4_muc4_1_1_c_2",
+   "negative": "bai3_muc3_3_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Những hoạt động thể dục giữa giờ nào phù hợp với học sinh THPT?",
+   "positive": "bai3_muc4_4_3",
+   "negative": "bai4_muc2_2_4",
+   "age_group": "15-19"
+ },
+ {
+   "question": "Con tôi 14 tuổi, bữa trưa và bữa phụ ở trường tổng cộng nên bao nhiêu calo?",
+   "positive": "bai3_muc3_3_1",
+   "negative": "bai4_muc4_1_2",
+   "age_group": "12-14"
+ },
+ {
+   "question": "Tại sao cần kiểm tra thực phẩm bên trong có nguyên vẹn hay không?",
+   "positive": "bai4_muc5",
+   "negative": "bai3_muc4_4_4",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Con tôi 38 tháng, thực đơn nên có bao nhiêu loại thực phẩm đạm?",
+   "positive": "bai3_muc3_3_5",
+   "negative": "bai4_muc4_1_8_c",
+   "age_group": "3-5"
+ },
+ {
+   "question": "Tại sao không được khạc nhổ trong khu vực chế biến nấu nướng?",
+   "positive": "bai4_muc4_1_1_c_2",
+   "negative": "bai3_muc4_1",
+   "age_group": "6-18"
+ },
+ {
+   "question": "Trẻ 17 tuổi có cần tham gia hoạt động tăng cường cơ và xương không?",
+   "positive": "bai3_muc4_2_2",
+   "negative": "bai4_muc4_2_2",
+   "age_group": "5-17"
+ },
+ {
+   "question": "Con tôi 9 tuổi thích ăn mì gói, có nên hạn chế không?",
+   "positive": "bai4_muc4_3_2",
+   "negative": "bai3_muc3_2_5",
+   "age_group": "8-9"
+ },
+ {
+   "question": "Tại sao cần có thiết bị làm sạch và khử trùng riêng?",
+   "positive": "bai4_muc4_1_1_b",
+   "negative": "bai3_muc3_3_1",
+   "age_group": "6-18"
+ },
+  {
+    "question": "Con tôi sắp đủ 6 tuổi vào lớp 1, có cần thay đổi từ 1 bữa chính thành 2 bữa chính ở trường không?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc2_2_1_3",
+    "age_group": "3-7"
+  },
+  {
+    "question": "Nếu con tôi 10 tuổi bị thừa cân thì nên chọn mức năng lượng ở ngưỡng nào của khoảng khuyến nghị?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai4_muc4_1_1_c_2",
+    "age_group": "10-11"
+  },
+  {
+    "question": "Khi nào trẻ KHÔNG được tiếp tục ăn thức ăn đã lưu mẫu trong tủ lạnh?",
+    "positive": "bai4_muc4_1_8_c",
+    "negative": "bai3_muc3_1_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 5 tuổi rưỡi, tỷ lệ protein động vật nên cao hơn hay thấp hơn so với khi 7 tuổi?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc2_2_2_2",
+    "age_group": "5-7"
+  },
+  {
+    "question": "Nếu trẻ 2 tuổi không muốn ngồi yên quá 1 giờ liên tiếp thì có bình thường không?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_1_3",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Làm sao biết bữa ăn có đạt đúng 4 yếu tố của khẩu phần cân đối hay không?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 13 tuổi, nếu ăn thiếu 1 trong 8 nhóm thực phẩm thì có sao không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai4_muc2_2_4_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Thời gian ủ bệnh ngắn nhất là của loại ngộ độc nào và kéo dài bao lâu?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Nếu trẻ 18 tháng chưa ăn được đủ định lượng cơm thì nên làm gì?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 4 tuổi, tại sao chỉ được xem màn hình tối đa 1 giờ chứ không phải 2 giờ?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc3_1",
+    "age_group": "3-4"
+  },
+  {
+    "question": "Trong trường hợp nào thì không cần lưu mẫu thức ăn đúng 24 giờ?",
+    "positive": "bai4_muc4_1_8_c",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 11 tuổi sắp lên THCS, tỷ lệ protein động vật sẽ thay đổi từ mức nào xuống mức nào?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_2",
+    "age_group": "10-14"
+  },
+  {
+    "question": "Nếu thực phẩm để quá 2 giờ sau khi nấu xong thì nguy cơ gì sẽ xảy ra?",
+    "positive": "bai4_muc4_1_4_2",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 3 tuổi cần 180 phút hoạt động thể lực nhưng phải có ít nhất 60 phút mức độ mạnh?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_1_7_2",
+    "age_group": "3-4"
+  },
+  {
+    "question": "Con tôi 16 tuổi, nếu không đạt được 60 phút hoạt động mỗi ngày thì có nên bỏ hẳn không?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai4_muc4_1_8",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Khi nào cần kiểm tra lại thực phẩm lần thứ 3 trong quy trình kiểm thực?",
+    "positive": "bai4_muc4_1_7_2",
+    "negative": "bai3_muc3_1_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 24 tháng, tại sao cần ăn 60-70% năng lượng ở trường thay vì 50-55% như trẻ lớn hơn?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc2_2_3_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Nếu nhân viên bếp bị viêm da nhiễm trùng ở tay thì có được đeo găng tay tiếp tục làm việc không?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_7",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao ngộ độc do hóa chất có triệu chứng thần kinh nhiều hơn triệu chứng tiêu hóa?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc4_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 35 tháng, nếu không thích ăn 10 loại thực phẩm thì tối thiểu cần bao nhiêu loại?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khi nào thì việc chỉ có 1 người ngộ độc vẫn được coi là vụ ngộ độc thực phẩm?",
+    "positive": "bai4_muc2_1",
+    "negative": "bai3_muc4_3_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 6 tuổi cần protein động vật chiếm hơn 50% nhưng trẻ 12 tuổi chỉ cần hơn 35%?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_1_a_2",
+    "age_group": "6-12"
+  },
+  {
+    "question": "Nếu thực phẩm có mùi lạ trong bước kiểm thực số 2 thì phải làm gì?",
+    "positive": "bai4_muc4_1_7_2",
+    "negative": "bai3_muc3_2_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 20 tháng, tại sao bữa phụ lại là sữa mẹ thay vì đồ ăn khác?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trong trường hợp nào thì trẻ 15 tuổi được phép uống đồ uống có cồn ở trường?",
+    "positive": "bai4_muc4_3_2",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi, nếu bữa trưa không đạt 30-40% năng lượng thì sẽ ảnh hưởng gì?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc2_2_1_2",
+    "age_group": "8-9"
+  },
+  {
+    "question": "Khi nào thì việc có 2 thứ thực phẩm cùng mức kcal lại không thể thay thế cho nhau?",
+    "positive": "bai3_muc3_2_5",
+    "negative": "bai4_muc4_1_9",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao trẻ 1 tuổi KHÔNG nên xem TV nhưng trẻ 2 tuổi lại được xem tối đa 1 giờ?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_3_1_b",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Nếu ngộ độc có thời gian ủ bệnh 6-48 giờ thì đó là loại ngộ độc gì?",
+    "positive": "bai4_muc2_2_1_3",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 17 tuổi, nếu chỉ tham gia 2 ngày hoạt động mạnh/tuần thay vì 3 ngày thì có đủ không?",
+    "positive": "bai3_muc4_2_2",
+    "negative": "bai4_muc4_2_2",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Khi nào thì thịt từ gia súc khỏe mạnh vẫn có thể gây ngộ độc?",
+    "positive": "bai4_muc2_2_1",
+    "negative": "bai3_muc3_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 30 tháng ăn ở trường 60-70% năng lượng nhưng trẻ 48 tháng chỉ ăn 50-55%?",
+    "positive": "bai3_muc3_3_2",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Nếu người chế biến bị lỗ rò hậu môn thì có được làm việc trong bếp ăn không?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 14 tuổi, tại sao bữa phụ chỉ 5-10% năng lượng thay vì nhiều hơn để no hơn?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai4_muc4_1_8_c",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trong trường hợp nào thì chuối KHÔNG thể thay thế bằng quả khác cùng mức kcal?",
+    "positive": "bai3_muc3_2_5",
+    "negative": "bai4_muc3_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nếu trẻ 36 tháng ăn dưới 5 loại thực phẩm/bữa thì có đạt tiêu chuẩn tối thiểu không?",
+    "positive": "bai3_muc3_1_4",
+    "negative": "bai4_muc4_1_1_a_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao ngộ độc do thức ăn biến chất có thể gây thiếu máu và thiếu vitamin?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 7 tuổi, nếu không tham gia đủ 3 loại hoạt động thể lực thì có sao không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai4_muc4_1_4_2",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Khi nào thì việc để thực phẩm trên sàn kê chỉ cách sàn 15cm là không đủ?",
+    "positive": "bai4_muc4_1_4",
+    "negative": "bai3_muc3_1_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ mầm non cần lipid động vật 70% và thực vật 30% theo tỷ lệ cụ thể?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc2_2_3",
+    "age_group": "1-6"
+  },
+  {
+    "question": "Nếu thức ăn có dấu hiệu bất thường ở bước 3 kiểm thực thì phải xử lý ra sao?",
+    "positive": "bai4_muc4_1_7_2",
+    "negative": "bai3_muc4_3_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 22 tháng, tại sao cần có cháo dự phòng cho những trẻ chưa ăn được cơm?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trong trường hợp nào thì trẻ 5 tuổi được phép xem màn hình hơn 1 giờ/ngày?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc5",
+    "age_group": "3-4"
+  },
+  {
+    "question": "Tại sao ngộ độc do độc tố tự nhiên có tỷ lệ tử vong cao nhất trong 4 loại?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc3_2_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 12 tuổi, nếu chỉ ăn 4/8 nhóm thực phẩm khuyến nghị thì có đủ không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Khi nào thì việc dùng kỹ thuật thông thường vẫn không xác định được chất độc?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc4_4_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 19 tháng vẫn được bú sữa mẹ nhưng trẻ 30 tháng thì không?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_1_b",
+    "age_group": "1-3"
+  },
+  {
+    "question": "Nếu carbohydrate của trẻ nhà trẻ chiếm 52% thay vì 47-50% thì có sao không?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_3",
+    "age_group": "1-3"
+  },
+  {
+    "question": "Con tôi 16 tuổi, nếu chỉ vận động 50 phút/ngày thay vì 60 phút thì có đạt không?",
+    "positive": "bai3_muc4_2_2",
+    "negative": "bai4_muc4_1_3",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc có đủ 5/8 nhóm thực phẩm vẫn chưa đủ?",
+    "positive": "bai3_muc3_1_1",
+    "negative": "bai4_muc4_1_7_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao người mắc giang mai thời kỳ lây không được chế biến thức ăn?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 33 tháng, nếu chỉ ăn 1 bữa chính thay vì 2 bữa thì có đủ dinh dưỡng không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc2_2_4",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Khi nào thì việc lưu mẫu thức ăn dưới 100g vẫn được chấp nhận?",
+    "positive": "bai4_muc4_1_8",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ mẫu giáo chỉ cần 52-60% carbohydrate nhưng trẻ nhà trẻ chỉ 47-50%?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_2",
+    "age_group": "1-6"
+  },
+  {
+    "question": "Nếu người lành mang vi trùng thương hàn thì có được đeo găng tay làm việc không?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_4_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 6 tuổi, tại sao cần 1270-1770 calo/ngày mà không phải con số cố định?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_8_c",
+    "age_group": "6-7"
+  },
+  {
+    "question": "Tại sao trẻ 21 tháng cần bữa chính buổi chiều là cháo nhưng lại khuyến khích cơm nát buổi trưa?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_9",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Nếu giáo viên thể dục chưa được tập huấn về tăng cường thể lực thì có được dạy không?",
+    "positive": "bai3_muc4_6",
+    "negative": "bai4_muc4_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi, tại sao cần 2110-3140 calo/ngày với khoảng chênh lệch lớn vậy?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc3_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Khi nào thì việc kiểm nghiệm nước không cần theo QCVN 01-1:2018/BYT?",
+    "positive": "bai4_muc4_1_9",
+    "negative": "bai3_muc3_2_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao những người mắc bệnh nấm tóc không được tiếp xúc trực tiếp với thực phẩm?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 26 tháng, nếu không thích sữa thì có thể thay bằng gì trong bữa phụ?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_4",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc có triệu chứng thần kinh lại chỉ ra ngộ độc do hóa chất?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc4_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 10 tuổi cần protein động vật hơn 35% nhưng trẻ 15 tuổi cũng chỉ cần hơn 35%?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_2",
+    "age_group": "10-19"
+  },
+  {
+    "question": "Nếu nhà bếp chỉ cách nguồn ô nhiễm 200m thì có đủ xa không?",
+    "positive": "bai4_muc4_1_1",
+    "negative": "bai3_muc3_3_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 18 tháng, tại sao lại cần ăn cơm nát thay vì cháo như trước đây?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Khi nào thì việc có hơi nước đọng trần vẫn được chấp nhận trong bếp ăn?",
+    "positive": "bai4_muc4_1_1_a_3",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 13 tuổi cần 721-961 calo bữa trưa thay vì con số cố định?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc5",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Nếu thực phẩm chỉ chênh lệch 5% so với khẩu phần dự kiến thì có được chấp nhận không?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 3 tuổi, tại sao cần giấc ngủ 10-13 giờ thay vì 11-14 giờ như lúc 2 tuổi?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "1-4"
+  },
+  {
+    "question": "Tại sao người mắc viêm gan A không được làm việc trong bếp nhưng đã khỏi thì được?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 32 tháng, nếu ăn thiếu 1 loại rau củ trong số 3-5 loại thì có sao không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_8",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Khi nào thì việc sử dụng nước rửa bát ở 40°C thay vì 45-50°C là không đủ?",
+    "positive": "bai4_muc4_1_1_b",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 9 tuổi cần 532-710 calo bữa trưa mà không phải ít hơn hoặc nhiều hơn?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc2_2_1",
+    "age_group": "8-9"
+  },
+  {
+    "question": "Nếu chỉ có 1 loại thực phẩm cung cấp chất đạm thay vì 2-3 loại thì có đạt không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai4_muc4_1_1_c_2",
+    "age_group": "6-19"
+  },
+  {
+    "question": "Con tôi 23 tháng, tại sao bữa chính buổi chiều lại có 4 nhóm chất dinh dưỡng?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_3_1_b",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc có triệu chứng tiêu hóa lại không phải ngộ độc do vi sinh vật?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc bệnh són phân không được tiếp xúc thực phẩm dù đã điều trị?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 17 tuổi, nếu chỉ tập luyện cá nhân mà không tham gia CLB thì có đủ không?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai4_muc4_2",
+    "age_group": "12-19"
+  },
+  {
+    "question": "Tại sao trẻ 28 tháng vẫn cần 60-70% năng lượng ở trường thay vì giảm xuống?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_1_a_2",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Nếu nhân viên chỉ mắc ghẻ ở chân thì có được tiếp tục làm việc không?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 11 tuổi, tại sao cần 618-825 calo bữa trưa mà không phải số tròn?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_4_2",
+    "age_group": "10-11"
+  },
+  {
+    "question": "Trong trường hợp nào thì số lượng mắc ngộ độc ít lẻ tẻ lại có tỷ lệ tử vong cao?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc3_2_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 2 tuổi không được hạn chế vận động quá 1 giờ liên tiếp?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_3_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 34 tháng, nếu chỉ uống sữa không đường thay vì sữa ít đường thì có tốt hơn không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khi nào thì việc rửa cốc chén bằng nước đứng thay vì tia nước chảy là được phép?",
+    "positive": "bai4_muc4_1_1_b",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc lao phổi không được chế biến thức ăn dù không ho?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_7",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 5 tuổi, nếu chỉ ăn 7 loại thực phẩm thay vì 10 loại thì có đạt chuẩn không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc2_2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trong trường hợp nào thì ngộ độc do vi sinh vật lại có thời gian ủ bệnh chỉ 6 giờ?",
+    "positive": "bai4_muc2_2_1_3",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 31 tháng cần hạn chế thực phẩm chế biến sẵn nhưng người lớn thì không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Nếu chỉ có thể lưu mẫu thức ăn được 20 giờ thay vì 24 giờ thì có được không?",
+    "positive": "bai4_muc4_1_8_c",
+    "negative": "bai3_muc4_4_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 18 tuổi, tại sao vẫn cần 780-1040 calo bữa trưa dù đã gần trưởng thành?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_7_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Khi nào thì việc ngộ độc xảy ra vào mùa nóng lại không phải do vi sinh vật?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc3_1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc viêm da nhiễm trùng ở lưng vẫn không được chế biến thức ăn?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 25 tháng, nếu tăng thời gian xem màn hình lên 2 giờ thì có ảnh hưởng gì không?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc5",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc có đủ 3 loại hoạt động thể lực vẫn chưa đủ cho trẻ em?",
+    "positive": "bai3_muc4_2_2",
+    "negative": "bai4_muc4_1_8_c",
+    "age_group": "5-17"
+  },
+  {
+    "question": "Tại sao trẻ 29 tháng cần 2 bữa chính và 1 bữa phụ thay vì 1 bữa chính như trẻ lớn hơn?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_1_c",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Nếu chỉ có thể đặt thực phẩm cách sàn 15cm thay vì 20cm thì có an toàn không?",
+    "positive": "bai4_muc4_1_4",
+    "negative": "bai3_muc3_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 19 tuổi, tại sao vẫn cần tuân theo nguyên tắc THPT mà không phải người lớn?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai4_muc2_2_4_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Khi nào thì việc có triệu chứng rối loạn cảm giác không phải do độc tố tự nhiên?",
+    "positive": "bai4_muc2_2_2_3",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc hắc lào ở tay không được tiếp xúc thực phẩm dù đã che kín?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 27 tháng, nếu giảm xuống 50% năng lượng ở trường thì có đủ dinh dưỡng không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_9",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc có đủ 5/8 nhóm thực phẩm nhưng thiếu chất béo là không được?",
+    "positive": "bai3_muc3_1_1",
+    "negative": "bai4_muc4_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao trẻ 1 tuổi cần 11-14 giờ ngủ nhưng trẻ 4 tuổi chỉ cần 10-13 giờ?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_3",
+    "age_group": "1-4"
+  },
+  {
+    "question": "Con tôi 35 tháng, nếu chỉ ăn bún/cháo trong bữa phụ mà không có sữa thì có đủ không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khi nào thì việc nước rửa bát chỉ đạt 70°C thay vì trên 80°C là chấp nhận được?",
+    "positive": "bai4_muc4_1_1_b",
+    "negative": "bai3_muc4_3_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc lỗ rò hậu môn không được phép tiếp xúc thực phẩm?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_2_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 19 tháng, tại sao cần món canh trong bữa trưa mà bữa chiều thì không?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_1_5",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc tích lũy chất độc lại nguy hiểm hơn ngộ độc cấp tính?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc4_4_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 30 tháng vẫn cần định lượng rau 80g mà không tăng lên 100g như trẻ lớn hơn?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Nếu chỉ rửa tay bằng xà phòng mà không khử trùng thì có đủ an toàn không?",
+    "positive": "bai4_muc4_2_2",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 16 tuổi, tại sao cần 2110-3140 calo/ngày mà khoảng chênh lệch tới 1000 calo?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao người mắc viêm phế quản không được chế biến thức ăn dù không ho ra thức ăn?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 24 tháng, nếu bỏ quả chín tráng miệng thì bữa ăn có còn đạt chuẩn không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_3_1_b",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc ngộ độc có thể lẻ tẻ hoặc rất lớn cùng lúc?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc4_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 33 tháng cần hạn chế muối dưới 3g/ngày mà không phải 4g như trẻ lớn hơn?",
+    "positive": "bai3_muc3_1_2",
+    "negative": "bai4_muc4_1_8",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Nếu chỉ có thể cách tường kho 40cm thay vì 50cm thì có an toàn không?",
+    "positive": "bai4_muc4_1_4",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 14 tuổi, tại sao cần 2040-2790 calo/ngày mà không ổn định ở mức trung bình?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc5",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Khi nào thì việc chỉ có hội chứng tiêu hóa lại không phải ngộ độc do vi sinh vật?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc3_2_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người mắc bệnh nấm móng tay không được tiếp xúc thực phẩm?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 26 tháng, nếu tăng carbohydrate lên 55% thay vì 52-60% thì có sao không?",
+    "positive": "bai3_muc3_2_3",
+    "negative": "bai4_muc4_1_6",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc bảo quản mẫu ở 10°C thay vì 2-8°C là không được?",
+    "positive": "bai4_muc4_1_8_c",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 22 tháng có thể ăn cơm nát nhưng vẫn cần cháo dự phòng?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai4_muc4_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 4 tuổi, tại sao phải có thời gian đi ngủ và thức dậy đều đặn?",
+    "positive": "bai3_muc4_2",
+    "negative": "bai4_muc4_3_2",
+    "age_group": "3-4"
+  },
+  {
+    "question": "Khi nào thì việc có chất phá hủy vitamin A,D,E lại do thức ăn biến chất?",
+    "positive": "bai4_muc2_2_4_2",
+    "negative": "bai3_muc3_1_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao người có sổ mũi có mủ không được chế biến thức ăn dù đã điều trị?",
+    "positive": "bai4_muc4_1_1_c",
+    "negative": "bai3_muc3_3_5",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 32 tháng, nếu chỉ có 1 loại thực phẩm cung cấp đạm thay vì 2-3 loại thì có đủ không?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_1_a_3",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Trong trường hợp nào thì việc chỉ kiểm tra cảm quan mà không xét nghiệm vẫn chẩn đoán được?",
+    "positive": "bai4_muc2_2_3_2",
+    "negative": "bai3_muc4_6",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tại sao trẻ 28 tháng cần ít nhất 80g rau mà không phải 60g như trẻ nhỏ hơn?",
+    "positive": "bai3_muc3_3_5",
+    "negative": "bai4_muc4_1_7_2",
+    "age_group": "2-3"
+  },
+  {
+    "question": "Nếu chỉ có thể rửa bát ở 75°C thay vì trên 80°C thì có đảm bảo vệ sinh không?",
+    "positive": "bai4_muc4_1_1_b",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 17 tuổi, tại sao vẫn cần 130-260 calo cho bữa phụ mà không giảm xuống?",
+    "positive": "bai3_muc3_3_1",
+    "negative": "bai4_muc4_1_8_c",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 2 tuổi hay từ chối ăn rau và chỉ thích ăn cơm trắng, có phải do kén chọn thực phẩm không?",
+    "positive": "bai1_muc3_1_2_1-2tuoi",
+    "negative": "bai1_muc3_5_2_15-19tuoi", 
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 3 tuổi không chịu ăn nhiều loại thực phẩm, chỉ thích bánh kẹo thì có nguy cơ gì?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bé 4 tuổi bị sâu răng hàm, có phải do ăn nhiều đồ ngọt không?",
+    "positive": "bai1_muc3_2_2_3-5tuoi", 
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con 7 tuổi hay bị táo bón, có phải do thiếu chất xơ không?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 8 tuổi có biểu hiện còi cọc, chậm lớn, biếng ăn là do suy dinh dưỡng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bé 5 tuổi chỉ ăn một số loại thực phẩm quen thuộc, không thử món mới có ảnh hưởng gì?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con 13 tuổi thiếu hụt chất dinh dưỡng do khẩu phần ăn không cân đối có dấu hiệu gì?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 16 tuổi hay ăn đồ ăn nhanh, thức uống có ga có nguy cơ béo phì không?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bé 1 tuổi hay tiêu chảy hoặc táo bón có phải do hệ tiêu hóa chưa phát triển hoàn thiện?",
+    "positive": "bai1_muc3_1_2_1-2tuoi",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con 14 tuổi kiêng khem quá mức để giảm cân có thể dẫn đến suy dinh dưỡng không?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 9 tuổi thường hay ốm, dễ mắc bệnh có phải do suy dinh dưỡng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bé 3 tuổi phân khô và cứng, đau khi đi đại tiện là do thiếu chất xơ?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con 17 tuổi bị thiếu máu, xơ cứng nang tóc, răng sâu có phải thiếu vi chất dinh dưỡng?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 6 tuổi cần bao nhiêu calo mỗi ngày tùy theo mức độ hoạt động?",
+    "positive": "bai1_muc3_3_3_1_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bé 12 tuổi nam cần bao nhiêu năng lượng khuyến nghị mỗi ngày?",
+    "positive": "bai1_muc3_4_3_1_12-14tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con gái 15 tuổi với hoạt động thể lực nhẹ cần bao nhiêu calo?",
+    "positive": "bai1_muc3_5_3_1_15-19tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 2 tuổi có nguy cơ dị ứng thực phẩm khi thử món mới không?",
+    "positive": "bai1_muc3_1_2_1-2tuoi",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Bé 18 tháng cần ăn bao nhiêu bữa ở trường, bao gồm những gì?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con 4 tuổi cần ăn bao nhiêu đơn vị rau quả mỗi ngày theo tháp dinh dưỡng?",
+    "positive": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 10 tuổi nên ăn bao nhiêu đơn vị thịt cá trứng mỗi ngày?",
+    "positive": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bé 16 tuổi cần hạn chế đường dưới bao nhiêu gram mỗi ngày?",
+    "positive": "bai1_muc3_5_4_15-19tuoi",
+    "negative": "bai1_muc3_2_4_3_3-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con 13 tuổi nên sử dụng tối đa bao nhiêu muối mỗi ngày?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ dưới 5 tuổi được phép ăn tối đa bao nhiêu muối mỗi ngày?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bé 7 tuổi cân 25kg cần uống bao nhiêu nước mỗi ngày?",
+    "positive": "bai1_muc3_3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con 14 tuổi cần bao nhiêu ml nước cho mỗi kg cân nặng?",
+    "positive": "bai1_muc3_4_3_2_12-14tuoi",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 5 tuổi có thể ăn được cơm nát và các món ăn thường chưa?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bé 20 tháng chưa ăn được cơm có thể dùng cháo dự phòng không?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con 15 tuổi không dung nạp lactose có thể thay sữa bằng gì?",
+    "positive": "bai1_muc3_5_4_15-19tuoi",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ thừa cân béo phì 16 tuổi nên dùng loại sữa nào?",
+    "positive": "bai1_muc3_5_4_15-19tuoi",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bé 11 tuổi cần bao nhiêu phần trăm protein động vật trong tổng protein?",
+    "positive": "bai1_bang4_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con 8 tuổi nam cần ăn bao nhiêu gram protein mỗi ngày?",
+    "positive": "bai1_bang4_6-11tuoi",
+    "negative": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 6 tuổi có thể ăn bao nhiêu đơn vị ngũ cốc mỗi ngày?",
+    "positive": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bé 12 tuổi nữ cần bổ sung bao nhiêu sắt mỗi ngày?",
+    "positive": "bai1_bang6_12-14tuoi",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con 17 tuổi nam hoạt động thể lực nặng cần bao nhiêu calo?",
+    "positive": "bai1_bang7_15-19tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ em có tỉ lệ thiếu máu do thiếu sắt cao nhất ở vùng nào?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Năm 2020 tỉ lệ thiếu máu ở trẻ em dưới 5 tuổi là bao nhiêu phần trăm?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Việt Nam có bao nhiêu triệu trẻ em dưới 5 tuổi bị suy dinh dưỡng?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ em thuộc hộ gia đình nghèo có nguy cơ còi cọc cao gấp mấy lần?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khoảng bao nhiêu phần trăm trẻ 6-9 tuổi bị sâu răng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ ăn thực phẩm carbohydrate dạng dính như nho khô có nguy cơ gì?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Canxi và vitamin D quan trọng thế nào với trẻ 9 tuổi?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao đảm bảo an toàn thực phẩm trong trường học quan trọng?",
+    "positive": "bai4_muc1_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Học sinh là đối tượng dễ mắc vấn đề gì về đường tiêu hóa?",
+    "positive": "bai4_muc1_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường có vai trò gì với sức khỏe học sinh?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường bao gồm những bữa nào trong ngày?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường giúp kiểm soát những bệnh nào liên quan dinh dưỡng?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quyết định nào của Thủ tướng phê duyệt đề án dinh dưỡng cho học sinh?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Công văn nào của Bộ GDĐT về tăng cường an toàn thực phẩm trong trường?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bước đầu tiên khi xây dựng khẩu phần thực đơn là gì?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường có tỉ lệ thừa cân béo phì cao nên chọn mức năng lượng như thế nào?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường nông thôn có tỉ lệ suy dinh dưỡng cao nên chọn năng lượng ra sao?",
+    "positive": "bai3_muc3_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn học đường cần hạn chế đường và muối như thế nào?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn học đường nên tăng cường sử dụng thực phẩm nào?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa phụ ở trường nên sử dụng sữa như thế nào?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Lượng đường tối đa cho học sinh mầm non và tiểu học là bao nhiêu?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "3-11"
+  },
+  {
+    "question": "Học sinh THCS và THPT được dùng tối đa bao nhiêu gram đường mỗi ngày?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "12-19"
+  },
+  {
+    "question": "Con 18 tháng ở trường nên ăn cháo hay cơm nát?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 24 tháng buổi trưa ở trường ăn những món gì?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Bé 20 tháng ở trường cần bao nhiêu gram rau sạch mỗi bữa?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 18-24 tháng bữa chính buổi chiều ở trường ăn gì?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Z-score từ -2SD đến +2SD được đánh giá như thế nào?",
+    "positive": "bai2_bang4",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chỉ số Z-score trên +3SD cho thấy trẻ bị gì?",
+    "positive": "bai2_bang4",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ có Z-score từ dưới -2SD đến -3SD bị đánh giá thế nào?",
+    "positive": "bai2_bang4",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Biên bản kiểm tra an toàn thực phẩm bếp ăn tập thể bao gồm những gì?",
+    "positive": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quy trình kiểm thực ba bước gồm những bước nào?",
+    "positive": "phuluc4_mau_kiemthuc_babuoc",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Việc lưu mẫu thức ăn trong bếp ăn tập thể có ý nghĩa gì?",
+    "positive": "phuluc5_mau_luumau_thuc_an",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con 3 tuổi hay bị táo bón và con 17 tuổi cũng hay táo bón, nguyên nhân có giống nhau không?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao trẻ 4 tuổi dễ bị sâu răng hơn trẻ 1 tuổi?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "So sánh vấn đề thừa cân béo phì ở trẻ 8 tuổi và 16 tuổi có gì khác nhau?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Nhu cầu protein của trẻ 10 tuổi và 14 tuổi khác nhau như thế nào?",
+    "positive": "bai1_bang4_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 13 tuổi với trẻ 17 tuổi cần hạn chế đường khác nhau thế nào?",
+    "positive": "bai3_muc3_3_4",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tại sao trẻ 15-19 tuổi lại hay tiêu thụ thức ăn không lành mạnh?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi gần 5 tuổi, sắp lên lớp 1, cần lưu ý gì về dinh dưỡng khi chuyển giai đoạn?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bé gần 12 tuổi sắp vào cấp 2, nhu cầu dinh dưỡng có thay đổi gì không?",
+    "positive": "bai1_muc3_3_3_1_6-11tuoi",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con 11 tuổi với con 12 tuổi về nhu cầu năng lượng có khác biệt lớn không?",
+    "positive": "bai1_muc3_3_3_1_6-11tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ vừa tròn 15 tuổi cần điều chỉnh chế độ ăn như thế nào so với khi 14 tuổi?",
+    "positive": "bai1_muc3_4_3_1_12-14tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con không thích ăn rau củ, chỉ thích thịt và cơm thì thiếu chất dinh dưỡng nào?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bé chỉ uống sữa, không chịu ăn cơm có đủ dinh dưỡng không?",
+    "positive": "bai1_muc3_1_2_1-2tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con hay ăn bánh kẹo, từ chối cơm rau thì có nguy cơ béo phì không?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ chỉ ăn đồ ăn nhanh, thức uống có ga thì thiếu vitamin nào?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Nếu con chỉ ăn thịt không ăn cá thì thiếu chất gì quan trọng?",
+    "positive": "bai1_muc3_5_4_15-19tuoi",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trường hợp con bị ngộ độc thực phẩm ở trường có thể do nguyên nhân nào?",
+    "positive": "bai4_muc1_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khi nào thì trẻ dễ bị tiêu chảy do thực phẩm không an toàn?",
+    "positive": "bai1_muc3_1_2_1-2tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ em thuộc nhóm nào dễ mắc vấn đề tiêu hóa nhất?",
+    "positive": "bai4_muc1_1",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Làm sao biết con có đang thiếu sắt hay không qua biểu hiện nào?",
+    "positive": "bai1_muc3_2_2_3-5tuoi",
+    "negative": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Triệu chứng nào cho thấy trẻ đang suy dinh dưỡng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Dấu hiệu nào chứng tỏ trẻ thiếu hụt vi chất dinh dưỡng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con hay mệt mỏi, kém học có phải do suy dinh dưỡng không?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao trẻ bị bệnh mạn tính lại dễ suy dinh dưỡng?",
+    "positive": "bai1_muc3_3_2_6-11tuoi",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con cần ăn bao nhiêu bữa mỗi ngày để đủ dinh dưỡng theo khuyến nghị?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường thường chiếm bao nhiêu phần trăm nhu cầu năng lượng cả ngày?",
+    "positive": "bai3_bang3",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn gạo tương đương bao nhiêu gram gạo sống?",
+    "positive": "bai1_muc2_1",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn thịt lợn bằng bao nhiêu gram thịt sống?",
+    "positive": "bai1_muc2_3",
+    "negative": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn sữa tươi tương đương bao nhiêu ml?",
+    "positive": "bai1_muc2_4",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 19 tuổi sắp thành niên hoàn toàn, cần lưu ý gì về dinh dưỡng?",
+    "positive": "bai1_muc3_5_2_15-19tuoi",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bé 1 tuổi vừa tập đi, nhu cầu dinh dưỡng có thay đổi gì so với trước?",
+    "positive": "bai1_muc3_1_1_1-2tuoi",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi mới 2 tuổi, có thể cho ăn những thực phẩm nào an toàn?",
+    "positive": "bai1_muc3_1_4_1-2tuoi",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
   }
 ]

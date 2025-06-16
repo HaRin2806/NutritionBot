@@ -10,26 +10,34 @@ with open(benchmark_file, 'r', encoding='utf-8') as f:
 
 # Hàm để xác định thư mục chứa chunk dựa trên chunk_id
 def get_chunk_file_path(chunk_id):
+    # Xác định thư mục chính (bai1, bai2, etc.)
     if chunk_id.startswith('bai1'):
-        chunk_dir = 'bai1/chunks'
+        main_dir = 'bai1'
     elif chunk_id.startswith('bai2'):
-        chunk_dir = 'bai2/chunks'
+        main_dir = 'bai2'
     elif chunk_id.startswith('bai3'):
-        chunk_dir = 'bai3/chunks'
+        main_dir = 'bai3'
     elif chunk_id.startswith('bai4'):
-        chunk_dir = 'bai4/chunks'
+        main_dir = 'bai4'
     elif chunk_id.startswith('phuluc'):
-        chunk_dir = 'phuluc/chunks'
-
-
-    # Đường dẫn đầy đủ đến file chunk
-    return os.path.join(base_dir, chunk_dir, f"{chunk_id}.md")
+        main_dir = 'phuluc'
+    else:
+        return None
+    
+    # Xác định thư mục con (chunks hoặc tables)
+    if '_bang' in chunk_id:
+        sub_dir = 'tables'
+    else:
+        sub_dir = 'chunks'
+    
+    # Đường dẫn đầy đủ đến file
+    return os.path.join(base_dir, main_dir, sub_dir, f"{chunk_id}.md")
 
 # Hàm để đọc nội dung từ file chunk tương ứng với chunk_id
 def read_chunk_file(chunk_id):
     chunk_file_path = get_chunk_file_path(chunk_id)
     
-    if os.path.exists(chunk_file_path):
+    if chunk_file_path and os.path.exists(chunk_file_path):
         with open(chunk_file_path, 'r', encoding='utf-8') as f:
             return f.read()
     else:

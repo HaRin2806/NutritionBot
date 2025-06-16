@@ -220,27 +220,12 @@ def edit_message(message_id):
             success, bot_message = conversation.regenerate_bot_response_after_edit(message_id, bot_response, sources)
             
             if success:
-                # Trả về conversation đã cập nhật
+                # ✅ Trả về conversation đã cập nhật với xử lý timestamp an toàn
                 updated_conversation = Conversation.find_by_id(conversation_id)
                 return jsonify({
                     "success": True,
                     "message": "Đã chỉnh sửa tin nhắn và tạo phản hồi mới",
-                    "conversation": {
-                        "id": str(updated_conversation.conversation_id),
-                        "messages": [
-                            {
-                                "id": str(msg["_id"]),
-                                "role": msg["role"],
-                                "content": msg["content"],
-                                "timestamp": msg["timestamp"].isoformat(),
-                                "sources": msg.get("sources", []),
-                                "is_edited": msg.get("is_edited", False),
-                                "versions": msg.get("versions", []),
-                                "current_version": msg.get("current_version", 1)
-                            }
-                            for msg in updated_conversation.messages
-                        ]
-                    }
+                    "conversation": updated_conversation.to_dict()  # ✅ Sử dụng to_dict() đã được sửa
                 })
             else:
                 return jsonify({

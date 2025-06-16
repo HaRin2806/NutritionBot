@@ -32,6 +32,40 @@ def get_db():
             raise
     return _db
 
+def safe_isoformat(timestamp_obj):
+    """Safely convert timestamp to isoformat string"""
+    if timestamp_obj is None:
+        return None
+    
+    if isinstance(timestamp_obj, str):
+        return timestamp_obj
+    
+    if hasattr(timestamp_obj, 'isoformat'):
+        return timestamp_obj.isoformat()
+    
+    # Nếu là các kiểu khác, convert về string
+    try:
+        return str(timestamp_obj)
+    except:
+        return None
+
+def safe_datetime(timestamp_obj):
+    """Safely convert various timestamp formats to datetime object"""
+    if timestamp_obj is None:
+        return datetime.datetime.now()
+    
+    if isinstance(timestamp_obj, datetime.datetime):
+        return timestamp_obj
+    
+    if isinstance(timestamp_obj, str):
+        try:
+            # Thử parse ISO format
+            return datetime.datetime.fromisoformat(timestamp_obj.replace('Z', '+00:00'))
+        except:
+            return datetime.datetime.now()
+    
+    return datetime.datetime.now()
+
 class Conversation:
     def __init__(self, user_id=None, title="Cuộc trò chuyện mới", age_context=None,
                  created_at=None, updated_at=None, is_archived=False, messages=None,
@@ -40,90 +74,17 @@ class Conversation:
         self.user_id = user_id
         self.title = title
         self.age_context = age_context
-        self.created_at = created_at or datetime.datetime.now()
-        self.updated_at = updated_at or datetime.datetime.now()
+        self.created_at = safe_datetime(created_at)
+        self.updated_at = safe_datetime(updated_at)
         self.is_archived = is_archived
         self.messages = messages or []
 
     def to_dict(self):
         """Convert conversation object sang dictionary cho JSON serialization"""
         try:
-            def safe_datetime_to_string(dt_obj):
-                """Safely convert datetime object to ISO string"""
-                if dt_obj is None:
-                    return None
-                # Nếu đã là string, return nguyên
-                if isinstance(dt_obj, str):
-                    return dt_obj
-                # Nếu là datetime object, convert sang string
-                if hasattr(dt_obj, 'isoformat'):
-                    return dt_obj.isoformat()
-                # Fallback: convert to string
-                return str(dt_obj)
-            
             result = {
                 "id": str(self.conversation_id),
                 "user_id": str(self.user_id),
-                "title": self.title,
-                "age_context": self.age_context,
-                "created_at": safe_datetime_to_string(self.created_at), 
-                "updated_at": safe_datetime_to_string(self.updated_at), 
-                "is_archived": self.is_archived,
-                "messages": []
-            }
-
-            for message in self.messages:
-                message_data = {
-                    "id": str(message["_id"]),
-                    "_id": str(message["_id"]),
-                    "role": message["role"],
-                    "content": message["content"],
-                    "timestamp": safe_datetime_to_string(message.get("timestamp")),
-                    "current_version": message.get("current_version", 1),
-                    "is_edited": message.get("is_edited", False)
-                }
-                
-                # Include versions data với safe serialization
-                if "versions" in message and message["versions"]:
-                    message_data["versions"] = []
-                    for version in message["versions"]:
-                        version_data = {
-                            "content": version["content"],
-                            "timestamp": safe_datetime_to_string(version.get("timestamp")),
-                            "version": version["version"]
-                        }
-                        
-                        if "sources" in version:
-                            version_data["sources"] = version["sources"]
-                        if "metadata" in version:
-                            version_data["metadata"] = version["metadata"]
-                        
-                        # KHÔNG include conversation_snapshot để tránh circular reference
-                        message_data["versions"].append(version_data)
-                else:
-                    # Default version nếu không có
-                    message_data["versions"] = [{
-                        "content": message["content"],
-                        "timestamp": message["timestamp"].isoformat() if hasattr(message["timestamp"], 'isoformat') else str(message["timestamp"]),
-                        "version": 1
-                    }]
-                
-                # Include sources và metadata
-                if "sources" in message:
-                    message_data["sources"] = message["sources"]
-                if "metadata" in message:
-                    message_data["metadata"] = message["metadata"]
-                    
-                result["messages"].append(message_data)
-            
-            return result
-            
-        except Exception as e:
-            logger.error(f"Lỗi khi convert conversation to dict: {e}")
-            # Fallback to basic structure
-            return {
-                "id": str(self.conversation_id) if self.conversation_id else None,
-                "user_id": str(self.user_id) if self.user_id else None,
                 "title": self.title,
                 "age_context": self.age_context,
                 "created_at": self.created_at.isoformat() if self.created_at else None,
@@ -132,43 +93,69 @@ class Conversation:
                 "messages": []
             }
 
+            for message in self.messages:
+                # ✅ Xử lý timestamp an toàn
+                timestamp_str = None
+                if "timestamp" in message:
+                    if hasattr(message["timestamp"], 'isoformat'):
+                        timestamp_str = message["timestamp"].isoformat()
+                    else:
+                        timestamp_str = str(message["timestamp"])
+                
+                message_data = {
+                    "id": str(message["_id"]),
+                    "_id": str(message["_id"]),
+                    "role": message["role"],
+                    "content": message["content"],
+                    "timestamp": timestamp_str,
+                    "current_version": message.get("current_version", 1),
+                    "is_edited": message.get("is_edited", False)
+                }
+                
+                # ✅ Xử lý versions với timestamp checking
+                if "versions" in message:
+                    message_data["versions"] = []
+                    for version in message["versions"]:
+                        # Xử lý timestamp an toàn cho versions
+                        version_timestamp = None
+                        if "timestamp" in version:
+                            if hasattr(version["timestamp"], 'isoformat'):
+                                version_timestamp = version["timestamp"].isoformat()
+                            else:
+                                version_timestamp = str(version["timestamp"])
+                        
+                        version_data = {
+                            "content": version["content"],
+                            "timestamp": version_timestamp,
+                            "version": version["version"]
+                        }
+                        if "sources" in version:
+                            version_data["sources"] = version["sources"]
+                        message_data["versions"].append(version_data)
+                
+                if "sources" in message:
+                    message_data["sources"] = message["sources"]
+                
+                result["messages"].append(message_data)
+
+            return result
+        except Exception as e:
+            logger.error(f"Lỗi khi convert conversation to dict: {e}")
+            return None
+
     @classmethod
     def from_dict(cls, conversation_dict):
         """Tạo đối tượng Conversation từ dictionary"""
         if not conversation_dict:
             return None
-        
-        def safe_string_to_datetime(dt_string):
-            """Safely convert string to datetime object"""
-            if dt_string is None:
-                return None
-            # Nếu đã là datetime object, return nguyên
-            if hasattr(dt_string, 'isoformat'):
-                return dt_string
-            # Nếu là string, parse thành datetime
-            if isinstance(dt_string, str):
-                try:
-                    # Parse ISO format string
-                    return datetime.datetime.fromisoformat(dt_string.replace('Z', '+00:00'))
-                except (ValueError, AttributeError):
-                    # Fallback: try parsing other common formats
-                    try:
-                        return datetime.datetime.strptime(dt_string, "%Y-%m-%d %H:%M:%S.%f")
-                    except ValueError:
-                        try:
-                            return datetime.datetime.strptime(dt_string, "%Y-%m-%d %H:%M:%S")
-                        except ValueError:
-                            logger.warning(f"Cannot parse datetime: {dt_string}")
-                            return datetime.datetime.now()
-            return datetime.datetime.now()
             
         return cls(
             conversation_id=conversation_dict.get("_id"),
             user_id=conversation_dict.get("user_id"),
             title=conversation_dict.get("title"),
             age_context=conversation_dict.get("age_context"),
-            created_at=safe_string_to_datetime(conversation_dict.get("created_at")), 
-            updated_at=safe_string_to_datetime(conversation_dict.get("updated_at")), 
+            created_at=conversation_dict.get("created_at"),
+            updated_at=conversation_dict.get("updated_at"),
             is_archived=conversation_dict.get("is_archived", False),
             messages=conversation_dict.get("messages", [])
         )
@@ -182,9 +169,32 @@ class Conversation:
             # Cập nhật thời gian
             self.updated_at = datetime.datetime.now()
             
+            # Tạo dict để lưu vào database
+            save_dict = {
+                "user_id": self.user_id,
+                "title": self.title,
+                "age_context": self.age_context,
+                "created_at": self.created_at,
+                "updated_at": self.updated_at,
+                "is_archived": self.is_archived,
+                "messages": []
+            }
+            
+            # Process messages để đảm bảo timestamp là datetime object
+            for message in self.messages:
+                message_copy = message.copy()
+                message_copy["timestamp"] = safe_datetime(message_copy.get("timestamp"))
+                
+                # Process versions
+                if "versions" in message_copy:
+                    for version in message_copy["versions"]:
+                        version["timestamp"] = safe_datetime(version.get("timestamp"))
+                
+                save_dict["messages"].append(message_copy)
+            
             if not self.conversation_id:
                 # Đây là cuộc hội thoại mới
-                insert_result = conversations_collection.insert_one(self.to_dict())
+                insert_result = conversations_collection.insert_one(save_dict)
                 self.conversation_id = insert_result.inserted_id
                 logger.info(f"Đã tạo cuộc hội thoại mới với ID: {self.conversation_id}")
                 return self.conversation_id
@@ -192,7 +202,7 @@ class Conversation:
                 # Cập nhật cuộc hội thoại đã tồn tại
                 conversations_collection.update_one(
                     {"_id": self.conversation_id}, 
-                    {"$set": self.to_dict()}
+                    {"$set": save_dict}
                 )
                 logger.info(f"Đã cập nhật thông tin cuộc hội thoại: {self.conversation_id}")
                 return self.conversation_id
@@ -215,7 +225,7 @@ class Conversation:
                 "version": 1
             }],
             "current_version": 1,
-            "parent_message_id": parent_message_id,  # Để track message thread
+            "parent_message_id": parent_message_id,
             "is_edited": False
         }
         
@@ -226,8 +236,7 @@ class Conversation:
         if metadata:
             message["metadata"] = metadata
             message["versions"][0]["metadata"] = metadata
-            
-        # Thêm tin nhắn vào danh sách
+
         self.messages.append(message)
         
         # Cập nhật thời gian của cuộc hội thoại
@@ -263,20 +272,17 @@ class Conversation:
                 """Tạo snapshot an toàn, tránh circular reference"""
                 safe_snapshot = []
                 for msg in messages_list:
-                    # Chỉ lưu những trường cần thiết, không lưu versions để tránh circular reference
                     safe_msg = {
                         "role": msg["role"],
                         "content": msg["content"],
-                        "timestamp": msg["timestamp"],
+                        "timestamp": safe_datetime(msg.get("timestamp")),
                         "current_version": msg.get("current_version", 1),
                         "is_edited": msg.get("is_edited", False)
                     }
                     
-                    # Lưu sources nếu có
                     if "sources" in msg:
                         safe_msg["sources"] = msg["sources"]
                     
-                    # Lưu metadata nếu có  
                     if "metadata" in msg:
                         safe_msg["metadata"] = msg["metadata"]
                     
@@ -293,7 +299,7 @@ class Conversation:
                 "content": new_content,
                 "timestamp": timestamp,
                 "version": new_version,
-                "conversation_snapshot": conversation_snapshot  # ✅ Safe snapshot
+                "conversation_snapshot": conversation_snapshot
             }
             
             # Cập nhật tin nhắn với version mới
@@ -302,14 +308,14 @@ class Conversation:
                 original_snapshot = create_safe_snapshot(self.messages[message_index:])
                 message["versions"] = [{
                     "content": message["content"],
-                    "timestamp": message.get("timestamp", timestamp),
+                    "timestamp": safe_datetime(message.get("timestamp", timestamp)),
                     "version": 1,
-                    "conversation_snapshot": original_snapshot  # ✅ Safe snapshot cho version gốc
+                    "conversation_snapshot": original_snapshot
                 }]
             
             message["versions"].append(new_version_data)
             message["current_version"] = new_version
-            message["content"] = new_content  # Cập nhật content hiện tại
+            message["content"] = new_content
             message["is_edited"] = True
             
             # Xóa tất cả tin nhắn sau tin nhắn được edit
@@ -328,6 +334,86 @@ class Conversation:
         except Exception as e:
             logger.error(f"Lỗi khi chỉnh sửa tin nhắn: {e}")
             return False, f"Lỗi khi chỉnh sửa tin nhắn: {str(e)}"
+
+    def regenerate_bot_response_after_edit(self, user_message_id, new_response, sources=None):
+        """Thay thế bot response tương ứng sau khi edit tin nhắn user"""
+        try:
+            # Tìm tin nhắn user vừa được edit
+            user_message_index = None
+            for i, message in enumerate(self.messages):
+                if str(message["_id"]) == str(user_message_id):
+                    user_message_index = i
+                    break
+            
+            if user_message_index is None:
+                return False, "Không tìm thấy tin nhắn user"
+            
+            # ✅ Tìm và thay thế bot message ngay sau user message
+            bot_message_index = user_message_index + 1
+            timestamp = datetime.datetime.now()
+            
+            bot_message_data = {
+                "_id": ObjectId(),
+                "role": "bot",
+                "content": new_response,
+                "timestamp": timestamp,
+                "versions": [{
+                    "content": new_response,
+                    "timestamp": timestamp,
+                    "version": 1
+                }],
+                "current_version": 1,
+                "parent_message_id": self.messages[user_message_index]["_id"],
+                "is_edited": False
+            }
+            
+            if sources:
+                bot_message_data["sources"] = sources
+                bot_message_data["versions"][0]["sources"] = sources
+            
+            # ✅ Kiểm tra xem có bot message cũ không
+            if (bot_message_index < len(self.messages) and 
+                self.messages[bot_message_index]["role"] == "bot"):
+                # Thay thế bot message cũ
+                old_bot_message = self.messages[bot_message_index]
+                
+                # Giữ lại versions cũ nếu có và thêm version mới
+                if "versions" in old_bot_message:
+                    # Tạo version mới cho response mới
+                    new_version = len(old_bot_message["versions"]) + 1
+                    new_version_data = {
+                        "content": new_response,
+                        "timestamp": timestamp,
+                        "version": new_version
+                    }
+                    if sources:
+                        new_version_data["sources"] = sources
+                    
+                    # Cập nhật message với version mới
+                    bot_message_data["versions"] = old_bot_message["versions"] + [new_version_data]
+                    bot_message_data["current_version"] = new_version
+                    bot_message_data["_id"] = old_bot_message["_id"]  # Giữ nguyên ID
+                    bot_message_data["is_edited"] = True
+                
+                # Thay thế bot message
+                self.messages[bot_message_index] = bot_message_data
+                logger.info(f"Đã thay thế bot response tại index {bot_message_index}")
+            else:
+                # Chèn bot message mới ngay sau user message
+                self.messages.insert(bot_message_index, bot_message_data)
+                logger.info(f"Đã chèn bot response mới tại index {bot_message_index}")
+            
+            # Cập nhật thời gian của cuộc hội thoại
+            self.updated_at = timestamp
+            
+            # Lưu thay đổi vào database
+            self.save()
+            
+            return True, "Đã tạo phản hồi mới thành công"
+            
+        except Exception as e:
+            logger.error(f"Lỗi khi tạo phản hồi mới: {e}")
+            return False, f"Lỗi: {str(e)}"
 
     def regenerate_response(self, message_id, new_response, sources=None):
         """Tạo version mới cho phản hồi bot"""
@@ -365,7 +451,7 @@ class Conversation:
             if "versions" not in message:
                 message["versions"] = [{
                     "content": message["content"],
-                    "timestamp": message.get("timestamp", timestamp),
+                    "timestamp": safe_datetime(message.get("timestamp", timestamp)),
                     "version": 1,
                     "sources": message.get("sources", [])
                 }]
@@ -373,7 +459,7 @@ class Conversation:
             # Thêm version mới
             message["versions"].append(new_version_data)
             message["current_version"] = new_version
-            message["content"] = new_response  # Cập nhật content hiện tại
+            message["content"] = new_response
             
             if sources:
                 message["sources"] = sources
@@ -392,55 +478,6 @@ class Conversation:
             logger.error(f"Lỗi khi regenerate response: {e}")
             return False, f"Lỗi: {str(e)}"
 
-    def regenerate_bot_response_after_edit(self, user_message_id, new_response, sources=None):
-        """Thêm phản hồi bot mới sau khi edit tin nhắn user"""
-        try:
-            # Tìm tin nhắn user vừa được edit
-            user_message_index = None
-            for i, message in enumerate(self.messages):
-                if str(message["_id"]) == str(user_message_id):
-                    user_message_index = i
-                    break
-            
-            if user_message_index is None:
-                return False, "Không tìm thấy tin nhắn user"
-            
-            # Thêm phản hồi bot mới ngay sau tin nhắn user
-            timestamp = datetime.datetime.now()
-            bot_message = {
-                "_id": ObjectId(),
-                "role": "bot",
-                "content": new_response,
-                "timestamp": timestamp,
-                "versions": [{
-                    "content": new_response,
-                    "timestamp": timestamp,
-                    "version": 1
-                }],
-                "current_version": 1,
-                "parent_message_id": self.messages[user_message_index]["_id"],
-                "is_edited": False
-            }
-            
-            if sources:
-                bot_message["sources"] = sources
-                bot_message["versions"][0]["sources"] = sources
-            
-            # Thêm bot message vào cuộc hội thoại
-            self.messages.append(bot_message)
-            
-            # Cập nhật thời gian
-            self.updated_at = timestamp
-            
-            # Lưu thay đổi
-            self.save()
-            
-            return True, "Đã tạo phản hồi mới"
-            
-        except Exception as e:
-            logger.error(f"Lỗi khi tạo phản hồi mới: {e}")
-            return False, f"Lỗi: {str(e)}"
-
     def switch_message_version(self, message_id, version_number):
         """Chuyển đổi version của tin nhắn và restore conversation context từ safe snapshot"""
         try:
@@ -457,7 +494,7 @@ class Conversation:
             message = self.messages[message_index]
             
             # Kiểm tra version có tồn tại không
-            if version_number > len(message["versions"]) or version_number < 1:
+            if version_number > len(message.get("versions", [])) or version_number < 1:
                 return False, "Version không tồn tại"
             
             # Switch version của tin nhắn
@@ -477,19 +514,19 @@ class Conversation:
                 
                 # Restore các tin nhắn từ snapshot (trừ tin nhắn đầu tiên vì đã có rồi)
                 snapshot = selected_version["conversation_snapshot"]
-                if len(snapshot) > 1:  # Nếu có tin nhắn khác ngoài user message
-                    restored_messages = snapshot[1:]  # Bỏ qua tin nhắn user đầu tiên
+                if len(snapshot) > 1:
+                    restored_messages = snapshot[1:]
                     
                     # Thêm lại các tin nhắn đã restore
                     for restored_msg in restored_messages:
                         new_message = {
-                            "_id": ObjectId(),  # Tạo ObjectId mới để tránh conflict
+                            "_id": ObjectId(),
                             "role": restored_msg["role"],
                             "content": restored_msg["content"],
-                            "timestamp": restored_msg["timestamp"],
+                            "timestamp": safe_datetime(restored_msg.get("timestamp")),
                             "versions": [{
                                 "content": restored_msg["content"],
-                                "timestamp": restored_msg["timestamp"],
+                                "timestamp": safe_datetime(restored_msg.get("timestamp")),
                                 "version": 1
                             }],
                             "current_version": restored_msg.get("current_version", 1),
@@ -522,45 +559,10 @@ class Conversation:
             logger.error(f"Lỗi khi chuyển đổi version tin nhắn: {e}")
             return False, f"Lỗi khi chuyển đổi version: {str(e)}"
 
-    def regenerate_bot_response(self, user_message_id):
-        """Tạo lại phản hồi của bot cho tin nhắn user cụ thể"""
-        try:
-            # Tìm tin nhắn user
-            user_message_index = None
-            for i, message in enumerate(self.messages):
-                if str(message["_id"]) == str(user_message_id):
-                    user_message_index = i
-                    break
-            
-            if user_message_index is None:
-                return False, "Không tìm thấy tin nhắn của người dùng"
-            
-            user_message = self.messages[user_message_index]
-            
-            if user_message["role"] != "user":
-                return False, "Chỉ có thể tạo lại phản hồi cho tin nhắn của người dùng"
-            
-            # Tìm tin nhắn bot tương ứng (tin nhắn ngay sau tin nhắn user)
-            bot_message_index = user_message_index + 1
-            
-            if bot_message_index < len(self.messages) and self.messages[bot_message_index]["role"] == "bot":
-                # Đánh dấu cần tạo lại phản hồi
-                self.messages[bot_message_index]["regenerate_required"] = True
-                self.save()
-                return True, "Đã đánh dấu cần tạo lại phản hồi"
-            else:
-                # Không có tin nhắn bot tương ứng
-                return False, "Không tìm thấy tin nhắn bot tương ứng"
-                
-        except Exception as e:
-            logger.error(f"Lỗi khi đánh dấu tạo lại phản hồi: {e}")
-            return False, f"Lỗi: {str(e)}"
-
     def get_message_by_id(self, message_id):
         """Lấy tin nhắn theo ID và convert ObjectId thành string"""
         for message in self.messages:
             if str(message["_id"]) == str(message_id):
-                # Convert ObjectId thành string để có thể serialize JSON
                 message_copy = message.copy()
                 message_copy["_id"] = str(message_copy["_id"])
                 if "parent_message_id" in message_copy and message_copy["parent_message_id"]:
@@ -610,131 +612,58 @@ class Conversation:
             logger.error(f"Lỗi khi xóa cuộc hội thoại: {e}")
             return False
 
-    def archive(self):
-        """Đánh dấu cuộc hội thoại như đã lưu trữ"""
-        self.is_archived = True
-        self.save()
-        return True
-        
-    def unarchive(self):
-        """Hủy đánh dấu cuộc hội thoại đã lưu trữ"""
-        self.is_archived = False
-        self.save()
-        return True
-
     @classmethod
     def find_by_id(cls, conversation_id):
         """Tìm cuộc hội thoại theo ID"""
         try:
             db = get_db()
             conversations_collection = db.conversations
-            conversation_data = conversations_collection.find_one({"_id": ObjectId(conversation_id)})
-            return cls.from_dict(conversation_data)
+            
+            if isinstance(conversation_id, str):
+                conversation_id = ObjectId(conversation_id)
+                
+            conversation_dict = conversations_collection.find_one({"_id": conversation_id})
+            
+            if conversation_dict:
+                return cls.from_dict(conversation_dict)
+            return None
         except Exception as e:
-            logger.error(f"Lỗi tìm cuộc hội thoại theo ID: {e}")
+            logger.error(f"Lỗi khi tìm cuộc hội thoại: {e}")
             return None
 
     @classmethod
     def find_by_user(cls, user_id, limit=10, skip=0, include_archived=False):
-        """Tìm cuộc hội thoại theo user ID"""
+        """Tìm cuộc hội thoại theo user_id"""
         try:
             db = get_db()
             conversations_collection = db.conversations
             
-            # Tạo filter
-            query_filter = {"user_id": ObjectId(user_id) if isinstance(user_id, str) else user_id}
-            
-            # Thêm điều kiện lọc các cuộc hội thoại đã lưu trữ
+            query_filter = {"user_id": user_id}
             if not include_archived:
-                query_filter["is_archived"] = False
+                query_filter["is_archived"] = {"$ne": True}
             
-            # Thực hiện truy vấn
-            conversations_data = conversations_collection.find(
-                query_filter
-            ).sort("updated_at", DESCENDING).skip(skip).limit(limit)
+            conversations = conversations_collection.find(query_filter)\
+                .sort("updated_at", DESCENDING)\
+                .skip(skip)\
+                .limit(limit)
             
-            # Chuyển đổi dữ liệu thành objects
-            return [cls.from_dict(conversation) for conversation in conversations_data]
+            return [cls.from_dict(conv) for conv in conversations]
         except Exception as e:
-            logger.error(f"Lỗi tìm cuộc hội thoại theo user ID: {e}")
+            logger.error(f"Lỗi khi tìm cuộc hội thoại theo user: {e}")
             return []
 
     @classmethod
     def count_by_user(cls, user_id, include_archived=False):
-        """Đếm số lượng cuộc hội thoại của một user"""
+        """Đếm số cuộc hội thoại của user"""
         try:
             db = get_db()
             conversations_collection = db.conversations
             
-            # Tạo filter
-            query_filter = {"user_id": ObjectId(user_id) if isinstance(user_id, str) else user_id}
-            
-            # Thêm điều kiện lọc các cuộc hội thoại đã lưu trữ
+            query_filter = {"user_id": user_id}
             if not include_archived:
-                query_filter["is_archived"] = False
+                query_filter["is_archived"] = {"$ne": True}
                 
             return conversations_collection.count_documents(query_filter)
         except Exception as e:
-            logger.error(f"Lỗi đếm cuộc hội thoại theo user ID: {e}")
+            logger.error(f"Lỗi khi đếm cuộc hội thoại: {e}")
             return 0
-
-    @classmethod
-    def search_by_content(cls, user_id, query, limit=10, skip=0):
-        """Tìm kiếm cuộc hội thoại theo nội dung tin nhắn"""
-        try:
-            db = get_db()
-            conversations_collection = db.conversations
-            
-            # Tạo filter để tìm kiếm cuộc hội thoại với nội dung tin nhắn chứa từ khóa
-            query_filter = {
-                "user_id": ObjectId(user_id) if isinstance(user_id, str) else user_id,
-                "messages.content": {"$regex": query, "$options": "i"}  # Tìm kiếm không phân biệt hoa thường
-            }
-            
-            # Thực hiện truy vấn
-            conversations_data = conversations_collection.find(
-                query_filter
-            ).sort("updated_at", DESCENDING).skip(skip).limit(limit)
-            
-            # Chuyển đổi dữ liệu thành objects
-            return [cls.from_dict(conversation) for conversation in conversations_data]
-        except Exception as e:
-            logger.error(f"Lỗi tìm kiếm cuộc hội thoại theo nội dung: {e}")
-            return []
-
-    @classmethod
-    def get_stats(cls):
-        """Lấy thống kê về cuộc hội thoại"""
-        try:
-            db = get_db()
-            conversations_collection = db.conversations
-            
-            # Tổng số cuộc hội thoại
-            total_conversations = conversations_collection.count_documents({})
-            
-            # Số lượng tin nhắn trung bình
-            pipeline = [
-                {"$project": {"message_count": {"$size": "$messages"}}},
-                {"$group": {"_id": None, "avg_messages": {"$avg": "$message_count"}}}
-            ]
-            avg_result = list(conversations_collection.aggregate(pipeline))
-            avg_messages = avg_result[0]["avg_messages"] if avg_result else 0
-            
-            # Số cuộc hội thoại trong 7 ngày qua
-            seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-            recent_conversations = conversations_collection.count_documents({
-                "created_at": {"$gte": seven_days_ago}
-            })
-            
-            return {
-                "total_conversations": total_conversations,
-                "avg_messages_per_conversation": avg_messages,
-                "recent_conversations": recent_conversations
-            }
-        except Exception as e:
-            logger.error(f"Lỗi lấy thống kê cuộc hội thoại: {e}")
-            return {
-                "total_conversations": 0,
-                "avg_messages_per_conversation": 0,
-                "recent_conversations": 0
-            }
