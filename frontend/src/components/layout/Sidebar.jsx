@@ -11,11 +11,12 @@ const Sidebar = ({
   activeConversation,
   onSelectConversation,
   onNewConversation,
-  onDeleteConversation,
-  onRenameConversation,
+  onDeleteConversation,       
+  onRenameConversation,        
   isLoading = false,
   isMobile = false,
   onCloseSidebar = () => { },
+
 }) => {
   const [searchTerm, setSearchTerm] = React.useState('');
   const { darkMode, currentThemeConfig } = useTheme();
@@ -31,16 +32,16 @@ const Sidebar = ({
     if (activeConversation?.id && conversationRefs.current[activeConversation.id]) {
       const element = conversationRefs.current[activeConversation.id];
       const container = element.closest('.overflow-y-auto');
-      
+
       if (container && element) {
         const containerRect = container.getBoundingClientRect();
         const elementRect = element.getBoundingClientRect();
-        
+
         const isVisible = (
           elementRect.top >= containerRect.top &&
           elementRect.bottom <= containerRect.bottom
         );
-        
+
         if (!isVisible) {
           const scrollTop = element.offsetTop - container.offsetTop - (container.clientHeight / 2) + (element.clientHeight / 2);
           container.scrollTo({
@@ -60,26 +61,27 @@ const Sidebar = ({
           conversationRefs.current[conversation.id] = el;
         }
       }}
-      onClick={() => {
-        onSelectConversation(conversation.id);
-        if (isMobile) onCloseSidebar();
-      }}
-      className={`px-4 py-3 cursor-pointer transition-all rounded-md mx-2 ${
-        activeConversation?.id === conversation.id 
+      className={`px-4 py-3 transition-all rounded-md mx-2 group ${activeConversation?.id === conversation.id
           ? '' // Style sẽ được set inline
           : `${darkMode ? 'hover:bg-gray-700 text-gray-300' : 'hover:bg-gray-50 text-gray-700'}`
-      }`}
-      style={{ 
-        backgroundColor: activeConversation?.id === conversation.id 
+        }`}
+      style={{
+        backgroundColor: activeConversation?.id === conversation.id
           ? (currentThemeConfig?.light || '#E6F7EF')
           : undefined,
-        color: activeConversation?.id === conversation.id 
+        color: activeConversation?.id === conversation.id
           ? (currentThemeConfig?.primary || '#36B37E')
           : undefined
       }}
     >
       <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
+        <div
+          className="flex-1 min-w-0 cursor-pointer"
+          onClick={() => {
+            onSelectConversation(conversation.id);
+            if (isMobile) onCloseSidebar();
+          }}
+        >
           <p className="text-sm font-medium truncate">
             {conversation.title}
           </p>
@@ -93,6 +95,13 @@ const Sidebar = ({
             )}
           </div>
         </div>
+
+        {/* Actions menu */}
+        <ConversationItem
+          conversation={conversation}
+          onDelete={onDeleteConversation}
+          onRename={onRenameConversation}
+        />
       </div>
     </div>
   );
@@ -114,21 +123,19 @@ const Sidebar = ({
       {/* Search */}
       <div className="p-4">
         <div className="relative">
-          <BiSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-            darkMode ? 'text-gray-400' : 'text-gray-500'
-          }`} />
+          <BiSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'
+            }`} />
           <input
             type="text"
             placeholder="Tìm kiếm cuộc trò chuyện..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 ${
-              darkMode 
+            className={`w-full pl-10 pr-4 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 ${darkMode
                 ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400'
                 : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-500'
-            }`}
-            style={{ 
-              focusRingColor: `${currentThemeConfig?.primary}40` 
+              }`}
+            style={{
+              focusRingColor: `${currentThemeConfig?.primary}40`
             }}
           />
         </div>
@@ -160,9 +167,8 @@ const Sidebar = ({
             {Object.entries(groupedConversations).map(([period, convs]) => (
               convs.length > 0 && (
                 <div key={period}>
-                  <div className={`px-4 py-2 text-xs font-medium uppercase tracking-wide ${
-                    darkMode ? 'text-gray-400' : 'text-gray-500'
-                  }`}>
+                  <div className={`px-4 py-2 text-xs font-medium uppercase tracking-wide ${darkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
                     {period}
                   </div>
                   {convs.map(renderConversationItem)}
@@ -177,11 +183,10 @@ const Sidebar = ({
       <div className={`p-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
         <Link
           to="/history"
-          className={`flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${
-            darkMode 
+          className={`flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${darkMode
               ? 'hover:bg-gray-700 hover:text-white'
               : 'hover:bg-gray-100 hover:text-gray-900'
-          }`}
+            }`}
           style={{ color: currentThemeConfig?.primary || '#36B37E' }}
           onClick={() => isMobile && onCloseSidebar()}
         >

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiArchive, BiEdit, BiRefresh } from 'react-icons/bi';
+import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiArchive, BiEdit, BiRefresh, BiArrowBack } from 'react-icons/bi';
 import { useApp } from '../contexts/AppContext';
 import { Header } from '../components/layout';
-import { Loader } from '../components/common';  
+import { Loader } from '../components/common';
 import { Button, Input, Modal } from '../components/base/index.jsx';
 import { formatDate, formatTime, getRelativeDate } from '../utils/index';
 import { chatService, adminService } from '../services';
@@ -46,12 +46,12 @@ const HistoryPage = () => {
         try {
           loadedRef.current = true;
           setLocalLoading(true);
-          
+
           console.log('🔄 HistoryPage: Loading all conversations directly from API...');
-          
+
           // ✅ Gọi trực tiếp chatService thay vì qua context
           const response = await chatService.getAllConversations(true);
-          
+
           if (response.success) {
             setLocalConversations(response.conversations || []);
             console.log('✅ Loaded conversations:', response.conversations?.length || 0);
@@ -157,13 +157,16 @@ const HistoryPage = () => {
       title: 'Đổi tên cuộc trò chuyện',
       input: 'text',
       inputValue: currentTitle,
+      inputPlaceholder: 'Nhập tên mới cho cuộc trò chuyện...',
+      confirmButtonText: 'Lưu',
+      cancelButtonText: 'Hủy',
       showCancelButton: true
     });
 
     if (result.isConfirmed && result.value) {
       try {
         await renameConversation(conversationId, result.value);
-        // ✅ SỬA: Update local state thay vì reload API
+        // Update local state
         setLocalConversations(prev =>
           prev.map(conv =>
             conv.id === conversationId
@@ -243,6 +246,14 @@ const HistoryPage = () => {
       <Header userData={userData} userAge={userAge} setUserAge={setUserAge} />
 
       <div className="max-w-7xl mx-auto py-6 px-4">
+        {/* Back button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center mb-6 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
+        >
+          <BiArrowBack className="mr-2" />
+          Quay lại
+        </button>
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {/* Header với thiết kế đẹp hơn */}
           <div className="bg-gradient-to-r from-mint-50 to-mint-100 p-6 border-b border-mint-200">
@@ -540,8 +551,8 @@ const HistoryPage = () => {
                               key={pageNumber}
                               onClick={() => setCurrentPage(pageNumber)}
                               className={`px-3 py-2 text-sm rounded-lg transition-colors ${currentPage === pageNumber
-                                  ? 'bg-mint-600 text-white'
-                                  : 'border border-gray-300 hover:bg-gray-100 text-gray-700'
+                                ? 'bg-mint-600 text-white'
+                                : 'border border-gray-300 hover:bg-gray-100 text-gray-700'
                                 }`}
                             >
                               {pageNumber}

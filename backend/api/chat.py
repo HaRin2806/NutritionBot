@@ -114,46 +114,6 @@ def chat():
             "error": f"Lỗi máy chủ: {str(e)}"
         }), 500
 
-@chat_routes.route('/follow-up-questions', methods=['POST'])
-@jwt_required()
-def generate_follow_up_questions():
-    """API endpoint để tạo câu hỏi gợi ý"""
-    try:
-        data = request.json
-        query = data.get('query')
-        answer = data.get('answer')
-        age = data.get('age', 1)
-        
-        if not query or not answer:
-            return jsonify({
-                "success": False,
-                "error": "Thiếu thông tin cần thiết"
-            }), 400
-        
-        # Sử dụng RAG Pipeline thay vì khởi tạo DataProcessor
-        pipeline = get_rag_pipeline()
-        
-        # Generate follow-up questions
-        follow_up_data = pipeline.generate_follow_up_questions(query, answer, age)
-        
-        if follow_up_data.get("success"):
-            return jsonify({
-                "success": True,
-                "questions": follow_up_data.get("questions", [])
-            })
-        else:
-            return jsonify({
-                "success": False,
-                "error": follow_up_data.get("error", "Không thể tạo câu hỏi gợi ý")
-            }), 500
-            
-    except Exception as e:
-        logger.error(f"Lỗi tạo câu hỏi gợi ý: {str(e)}")
-        return jsonify({
-            "success": False,
-            "error": f"Lỗi máy chủ: {str(e)}"
-        }), 500
-
 @chat_routes.route('/messages/<message_id>/edit', methods=['PUT'])
 @jwt_required()
 def edit_message(message_id):
@@ -171,6 +131,8 @@ def edit_message(message_id):
                 "success": False,
                 "error": "Thiếu thông tin cần thiết"
             }), 400
+        
+        logger.info(f"Edit message {message_id} in conversation {conversation_id}: {new_content[:50]}...")
         
         # Tìm conversation
         conversation = Conversation.find_by_id(conversation_id)
@@ -219,8 +181,9 @@ def edit_message(message_id):
             success, bot_message = conversation.regenerate_bot_response_after_edit(message_id, bot_response, sources)
             
             if success:
-                # Trả về conversation đã cập nhật với xử lý timestamp an toàn
+                # Trả về conversation đã cập nhật
                 updated_conversation = Conversation.find_by_id(conversation_id)
+                logger.info(f"Successfully edited message and generated new response")
                 return jsonify({
                     "success": True,
                     "message": "Đã chỉnh sửa tin nhắn và tạo phản hồi mới",
@@ -260,6 +223,8 @@ def regenerate_response(message_id):
                 "success": False,
                 "error": "Thiếu conversation_id"
             }), 400
+        
+        logger.info(f"Regenerate response for message {message_id} in conversation {conversation_id}")
         
         # Tìm conversation
         conversation = Conversation.find_by_id(conversation_id)
@@ -302,6 +267,7 @@ def regenerate_response(message_id):
             if success:
                 # Trả về conversation đã cập nhật
                 updated_conversation = Conversation.find_by_id(conversation_id)
+                logger.info(f"Successfully regenerated response")
                 return jsonify({
                     "success": True,
                     "conversation": updated_conversation.to_dict()
@@ -350,12 +316,24 @@ def switch_message_version(message_id, version):
                 "error": "Không tìm thấy cuộc trò chuyện"
             }), 404
         
+        # Debug: Log current conversation state before switch
+        logger.info(f"Before switch - Conversation has {len(conversation.messages)} messages")
+        for i, msg in enumerate(conversation.messages):
+            logger.info(f"  Message {i}: {msg['role']} - {msg['content'][:30]}... (current_version: {msg.get('current_version', 1)})")
+        
         # Chuyển đổi version
         success = conversation.switch_message_version(message_id, version)
         
         if success:
-            logger.info(f"Successfully switched message {message_id} to version {version}")
+            # Reload conversation để đảm bảo có dữ liệu mới nhất
             updated_conversation = Conversation.find_by_id(conversation_id)
+            
+            # Debug: Log conversation state after switch
+            logger.info(f"After switch - Conversation has {len(updated_conversation.messages)} messages")
+            for i, msg in enumerate(updated_conversation.messages):
+                logger.info(f"  Message {i}: {msg['role']} - {msg['content'][:30]}... (current_version: {msg.get('current_version', 1)})")
+            
+            logger.info(f"Successfully switched message {message_id} to version {version}")
             return jsonify({
                 "success": True,
                 "conversation": updated_conversation.to_dict()

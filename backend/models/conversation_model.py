@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 import logging
 from pymongo import MongoClient, DESCENDING
 from dotenv import load_dotenv
+import copy
 
 # Cấu hình logging
 logger = logging.getLogger(__name__)
@@ -43,7 +44,6 @@ def safe_isoformat(timestamp_obj):
     if hasattr(timestamp_obj, 'isoformat'):
         return timestamp_obj.isoformat()
     
-    # Nếu là các kiểu khác, convert về string
     try:
         return str(timestamp_obj)
     except:
@@ -59,7 +59,6 @@ def safe_datetime(timestamp_obj):
     
     if isinstance(timestamp_obj, str):
         try:
-            # Thử parse ISO format
             return datetime.datetime.fromisoformat(timestamp_obj.replace('Z', '+00:00'))
         except:
             return datetime.datetime.now()
@@ -83,7 +82,6 @@ class Conversation:
     def create(cls, user_id, title="Cuộc trò chuyện mới", age_context=None):
         """Tạo và lưu conversation mới vào database"""
         try:
-            # Convert user_id to ObjectId if it's string
             if isinstance(user_id, str):
                 user_id = ObjectId(user_id)
             
@@ -93,7 +91,6 @@ class Conversation:
                 age_context=age_context
             )
             
-            # Lưu vào database và return ID
             conversation_id = conversation.save()
             conversation.conversation_id = conversation_id
             
@@ -103,6 +100,112 @@ class Conversation:
         except Exception as e:
             logger.error(f"Error creating conversation: {e}")
             raise
+
+    def serialize_message_for_following(self, message):
+        """Serialize message để lưu vào following_messages"""
+        serialized = {
+            "role": message["role"],
+            "content": message["content"],
+            "timestamp": safe_datetime(message.get("timestamp")),
+            "current_version": message.get("current_version", 1),
+            "is_edited": message.get("is_edited", False)
+        }
+        
+        if "sources" in message:
+            serialized["sources"] = message["sources"]
+        if "metadata" in message:
+            serialized["metadata"] = message["metadata"]
+        
+        # Serialize versions
+        if "versions" in message and message["versions"]:
+            serialized["versions"] = []
+            for version in message["versions"]:
+                version_data = {
+                    "version": version["version"],
+                    "content": version["content"],
+                    "timestamp": safe_datetime(version.get("timestamp")),
+                    "following_messages": version.get("following_messages", [])
+                }
+                if "sources" in version:
+                    version_data["sources"] = version["sources"]
+                if "metadata" in version:
+                    version_data["metadata"] = version["metadata"]
+                serialized["versions"].append(version_data)
+        
+        return serialized
+
+    def deserialize_message_from_following(self, serialized_message):
+        """Deserialize message từ following_messages"""
+        message = {
+            "_id": ObjectId(),
+            "role": serialized_message["role"],
+            "content": serialized_message["content"],
+            "timestamp": safe_datetime(serialized_message.get("timestamp")),
+            "current_version": serialized_message.get("current_version", 1),
+            "is_edited": serialized_message.get("is_edited", False)
+        }
+        
+        if "sources" in serialized_message:
+            message["sources"] = serialized_message["sources"]
+        if "metadata" in serialized_message:
+            message["metadata"] = serialized_message["metadata"]
+        
+        # Deserialize versions
+        if "versions" in serialized_message and serialized_message["versions"]:
+            message["versions"] = []
+            for version_data in serialized_message["versions"]:
+                version = {
+                    "version": version_data["version"],
+                    "content": version_data["content"],
+                    "timestamp": safe_datetime(version_data.get("timestamp")),
+                    "following_messages": version_data.get("following_messages", [])
+                }
+                if "sources" in version_data:
+                    version["sources"] = version_data["sources"]
+                if "metadata" in version_data:
+                    version["metadata"] = version_data["metadata"]
+                message["versions"].append(version)
+        else:
+            # Tạo version mặc định
+            message["versions"] = [{
+                "version": 1,
+                "content": message["content"],
+                "timestamp": message["timestamp"],
+                "following_messages": []
+            }]
+            if "sources" in message:
+                message["versions"][0]["sources"] = message["sources"]
+            if "metadata" in message:
+                message["versions"][0]["metadata"] = message["metadata"]
+        
+        return message
+
+    def capture_following_messages(self, from_message_index):
+        """Capture tất cả messages sau from_message_index"""
+        following_messages = []
+        
+        for i in range(from_message_index + 1, len(self.messages)):
+            message = self.messages[i]
+            serialized = self.serialize_message_for_following(message)
+            following_messages.append(serialized)
+        
+        logger.info(f"Captured {len(following_messages)} following messages from index {from_message_index}")
+        return following_messages
+
+    def restore_following_messages(self, target_message_index, following_messages):
+        """Restore following messages sau target_message_index"""
+        # Cắt conversation tại target message
+        self.messages = self.messages[:target_message_index + 1]
+        
+        # Restore messages
+        restored_count = 0
+        for serialized_message in following_messages:
+            message = self.deserialize_message_from_following(serialized_message)
+            self.messages.append(message)
+            restored_count += 1
+        
+        logger.info(f"Restored {restored_count} following messages after index {target_message_index}")
+        return restored_count
 
     def to_dict(self):
         """Convert conversation object sang dictionary cho JSON serialization"""
@@ -119,7 +222,6 @@ class Conversation:
             }
 
             for message in self.messages:
-                # Xử lý timestamp an toàn
                 timestamp_str = None
                 if "timestamp" in message:
                     if hasattr(message["timestamp"], 'isoformat'):
@@ -137,11 +239,9 @@ class Conversation:
                     "is_edited": message.get("is_edited", False)
                 }
                 
-                # Xử lý versions với timestamp checking
-                if "versions" in message:
+                if "versions" in message and message["versions"]:
                     message_data["versions"] = []
                     for version in message["versions"]:
-                        # Xử lý timestamp an toàn cho versions
                         version_timestamp = None
                         if "timestamp" in version:
                             if hasattr(version["timestamp"], 'isoformat'):
@@ -191,10 +291,8 @@ class Conversation:
             db = get_db()
             conversations_collection = db.conversations
             
-            # Cập nhật thời gian
             self.updated_at = datetime.datetime.now()
             
-            # Tạo dict để lưu vào database
             save_dict = {
                 "user_id": self.user_id,
                 "title": self.title,
@@ -205,12 +303,10 @@ class Conversation:
                 "messages": []
             }
             
-            # Process messages để đảm bảo timestamp là datetime object
             for message in self.messages:
                 message_copy = message.copy()
                 message_copy["timestamp"] = safe_datetime(message_copy.get("timestamp"))
                 
-                # Process versions
                 if "versions" in message_copy:
                     for version in message_copy["versions"]:
                         version["timestamp"] = safe_datetime(version.get("timestamp"))
@@ -218,13 +314,11 @@ class Conversation:
                 save_dict["messages"].append(message_copy)
             
             if not self.conversation_id:
-                # Đây là cuộc hội thoại mới
                 insert_result = conversations_collection.insert_one(save_dict)
                 self.conversation_id = insert_result.inserted_id
                 logger.info(f"Saved new conversation with ID: {self.conversation_id}")
                 return self.conversation_id
             else:
-                # Cập nhật cuộc hội thoại đã tồn tại
                 conversations_collection.update_one(
                     {"_id": self.conversation_id}, 
                     {"$set": save_dict}
@@ -236,7 +330,7 @@ class Conversation:
             raise
 
     def add_message(self, role, content, sources=None, metadata=None, parent_message_id=None):
-        """Thêm tin nhắn mới vào cuộc hội thoại với hỗ trợ versioning"""
+        """Thêm tin nhắn mới vào cuộc hội thoại"""
         timestamp = datetime.datetime.now()
         
         message = {
@@ -248,7 +342,7 @@ class Conversation:
                 "content": content,
                 "timestamp": timestamp,
                 "version": 1,
-                "following_messages": []  # Lưu các tin nhắn theo sau version này
+                "following_messages": []
             }],
             "current_version": 1,
             "parent_message_id": parent_message_id,
@@ -264,78 +358,15 @@ class Conversation:
             message["versions"][0]["metadata"] = metadata
 
         self.messages.append(message)
-        
-        # Cập nhật thời gian của cuộc hội thoại
         self.updated_at = timestamp
-        
-        # Lưu thay đổi vào database
         self.save()
         
         logger.info(f"Added message to conversation {self.conversation_id}")
-        
         return message["_id"]
 
-    def create_following_messages_snapshot(self, from_index):
-        """Tạo snapshot của tất cả tin nhắn từ vị trí from_index + 1 trở đi"""
-        try:
-            following_messages = []
-            
-            for i in range(from_index + 1, len(self.messages)):
-                msg = self.messages[i]
-                
-                # Tạo snapshot đầy đủ của message
-                msg_snapshot = {
-                    "role": msg["role"],
-                    "content": msg["content"],
-                    "timestamp": safe_datetime(msg.get("timestamp")),
-                    "current_version": msg.get("current_version", 1),
-                    "is_edited": msg.get("is_edited", False)
-                }
-                
-                # Lưu toàn bộ versions của message
-                if "versions" in msg and msg["versions"]:
-                    msg_snapshot["versions"] = []
-                    for version in msg["versions"]:
-                        version_data = {
-                            "content": version["content"],
-                            "timestamp": safe_datetime(version.get("timestamp")),
-                            "version": version["version"]
-                        }
-                        if "sources" in version:
-                            version_data["sources"] = version["sources"]
-                        if "metadata" in version:
-                            version_data["metadata"] = version["metadata"]
-                        if "following_messages" in version:
-                            version_data["following_messages"] = version["following_messages"]
-                        msg_snapshot["versions"].append(version_data)
-                else:
-                    # Tạo version mặc định
-                    msg_snapshot["versions"] = [{
-                        "content": msg["content"],
-                        "timestamp": safe_datetime(msg.get("timestamp")),
-                        "version": 1,
-                        "following_messages": []
-                    }]
-                
-                if "sources" in msg:
-                    msg_snapshot["sources"] = msg["sources"]
-                
-                if "metadata" in msg:
-                    msg_snapshot["metadata"] = msg["metadata"]
-                
-                following_messages.append(msg_snapshot)
-            
-            logger.info(f"Created snapshot of {len(following_messages)} following messages from index {from_index}")
-            return following_messages
-            
-        except Exception as e:
-            logger.error(f"Lỗi tạo following messages snapshot: {e}")
-            return []
-
     def edit_message(self, message_id, new_content):
-        """Chỉnh sửa tin nhắn và lưu snapshot của tất cả tin nhắn theo sau"""
+        """Chỉnh sửa tin nhắn và lưu following messages vào version hiện tại"""
         try:
-            # Tìm tin nhắn cần chỉnh sửa
             message_index = None
             for i, message in enumerate(self.messages):
                 if str(message["_id"]) == str(message_id):
@@ -347,61 +378,62 @@ class Conversation:
             
             message = self.messages[message_index]
             
-            # Chỉ cho phép chỉnh sửa tin nhắn của user
             if message["role"] != "user":
                 return False, "Chỉ có thể chỉnh sửa tin nhắn của người dùng"
             
             timestamp = datetime.datetime.now()
             
-            # Tạo snapshot của tất cả tin nhắn theo sau
-            following_messages = self.create_following_messages_snapshot(message_index)
+            # Capture following messages cho version hiện tại
+            following_messages = self.capture_following_messages(message_index)
             
-            # Tạo version mới cho tin nhắn được edit
-            new_version = len(message.get("versions", [])) + 1
-            new_version_data = {
-                "content": new_content,
-                "timestamp": timestamp,
-                "version": new_version,
-                "following_messages": following_messages
-            }
-            
-            # Cập nhật tin nhắn với version mới
+            # Khởi tạo versions nếu chưa có
             if "versions" not in message:
-                # Tạo version 1 với snapshot hiện tại
-                original_following = self.create_following_messages_snapshot(message_index)
                 message["versions"] = [{
                     "content": message["content"],
                     "timestamp": safe_datetime(message.get("timestamp", timestamp)),
                     "version": 1,
-                    "following_messages": original_following
+                    "following_messages": following_messages
                 }]
+                if "sources" in message:
+                    message["versions"][0]["sources"] = message["sources"]
+                if "metadata" in message:
+                    message["versions"][0]["metadata"] = message["metadata"]
+            else:
+                # Cập nhật following_messages cho version hiện tại
+                current_version_index = message.get("current_version", 1) - 1
+                if current_version_index < len(message["versions"]):
+                    message["versions"][current_version_index]["following_messages"] = following_messages
+            
+            # Tạo version mới
+            new_version = len(message["versions"]) + 1
+            new_version_data = {
+                "content": new_content,
+                "timestamp": timestamp,
+                "version": new_version,
+                "following_messages": []
+            }
             
             message["versions"].append(new_version_data)
             message["current_version"] = new_version
             message["content"] = new_content
             message["is_edited"] = True
             
-            # Xóa tất cả tin nhắn sau tin nhắn được edit
+            # Xóa tất cả messages sau message được edit
             self.messages = self.messages[:message_index + 1]
             
-            # Cập nhật thời gian của cuộc hội thoại
             self.updated_at = timestamp
-            
-            # Lưu thay đổi vào database
             self.save()
             
-            logger.info(f"Đã chỉnh sửa tin nhắn {message_id} và lưu {len(following_messages)} following messages")
-            
+            logger.info(f"Edited message {message_id}, created version {new_version} with {len(following_messages)} following messages")
             return True, "Đã chỉnh sửa tin nhắn thành công"
             
         except Exception as e:
-            logger.error(f"Lỗi khi chỉnh sửa tin nhắn: {e}")
-            return False, f"Lỗi khi chỉnh sửa tin nhắn: {str(e)}"
+            logger.error(f"Error editing message: {e}")
+            return False, f"Lỗi: {str(e)}"
 
     def regenerate_bot_response_after_edit(self, user_message_id, new_response, sources=None):
         """Thêm phản hồi bot mới sau khi edit tin nhắn user"""
         try:
-            # Tìm tin nhắn user vừa được edit
             user_message_index = None
             for i, message in enumerate(self.messages):
                 if str(message["_id"]) == str(user_message_id):
@@ -411,7 +443,6 @@ class Conversation:
             if user_message_index is None:
                 return False, "Không tìm thấy tin nhắn user"
             
-            # Thêm phản hồi bot mới ngay sau tin nhắn user
             timestamp = datetime.datetime.now()
             bot_message = {
                 "_id": ObjectId(),
@@ -433,56 +464,30 @@ class Conversation:
                 bot_message["sources"] = sources
                 bot_message["versions"][0]["sources"] = sources
             
-            # Thêm bot message vào cuộc hội thoại
             self.messages.append(bot_message)
             
-            # Cập nhật following_messages của version hiện tại của user message
+            # Cập nhật following_messages cho version hiện tại của user message
             user_message = self.messages[user_message_index]
             if "versions" in user_message:
-                current_version_index = user_message["current_version"] - 1
+                current_version_index = user_message.get("current_version", 1) - 1
                 if current_version_index < len(user_message["versions"]):
-                    # Thêm bot message vào following_messages của version hiện tại
-                    if "following_messages" not in user_message["versions"][current_version_index]:
-                        user_message["versions"][current_version_index]["following_messages"] = []
-                    
-                    bot_snapshot = {
-                        "role": "bot",
-                        "content": new_response,
-                        "timestamp": timestamp,
-                        "current_version": 1,
-                        "is_edited": False,
-                        "versions": [{
-                            "content": new_response,
-                            "timestamp": timestamp,
-                            "version": 1,
-                            "following_messages": []
-                        }]
-                    }
-                    
-                    if sources:
-                        bot_snapshot["sources"] = sources
-                        bot_snapshot["versions"][0]["sources"] = sources
-                    
-                    user_message["versions"][current_version_index]["following_messages"].append(bot_snapshot)
+                    # Capture lại following messages bao gồm bot response mới
+                    following_messages = self.capture_following_messages(user_message_index)
+                    user_message["versions"][current_version_index]["following_messages"] = following_messages
             
-            # Cập nhật thời gian
             self.updated_at = timestamp
-            
-            # Lưu thay đổi
             self.save()
             
-            logger.info(f"Đã thêm phản hồi bot mới cho tin nhắn user {user_message_id}")
-            
+            logger.info(f"Added bot response after edit for user message {user_message_id}")
             return True, "Đã tạo phản hồi mới"
             
         except Exception as e:
-            logger.error(f"Lỗi khi tạo phản hồi mới: {e}")
+            logger.error(f"Error adding bot response: {e}")
             return False, f"Lỗi: {str(e)}"
 
     def regenerate_response(self, message_id, new_response, sources=None):
-        """Tạo version mới cho phản hồi bot và lưu following messages"""
+        """Tạo version mới cho phản hồi bot"""
         try:
-            # Tìm tin nhắn bot cần regenerate
             message_index = None
             for i, message in enumerate(self.messages):
                 if str(message["_id"]) == str(message_id):
@@ -494,40 +499,43 @@ class Conversation:
             
             message = self.messages[message_index]
             
-            # Chỉ cho phép regenerate tin nhắn bot
             if message["role"] != "bot":
                 return False, "Chỉ có thể regenerate phản hồi của bot"
             
             timestamp = datetime.datetime.now()
             
-            # Tạo snapshot của tất cả tin nhắn theo sau
-            following_messages = self.create_following_messages_snapshot(message_index)
-            
-            # Tạo version mới
-            new_version = len(message.get("versions", [])) + 1
-            new_version_data = {
-                "content": new_response,
-                "timestamp": timestamp,
-                "version": new_version,
-                "following_messages": following_messages
-            }
-            
-            if sources:
-                new_version_data["sources"] = sources
+            # Capture following messages cho version hiện tại
+            following_messages = self.capture_following_messages(message_index)
             
             # Khởi tạo versions nếu chưa có
             if "versions" not in message:
-                # Tạo version 1 với following messages hiện tại
-                original_following = self.create_following_messages_snapshot(message_index)
                 message["versions"] = [{
                     "content": message["content"],
                     "timestamp": safe_datetime(message.get("timestamp", timestamp)),
                     "version": 1,
                     "sources": message.get("sources", []),
-                    "following_messages": original_following
+                    "following_messages": following_messages
                 }]
+                if "metadata" in message:
+                    message["versions"][0]["metadata"] = message["metadata"]
+            else:
+                # Cập nhật following_messages cho version hiện tại
+                current_version_index = message.get("current_version", 1) - 1
+                if current_version_index < len(message["versions"]):
+                    message["versions"][current_version_index]["following_messages"] = following_messages
             
-            # Thêm version mới
+            # Tạo version mới
+            new_version = len(message["versions"]) + 1
+            new_version_data = {
+                "content": new_response,
+                "timestamp": timestamp,
+                "version": new_version,
+                "following_messages": []
+            }
+            
+            if sources:
+                new_version_data["sources"] = sources
+            
             message["versions"].append(new_version_data)
             message["current_version"] = new_version
             message["content"] = new_response
@@ -536,85 +544,22 @@ class Conversation:
             if sources:
                 message["sources"] = sources
             
-            # Xóa tất cả tin nhắn sau regenerate message
+            # Xóa tất cả messages sau regenerate message
             self.messages = self.messages[:message_index + 1]
             
-            # Cập nhật thời gian của cuộc hội thoại
-            self.updated_at = timestamp
-            
-            # Lưu thay đổi vào database
+            self.updated_at = datetime.datetime.now()
             self.save()
             
-            logger.info(f"Đã regenerate response cho tin nhắn {message_id}, version {new_version} với {len(following_messages)} following messages")
-            
+            logger.info(f"Regenerated response for message {message_id}, version {new_version} with {len(following_messages)} following messages")
             return True, "Đã tạo phản hồi mới thành công"
             
         except Exception as e:
-            logger.error(f"Lỗi khi regenerate response: {e}")
+            logger.error(f"Error regenerating response: {e}")
             return False, f"Lỗi: {str(e)}"
 
-    def restore_following_messages(self, following_messages_data):
-        """Restore các tin nhắn từ following_messages data"""
-        try:
-            restored_count = 0
-            
-            for msg_data in following_messages_data:
-                # Tạo message mới với ObjectId mới
-                new_message = {
-                    "_id": ObjectId(),
-                    "role": msg_data["role"],
-                    "content": msg_data["content"],
-                    "timestamp": safe_datetime(msg_data.get("timestamp")),
-                    "current_version": msg_data.get("current_version", 1),
-                    "is_edited": msg_data.get("is_edited", False)
-                }
-                
-                # Restore versions structure đầy đủ
-                if "versions" in msg_data and msg_data["versions"]:
-                    new_message["versions"] = []
-                    for version in msg_data["versions"]:
-                        version_data = {
-                            "content": version["content"],
-                            "timestamp": safe_datetime(version.get("timestamp")),
-                            "version": version["version"]
-                        }
-                        if "sources" in version:
-                            version_data["sources"] = version["sources"]
-                        if "metadata" in version:
-                            version_data["metadata"] = version["metadata"]
-                        if "following_messages" in version:
-                            version_data["following_messages"] = version["following_messages"]
-                        new_message["versions"].append(version_data)
-                else:
-                    # Tạo version mặc định
-                    new_message["versions"] = [{
-                        "content": msg_data["content"],
-                        "timestamp": safe_datetime(msg_data.get("timestamp")),
-                        "version": 1,
-                        "following_messages": []
-                    }]
-                
-                # Restore sources và metadata cho message hiện tại
-                if "sources" in msg_data:
-                    new_message["sources"] = msg_data["sources"]
-                
-                if "metadata" in msg_data:
-                    new_message["metadata"] = msg_data["metadata"]
-                
-                self.messages.append(new_message)
-                restored_count += 1
-            
-            logger.info(f"Restored {restored_count} following messages")
-            return restored_count
-            
-        except Exception as e:
-            logger.error(f"Lỗi restore following messages: {e}")
-            return 0
-
     def switch_message_version(self, message_id, version_number):
-        """Chuyển đổi version của tin nhắn và restore following messages từ snapshot"""
+        """Chuyển đổi version của tin nhắn và restore following messages"""
         try:
-            # Tìm tin nhắn
             message_index = None
             for i, message in enumerate(self.messages):
                 if str(message["_id"]) == str(message_id):
@@ -622,26 +567,25 @@ class Conversation:
                     break
             
             if message_index is None:
-                logger.error(f"Không tìm thấy tin nhắn với ID: {message_id}")
+                logger.error(f"Message not found: {message_id}")
                 return False
             
             message = self.messages[message_index]
             
-            # Kiểm tra version có tồn tại không
             if not message.get("versions") or version_number > len(message["versions"]) or version_number < 1:
-                logger.error(f"Version {version_number} không tồn tại cho message {message_id}")
+                logger.error(f"Version {version_number} not found for message {message_id}")
                 return False
             
-            logger.info(f"Switching message {message_id} to version {version_number}")
+            current_version = message.get("current_version", 1)
+            logger.info(f"Switching message {message_id} from version {current_version} to version {version_number}")
             
-            # Lấy version được chọn
             selected_version = message["versions"][version_number - 1]
             
-            # Cập nhật message hiện tại với content của version được chọn
+            # Update message content to selected version
             message["current_version"] = version_number
             message["content"] = selected_version["content"]
             
-            # Cập nhật sources và metadata nếu có
+            # Update sources and metadata
             if "sources" in selected_version:
                 message["sources"] = selected_version["sources"]
             elif "sources" in message:
@@ -652,44 +596,29 @@ class Conversation:
             elif "metadata" in message:
                 del message["metadata"]
             
-            # Xóa tất cả tin nhắn sau message hiện tại trước
-            self.messages = self.messages[:message_index + 1]
-            
             # Restore following messages từ version được chọn
-            if "following_messages" in selected_version and selected_version["following_messages"]:
-                following_messages = selected_version["following_messages"]
-                restored_count = self.restore_following_messages(following_messages)
+            following_messages = selected_version.get("following_messages", [])
+            if following_messages:
+                restored_count = self.restore_following_messages(message_index, following_messages)
                 logger.info(f"Restored {restored_count} following messages from version {version_number}")
+            else:
+                # Nếu không có following messages, chỉ cắt conversation tại message này
+                self.messages = self.messages[:message_index + 1]
+                logger.info(f"No following messages in version {version_number}, truncated conversation at message index {message_index}")
             
-            # Cập nhật thời gian
             self.updated_at = datetime.datetime.now()
-            
-            # Lưu thay đổi vào database
             self.save()
             
             logger.info(f"Successfully switched to version {version_number} for message {message_id}")
-            
             return True
             
         except Exception as e:
             logger.error(f"Error switching message version: {e}")
             return False
 
-    def get_message_by_id(self, message_id):
-        """Lấy tin nhắn theo ID và convert ObjectId thành string"""
-        for message in self.messages:
-            if str(message["_id"]) == str(message_id):
-                message_copy = message.copy()
-                message_copy["_id"] = str(message_copy["_id"])
-                if "parent_message_id" in message_copy and message_copy["parent_message_id"]:
-                    message_copy["parent_message_id"] = str(message_copy["parent_message_id"])
-                return message_copy
-        return None
-
     def delete_message_and_following(self, message_id):
         """Xóa tin nhắn và tất cả tin nhắn sau nó"""
         try:
-            # Tìm index của tin nhắn cần xóa
             message_index = None
             for i, message in enumerate(self.messages):
                 if str(message["_id"]) == str(message_id):
@@ -699,19 +628,14 @@ class Conversation:
             if message_index is None:
                 return False, "Không tìm thấy tin nhắn"
             
-            # Xóa tin nhắn và tất cả tin nhắn sau nó
             self.messages = self.messages[:message_index]
-            
-            # Cập nhật thời gian
             self.updated_at = datetime.datetime.now()
-            
-            # Lưu thay đổi
             self.save()
             
             return True, "Đã xóa tin nhắn và các tin nhắn sau nó"
             
         except Exception as e:
-            logger.error(f"Lỗi khi xóa tin nhắn: {e}")
+            logger.error(f"Error deleting message: {e}")
             return False, f"Lỗi: {str(e)}"
         
     def delete(self):
@@ -749,12 +673,11 @@ class Conversation:
 
     @classmethod
     def find_by_user(cls, user_id, limit=50, skip=0, include_archived=False):
-        """Tìm cuộc hội thoại theo user_id với sorting và logging tốt hơn"""
+        """Tìm cuộc hội thoại theo user_id"""
         try:
             db = get_db()
             conversations_collection = db.conversations
             
-            # Convert user_id to ObjectId if it's string
             if isinstance(user_id, str):
                 user_id = ObjectId(user_id)
             
@@ -764,23 +687,19 @@ class Conversation:
             
             logger.info(f"Querying conversations with filter: {query_filter}, limit: {limit}, skip: {skip}")
             
-            # Đảm bảo sorting theo updated_at DESC để lấy conversations mới nhất
             conversations_cursor = conversations_collection.find(query_filter)\
                 .sort("updated_at", DESCENDING)\
                 .skip(skip)\
                 .limit(limit)
             
-            # Convert cursor to list và log
             conversations_list = list(conversations_cursor)
             logger.info(f"Found {len(conversations_list)} conversations for user {user_id}")
             
-            # Convert to Conversation objects
             result = []
             for conv_dict in conversations_list:
                 conv_obj = cls.from_dict(conv_dict)
                 if conv_obj:
                     result.append(conv_obj)
-                    logger.debug(f"   - {conv_obj.title} (ID: {conv_obj.conversation_id}, Updated: {conv_obj.updated_at})")
             
             logger.info(f"Returning {len(result)} conversation objects")
             return result
@@ -791,12 +710,11 @@ class Conversation:
 
     @classmethod
     def count_by_user(cls, user_id, include_archived=False):
-        """Đếm số cuộc hội thoại của user với logging"""
+        """Đếm số cuộc hội thoại của user"""
         try:
             db = get_db()
             conversations_collection = db.conversations
             
-            # Convert user_id to ObjectId if it's string
             if isinstance(user_id, str):
                 user_id = ObjectId(user_id)
             

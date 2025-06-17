@@ -31,25 +31,25 @@ const MessageBubble = ({
   const textareaRef = useRef(null);
 
   const messageId = message._id || message.id;
-
-  // Logic version - chỉ hiển thị version control cho user messages có multiple versions
-  const hasVersions = isUser && message.versions && Array.isArray(message.versions) && message.versions.length > 1;
+  const hasVersions = message.versions && Array.isArray(message.versions) && message.versions.length > 1;
   const currentVersion = message.current_version || 1;
   const totalVersions = message.versions ? message.versions.length : 1;
 
-  // Debug log để kiểm tra data
   useEffect(() => {
-    if (isUser) {
-      console.log('User MessageBubble Debug:', {
+    if (hasVersions) {
+      console.log(`MessageBubble [${message.role}] Debug:`, {
         messageId,
-        hasVersions,
         currentVersion,
         totalVersions,
-        versions: message.versions?.map(v => ({ version: v.version, content: v.content.substring(0, 50) + '...', followingCount: v.following_messages?.length || 0 })),
-        role: message.role
+        isEdited: message.is_edited,
+        versions: message.versions?.map(v => ({
+          version: v.version,
+          content: v.content.substring(0, 30) + '...',
+          followingMessagesCount: v.following_messages ? v.following_messages.length : 0
+        }))
       });
     }
-  }, [message, hasVersions, currentVersion, totalVersions, isUser]);
+  }, [message, hasVersions, currentVersion, totalVersions, messageId]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -66,7 +66,6 @@ const MessageBubble = ({
     setEditContent(message.content || '');
   }, [message.content]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (isEditing && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -76,6 +75,7 @@ const MessageBubble = ({
   }, [isEditing]);
 
   const handleEditStart = () => {
+    console.log(`Starting edit for message: ${messageId}`);
     onEditStart(messageId);
     setShowMenu(false);
   };
@@ -85,6 +85,7 @@ const MessageBubble = ({
 
     setIsSubmitting(true);
     try {
+      console.log(`Submitting edit for message: ${messageId}`);
       await onEditMessage(messageId, conversationId, editContent.trim());
       onEditEnd();
     } catch (error) {
@@ -95,22 +96,26 @@ const MessageBubble = ({
   };
 
   const handleEditCancel = () => {
+    console.log(`Canceling edit for message: ${messageId}`);
     onEditEnd();
     setEditContent(message.content);
     setIsSubmitting(false);
   };
 
   const handleVersionSwitch = async (version) => {
-    if (isVersionSwitching) return;
+    if (isVersionSwitching || version === currentVersion) {
+      console.log(`Skip version switch - switching: ${isVersionSwitching}, same version: ${version === currentVersion}`);
+      return;
+    }
     
-    console.log('Switching to version:', version, 'for message:', messageId);
+    console.log(`Switching message ${messageId} from version ${currentVersion} to version ${version}`);
     
     setIsVersionSwitching(true);
     try {
       await onSwitchVersion(messageId, conversationId, version);
-      console.log('Version switch completed successfully');
+      console.log(`Version switch completed successfully: ${messageId} -> version ${version}`);
     } catch (error) {
-      console.error('Error switching version:', error);
+      console.error(`Error switching version for message ${messageId}:`, error);
     } finally {
       setIsVersionSwitching(false);
     }
@@ -118,6 +123,7 @@ const MessageBubble = ({
 
   const handleRegenerate = async () => {
     try {
+      console.log(`Regenerating response for message: ${messageId}`);
       await onRegenerateResponse(messageId, conversationId, userAge);
       setShowMenu(false);
     } catch (error) {
@@ -128,6 +134,7 @@ const MessageBubble = ({
   const handleDelete = async () => {
     if (window.confirm('Bạn có chắc muốn xóa tin nhắn này và tất cả tin nhắn sau nó?')) {
       try {
+        console.log(`Deleting message and following: ${messageId}`);
         await onDeleteMessage(messageId, conversationId);
         setShowMenu(false);
       } catch (error) {
@@ -157,7 +164,6 @@ const MessageBubble = ({
               : '#ffffff',
         }}
       >
-        {/* Typing indicator cho bot message */}
         {isRegenerating ? (
           <div className="p-4">
             <div className="flex items-center space-x-2">
@@ -176,7 +182,6 @@ const MessageBubble = ({
           </div>
         ) : (
           <>
-            {/* Message content */}
             <div className="p-4">
               {isEditing ? (
                 <div className="space-y-3">
@@ -243,7 +248,6 @@ const MessageBubble = ({
               )}
             </div>
 
-            {/* Version selector - chỉ hiển thị cho user messages có multiple versions */}
             {hasVersions && !isEditing && (
               <div className={`px-4 py-3 border-t ${
                 isUser 
@@ -318,7 +322,6 @@ const MessageBubble = ({
               </div>
             )}
 
-            {/* Timestamp and actions */}
             <div className="px-4 pb-3 flex items-center justify-between">
               <div className={`text-xs ${
                 isUser 
@@ -329,7 +332,6 @@ const MessageBubble = ({
                 {message.is_edited && <span className="ml-1">(đã chỉnh sửa)</span>}
               </div>
 
-              {/* Action buttons */}
               {!isEditing && (
                 <div className="relative" ref={menuRef}>
                   <button

@@ -10,7 +10,7 @@ const ChatPage = () => {
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { theme, darkMode, currentThemeConfig } = useTheme();
-  
+
   const {
     userData, isLoading, isAuthenticated,
     activeConversation, conversations, isLoadingConversations,
@@ -18,7 +18,8 @@ const ChatPage = () => {
     fetchConversations, fetchConversationDetail, sendMessage, startNewConversation,
     deleteConversation, renameConversation, editMessage,
     switchMessageVersion, regenerateResponse, deleteMessageAndFollowing,
-    showConfirm, showAgePrompt
+    showConfirm, showAgePrompt, showError
+    
   } = useApp();
 
   const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth >= 768);
@@ -64,10 +65,10 @@ const ChatPage = () => {
     const loadConversations = async () => {
       if (userData && !isLoadingConversations && !loadedRef.current.conversationsLoaded) {
         console.log('🔄 ChatPage: Loading conversations for first time...');
-        
+
         loadedRef.current.conversationsLoaded = true;
         const result = await fetchConversations(false); // false = không force, để context tự quyết định
-        
+
         if (result.success) {
           console.log(`✅ ChatPage: Loaded ${result.conversations.length} conversations`);
         } else {
@@ -174,7 +175,7 @@ const ChatPage = () => {
 
     try {
       let ageToUse = currentConversationAge || userAge;
-      
+
       if (!ageToUse) {
         const result = await showAgePrompt();
         if (result.isConfirmed) {
@@ -187,13 +188,13 @@ const ChatPage = () => {
 
       console.log('🔄 ChatPage: Creating new conversation...');
       const conversation = await startNewConversation(ageToUse);
-      
+
       if (conversation && conversation.id) {
         console.log('✅ ChatPage: New conversation created:', conversation.id);
-        
+
         // ✅ SỬA: Reset conversations loaded flag để force reload sidebar
         loadedRef.current.conversationsLoaded = false;
-        
+
         navigate(`/chat/${conversation.id}`);
         setCurrentConversationAge(ageToUse);
       }
@@ -212,11 +213,11 @@ const ChatPage = () => {
     if (result.isConfirmed) {
       try {
         await deleteConversation(id);
-        
+
         // ✅ SỬA: Reset flag để force reload conversations
         loadedRef.current.conversationsLoaded = false;
         await fetchConversations(true);
-        
+
         if (id === activeConversation?.id) {
           navigate('/chat');
         }
@@ -246,7 +247,7 @@ const ChatPage = () => {
     try {
       console.log('🔄 ChatPage: Sending message...');
       const result = await sendMessage(message, activeConversation?.id);
-      
+
       if (result.success) {
         console.log('✅ ChatPage: Message sent successfully');
         // ✅ SỬA: Reset flag để đảm bảo sidebar được update
@@ -257,23 +258,42 @@ const ChatPage = () => {
     }
   }, [isAuthenticated, currentConversationAge, userAge, showAgePrompt, setUserAge, sendMessage, activeConversation?.id]);
 
-  const handleRenameConversation = useCallback(async (id, newTitle) => {
+  const handleRenameConversation = useCallback(async (id, currentTitle) => {
     try {
-      await renameConversation(id, newTitle);
-      // Force reload conversations để update sidebar
-      loadedRef.current.conversationsLoaded = false;
-      await fetchConversations(true);
+      // Hiển thị prompt để nhập tên mới
+      const result = await showConfirm({
+        title: 'Đổi tên cuộc trò chuyện',
+        input: 'text',
+        inputValue: currentTitle,
+        inputPlaceholder: 'Nhập tên mới cho cuộc trò chuyện...',
+        confirmButtonText: 'Lưu',
+        cancelButtonText: 'Hủy',
+        showCancelButton: true
+      });
+
+      if (result.isConfirmed && result.value) {
+        console.log('🔄 ChatPage: Renaming conversation:', id, 'to:', result.value);
+
+        await renameConversation(id, result.value);
+
+        // Force reload conversations để update sidebar và đồng bộ với HistoryPage
+        loadedRef.current.conversationsLoaded = false;
+        await fetchConversations(true);
+
+        console.log('✅ ChatPage: Conversation renamed successfully');
+      }
     } catch (error) {
-      console.error('❌ Error renaming conversation:', error);
+      console.error('❌ ChatPage: Error renaming conversation:', error);
+      showError('Không thể đổi tên cuộc trò chuyện');
     }
-  }, [renameConversation, fetchConversations]);
+  }, [renameConversation, fetchConversations, showConfirm, showError]);
 
   // Enhanced switch version handler
   const handleSwitchVersion = useCallback(async (messageId, conversationId, version) => {
     try {
       console.log('🔄 Switching version:', version, 'for message:', messageId);
       const result = await switchMessageVersion(messageId, conversationId, version);
-      
+
       if (result.success) {
         // Force reload conversation detail to get updated state
         loadedRef.current.conversationId = null;
@@ -287,15 +307,14 @@ const ChatPage = () => {
 
   if (isLoading) {
     return (
-      <div className={`flex items-center justify-center h-screen transition-colors duration-300 ${
-        darkMode ? 'bg-gray-900' : 'bg-gray-50'
-      }`}>
+      <div className={`flex items-center justify-center h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'
+        }`}>
         <div className="text-center">
-          <div 
+          <div
             className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
-            style={{ 
-              borderColor: currentThemeConfig?.primary || '#36B37E', 
-              borderTopColor: 'transparent' 
+            style={{
+              borderColor: currentThemeConfig?.primary || '#36B37E',
+              borderTopColor: 'transparent'
             }}
           />
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Đang tải...</p>
@@ -319,9 +338,8 @@ const ChatPage = () => {
   });
 
   return (
-    <div className={`flex flex-col h-screen transition-colors duration-300 ${
-      darkMode ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
+    <div className={`flex flex-col h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'
+      }`}>
       <Header
         userData={userData}
         userAge={currentConversationAge || userAge}
@@ -338,14 +356,13 @@ const ChatPage = () => {
           ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} 
           border-r flex flex-col shadow-lg transition-all duration-300 overflow-hidden 
           ${isMobile ? 'absolute inset-y-0 left-0 z-40' : 'relative'}`}>
-          
+
           {isMobile && isSidebarVisible && (
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsSidebarVisible(false)}
-                className={`p-2 rounded-lg transition-colors ${
-                  darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-                }`}
+                className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                  }`}
               >
                 <BiPlus className="w-5 h-5 rotate-45" />
               </button>
@@ -375,9 +392,9 @@ const ChatPage = () => {
         <div className="flex-1 flex flex-col min-w-0 relative">
           {activeConversation ? (
             <>
-              <div 
+              <div
                 className="flex-1 overflow-y-auto transition-colors duration-300"
-                style={{ 
+                style={{
                   backgroundColor: darkMode ? '#1f2937' : (currentThemeConfig?.light || '#F7FFFA')
                 }}
               >
@@ -398,9 +415,9 @@ const ChatPage = () => {
                   </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center">
-                    <BiChat 
-                      className="text-4xl mb-4" 
-                      style={{ color: currentThemeConfig?.primary || '#36B37E' }} 
+                    <BiChat
+                      className="text-4xl mb-4"
+                      style={{ color: currentThemeConfig?.primary || '#36B37E' }}
                     />
                     <p className={`text-lg mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       Bắt đầu cuộc trò chuyện mới
@@ -409,9 +426,9 @@ const ChatPage = () => {
                       Hãy nhập câu hỏi vào ô bên dưới để bắt đầu trò chuyện với Nutribot
                     </p>
                     {(currentConversationAge || userAge) && (
-                      <div 
+                      <div
                         className="mb-4 px-4 py-2 rounded-full text-sm"
-                        style={{ 
+                        style={{
                           backgroundColor: currentThemeConfig?.light || '#E6F7EF',
                           color: currentThemeConfig?.primary || '#36B37E'
                         }}
@@ -429,12 +446,11 @@ const ChatPage = () => {
               />
             </>
           ) : (
-            <div className={`flex-1 flex items-center justify-center flex-col ${
-              darkMode ? 'text-gray-400' : 'text-gray-500'
-            }`}>
-              <BiChat 
-                className="text-7xl mb-6" 
-                style={{ color: currentThemeConfig?.primary || '#36B37E' }} 
+            <div className={`flex-1 flex items-center justify-center flex-col ${darkMode ? 'text-gray-400' : 'text-gray-500'
+              }`}>
+              <BiChat
+                className="text-7xl mb-6"
+                style={{ color: currentThemeConfig?.primary || '#36B37E' }}
               />
               <p className={`text-xl mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Chưa có cuộc trò chuyện nào

@@ -66,21 +66,61 @@ const useToast = () => {
         text = 'Bạn có chắc chắn?',
         confirmButtonText = 'Xác nhận',
         cancelButtonText = 'Hủy',
-        icon = 'question'
+        icon = 'question',
+        input = null,
+        inputValue = '',
+        inputPlaceholder = '',
+        showCancelButton = true
       } = options;
 
       const { currentTheme, darkMode } = getCurrentTheme();
 
-      return Swal.fire({
-        title, text, icon,
-        showCancelButton: true,
+      const swalConfig = {
+        title,
+        showCancelButton,
         confirmButtonColor: currentTheme.primary,
         cancelButtonColor: '#d33',
         confirmButtonText,
         cancelButtonText,
         background: darkMode ? '#1f2937' : '#ffffff',
         color: darkMode ? '#f3f4f6' : '#111827'
-      });
+      };
+
+      // Thêm text nếu không có input
+      if (!input) {
+        swalConfig.text = text;
+        swalConfig.icon = icon;
+      }
+
+      // Thêm input nếu có
+      if (input) {
+        swalConfig.input = input;
+        swalConfig.inputValue = inputValue;
+        swalConfig.inputPlaceholder = inputPlaceholder;
+
+        // Style cho input trong dark mode
+        if (darkMode) {
+          swalConfig.inputAttributes = {
+            style: `
+          background-color: #374151;
+          color: #ffffff;
+          border: 1px solid #4b5563;
+          border-radius: 0.5rem;
+        `
+          };
+        }
+
+        // Validation cho input
+        swalConfig.preConfirm = (value) => {
+          if (!value || !value.trim()) {
+            Swal.showValidationMessage('Vui lòng nhập giá trị hợp lệ');
+            return false;
+          }
+          return value.trim();
+        };
+      }
+
+      return Swal.fire(swalConfig);
     },
 
     showAgePrompt: (currentAge = null) => {
@@ -170,20 +210,20 @@ export const AppProvider = ({ children }) => {
     try {
       updateState({ isLoadingConversations: true });
       console.log('🔄 fetchConversations: Starting to load conversations...');
-      
+
       // ✅ SỬA: Sử dụng getAllConversations để lấy tất cả
       const response = await chatService.getAllConversations(false); // false = không lấy archived
-      
+
       if (response.success) {
         const conversations = response.conversations || [];
         updateState({
           conversations,
           isLoadingConversations: false
         });
-        
+
         conversationsLoadedRef.current = true;
         console.log(`✅ fetchConversations: Loaded ${conversations.length} conversations`);
-        
+
         return { success: true, conversations };
       } else {
         updateState({
@@ -209,7 +249,7 @@ export const AppProvider = ({ children }) => {
     try {
       console.log('🔄 fetchConversationDetail:', id);
       const response = await chatService.getConversationDetail(id);
-      
+
       if (response.success) {
         updateState({ activeConversation: response.conversation });
         console.log('✅ fetchConversationDetail: Loaded conversation detail:', response.conversation.id);
@@ -404,9 +444,9 @@ export const AppProvider = ({ children }) => {
           console.log('🔄 Message sent, forcing conversations reload...');
           conversationsLoadedRef.current = false; // Reset flag để force load
           await fetchConversations(true);
-          
+
           await fetchConversationDetail(response.conversation_id);
-          
+
           console.log('✅ Message sent and data reloaded');
 
           if (!conversationId) {
@@ -453,20 +493,20 @@ export const AppProvider = ({ children }) => {
     try {
       console.log('🔄 Creating new conversation...');
       const response = await chatService.createConversation('Cuộc trò chuyện mới', currentAge);
-      
+
       if (response.success && response.conversation_id) {
         console.log(`✅ Created conversation: ${response.conversation_id}`);
-        
+
         // ✅ SỬA: Force reload conversations
         conversationsLoadedRef.current = false;
         await fetchConversations(true);
-        
+
         const conversation = await fetchConversationDetail(response.conversation_id);
-        
+
         console.log('✅ New conversation ready:', conversation?.id);
         return conversation;
       }
-      
+
       throw new Error(response.error || 'Failed to create conversation');
     } catch (error) {
       console.error("❌ Error creating conversation:", error);
@@ -482,10 +522,10 @@ export const AppProvider = ({ children }) => {
           conversations: state.conversations.filter(c => c.id !== id),
           activeConversation: state.activeConversation?.id === id ? null : state.activeConversation
         });
-        
+
         // ✅ SỬA: Force reload conversations sau khi delete
         conversationsLoadedRef.current = false;
-        
+
         return { success: true };
       }
       throw new Error(response.error);
@@ -497,21 +537,36 @@ export const AppProvider = ({ children }) => {
 
   const renameConversation = useCallback(async (id, newTitle) => {
     try {
+      console.log('🔄 AppContext: Renaming conversation:', id, 'to:', newTitle);
+
       const response = await chatService.updateConversation(id, { title: newTitle });
       if (response.success) {
+        // Cập nhật state trong context
         updateState({
           conversations: state.conversations.map(conv =>
             conv.id === id ? { ...conv, title: newTitle } : conv
           )
         });
+
+        // Cập nhật activeConversation nếu đang rename conversation hiện tại
+        if (state.activeConversation && state.activeConversation.id === id) {
+          updateState({
+            activeConversation: {
+              ...state.activeConversation,
+              title: newTitle
+            }
+          });
+        }
+
+        console.log('AppContext: Conversation renamed successfully');
         return { success: true };
       }
       throw new Error(response.error);
     } catch (error) {
-      console.error("Error renaming conversation:", error);
+      console.error("AppContext: Error renaming conversation:", error);
       throw error;
     }
-  }, [state.conversations, updateState]);
+  }, [state.conversations, state.activeConversation, updateState]);
 
   const editMessage = useCallback(async (messageId, conversationId, newContent) => {
     try {
@@ -549,7 +604,7 @@ export const AppProvider = ({ children }) => {
     try {
       console.log('Switching to version:', version, 'for message:', messageId);
       const response = await chatService.switchMessageVersion(messageId, conversationId, version);
-      
+
       if (response.success) {
         await fetchConversationDetail(conversationId);
         console.log('Version switched successfully');
