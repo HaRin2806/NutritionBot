@@ -2,7 +2,7 @@ import baseApi from './baseApi';
 
 // Chat Service - tối ưu từ chatService.js
 export const chatService = {
-  sendMessage: (message, age, conversationId) => 
+  sendMessage: (message, age, conversationId) =>
     baseApi.post('/chat', { message, age, ...(conversationId && { conversation_id: conversationId }) }),
 
   // ✅ SỬA: Tăng per_page mặc định và fix logic
@@ -14,7 +14,7 @@ export const chatService = {
   // ✅ SỬA: Cải thiện logic getAllConversations
   getAllConversations: async (includeArchived = false) => {
     console.log(`🔄 getAllConversations: Starting with includeArchived=${includeArchived}`);
-    
+
     let allConversations = [];
     let page = 1;
     const perPage = 100; // Tăng size để giảm số lần gọi API
@@ -24,13 +24,13 @@ export const chatService = {
       while (hasMore) {
         console.log(`🔄 Loading page ${page}...`);
         const response = await chatService.getConversations(includeArchived, page, perPage);
-        
+
         if (response.success && response.conversations) {
           const newConversations = response.conversations;
           allConversations = [...allConversations, ...newConversations];
-          
+
           console.log(`📄 Page ${page}: Got ${newConversations.length} conversations, total so far: ${allConversations.length}`);
-          
+
           // Check if we have more pages
           const pagination = response.pagination;
           if (pagination && page < pagination.pages) {
@@ -38,7 +38,7 @@ export const chatService = {
           } else {
             hasMore = false;
           }
-          
+
           // Safety check: if we got less than perPage, probably last page
           if (newConversations.length < perPage) {
             hasMore = false;
@@ -80,19 +80,19 @@ export const chatService = {
 
   archiveConversation: (id) => baseApi.post(`/conversations/${id}/archive`),
   unarchiveConversation: (id) => baseApi.post(`/conversations/${id}/unarchive`),
-  
+
   generateTitle: (conversationId) => baseApi.post(`/conversations/${conversationId}/generate-title`),
-  
+
   bulkDeleteConversations: (ids) => baseApi.post('/conversations/bulk-delete', { conversation_ids: ids }),
 
   // Message operations
-  editMessage: (messageId, conversationId, newContent, age) => 
+  editMessage: (messageId, conversationId, newContent, age) =>
     baseApi.put(`/messages/${messageId}/edit`, { content: newContent, conversation_id: conversationId, age }),
-  switchMessageVersion: (messageId, conversationId, version) => 
+  switchMessageVersion: (messageId, conversationId, version) =>
     baseApi.put(`/messages/${messageId}/versions/${version}`, { conversation_id: conversationId }),
-  regenerateResponse: (messageId, conversationId, age) => 
+  regenerateResponse: (messageId, conversationId, age) =>
     baseApi.post(`/messages/${messageId}/regenerate`, { conversation_id: conversationId, age }),
-  deleteMessageAndFollowing: (messageId, conversationId) => 
+  deleteMessageAndFollowing: (messageId, conversationId) =>
     baseApi.delete(`/messages/${messageId}`, { conversation_id: conversationId }),
 };
 
@@ -106,22 +106,21 @@ export const authService = {
   changePassword: (passwordData) => baseApi.post('/auth/change-password', passwordData),
 };
 
-// Admin Service - giữ nguyên
+// Admin Service - cập nhật
 export const adminService = {
   // Stats & Dashboard
   getStats: () => baseApi.get('/admin/stats/overview'),
-  getUserStats: () => baseApi.get('/admin/users/stats/summary'),
-  getConversationStats: () => baseApi.get('/admin/stats/conversations'),
+  getSystemInfo: () => baseApi.get('/admin/system-info'),
 
   // User Management
-  getAllUsers: (page = 1, perPage = 20, filters = {}) => 
+  getAllUsers: (page = 1, perPage = 20, filters = {}) =>
     baseApi.get('/admin/users', { page, per_page: perPage, ...filters }),
   getUserDetail: (userId) => baseApi.get(`/admin/users/${userId}`),
   updateUser: (userId, userData) => baseApi.put(`/admin/users/${userId}`, userData),
   deleteUser: (userId) => baseApi.delete(`/admin/users/${userId}`),
   bulkDeleteUsers: (userIds) => baseApi.post('/admin/users/bulk-delete', { user_ids: userIds }),
 
-  // Document Management
+  // Document Management  
   getAllDocuments: () => baseApi.get('/admin/documents'),
   uploadDocument: (file, metadata) => baseApi.upload('/admin/documents/upload', file, metadata),
   processDocument: (docId, options) => baseApi.post(`/admin/documents/${docId}/process`, options),
@@ -139,27 +138,27 @@ export const storageService = {
     if (user) storage.setItem('user', JSON.stringify(user));
     if (token) storage.setItem('access_token', token);
   },
-  
+
   getUserData: () => {
     const localUser = localStorage.getItem('user');
     const sessionUser = sessionStorage.getItem('user');
     return localUser ? JSON.parse(localUser) : sessionUser ? JSON.parse(sessionUser) : null;
   },
-  
+
   getToken: () => localStorage.getItem('access_token') || sessionStorage.getItem('access_token'),
-  
+
   clearUserData: () => {
     ['user', 'access_token', 'user_age'].forEach(key => {
       localStorage.removeItem(key);
       sessionStorage.removeItem(key);
     });
   },
-  
+
   saveUserAge: (age) => {
     console.log('💾 Saving age to storage:', age);
     localStorage.setItem('user_age', age.toString());
   },
-  
+
   getUserAge: () => {
     const age = localStorage.getItem('user_age');
     console.log('📖 Getting age from storage:', age);

@@ -47,21 +47,26 @@ def get_overview_stats():
     try:
         db = get_db()
         
-        # Thống kê users
-        total_users = db.users.count_documents({}) if hasattr(db, 'users') else 1
-        today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # Sử dụng timezone Việt Nam (UTC+7)
+        import pytz
+        vietnam_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+        now_vietnam = datetime.datetime.now(vietnam_tz)
+        
+        # Thống kê users thực tế
+        total_users = db.users.count_documents({}) if hasattr(db, 'users') else 0
+        today_start = now_vietnam.replace(hour=0, minute=0, second=0, microsecond=0)
         new_users_today = db.users.count_documents({
-            "created_at": {"$gte": today_start}
+            "created_at": {"$gte": today_start.astimezone(pytz.UTC).replace(tzinfo=None)}
         }) if hasattr(db, 'users') else 0
         
-        # Thống kê conversations
+        # Thống kê conversations thực tế
         total_conversations = db.conversations.count_documents({})
-        day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+        day_ago = now_vietnam - datetime.timedelta(days=1)
         recent_conversations = db.conversations.count_documents({
-            "updated_at": {"$gte": day_ago}
+            "updated_at": {"$gte": day_ago.astimezone(pytz.UTC).replace(tzinfo=None)}
         })
         
-        # Thống kê tin nhắn
+        # Thống kê tin nhắn thực tế
         pipeline = [
             {"$project": {"message_count": {"$size": "$messages"}}},
             {"$group": {"_id": None, "total_messages": {"$sum": "$message_count"}}}
@@ -69,30 +74,84 @@ def get_overview_stats():
         message_result = list(db.conversations.aggregate(pipeline))
         total_messages = message_result[0]["total_messages"] if message_result else 0
         
-        # Thống kê admin
-        total_admins = db.users.count_documents({"role": "admin"}) if hasattr(db, 'users') else 1
+        # Thống kê admin thực tế
+        total_admins = db.users.count_documents({"role": "admin"}) if hasattr(db, 'users') else 0
+        
+        # Thống kê theo tuần (7 ngày gần nhất) - SỬA LẠI
+        daily_stats = []
+        for i in range(7):
+            # Tính ngày theo timezone Việt Nam
+            target_date = now_vietnam.date() - datetime.timedelta(days=6-i)
+            day_start = vietnam_tz.localize(datetime.datetime.combine(target_date, datetime.time.min))
+            day_end = vietnam_tz.localize(datetime.datetime.combine(target_date, datetime.time.max))
+            
+            # Convert về UTC để query MongoDB
+            day_start_utc = day_start.astimezone(pytz.UTC).replace(tzinfo=None)
+            day_end_utc = day_end.astimezone(pytz.UTC).replace(tzinfo=None)
+            
+            # Đếm conversations được tạo HOẶC cập nhật trong ngày
+            daily_conversations_created = db.conversations.count_documents({
+                "created_at": {"$gte": day_start_utc, "$lte": day_end_utc}
+            })
+            
+            daily_conversations_updated = db.conversations.count_documents({
+                "updated_at": {"$gte": day_start_utc, "$lte": day_end_utc},
+                "created_at": {"$lt": day_start_utc}  # Không đếm trùng với conversations mới tạo
+            })
+            
+            total_daily_activity = daily_conversations_created + daily_conversations_updated
+            
+            daily_users = 0
+            if hasattr(db, 'users'):
+                daily_users = db.users.count_documents({
+                    "created_at": {"$gte": day_start_utc, "$lte": day_end_utc}
+                })
+            
+            daily_stats.append({
+                "date": target_date.strftime("%Y-%m-%d"),
+                "label": target_date.strftime("%d/%m"),
+                "conversations": total_daily_activity,
+                "users": daily_users,
+                "created": daily_conversations_created,
+                "updated": daily_conversations_updated
+            })
+        
+        # Thống kê theo độ tuổi thực tế
+        age_pipeline = [
+            {"$group": {"_id": "$age_context", "count": {"$sum": 1}}},
+            {"$sort": {"_id": 1}}
+        ]
+        age_stats = list(db.conversations.aggregate(age_pipeline))
         
         return jsonify({
             "success": True,
             "stats": {
                 "users": {
                     "total": total_users,
-                    "new_today": new_users_today
+                    "new_today": new_users_today,
+                    "active": total_users
                 },
                 "conversations": {
                     "total": total_conversations,
                     "recent": recent_conversations
                 },
-                "data": {
-                    "total_chunks": total_messages,
-                    "total_tables": 0,
-                    "total_figures": 0,
-                    "total_items": total_messages,
-                    "embeddings": 0
+                "messages": {
+                    "total": total_messages,
+                    "avg_per_conversation": round(total_messages / total_conversations, 1) if total_conversations > 0 else 0
                 },
                 "admins": {
                     "total": total_admins
-                }
+                },
+                "daily_stats": daily_stats,
+                "age_distribution": [
+                    {
+                        "age_group": f"{stat['_id']} tuổi" if stat['_id'] else "Không rõ",
+                        "count": stat["count"]
+                    }
+                    for stat in age_stats
+                ],
+                "timezone": "Asia/Ho_Chi_Minh",
+                "current_time": now_vietnam.isoformat()
             }
         })
         
@@ -103,56 +162,49 @@ def get_overview_stats():
             "error": str(e)
         }), 500
 
-@admin_routes.route('/recent-activities', methods=['GET'])
-@require_admin
-def get_recent_activities():
-    """Lấy hoạt động gần đây"""
+@admin_routes.route('/system-info', methods=['GET'])
+@require_admin 
+def get_system_info():
+    """Lấy thông tin hệ thống"""
     try:
-        limit = int(request.args.get('limit', 10))
+        from core.embedding_model import get_embedding_model
+        
+        # Thông tin vector database
+        try:
+            embedding_model = get_embedding_model()
+            vector_count = embedding_model.count()
+        except:
+            vector_count = 0
+        
+        # Thông tin database
         db = get_db()
+        collections = db.list_collection_names()
         
-        activities = []
-        
-        # Conversations gần đây
-        recent_conversations = list(db.conversations.find(
-            {},
-            {"title": 1, "user_id": 1, "created_at": 1, "updated_at": 1}
-        ).sort("updated_at", -1).limit(limit))
-        
-        for conv in recent_conversations:
-            user = User.find_by_id(conv.get("user_id"))
-            activities.append({
-                "type": "conversation_created",
-                "title": "Cuộc hội thoại mới",
-                "description": f"'{conv.get('title', 'Cuộc hội thoại')}' - {user.name if user else 'Unknown'}",
-                "timestamp": conv.get("updated_at", datetime.datetime.now()).isoformat()
-            })
-        
-        # Users mới (nếu có)
-        if hasattr(db, 'users'):
-            recent_users = list(db.users.find(
-                {},
-                {"name": 1, "email": 1, "created_at": 1}
-            ).sort("created_at", -1).limit(3))
-            
-            for user in recent_users:
-                activities.append({
-                    "type": "user_registered",
-                    "title": "Người dùng mới đăng ký",
-                    "description": f"{user.get('name', 'Unknown')} ({user.get('email', '')}) đã đăng ký",
-                    "timestamp": user.get("created_at", datetime.datetime.now()).isoformat()
-                })
-        
-        # Sắp xếp theo thời gian
-        activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        system_info = {
+            "database": {
+                "type": "MongoDB",
+                "collections": len(collections),
+                "status": "active"
+            },
+            "vector_db": {
+                "type": "ChromaDB", 
+                "embeddings": vector_count,
+                "model": "multilingual-e5-base"
+            },
+            "ai": {
+                "generation_model": "Gemini 2.0 Flash",
+                "embedding_model": "multilingual-e5-base",
+                "status": "active"
+            }
+        }
         
         return jsonify({
             "success": True,
-            "activities": activities[:limit]
+            "system_info": system_info
         })
         
     except Exception as e:
-        logger.error(f"Lỗi lấy hoạt động gần đây: {str(e)}")
+        logger.error(f"Lỗi lấy thông tin hệ thống: {str(e)}")
         return jsonify({
             "success": False,
             "error": str(e)
