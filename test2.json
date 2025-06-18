@@ -258,12 +258,6 @@
     "age_group": "12-14"
   },
   {
-    "question": "Trẻ 17 tuổi vận động nặng cần bao nhiêu calo?",
-    "positive": "bai1_bang7_15-19tuoi",
-    "negative": "bai1_bang5_6-11tuoi",
-    "age_group": "15-19"
-  },
-  {
     "question": "Con tôi 5 tuổi không thích ăn thịt có thể thay bằng gì?",
     "positive": "bai1_muc3_2_4_3_3-5tuoi",
     "negative": "bai1_muc3_3_4_3_6-11tuoi",
@@ -568,12 +562,6 @@
     "positive": "bai1_muc3_4_1_12-14tuoi",
     "negative": "bai1_muc3_3_1_6-11tuoi",
     "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 17 tuổi vận động nặng cần bao nhiêu calo?",
-    "positive": "bai1_bang7_15-19tuoi",
-    "negative": "bai1_bang5_6-11tuoi",
-    "age_group": "15-19"
   },
   {
     "question": "Con tôi 5 tuổi không thích ăn thịt có thể thay bằng gì?",
@@ -3765,6 +3753,2592 @@
     "question": "Con tôi 13 tuổi có thể ăn thức ăn có biểu hiện khác lạ?",
     "positive": "bai4_muc4_1_7_2",
     "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 4 tuổi có thể dùng WHO anthro hay WHO anthro plus?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 6 tuổi cần tính Z-score BMI theo tuổi và giới không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tháng có thể chấm biểu đồ tăng trưởng được chưa?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 15 tuổi có dùng ngưỡng BMI như người lớn không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi cần đo chiều cao theo kỹ thuật nào?",
+    "positive": "bai2_muc3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Đường tăng trưởng đi xuống có nghĩa là gì?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc2_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần theo dõi xu hướng dinh dưỡng không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 3 tuổi có thể bị suy dinh dưỡng thể phối hợp không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần dùng Anthropometric calculator?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Làm sao tính tuổi theo tháng cho trẻ 2 tuổi?",
+    "positive": "bai2_muc3_2",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần Individual assessment không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Đường tăng trưởng nằm ngang có đáng lo không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc2_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần Nutritional survey không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 5 tuổi vừa đủ dùng phần mềm nào để đánh giá?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần chấm vào cuối tháng tuổi không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 8 tuổi có thể dùng WHO anthro plus không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 17 tuổi cần tính Z-score theo công thức nào?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Điểm ngưỡng -2SD có nghĩa là gì?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc4_4",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần lập lịch tháng tuổi không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 13 tuổi có thể theo dõi sự tăng trưởng không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần đánh giá cân nặng theo chiều cao?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Kênh màu đỏ trên biểu đồ có nghĩa là gì?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần đánh giá nhân trắc học không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần can thiệp kịp thời nếu có sai lệch?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần dùng quần thể tham khảo WHO?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai1_muc3_1_3_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Kênh màu cam trên biểu đồ cho biết điều gì?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần đánh giá theo chiều cao/tuổi?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 7 tuổi có cần dùng ê-ke để chấm biểu đồ?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần theo dõi đường biểu diễn tăng trưởng?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 15 tuổi có cần tính BMI theo quần thể WHO không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 1 tuổi có thể dùng biểu đồ tăng trưởng chưa?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 14 tuổi có cần lập kế hoạch can thiệp dinh dưỡng?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần đánh giá theo BMI/tuổi không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Kênh màu xanh có nghĩa là bình thường không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có thể bị suy dinh dưỡng cấp tính không?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 11 tuổi có cần phân tích xu hướng dinh dưỡng không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần điền họ tên vào biểu đồ không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao không dùng ngưỡng BMI cố định cho trẻ 17 tuổi?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần dùng thang đo từ 0-30kg không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 12 tuổi có cần đánh giá tình trạng dinh dưỡng định kỳ?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần dùng độ lệch chuẩn không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần nối các điểm chấm trên biểu đồ?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần dùng kỹ thuật cân đo chính xác?",
+    "positive": "bai2_muc3_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 4 tuổi có thể gầy còm và còi cọc cùng lúc không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần sử dụng Individual assessment?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao sự tăng cân quan trọng hơn con số thực tế?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần đánh giá theo chiều dài nằm không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần phát triển chương trình giáo dục dinh dưỡng?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần điền ngày tháng năm sinh vào biểu đồ?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 16 tuổi có cần theo dõi biểu đồ tăng trưởng như trẻ nhỏ?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_4",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần xác định sai lệch tăng trưởng không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần dùng màu khác nhau cho bé trai và bé gái không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần cải thiện sức khỏe dinh dưỡng tổng thể?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 5 tuổi có cần dùng thang đo 45-125cm không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần chiến lược y tế học đường không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần chọn biểu đồ đúng giới tính?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần dùng Z-score BMI/tuổi không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 6 tuổi có cần xác định thiếu hụt chất dinh dưỡng cụ thể?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần dùng đơn vị chia 2kg không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao cần ghi tháng sinh vào ô đầu tiên?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần hỗ trợ kịp thời nếu có vấn đề?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 9 tuổi có cần đánh giá quần thể nghiên cứu không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần đánh giá tỷ lệ thừa cân/béo phì?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tại sao cần đánh dấu năm mới trong lịch tháng tuổi?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần theo dõi từ 0 đến 60 tháng?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 4 tuổi có thể có vị trí điểm chấm trên các kênh?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần thực hiện chính sách cải thiện dinh dưỡng?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần dùng góc vuông của ê-ke làm điểm chấm?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần xác định vấn đề dinh dưỡng sớm?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 13 tuổi có cần dùng đơn vị chia 5cm không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần hướng dẫn biện pháp can thiệp?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần nhóm từ 1 đến 5 tuổi trên trục tháng?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần đảm bảo sức khỏe học sinh không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 6 tuổi có cần chấm vào ngày cân đo chính xác?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 1 tuổi có cần theo dõi lâu dài không?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao đường tăng trưởng đi lên là bình thường?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần theo dõi tiến bộ phát triển?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần từ 8-30kg hay 0-30kg?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần đánh giá nhân trắc học định kỳ?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần màu sắc khác nhau cho từng kênh?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần từ 60-125cm hay 45-125cm?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 19 tuổi có cần dùng cách tính Z-score không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần biết tỷ lệ suy dinh dưỡng học đường?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần lặp lại đến 60 tháng tuổi?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần tham khảo WHO anthro plus?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 3 tuổi có cần trục thang đo cân nặng không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần quan tâm cơ thể đang phát triển?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần dùng một cạnh ê-ke trùng vạch đứng?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần theo dõi cân đối tỷ lệ dinh dưỡng?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 17 tuổi có cần chiều cao tiếp tục tăng không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần hai mặt biểu đồ tăng trưởng?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao suy dinh dưỡng thể thiếu cân dưới -2SD?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc4_4",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần đánh giá tình trạng dinh dưỡng riêng?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần cạnh ê-ke tương ứng cân nặng không?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần tham khảo địa chỉ WHO không?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần nhận định màu của kênh trên biểu đồ?",
+    "positive": "bai2_muc4_4",
+    "negative": "bai2_muc4_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần hướng dẫn sử dụng phần mềm?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 13 tuổi có cần theo dõi biểu đồ tăng trưởng dự kiến?",
+    "positive": "bai2_muc2_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần biểu đồ chiều dài nằm không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao cần ba chức năng trong phần mềm WHO?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần lưu giữ thông tin phát triển không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần theo chiều dọc thời gian không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần nhập thông tin tuổi giới không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần quần thể tham khảo WHO 2006?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần tính toán chỉ số nhân trắc?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 5 tuổi có cần từ 0 đến 60 tháng tuổi?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần giới hạn từ -2SD đến +2SD?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần so sánh với cùng tuổi cùng giới?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần số trung bình quần thể tham khảo?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 12 tuổi có cần kích thước đo được không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần phân loại theo Z-score BMI?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao cần điểm ngưỡng đề nghị thấp hơn?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần suy dinh dưỡng thể cấp tính?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 18 tuổi có cần đánh giá theo vị thành niên?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần suy dinh dưỡng thể mạn tính?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần dùng chỉ tiêu chiều cao theo tuổi?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần theo dõi quá trình phát triển?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần địa chỉ trang web WHO không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần sách hướng dẫn sử dụng không?",
+    "positive": "bai2_muc4_3",
+    "negative": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao cần cân nặng theo chiều cao?",
+    "positive": "bai2_muc4_2",
+    "negative": "bai2_muc4_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần dùng trang web WHO anthro plus?",
+    "positive": "bai2_muc5_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 6 tuổi có cần chỉ tiêu cân nặng theo tuổi?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 1 tuổi có cần ba chỉ tiêu WHO không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao cần phân loại tình trạng dinh dưỡng trẻ em?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc2_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần đơn vị độ lệch chuẩn không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần chỉ tiêu phổ biến nhất không?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần thang phân loại TTDD?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tại sao WHO khuyến cáo ba chỉ tiêu chủ yếu?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần so với quần thể tham chiếu?",
+    "positive": "bai2_muc4_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 15 tuổi có cần biết tầm quan trọng nhân trắc học?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần hiểu về vai trò đánh giá không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao cần khái niệm nhân trắc học dinh dưỡng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc4_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần đánh giá sức khỏe học sinh?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 17 tuổi có cần quan tâm tầm quan trọng đánh giá?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần biết vai trò quan trọng nhân trắc?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tại sao nhân trắc học quan trọng với tình trạng dinh dưỡng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần giới thiệu khái niệm không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 18 tuổi có cần hiểu vai trò nhân trắc học không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần tìm hiểu về đánh giá dinh dưỡng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao cần quan tâm sức khỏe qua nhân trắc học?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần biết khái niệm cơ bản không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần hiểu tầm quan trọng đánh giá không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần quan tâm nhân trắc học không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tại sao cần vai trò quan trọng trong đánh giá?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc4_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần biết về tình trạng sức khỏe?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 19 tuổi có cần tìm hiểu nhân trắc học dinh dưỡng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần quan tâm đến đánh giá không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tại sao học sinh cần đánh giá nhân trắc học?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần hiểu vai trò quan trọng không?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 14 tuổi có cần biết khái niệm và tầm quan trọng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần giới thiệu về nhân trắc học?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao cần vai trò trong tình trạng dinh dưỡng?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần tầm quan trọng của đánh giá?",
+    "positive": "bai2_muc1_2_1",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần bữa ăn học đường đa dạng 8 nhóm thực phẩm?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 12 tuổi có cần định lượng rau củ quả 100-150g/bữa không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần bữa trưa đáp ứng 30-40% năng lượng ngày?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_3_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp giảm bất bình đẳng xã hội không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần bữa phụ đáp ứng 5-10% năng lượng?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trường nội trú có phân bố năng lượng khác trường bán trú?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai3_muc3_3_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần tối thiểu 10 loại thực phẩm trong bữa chính?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Quyết định 4280/QĐ-BGDĐT có quy định gì về THCS?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần bữa sáng 20-30% năng lượng không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp tăng cường hiệu suất học tập?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần 2-3 loại thực phẩm cung cấp chất đạm?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ mầm non có cần 60-80g rau củ quả mỗi bữa không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần môi trường xã hội từ bữa ăn?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Quyết định 2195/QĐ-BGDĐT có nói về mầm non và tiểu học?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần bữa tối 25-30% năng lượng ở nhà?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp phát triển kỹ năng giao tiếp?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc3_1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần ít nhất 5 trong 8 nhóm thực phẩm WHO?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trường THCS có thể không tổ chức bữa ăn học đường không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai3_muc2_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần nhóm gạo ngô khoai sắn không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp giáo dục văn hóa ẩm thực?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần nhóm thịt cá hải sản không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Công văn 988/BGDĐT-GDTC nói về điều gì năm 2023?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần nhóm sữa và sản phẩm từ sữa?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp tạo thói quen ăn uống lành mạnh?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần nhóm trứng và sản phẩm từ trứng?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_4_3_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trường học có trách nhiệm hợp tác với đơn vị cung cấp không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần nhóm củ quả màu vàng da cam?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bữa ăn học đường có cung cấp an ninh lương thực không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần nhóm rau củ quả khác như su hào?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần đảm bảo tuân thủ quy định về dinh dưỡng không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần nhóm chất béo bắt buộc không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp kiểm soát bệnh dinh dưỡng?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần chế biến món xào món mặn món canh?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần thông báo mức chi phí cho phụ huynh không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần món tráng miệng trong bữa ăn?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp hiểu về dinh dưỡng và thực phẩm?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần đảm bảo cân đối hợp lý đa dạng?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần chính sách hỗ trợ phụ huynh khó khăn không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần đảm bảo đủ định lượng rau củ không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có tạo lòng biết ơn người làm thực phẩm?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần 3-5 loại rau củ trong bữa chính?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Đề án 2018-2025 có mục tiêu dự phòng bệnh gì?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần rau đã sơ chế bỏ rễ và lá sâu?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp phát triển cơ bắp hệ thần kinh?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần đảm bảo cung cấp đủ chất đạm chất béo?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần đánh giá chất lượng bữa ăn học đường không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần chất bột đường vitamin chất khoáng?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_3_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có tăng sức đề kháng giảm nguy cơ bệnh?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần acid amin cơ thể không tự tổng hợp?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần tăng cường hoạt động thể lực kết hợp bữa ăn?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc1_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần vitamin chất khoáng chất xơ không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có tạo môi trường học tập công bằng?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần nhóm hạt đậu đỗ vừng lạc không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Chương trình bữa ăn học đường có quy định số lượng calo?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_bang9_tonghop",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần chất đạm động vật và canxi quan trọng?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp duy trì sự tập trung giảm đói?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần chất đạm thực vật cho cơ thể không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần thành phần bữa ăn trong chương trình học đường?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc3_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần tính đa dạng trong thực đơn không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bữa ăn học đường có tăng khả năng tiếp thu thông tin?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần rau tươi có màu xanh thẫm không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần yêu cầu về an toàn vệ sinh thực phẩm không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần các chất dinh dưỡng quý cho cơ thể?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có tạo cơ hội phát triển bình đẳng?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 14 tuổi có thể không ăn sáng đi học được không?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần đảm bảo chất lượng dinh dưỡng và sức khỏe?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần khuyến cáo Tổ chức Y tế thế giới?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có tăng cường tình đoàn kết bạn bè?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần đảm bảo tối thiểu 3 bữa chính?",
+    "positive": "bai3_muc3_3_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần tiêu chuẩn về dinh dưỡng và vệ sinh không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần cung cấp năng lượng cho hoạt động học tập?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp rèn luyện kỹ năng xã hội?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần đáp ứng nhu cầu vận động phát triển?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần miễn phí bữa ăn cho học sinh chính sách không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần phát triển thể lực và trí lực?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bữa ăn học đường có ý thức bảo vệ môi trường không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần hình thành thói quen ăn uống khoa học?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần bảo đảm an ninh lương thực thực phẩm không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần trẻ phát triển khỏe mạnh đủ sức học tập?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có đảm bảo sự phát triển toàn diện không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần hỗ trợ kiểm soát bệnh dinh dưỡng?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có thể là bữa ăn sáng trưa chiều và bữa phụ không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần kiểm soát suy dinh dưỡng thiếu vi chất?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có cung cấp năng lượng và chất dinh dưỡng?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần kiểm soát thừa cân béo phì không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Số lượng bữa ăn có thay đổi theo cấp học không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần bữa xế giữa sáng hoặc giữa chiều?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có thiết thực và ý nghĩa cao không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần loại hình bán trú nội trú không?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần nhiệm vụ thiết thực trong công tác giáo dục không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần có lợi cho sức khỏe học sinh?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có nâng cao chất lượng giáo dục không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần chuẩn bị để cung cấp năng lượng?",
+    "positive": "bai3_muc2_1",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần tạo điều kiện tốt nhất cho sự phát triển không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần bữa ăn đầy đủ và giá cả hợp lý?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Bữa ăn học đường có tham gia vào hoạt động học tập không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần năng lượng cho cơ bắp hệ thần kinh?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần đóng vai trò không thể thiếu trong giáo dục không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần giảm cảm giác đói khi học không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa ăn học đường có hỗ trợ phát triển hệ miễn dịch không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần tương tác giữa các học sinh không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần góp phần phát triển kỹ năng giao tiếp không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần cơ hội nhận nguồn dinh dưỡng không?",
+    "positive": "bai3_muc1_1",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có thể tính trước 1-2 tuần để đặt thực phẩm không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần bàn với bếp trưởng về nguyên liệu?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần lập bảng tính toán lượng thực phẩm không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần tính gạo và thực phẩm giàu đạm?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần sử dụng phần mềm tính toán thực phẩm không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai2_muc4_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần tính định lượng chất béo gia vị?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần đảm bảo định lượng theo từng lứa tuổi không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_bang9_tonghop",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần tính sữa chế phẩm sữa không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần cân đối giữa động vật và thực vật không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_1_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần đáp ứng tiêu chuẩn dinh dưỡng?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần phù hợp với mức tiền ăn của trẻ không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần tính thực phẩm sống sạch không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần liệt kê tổng số nguyên liệu cho cả ngày không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần thực phẩm đi chợ cho học sinh?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần tổng số thực phẩm đặt hàng toàn trường không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần khung thực đơn cách chế biến?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần đảm bảo công tác đặt thực phẩm không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai4_muc4_1_7",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần thành phần nguyên liệu từng món?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Có cần cân đối các chất cung cấp năng lượng không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần khẩu phần đạt tiêu chuẩn năng lượng?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần người phụ trách xây dựng thực đơn không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai4_muc1_2_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần một trẻ theo từng độ tuổi?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần tính toán cho một suất ăn không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần tính toán định lượng thực phẩm?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần chọn và tính thực phẩm đạt khẩu phần không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc3_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần dựa vào khung thực đơn không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần bữa ăn học đường một ngày tại trường không?",
+    "positive": "bai3_muc3_2_2",
+    "negative": "bai3_muc2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần dự phòng bệnh ung thư tim mạch?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Có cần dự phòng đái tháo đường phổi tắc nghẽn không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần dự phòng hen phế quản không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Có cần giai đoạn 2018-2025 cho học sinh sinh viên?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai3_muc1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần bảo đảm dinh dưỡng hợp lý không?",
+    "positive": "bai3_muc2_2",
+    "negative": "bai1_muc3_1_3_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần tham gia hoạt động thể lực 60 phút mỗi ngày?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần kết hợp vận động aerobic với làm mạnh cơ không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần tăng cường HĐTL với phát triển toàn diện?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động thể lực có được tính trừ thời gian ngủ không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần CLB thể thao ở trường không?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ mầm non có cần bài tập khởi động trước vận động?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần kết hợp lượng vận động và nghỉ ngơi?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trường học có cần sân bãi an toàn để triển khai hoạt động thể lực?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần thực hiện động tác căng cơ sau 60 phút học?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có thể mang tính tự phát ở trẻ em không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần tập luyện theo nhóm có HLV không?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 4 tuổi có cần các trò chơi vận động hấp dẫn không?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần tham gia Ngày hội TDTT hàng năm?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm chạy bộ đi bộ nhanh bơi lội?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần tập với bóng và thảm yoga không?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 13 tuổi có cần kết hợp vai trò giáo viên với tự giác học sinh?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần hoạt động thể lực mức độ trung bình và mạnh?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Cơ sở giáo dục có thể xã hội hóa đầu tư thể thao không?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần thường xuyên sử dụng cầu thang bộ?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động thể lực có 4 yếu tố chính nào không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần chạy tiếp sức rèn luyện sức nhanh?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 14 tuổi có cần kết hợp yêu cầu chung với đối xử cá biệt?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần các bài tập vận động đơn giản đa dạng?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trường học có cần nhà tập luyện đa năng và bể bơi không?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần tập thói quen đi bộ đến trường?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có tiêu thụ năng lượng từ hệ cơ xương?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần tập luyện cá nhân thể dục vệ sinh?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần đứng lên ngồi xuống rèn phản xạ không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần kết hợp củng cố với nâng cao?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Cường độ hoạt động thể lực có phụ thuộc mục tiêu cá nhân không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần lăn bóng rèn phản xạ tập trung?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 17 tuổi có cần tổ chức hoạt động thể thao ngoại khóa?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần chơi đùa với trẻ nhỏ để vận động?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Học sinh có sức khỏe yếu có thể thực hiện HĐTL không?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_2_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần trung tâm thể thao của trường?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tần suất hoạt động thể lực có tính theo ngày tuần tháng?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần vận động cơ thể sôi động phóng khoáng?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 13 tuổi có cần hoạt động giao lưu trao đổi thể thao?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần thực hiện bài tập nhỏ tăng dần?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm aerobic yoga điền kinh không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần tập theo nhóm tự nguyện tự quản?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 6 tuổi có cần hoạt động đa dạng vui phù hợp sở thích?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần tổ chức theo tập thể tổ đội nhóm lớp?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Thời gian hoạt động thể lực có liên quan số phút thực hiện?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần cảm nhận sự thích thú và thoải mái?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 14 tuổi có cần thi đấu thể thao ít nhất năm một lần?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần tích cực hoạt động dã ngoại ngoài trời?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Loại hoạt động thể lực có bao gồm đạp xe không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần phát triển toàn diện trí lực tâm lý?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần thể dục giữa giờ mỗi giờ nghỉ?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần thể dục buổi sáng thể dục giữa giờ?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động thể lực có phân loại nhẹ trung bình mạnh không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần hình thành thói quen rèn luyện sức khỏe?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 16 tuổi có cần phổ biến kiến thức tập luyện thể thao?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần tranh thủ tập yoga khi xem TV?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ em có thể vận động khi chơi hoặc di chuyển không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần tăng cường sự hợp tác giúp đỡ nhau?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 11 tuổi có cần bài tập cổ tay vai hông chân?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần tự tập theo xu hướng huấn luyện?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động thể lực có tùy theo khả năng của mỗi trẻ không?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần phù hợp với đặc điểm tâm sinh lý?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 18 tuổi có cần dạo chơi hàng ngày để vận động?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần trò chơi dân gian phát triển vận động?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Cơ sở giáo dục có cần sử dụng trang thiết bị dụng cụ thể thao?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần điều chỉnh bài tập theo vấn đề sức khỏe?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 9 tuổi có cần giảm nguy cơ chấn thương khi tập?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần trò chơi vận động và thi đấu?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Sự đa dạng vận động có lợi cho sức khỏe trẻ không?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần bất cứ hoạt động tiêu hao năng lượng?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 12 tuổi có cần thường xuyên ôn tập củng cố kỹ năng?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần tập với con lăn và thảm yoga?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có thể có tổ chức và có ý thức không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần hoạt động trải nghiệm dã ngoại?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần cơ thể được làm nóng trước tập?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần hướng dẫn viên TDTT chuyên môn?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ có thể tham gia tập ở nhà công viên trại hè không?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần hệ tuần hoàn bơm máu giàu oxy?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 13 tuổi có cần tăng dần tần suất cường độ thời gian?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần vận động là nền tảng sinh hoạt hàng ngày?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Mức độ cường độ có phụ thuộc tình trạng sức khỏe không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_4_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần nâng cao sức khỏe năng lực thể chất?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 6 tuổi có cần kinh nghiệm thử thách từ trò chơi?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần phù hợp với điều kiện thực tiễn trường?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có thể không đáp ứng khuyến cáo WHO?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần sắp xếp lượng vận động phù hợp?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 4 tuổi có cần chơi vận động để cảm nhận thích thú?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 18 tuổi có cần buổi tập nâng cao sức khỏe?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trò chơi vận động có gây hứng thú hơn bài tập thể hình?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai3_muc4_4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần giúp trẻ nhanh nhẹn phản xạ nhanh?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 15 tuổi có cần tư tưởng phẩm chất từ tập luyện?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần hình thành vận động cơ bản cơ thể?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trường học có cần công viên công cộng khu vui chơi?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai3_muc4_5",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần khuyến khích hỗ trợ nhu cầu đặc biệt?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động aerobic có bao gồm đi bộ nhanh thể dục nhịp điệu?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần chăm sóc sức khỏe từ HĐTL không?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 8 tuổi có cần cơ bắp chuẩn bị sẵn sàng tốt nhất?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 1 tuổi có cần hoạt động thể lực trừ thời gian ngủ?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Hoạt động làm mạnh cơ có bao gồm hít đất kéo co?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần căn cứ trình độ chung học sinh?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 10 tuổi có cần tăng cường vận động nâng cao sức khỏe?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 19 tuổi có cần kế hoạch phân cấp tổ chức tập luyện?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động làm mạnh xương có bao gồm chạy nhảy yoga?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần vận động dù chỉ chút ít?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 17 tuổi có cần điều kiện cơ sở địa phương và trường?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần phù hợp nhu cầu sở thích vui chơi?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 14 tuổi có cần luân phiên hợp lý luyện tập nghỉ ngơi?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_3_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần 60 phút bao gồm giờ học GDTC?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có phụ thuộc mục đích cá nhân không?",
+    "positive": "bai3_muc4_1",
+    "negative": "bai3_muc4_3_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần phòng bệnh tật từ hoạt động thể lực?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 18 tuổi có cần điều chỉnh cho phù hợp điều kiện sức khỏe?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 5 tuổi có cần đặc điểm phát triển thể chất lứa tuổi?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trường học có cần nâng cấp cải tạo công trình thể thao?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai4_muc1_2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần chịu đựng lượng vận động sinh lý?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 9 tuổi có cần tinh thần thể chất sẵn sàng tập luyện?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 12 tuổi có cần hoàn thành nhiệm vụ tập luyện tích cực?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm tennis và bóng rổ không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 8 tuổi có cần thể lực tầm vóc từ vận động?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 16 tuổi có cần tham gia tập luyện và thi đấu CLB?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 3 tuổi có cần vận động tự do và thoải mái?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trường học có cần đáp ứng nhu cầu hoạt động thể lực?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai3_muc2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần hoàn thành chất lượng nhiệm vụ hướng dẫn?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động mạnh có bao gồm chạy bộ rượt đuổi đá bóng?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 10 tuổi có cần bước đầu hình thành thói quen rèn luyện?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 19 tuổi có cần phát triển toàn diện nhân cách học sinh?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 6 tuổi có cần thu hút sự tham gia vào trò chơi?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_3_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm trò chơi ném bắt bóng không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần tập có hướng dẫn theo tập thể?",
+    "positive": "bai3_muc4_4_3",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 4 tuổi có cần điều kiện thực tiễn tại nhà trường?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 14 tuổi có cần chú ý từng học sinh đặc thù?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm nhảy lò cò bóng chuyền?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 11 tuổi có cần giờ ra chơi và hoạt động thể thao?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 18 tuổi có cần kỹ thuật kỹ năng vận động đã học?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 2 tuổi có cần vận động và hưng phấn từ trò chơi?",
+    "positive": "bai3_muc4_3_1",
+    "negative": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trường học có cần phục vụ giáo dục thể chất hoạt động thể thao?",
+    "positive": "bai3_muc4_5",
+    "negative": "bai3_muc2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 15 tuổi có cần lựa chọn phương pháp hướng dẫn tập luyện?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động nhịp điệu có mạnh bao gồm động tác mạnh không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 7 tuổi có cần đi bộ hoặc xe đạp đến trường?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ 12 tuổi có cần tạo điều kiện tham gia hiệu quả?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 9 tuổi có cần xây dựng đơn giản đa dạng phong phú?",
+    "positive": "bai3_muc4_4_2",
+    "negative": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hoạt động thể lực có bao gồm nhảy bao bố không?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai3_muc4_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 16 tuổi có cần tham gia hoạt động ngoài giờ học?",
+    "positive": "bai3_muc4_4_4",
+    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ 5 tuổi có cần mới lạ phù hợp sở thích vận động?",
+    "positive": "bai3_muc4_4_1",
+    "negative": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần đạo đức thẩm mỹ năng lực học sinh?",
+    "positive": "bai3_muc4_3_2",
+    "negative": "bai1_muc3_4_1_12-14tuoi",
     "age_group": "12-14"
   }
 ]
