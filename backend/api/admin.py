@@ -255,7 +255,7 @@ def get_system_alerts():
 @admin_routes.route('/users', methods=['GET'])
 @require_admin
 def get_all_users():
-    """Lấy danh sách người dùng"""
+    """Lấy danh sách người dùng với thông tin thực tế"""
     try:
         db = get_db()
         users_collection = db.users
@@ -264,6 +264,7 @@ def get_all_users():
         per_page = int(request.args.get('per_page', 20))
         search = request.args.get('search', '')
         gender_filter = request.args.get('gender', '')
+        role_filter = request.args.get('role', '')
         sort_by = request.args.get('sort_by', 'created_at')
         sort_order = request.args.get('sort_order', 'desc')
         
@@ -276,6 +277,8 @@ def get_all_users():
             ]
         if gender_filter:
             query_filter["gender"] = gender_filter
+        if role_filter:
+            query_filter["role"] = role_filter
         
         # Pagination
         skip = (page - 1) * per_page
@@ -286,26 +289,52 @@ def get_all_users():
         
         users_list = []
         for user_data in users_cursor:
+            # Đếm conversations thực tế
             conversation_count = db.conversations.count_documents({"user_id": user_data["_id"]})
+            
+            # Lấy conversation mới nhất để biết last_activity
             latest_conversation = db.conversations.find_one(
                 {"user_id": user_data["_id"]},
                 sort=[("updated_at", -1)]
             )
+            
+            # Đếm tin nhắn
+            user_conversations = list(db.conversations.find({"user_id": user_data["_id"]}))
+            total_messages = sum(len(conv.get("messages", [])) for conv in user_conversations)
             
             users_list.append({
                 "id": str(user_data["_id"]),
                 "name": user_data.get("name", ""),
                 "email": user_data.get("email", ""),
                 "gender": user_data.get("gender", ""),
+                "role": user_data.get("role", "user"),
                 "created_at": user_data.get("created_at").isoformat() if user_data.get("created_at") else None,
                 "updated_at": user_data.get("updated_at").isoformat() if user_data.get("updated_at") else None,
+                "last_login": user_data.get("last_login").isoformat() if user_data.get("last_login") else None,
                 "conversation_count": conversation_count,
-                "last_activity": latest_conversation.get("updated_at").isoformat() if latest_conversation and latest_conversation.get("updated_at") else None
+                "message_count": total_messages,
+                "last_activity": latest_conversation.get("updated_at").isoformat() if latest_conversation and latest_conversation.get("updated_at") else None,
+                "avg_messages_per_conversation": round(total_messages / conversation_count, 1) if conversation_count > 0 else 0
             })
+        
+        # Thống kê tổng hợp
+        stats = {
+            "total_users": total_users,
+            "total_admins": users_collection.count_documents({"role": "admin"}),
+            "total_regular_users": users_collection.count_documents({"role": "user"}),
+            "active_users": users_collection.count_documents({"last_login": {"$exists": True}}),
+            "gender_stats": {
+                "male": users_collection.count_documents({"gender": "male"}),
+                "female": users_collection.count_documents({"gender": "female"}),
+                "other": users_collection.count_documents({"gender": "other"}),
+                "unknown": users_collection.count_documents({"gender": {"$in": [None, ""]}})
+            }
+        }
         
         return jsonify({
             "success": True,
             "users": users_list,
+            "stats": stats,
             "pagination": {
                 "page": page,
                 "per_page": per_page,
@@ -324,7 +353,7 @@ def get_all_users():
 @admin_routes.route('/users/<user_id>', methods=['GET'])
 @require_admin
 def get_user_detail(user_id):
-    """Lấy chi tiết người dùng"""
+    """Lấy chi tiết người dùng với thông tin đầy đủ"""
     try:
         user = User.find_by_id(user_id)
         if not user:
@@ -334,30 +363,41 @@ def get_user_detail(user_id):
             }), 404
         
         db = get_db()
+        
+        # Lấy conversations của user
         user_conversations = list(db.conversations.find(
             {"user_id": ObjectId(user_id)},
             {"title": 1, "created_at": 1, "updated_at": 1, "age_context": 1, "messages": 1}
         ).sort("updated_at", -1))
         
+        # Tính thống kê chi tiết
+        total_messages = sum(len(conv.get("messages", [])) for conv in user_conversations)
         conversation_stats = {
             "total_conversations": len(user_conversations),
-            "total_messages": sum(len(conv.get("messages", [])) for conv in user_conversations),
-            "avg_messages_per_conversation": 0,
-            "most_recent_conversation": None
+            "total_messages": total_messages,
+            "avg_messages_per_conversation": round(total_messages / len(user_conversations), 1) if user_conversations else 0,
+            "most_recent_conversation": user_conversations[0].get("updated_at").isoformat() if user_conversations and user_conversations[0].get("updated_at") else None,
+            "oldest_conversation": user_conversations[-1].get("created_at").isoformat() if user_conversations and user_conversations[-1].get("created_at") else None
         }
         
-        if user_conversations:
-            conversation_stats["avg_messages_per_conversation"] = conversation_stats["total_messages"] / len(user_conversations)
-            conversation_stats["most_recent_conversation"] = user_conversations[0].get("updated_at").isoformat() if user_conversations[0].get("updated_at") else None
+        # Thống kê theo độ tuổi
+        age_stats = {}
+        for conv in user_conversations:
+            age = conv.get("age_context")
+            if age:
+                age_stats[age] = age_stats.get(age, 0) + 1
         
         user_detail = {
             "id": str(user.user_id),
             "name": user.name,
             "email": user.email,
             "gender": user.gender,
+            "role": user.role,
             "created_at": user.created_at.isoformat() if user.created_at else None,
             "updated_at": user.updated_at.isoformat() if user.updated_at else None,
+            "last_login": user.last_login.isoformat() if user.last_login else None,
             "stats": conversation_stats,
+            "age_usage": age_stats,
             "recent_conversations": [
                 {
                     "id": str(conv["_id"]),
