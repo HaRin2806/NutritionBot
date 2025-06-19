@@ -122,7 +122,10 @@ export const adminService = {
 
   // Document Management
   getAllDocuments: () => baseApi.get('/admin/documents'),
-  getDocumentDetail: (docId) => baseApi.get(`/admin/documents/${docId}`),
+  getDocumentDetail: (docId) => {
+    console.log(`Getting document detail: ${docId}`);
+    return baseApi.get(`/admin/documents/${docId}`);
+  },
   uploadDocument: (file, metadata) => baseApi.upload('/admin/documents/upload', file, metadata),
   processDocument: (docId, options) => baseApi.post(`/admin/documents/${docId}/process`, options),
   deleteDocument: (docId) => baseApi.delete(`/admin/documents/${docId}`),

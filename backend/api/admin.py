@@ -724,97 +724,141 @@ def get_chapter_type(chapter):
 def get_document_detail(doc_id):
     """Lấy chi tiết document theo chapter"""
     try:
-        embedding_model = get_embedding_model()
+        logger.info(f"Getting document detail for: {doc_id}")
         
-        # Query documents theo chapter - thử nhiều cách
-        queries = []
+        # Sử dụng try-catch để tránh lỗi tensor
+        try:
+            embedding_model = get_embedding_model()
+        except Exception as model_error:
+            logger.warning(f"Cannot load embedding model: {model_error}")
+            # Fallback: truy cập trực tiếp ChromaDB
+            import chromadb
+            from config import CHROMA_PERSIST_DIRECTORY, COLLECTION_NAME
+            
+            chroma_client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIRECTORY)
+            collection = chroma_client.get_collection(name=COLLECTION_NAME)
+        else:
+            collection = embedding_model.collection
         
-        # Thử query theo chunk_id pattern
-        if doc_id != 'unknown':
-            queries.append({"chunk_id": {"$regex": f"^{doc_id}_"}})
-        
-        # Thử query theo chapter field
-        queries.append({"chapter": doc_id})
-        
-        # Thử query theo source
-        queries.append({"source": doc_id})
-        
-        results = None
-        for query in queries:
-            try:
-                results = embedding_model.collection.get(
-                    where=query,
-                    include=['metadatas', 'documents', 'ids']
-                )
-                if results and results['metadatas']:
-                    logger.info(f"Found {len(results['metadatas'])} documents with query: {query}")
-                    break
-            except Exception as e:
-                logger.warning(f"Query {query} failed: {e}")
-                continue
-        
-        # Nếu không tìm thấy bằng query, thử filter manually
-        if not results or not results['metadatas']:
-            logger.info(f"Trying manual filter for doc_id: {doc_id}")
-            all_results = embedding_model.collection.get(
-                include=['metadatas', 'documents', 'ids']
+        # Lấy tất cả documents và filter manually để tránh lỗi query
+        try:
+            all_results = collection.get(
+                include=['metadatas', 'documents']  # Bỏ 'ids' để tránh lỗi
             )
             
-            if all_results and all_results['metadatas']:
-                filtered_indices = []
-                for i, metadata in enumerate(all_results['metadatas']):
-                    chunk_id = metadata.get('chunk_id', '')
-                    chapter = metadata.get('chapter', '')
-                    source = metadata.get('source', '')
+            if not all_results or not all_results.get('metadatas'):
+                logger.warning("No documents found in collection")
+                return jsonify({
+                    "success": False,
+                    "error": "Không có dữ liệu trong collection"
+                }), 404
+            
+            # Filter manually
+            filtered_documents = []
+            filtered_metadatas = []
+            
+            for i, metadata in enumerate(all_results['metadatas']):
+                if not metadata:
+                    continue
                     
-                    if (chunk_id.startswith(f"{doc_id}_") or 
-                        chapter == doc_id or 
-                        source == doc_id or
-                        (doc_id == 'unknown' and not any(chunk_id.startswith(f"bai{i}_") for i in range(1, 5)) and 'phuluc' not in chunk_id.lower())):
-                        filtered_indices.append(i)
+                chunk_id = metadata.get('chunk_id', '')
+                chapter = metadata.get('chapter', '')
                 
-                if filtered_indices:
-                    results = {
-                        'ids': [all_results['ids'][i] for i in filtered_indices],
-                        'metadatas': [all_results['metadatas'][i] for i in filtered_indices],
-                        'documents': [all_results['documents'][i] for i in filtered_indices]
-                    }
-        
-        if not results or not results['metadatas']:
+                # Kiểm tra match với doc_id
+                if (chunk_id.startswith(f"{doc_id}_") or 
+                    chapter == doc_id or
+                    (doc_id in ['bai1', 'bai2', 'bai3', 'bai4'] and chunk_id.startswith(f"{doc_id}_")) or
+                    (doc_id == 'phuluc' and 'phuluc' in chunk_id.lower())):
+                    
+                    filtered_documents.append(all_results['documents'][i])
+                    filtered_metadatas.append(metadata)
+            
+            logger.info(f"Found {len(filtered_documents)} matching documents for {doc_id}")
+            
+            if not filtered_documents:
+                return jsonify({
+                    "success": False,
+                    "error": f"Không tìm thấy tài liệu cho {doc_id}"
+                }), 404
+            
+        except Exception as query_error:
+            logger.error(f"ChromaDB query error: {query_error}")
             return jsonify({
                 "success": False,
-                "error": f"Không tìm thấy tài liệu cho {doc_id}"
-            }), 404
+                "error": f"Lỗi truy vấn cơ sở dữ liệu: {str(query_error)}"
+            }), 500
         
-        # Xử lý kết quả
-        chunks = []
-        for i, metadata in enumerate(results['metadatas']):
+        # Xử lý kết quả và nhóm theo content_type
+        chunks_by_type = {
+            'text': [],
+            'table': [],
+            'figure': []
+        }
+        
+        for i, metadata in enumerate(filtered_metadatas):
+            content_type = metadata.get('content_type', 'text')
+            
+            # Parse age_range
+            age_range_str = metadata.get('age_range', '1-19')
+            try:
+                if '-' in age_range_str:
+                    age_min, age_max = map(int, age_range_str.split('-'))
+                else:
+                    age_min = age_max = int(age_range_str)
+            except:
+                age_min, age_max = 1, 19
+            
             chunk = {
-                "id": results['ids'][i],
-                "content": results['documents'][i][:200] + "..." if len(results['documents'][i]) > 200 else results['documents'][i],
-                "metadata": metadata,
-                "content_type": metadata.get('content_type', 'text'),
-                "age_range": metadata.get('age_range', []),
-                "created_at": metadata.get('created_at')
+                "id": metadata.get('chunk_id', f'chunk_{i}'),
+                "title": metadata.get('title', 'Không có tiêu đề'),
+                "content": filtered_documents[i],
+                "content_type": content_type,
+                "age_range": age_range_str,
+                "age_min": age_min,
+                "age_max": age_max,
+                "summary": metadata.get('summary', 'Không có tóm tắt'),
+                "pages": metadata.get('pages', ''),
+                "word_count": metadata.get('word_count', 0),
+                "token_count": metadata.get('token_count', 0),
+                "related_chunks": metadata.get('related_chunks', '').split(',') if metadata.get('related_chunks') else [],
+                "created_at": metadata.get('created_at', ''),
+                "document_source": metadata.get('document_source', ''),
+                # Metadata đặc biệt
+                "contains_table": metadata.get('contains_table', False),
+                "contains_figure": metadata.get('contains_figure', False),
+                "table_columns": metadata.get('table_columns', '').split(',') if metadata.get('table_columns') else []
             }
-            chunks.append(chunk)
+            
+            # Phân loại vào đúng nhóm
+            if content_type in chunks_by_type:
+                chunks_by_type[content_type].append(chunk)
+            else:
+                chunks_by_type['text'].append(chunk)
         
-        logger.info(f"Returning {len(chunks)} chunks for {doc_id}")
+        # Tính thống kê
+        total_chunks = sum(len(chunks) for chunks in chunks_by_type.values())
+        
+        logger.info(f"Successfully processed {total_chunks} chunks for {doc_id}")
         
         return jsonify({
             "success": True,
             "document": {
                 "id": doc_id,
-                "chunks": chunks,
-                "total_chunks": len(chunks)
+                "chunks": chunks_by_type,
+                "stats": {
+                    "total_chunks": total_chunks,
+                    "text_chunks": len(chunks_by_type['text']),
+                    "table_chunks": len(chunks_by_type['table']),
+                    "figure_chunks": len(chunks_by_type['figure'])
+                }
             }
         })
         
     except Exception as e:
-        logger.error(f"Lỗi lấy chi tiết document: {str(e)}")
+        logger.error(f"Error getting document detail: {str(e)}")
         return jsonify({
             "success": False,
-            "error": str(e)
+            "error": f"Lỗi máy chủ: {str(e)}"
         }), 500
 
 @admin_routes.route('/documents/debug/metadata', methods=['GET'])
@@ -822,26 +866,44 @@ def get_document_detail(doc_id):
 def debug_metadata():
     """Debug metadata trong ChromaDB"""
     try:
-        embedding_model = get_embedding_model()
-        
-        # Lấy 10 documents đầu tiên để debug
-        results = embedding_model.collection.get(
-            limit=10,
-            include=['metadatas', 'ids']
-        )
+        # Sử dụng try-catch để tránh lỗi tensor
+        try:
+            embedding_model = get_embedding_model()
+            total_docs = embedding_model.count()
+        except Exception as model_error:
+            logger.warning(f"Không thể load embedding model: {model_error}")
+            # Fallback: truy cập trực tiếp ChromaDB
+            import chromadb
+            from config import CHROMA_PERSIST_DIRECTORY, COLLECTION_NAME
+            
+            chroma_client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIRECTORY)
+            collection = chroma_client.get_collection(name=COLLECTION_NAME)
+            total_docs = collection.count()
+            
+            # Lấy sample metadata
+            results = collection.get(
+                limit=10,
+                include=['metadatas']
+            )
+        else:
+            # Lấy 10 documents đầu tiên để debug
+            results = embedding_model.collection.get(
+                limit=10,
+                include=['metadatas']
+            )
         
         debug_info = {
-            "total_documents": len(results['metadatas']) if results else 0,
-            "sample_metadata": results['metadatas'][:5] if results else [],
-            "sample_ids": results['ids'][:5] if results else [],
+            "total_documents": total_docs,
+            "sample_metadata": results['metadatas'][:5] if results and results.get('metadatas') else [],
             "all_metadata_keys": []
         }
         
-        if results and results['metadatas']:
+        if results and results.get('metadatas'):
             # Lấy tất cả keys từ metadata
             all_keys = set()
             for metadata in results['metadatas']:
-                all_keys.update(metadata.keys())
+                if metadata:  # Kiểm tra metadata không None
+                    all_keys.update(metadata.keys())
             debug_info["all_metadata_keys"] = list(all_keys)
         
         return jsonify({
@@ -880,9 +942,14 @@ def upload_document():
                 "error": "Chỉ chấp nhận file PDF"
             }), 400
         
+        # Tạo thư mục temp nếu chưa có
+        temp_dir = '/tmp'
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+        
         # Lưu file tạm thời
         filename = secure_filename(file.filename)
-        temp_path = os.path.join('/tmp', filename)
+        temp_path = os.path.join(temp_dir, f"{int(time.time())}_{filename}")
         file.save(temp_path)
         
         # Metadata từ form
@@ -893,19 +960,26 @@ def upload_document():
         # Tạo document record
         document_id = f"upload_{int(datetime.datetime.now().timestamp())}"
         
+        logger.info(f"Uploaded file: {filename} -> {temp_path}")
+        
         return jsonify({
             "success": True,
             "message": "File đã được upload thành công",
             "document_id": document_id,
             "filename": filename,
-            "temp_path": temp_path
+            "temp_path": temp_path,
+            "metadata": {
+                "title": title,
+                "description": description,
+                "author": author
+            }
         })
         
     except Exception as e:
         logger.error(f"Lỗi upload document: {str(e)}")
         return jsonify({
             "success": False,
-            "error": str(e)
+            "error": f"Lỗi upload: {str(e)}"
         }), 500
 
 @admin_routes.route('/documents/<doc_id>/process', methods=['POST'])
@@ -922,15 +996,37 @@ def process_document(doc_id):
                 "error": "File không tồn tại"
             }), 400
         
-        # Đọc PDF content (cần thêm PyPDF2 hoặc pdfplumber)
-        import PyPDF2
+        logger.info(f"Processing document {doc_id} from {temp_path}")
         
-        with open(temp_path, 'rb') as file:
-            pdf_reader = PyPDF2.PdfReader(file)
-            pdf_text = ""
-            for page_num in range(len(pdf_reader.pages)):
-                page = pdf_reader.pages[page_num]
-                pdf_text += page.extract_text()
+        # Kiểm tra và import PyPDF2
+        try:
+            import PyPDF2
+        except ImportError:
+            logger.error("PyPDF2 không được cài đặt")
+            return jsonify({
+                "success": False,
+                "error": "Thiếu thư viện PyPDF2. Vui lòng cài đặt: pip install PyPDF2"
+            }), 500
+        
+        # Đọc PDF content
+        try:
+            with open(temp_path, 'rb') as file:
+                pdf_reader = PyPDF2.PdfReader(file)
+                pdf_text = ""
+                for page_num in range(len(pdf_reader.pages)):
+                    page = pdf_reader.pages[page_num]
+                    page_text = page.extract_text()
+                    if page_text:
+                        pdf_text += page_text + "\n"
+                        
+            logger.info(f"Extracted {len(pdf_text)} characters from PDF")
+            
+        except Exception as pdf_error:
+            logger.error(f"Lỗi đọc PDF: {pdf_error}")
+            return jsonify({
+                "success": False,
+                "error": f"Không thể đọc file PDF: {str(pdf_error)}"
+            }), 400
         
         if not pdf_text.strip():
             return jsonify({
@@ -939,83 +1035,132 @@ def process_document(doc_id):
             }), 400
         
         # Tạo prompt cho Gemini
-        prompt = create_document_processing_prompt(pdf_text)
+        try:
+            prompt = create_document_processing_prompt(pdf_text)
+            logger.info("Created prompt for Gemini")
+        except Exception as prompt_error:
+            logger.error(f"Lỗi tạo prompt: {prompt_error}")
+            return jsonify({
+                "success": False,
+                "error": f"Lỗi tạo prompt: {str(prompt_error)}"
+            }), 500
         
         # Gọi Gemini API
-        model = genai.GenerativeModel('gemini-2.0-flash')
-        
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                response = model.generate_content(prompt)
-                result_text = response.text.strip()
+        try:
+            model = genai.GenerativeModel('gemini-2.5-flash')
+            logger.info("Calling Gemini API...")
+            
+            response = model.generate_content(
+                prompt,
+                generation_config=genai.types.GenerationConfig(
+                    temperature=0.1,
+                    max_output_tokens=10000
+                )
+            )
+            
+            if not response or not response.text:
+                return jsonify({
+                    "success": False,
+                    "error": "Gemini không trả về response"
+                }), 500
                 
-                # Parse JSON response
-                try:
-                    if result_text.startswith('```json'):
-                        result_text = result_text.replace('```json', '').replace('```', '').strip()
-                    
-                    processed_data = json.loads(result_text)
-                    
-                    # Validate format
-                    if validate_processed_format(processed_data):
-                        # Lưu vào ChromaDB
-                        save_processed_document(doc_id, processed_data)
-                        
-                        # Xóa file tạm
-                        os.remove(temp_path)
-                        
-                        return jsonify({
-                            "success": True,
-                            "message": "Xử lý tài liệu thành công",
-                            "processed_chunks": len(processed_data.get('chunks', [])),
-                            "document_id": doc_id
-                        })
-                    else:
-                        if attempt == max_retries - 1:
-                            return jsonify({
-                                "success": False,
-                                "error": "Gemini không trả về đúng định dạng sau nhiều lần thử"
-                            }), 500
-                        continue
-                        
-                except json.JSONDecodeError:
-                    if attempt == max_retries - 1:
-                        return jsonify({
-                            "success": False,
-                            "error": "Không thể parse JSON từ Gemini response"
-                        }), 500
-                    continue
-                    
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    return jsonify({
-                        "success": False,
-                        "error": f"Lỗi gọi Gemini API: {str(e)}"
-                    }), 500
-                time.sleep(2)  # Wait before retry
-                continue
+            result_text = response.text.strip()
+            logger.info(f"Got response from Gemini: {len(result_text)} characters")
+            
+        except Exception as gemini_error:
+            logger.error(f"Lỗi gọi Gemini API: {gemini_error}")
+            return jsonify({
+                "success": False,
+                "error": f"Lỗi gọi AI API: {str(gemini_error)}"
+            }), 500
+        
+        # Parse JSON response
+        try:
+            # Làm sạch JSON response
+            if result_text.startswith('```json'):
+                result_text = result_text.replace('```json', '').replace('```', '').strip()
+            elif result_text.startswith('```'):
+                result_text = result_text[3:].rstrip('```').strip()
+            
+            processed_data = json.loads(result_text)
+            logger.info("Successfully parsed JSON response")
+            
+        except json.JSONDecodeError as json_error:
+            logger.error(f"JSON decode error: {json_error}")
+            logger.error(f"Raw response: {result_text}")
+            return jsonify({
+                "success": False,
+                "error": f"AI trả về format không hợp lệ: {str(json_error)}"
+            }), 500
+        
+        # Validate format
+        try:
+            if not validate_processed_format(processed_data):
+                return jsonify({
+                    "success": False,
+                    "error": "AI trả về format không đúng cấu trúc yêu cầu"
+                }), 500
+        except Exception as validate_error:
+            logger.error(f"Validation error: {validate_error}")
+            return jsonify({
+                "success": False,
+                "error": f"Lỗi validate format: {str(validate_error)}"
+            }), 500
+        
+        # Lưu vào ChromaDB
+        try:
+            save_processed_document(doc_id, processed_data)
+            logger.info(f"Successfully saved document {doc_id} to ChromaDB")
+        except Exception as save_error:
+            logger.error(f"Lỗi lưu document: {save_error}")
+            return jsonify({
+                "success": False,
+                "error": f"Lỗi lưu document: {str(save_error)}"
+            }), 500
+        
+        # Xóa file tạm
+        try:
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                logger.info(f"Deleted temp file: {temp_path}")
+        except Exception as delete_error:
+            logger.warning(f"Cannot delete temp file: {delete_error}")
+        
+        return jsonify({
+            "success": True,
+            "message": "Xử lý tài liệu thành công",
+            "processed_chunks": len(processed_data.get('chunks', [])),
+            "processed_tables": len(processed_data.get('tables', [])),
+            "processed_figures": len(processed_data.get('figures', [])),
+            "document_id": doc_id
+        })
         
     except Exception as e:
         logger.error(f"Lỗi xử lý document: {str(e)}")
         return jsonify({
             "success": False,
-            "error": str(e)
+            "error": f"Lỗi xử lý: {str(e)}"
         }), 500
 
 def create_document_processing_prompt(pdf_text):
     """Tạo prompt chi tiết cho Gemini"""
-    return f"""
+    # Cắt ngắn text để tránh vượt quá limit
+    max_text_length = 8000
+    if len(pdf_text) > max_text_length:
+        pdf_text = pdf_text[:max_text_length] + "..."
+    
+    prompt = f"""
 Bạn là một chuyên gia phân tích tài liệu dinh dưỡng. Nhiệm vụ của bạn là phân tích và chia nhỏ tài liệu PDF về dinh dưỡng thành các phần có nghĩa.
 
 TÁCH LIỆU CẦN XỬ LÝ:
-{pdf_text[:8000]}...
+{pdf_text}
 
 YÊU CẦU PHÂN TÍCH:
 
 1. PHÂN CHIA NỘI DUNG:
    - Chia tài liệu thành các chunk có nghĩa (mỗi chunk 200-500 từ)
-   - Mỗi chunk phải hoàn chỉnh về ý nghĩa
+   - Bạn phải giữ nguyên nội dung chunk và trả lại nội dung chunk đó, không được thay đổi ý nghĩa
+   - Mỗi chunk phải có tiêu đề rõ ràng
    - Phân biệt rõ text, table, figure
 
 2. ĐẶT TÊN THEO QUY CHUẨN:
@@ -1032,102 +1177,133 @@ YÊU CẦU PHÂN TÍCH:
 4. ĐỊNH DẠNG OUTPUT:
 Trả về JSON với cấu trúc chính xác như sau:
 
-{
-    "bai_info": {
+{{
+    "bai_info": {{
         "id": "bosungX",
         "title": "Tiêu đề tài liệu bổ sung",
         "pages": "trang áp dụng",
         "overview": "Tổng quan tài liệu"
-    },
+    }},
     "chunks": [
-        {
+        {{
             "id": "bosungX_mucY_Z",
             "title": "Tiêu đề chunk",
             "content_type": "text",
-            "age_range": [min_age, max_age],
+            "age_range": [1, 19],
             "pages": "trang",
-            "related_chunks": ["chunk_id_khac"],
+            "related_chunks": [],
             "summary": "Tóm tắt nội dung",
-            "word_count": số_từ,
-            "token_count": số_token_ước_tính,
-            "contains_table": true/false,
-            "contains_figure": true/false
-        }
+            "word_count": 100,
+            "token_count": 150,
+            "contains_table": false,
+            "contains_figure": false
+        }}
     ],
     "tables": [
-        {
+        {{
             "id": "bosungX_bangY",
             "title": "Tiêu đề bảng",
             "content_type": "table",
-            "age_range": [min_age, max_age],
+            "age_range": [1, 19],
             "pages": "trang",
-            "related_chunks": ["chunk_liên_quan"],
-            "table_columns": ["cột1", "cột2", "cột3"],
+            "related_chunks": [],
+            "table_columns": ["cột1", "cột2"],
             "summary": "Mô tả bảng",
-            "word_count": số_từ,
-            "token_count": số_token
-        }
+            "word_count": 50,
+            "token_count": 75
+        }}
     ],
     "figures": [
-        {
+        {{
             "id": "bosungX_hinhY",
             "title": "Tiêu đề hình",
             "content_type": "figure",
-            "age_range": [min_age, max_age],
+            "age_range": [1, 19],
             "pages": "trang",
-            "related_chunks": ["chunk_liên_quan"],
+            "related_chunks": [],
             "summary": "Mô tả hình ảnh"
-        }
+        }}
     ],
-    "total_items": {
-        "chunks": số_chunk,
-        "tables": số_bảng,
-        "figures": số_hình
-    },
+    "total_items": {{
+        "chunks": 1,
+        "tables": 1,
+        "figures": 1
+    }},
     "document_source": "Tài liệu bổ sung"
-}
+}}
 
 LUU Ý QUAN TRỌNG:
 - Đảm bảo JSON format hoàn toàn chính xác
 - Không thêm bất kỳ text nào ngoài JSON
-- age_range phải là array 2 số nguyên
+- age_range phải là array 2 số nguyên từ 1 đến 19
 - Tất cả field bắt buộc phải có
 - related_chunks phải là array string
 - Phân tích kỹ nội dung để xác định độ tuổi phù hợp
 
 Hãy phân tích và trả về JSON theo đúng format trên.
 """
+    return prompt
 
 def validate_processed_format(data):
     """Validate format của processed data"""
     try:
+        # Kiểm tra required fields
         required_fields = ['bai_info', 'chunks', 'total_items']
         for field in required_fields:
             if field not in data:
+                logger.error(f"Missing required field: {field}")
                 return False
         
         # Validate bai_info
+        bai_info = data['bai_info']
         bai_info_fields = ['id', 'title', 'overview']
         for field in bai_info_fields:
-            if field not in data['bai_info']:
+            if field not in bai_info:
+                logger.error(f"Missing bai_info field: {field}")
                 return False
         
         # Validate chunks
         if not isinstance(data['chunks'], list):
+            logger.error("chunks must be a list")
             return False
         
-        for chunk in data['chunks']:
+        for i, chunk in enumerate(data['chunks']):
             chunk_fields = ['id', 'title', 'content_type', 'age_range', 'summary']
             for field in chunk_fields:
                 if field not in chunk:
+                    logger.error(f"Missing chunk field '{field}' in chunk {i}")
                     return False
             
-            if not isinstance(chunk['age_range'], list) or len(chunk['age_range']) != 2:
+            # Validate age_range
+            age_range = chunk['age_range']
+            if not isinstance(age_range, list) or len(age_range) != 2:
+                logger.error(f"Invalid age_range in chunk {i}: must be list of 2 integers")
+                return False
+            
+            if not all(isinstance(x, int) and 1 <= x <= 19 for x in age_range):
+                logger.error(f"Invalid age_range values in chunk {i}: must be integers 1-19")
                 return False
         
+        # Validate optional fields
+        for table in data.get('tables', []):
+            if 'age_range' in table:
+                age_range = table['age_range']
+                if not isinstance(age_range, list) or len(age_range) != 2:
+                    logger.error("Invalid age_range in table")
+                    return False
+        
+        for figure in data.get('figures', []):
+            if 'age_range' in figure:
+                age_range = figure['age_range']
+                if not isinstance(age_range, list) or len(age_range) != 2:
+                    logger.error("Invalid age_range in figure")
+                    return False
+        
+        logger.info("Document format validation passed")
         return True
         
-    except Exception:
+    except Exception as e:
+        logger.error(f"Validation error: {e}")
         return False
 
 def save_processed_document(doc_id, processed_data):
@@ -1135,75 +1311,106 @@ def save_processed_document(doc_id, processed_data):
     try:
         embedding_model = get_embedding_model()
         
-        # Lưu chunks
+        # Chuẩn bị tất cả items để index
+        all_items = []
+        
+        # Xử lý chunks
         for chunk in processed_data.get('chunks', []):
+            # Tạo content đầy đủ
             chunk_content = f"Tiêu đề: {chunk['title']}\nNội dung: {chunk.get('summary', '')}"
             
+            # Chuẩn bị metadata theo format cần thiết
             metadata = {
                 "chunk_id": chunk['id'],
                 "chapter": doc_id,
-                "content_type": chunk['content_type'],
-                "age_range": chunk['age_range'],
                 "title": chunk['title'],
+                "content_type": chunk['content_type'],
+                "age_range": f"{chunk['age_range'][0]}-{chunk['age_range'][1]}",
+                "age_min": chunk['age_range'][0],
+                "age_max": chunk['age_range'][1],
                 "summary": chunk['summary'],
-                "related_chunks": chunk.get('related_chunks', []),
+                "pages": chunk.get('pages', ''),
+                "related_chunks": ','.join(chunk.get('related_chunks', [])),
+                "word_count": chunk.get('word_count', 0),
+                "token_count": chunk.get('token_count', 0),
+                "contains_table": chunk.get('contains_table', False),
+                "contains_figure": chunk.get('contains_figure', False),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu bổ sung"
+                "document_source": "Tài liệu upload"
             }
             
-            embedding_model.add_document(
-                text=chunk_content,
-                metadata=metadata,
-                doc_id=chunk['id']
-            )
+            # Thêm vào danh sách
+            all_items.append({
+                "content": chunk_content,
+                "metadata": metadata,
+                "id": chunk['id']
+            })
         
-        # Lưu tables
+        # Xử lý tables
         for table in processed_data.get('tables', []):
             table_content = f"Bảng: {table['title']}\nMô tả: {table.get('summary', '')}"
             
             metadata = {
                 "chunk_id": table['id'],
                 "chapter": doc_id,
-                "content_type": "table",
-                "age_range": table['age_range'],
                 "title": table['title'],
+                "content_type": "table",
+                "age_range": f"{table['age_range'][0]}-{table['age_range'][1]}",
+                "age_min": table['age_range'][0],
+                "age_max": table['age_range'][1],
                 "summary": table['summary'],
-                "table_columns": table.get('table_columns', []),
+                "pages": table.get('pages', ''),
+                "related_chunks": ','.join(table.get('related_chunks', [])),
+                "table_columns": ','.join(table.get('table_columns', [])),
+                "word_count": table.get('word_count', 0),
+                "token_count": table.get('token_count', 0),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu bổ sung"
+                "document_source": "Tài liệu upload"
             }
             
-            embedding_model.add_document(
-                text=table_content,
-                metadata=metadata,
-                doc_id=table['id']
-            )
+            all_items.append({
+                "content": table_content,
+                "metadata": metadata,
+                "id": table['id']
+            })
         
-        # Lưu figures
+        # Xử lý figures
         for figure in processed_data.get('figures', []):
             figure_content = f"Hình: {figure['title']}\nMô tả: {figure.get('summary', '')}"
             
             metadata = {
                 "chunk_id": figure['id'],
                 "chapter": doc_id,
-                "content_type": "figure",
-                "age_range": figure['age_range'],
                 "title": figure['title'],
+                "content_type": "figure",
+                "age_range": f"{figure['age_range'][0]}-{figure['age_range'][1]}",
+                "age_min": figure['age_range'][0],
+                "age_max": figure['age_range'][1],
                 "summary": figure['summary'],
+                "pages": figure.get('pages', ''),
+                "related_chunks": ','.join(figure.get('related_chunks', [])),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu bổ sung"
+                "document_source": "Tài liệu upload"
             }
             
-            embedding_model.add_document(
-                text=figure_content,
-                metadata=metadata,
-                doc_id=figure['id']
-            )
+            all_items.append({
+                "content": figure_content,
+                "metadata": metadata,
+                "id": figure['id']
+            })
         
-        logger.info(f"Đã lưu processed document {doc_id} vào ChromaDB")
+        # Sử dụng index_chunks để lưu tất cả items
+        if all_items:
+            success = embedding_model.index_chunks(all_items)
+            if success:
+                logger.info(f"Successfully indexed {len(all_items)} items for document {doc_id}")
+            else:
+                raise Exception("Failed to index chunks")
+        else:
+            logger.warning(f"No items to index for document {doc_id}")
         
     except Exception as e:
-        logger.error(f"Lỗi lưu processed document: {str(e)}")
+        logger.error(f"Error in save_processed_document: {str(e)}")
         raise
 
 @admin_routes.route('/documents/<doc_id>', methods=['DELETE'])
