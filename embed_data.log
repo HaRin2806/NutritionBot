@@ -1,0 +1,48 @@
+2025-06-19 16:20:29,975 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-06-19 16:20:29,975 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-06-19 16:20:35,411 - core.embedding_model - INFO - �ang th�m 50 documents v�o ChromaDB
+2025-06-19 16:21:23,856 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-06-19 16:21:23,856 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-06-19 16:21:32,970 - core.embedding_model - INFO - �ang th�m 50 documents v�o ChromaDB
+2025-06-19 16:25:46,178 - embed_data - INFO - Bat dau qua trinh embedding du lieu tu D:\DATN\data
+2025-06-19 16:25:46,180 - core.data_processor - INFO - Khởi tạo DataProcessor với data_dir: D:\DATN\data
+2025-06-19 16:25:46,180 - core.data_processor - INFO - Đang tải dữ liệu từ thư mục: D:\DATN\data
+2025-06-19 16:25:46,187 - core.data_processor - INFO - Đã tải xong thư mục: bai1
+2025-06-19 16:25:46,188 - core.data_processor - INFO - Đã tải xong thư mục: bai2
+2025-06-19 16:25:46,193 - core.data_processor - INFO - Đã tải xong thư mục: bai3
+2025-06-19 16:25:46,201 - core.data_processor - INFO - Đã tải xong thư mục: bai4
+2025-06-19 16:25:46,208 - core.data_processor - INFO - Đã tải xong thư mục: phuluc
+2025-06-19 16:25:46,208 - core.embedding_model - INFO - Khởi tạo EmbeddingModel instance lần đầu
+2025-06-19 16:25:46,209 - core.embedding_model - INFO - Đang khởi tạo embedding model: intfloat/multilingual-e5-base
+2025-06-19 16:25:46,212 - sentence_transformers.SentenceTransformer - INFO - Use pytorch device_name: cpu
+2025-06-19 16:25:46,212 - sentence_transformers.SentenceTransformer - INFO - Load pretrained SentenceTransformer: intfloat/multilingual-e5-base
+2025-06-19 16:25:51,160 - core.embedding_model - INFO - Đã tải sentence transformer model
+2025-06-19 16:25:51,267 - core.embedding_model - INFO - Đã kết nối ChromaDB tại: chroma_db
+2025-06-19 16:25:51,270 - core.embedding_model - INFO - Đã kết nối collection 'nutrition_data' với 0 items
+2025-06-19 16:25:51,271 - embed_data - INFO - Xoa chi muc cu va tao lai...
+2025-06-19 16:25:51,292 - embed_data - INFO - Da xoa va tao lai collection
+2025-06-19 16:25:51,292 - embed_data - INFO - Dang chuan bi du lieu cho qua trinh embedding...
+2025-06-19 16:25:51,295 - embed_data - INFO - Da chuan bi 175 items de embedding
+2025-06-19 16:25:51,295 - embed_data - INFO - Bao gom: 125 van ban, 33 bang bieu, 17 hinh anh
+2025-06-19 16:25:51,295 - embed_data - INFO - Bat dau qua trinh embedding...
+2025-06-19 16:25:51,296 - embed_data - INFO - Dang xu ly batch 1/4, kich thuoc: 50
+2025-06-19 16:25:51,296 - core.embedding_model - INFO - Đang xử lý batch 1/1 (50 items)
+2025-06-19 16:25:51,296 - core.embedding_model - INFO - Đang thêm 50 documents vào ChromaDB
+2025-06-19 16:26:18,693 - core.embedding_model - INFO - Đã thêm thành công 50 documents
+2025-06-19 16:26:18,693 - core.embedding_model - INFO - Đã index thành công 50 chunks
+2025-06-19 16:26:18,693 - embed_data - INFO - Dang xu ly batch 2/4, kich thuoc: 50
+2025-06-19 16:26:18,694 - core.embedding_model - INFO - Đang xử lý batch 1/1 (50 items)
+2025-06-19 16:26:18,694 - core.embedding_model - INFO - Đang thêm 50 documents vào ChromaDB
+2025-06-19 16:26:46,717 - core.embedding_model - INFO - Đã thêm thành công 50 documents
+2025-06-19 16:26:46,717 - core.embedding_model - INFO - Đã index thành công 50 chunks
+2025-06-19 16:26:46,718 - embed_data - INFO - Dang xu ly batch 3/4, kich thuoc: 50
+2025-06-19 16:26:46,718 - core.embedding_model - INFO - Đang xử lý batch 1/1 (50 items)
+2025-06-19 16:26:46,718 - core.embedding_model - INFO - Đang thêm 50 documents vào ChromaDB
+2025-06-19 16:27:12,522 - core.embedding_model - INFO - Đã thêm thành công 50 documents
+2025-06-19 16:27:12,524 - core.embedding_model - INFO - Đã index thành công 50 chunks
+2025-06-19 16:27:12,525 - embed_data - INFO - Dang xu ly batch 4/4, kich thuoc: 25
+2025-06-19 16:27:12,525 - core.embedding_model - INFO - Đang xử lý batch 1/1 (25 items)
+2025-06-19 16:27:12,525 - core.embedding_model - INFO - Đang thêm 25 documents vào ChromaDB
+2025-06-19 16:27:28,316 - core.embedding_model - INFO - Đã thêm thành công 25 documents
+2025-06-19 16:27:28,317 - core.embedding_model - INFO - Đã index thành công 25 chunks
+2025-06-19 16:27:28,366 - embed_data - INFO - Hoan thanh qua trinh embedding 175 items trong 102.14 giay

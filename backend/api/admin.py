@@ -635,7 +635,7 @@ def get_all_documents():
         for i, metadata in enumerate(results['metadatas'][:3]):
             logger.info(f"Metadata {i}: {metadata}")
         
-        # Phân tích metadata để tìm ra cấu trúc thực tế
+        # Phân tích metadata để nhóm theo chapter
         documents_by_chapter = {}
         stats = {
             "total": 0,
@@ -644,28 +644,8 @@ def get_all_documents():
         }
         
         for i, metadata in enumerate(results['metadatas']):
-            # Tìm chapter từ chunk_id hoặc metadata
-            chapter = None
-            chunk_id = metadata.get('chunk_id', '')
-            
-            # Phân tích chunk_id để tìm chapter
-            if chunk_id.startswith('bai1_'):
-                chapter = 'bai1'
-            elif chunk_id.startswith('bai2_'):
-                chapter = 'bai2'
-            elif chunk_id.startswith('bai3_'):
-                chapter = 'bai3'
-            elif chunk_id.startswith('bai4_'):
-                chapter = 'bai4'
-            elif 'phuluc' in chunk_id.lower() or 'appendix' in chunk_id.lower():
-                chapter = 'phuluc'
-            else:
-                # Thử tìm từ metadata khác
-                chapter = metadata.get('chapter', metadata.get('source', 'unknown'))
-            
-            if not chapter:
-                chapter = 'unknown'
-            
+            # Lấy chapter từ metadata
+            chapter = metadata.get('chapter', 'unknown')
             content_type = metadata.get('content_type', 'text')
             
             # Cập nhật stats

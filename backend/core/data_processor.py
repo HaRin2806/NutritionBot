@@ -2,6 +2,7 @@ import os
 import json
 import re
 import logging
+import datetime
 from typing import Dict, List, Any, Union, Tuple
 
 # Cấu hình logging
@@ -327,51 +328,158 @@ class DataProcessor:
         
         # Thêm chunks
         for chunk in self.chunks:
+            # Tìm chapter từ chunk ID
+            chunk_id = chunk.get("id", "")
+            chapter = "unknown"
+            if chunk_id.startswith("bai1_"):
+                chapter = "bai1"
+            elif chunk_id.startswith("bai2_"):
+                chapter = "bai2"
+            elif chunk_id.startswith("bai3_"):
+                chapter = "bai3"
+            elif chunk_id.startswith("bai4_"):
+                chapter = "bai4"
+            elif "phuluc" in chunk_id.lower():
+                chapter = "phuluc"
+            
+            content = chunk.get("content", "")
+            if chunk.get("title"):
+                content = f"Tiêu đề: {chunk.get('title')}\n\nNội dung: {content}"
+            
+            # Xử lý age_range - convert list thành string và tách thành min/max
+            age_range = chunk.get("age_range", [0, 100])
+            age_min = age_range[0] if len(age_range) > 0 else 0
+            age_max = age_range[1] if len(age_range) > 1 else 100
+            age_range_str = f"{age_min}-{age_max}"
+            
+            # Xử lý related_chunks - convert list thành string
+            related_chunks = chunk.get("related_chunks", [])
+            related_chunks_str = ",".join(related_chunks) if related_chunks else ""
+            
             embedding_item = {
-                "id": chunk.get("id"),
-                "title": chunk.get("title", ""),
-                "content": chunk.get("content", ""),
-                "content_type": chunk.get("content_type", "text"),
-                "age_range": chunk.get("age_range", [0, 100]),
-                "summary": chunk.get("summary", ""),
-                "pages": chunk.get("pages", ""),
-                "related_chunks": chunk.get("related_chunks", []),
-                "word_count": chunk.get("word_count", 0),
-                "token_count": chunk.get("token_count", 0),
-                "contains_table": chunk.get("contains_table", False),
-                "contains_figure": chunk.get("contains_figure", False)
+                "content": content,
+                "metadata": {
+                    "chunk_id": chunk_id,
+                    "chapter": chapter,
+                    "title": chunk.get("title", ""),
+                    "content_type": chunk.get("content_type", "text"),
+                    "age_range": age_range_str,
+                    "age_min": age_min,
+                    "age_max": age_max,
+                    "summary": chunk.get("summary", ""),
+                    "pages": chunk.get("pages", ""),
+                    "related_chunks": related_chunks_str,
+                    "word_count": chunk.get("word_count", 0),
+                    "token_count": chunk.get("token_count", 0),
+                    "contains_table": chunk.get("contains_table", False),
+                    "contains_figure": chunk.get("contains_figure", False),
+                    "created_at": datetime.datetime.now().isoformat()
+                },
+                "id": chunk_id
             }
             all_items.append(embedding_item)
         
         # Thêm tables
         for table in self.tables:
+            # Tìm chapter từ table ID
+            table_id = table.get("id", "")
+            chapter = "unknown"
+            if table_id.startswith("bai1_"):
+                chapter = "bai1"
+            elif table_id.startswith("bai2_"):
+                chapter = "bai2"
+            elif table_id.startswith("bai3_"):
+                chapter = "bai3"
+            elif table_id.startswith("bai4_"):
+                chapter = "bai4"
+            elif "phuluc" in table_id.lower():
+                chapter = "phuluc"
+            
+            content = table.get("content", "")
+            if table.get("title"):
+                content = f"Bảng: {table.get('title')}\n\nNội dung: {content}"
+            
+            # Xử lý age_range
+            age_range = table.get("age_range", [0, 100])
+            age_min = age_range[0] if len(age_range) > 0 else 0
+            age_max = age_range[1] if len(age_range) > 1 else 100
+            age_range_str = f"{age_min}-{age_max}"
+            
+            # Xử lý related_chunks và table_columns
+            related_chunks = table.get("related_chunks", [])
+            related_chunks_str = ",".join(related_chunks) if related_chunks else ""
+            table_columns = table.get("table_columns", [])
+            table_columns_str = ",".join(table_columns) if table_columns else ""
+            
             embedding_item = {
-                "id": table.get("id"),
-                "title": table.get("title", ""),
-                "content": table.get("content", ""),
-                "content_type": "table",
-                "age_range": table.get("age_range", [0, 100]),
-                "summary": table.get("summary", ""),
-                "pages": table.get("pages", ""),
-                "related_chunks": table.get("related_chunks", []),
-                "table_columns": table.get("table_columns", []),
-                "word_count": table.get("word_count", 0),
-                "token_count": table.get("token_count", 0)
+                "content": content,
+                "metadata": {
+                    "chunk_id": table_id,
+                    "chapter": chapter,
+                    "title": table.get("title", ""),
+                    "content_type": "table",
+                    "age_range": age_range_str,
+                    "age_min": age_min,
+                    "age_max": age_max,
+                    "summary": table.get("summary", ""),
+                    "pages": table.get("pages", ""),
+                    "related_chunks": related_chunks_str,
+                    "table_columns": table_columns_str,
+                    "word_count": table.get("word_count", 0),
+                    "token_count": table.get("token_count", 0),
+                    "created_at": datetime.datetime.now().isoformat()
+                },
+                "id": table_id
             }
             all_items.append(embedding_item)
         
         # Thêm figures
         for figure in self.figures:
+            # Tìm chapter từ figure ID
+            figure_id = figure.get("id", "")
+            chapter = "unknown"
+            if figure_id.startswith("bai1_"):
+                chapter = "bai1"
+            elif figure_id.startswith("bai2_"):
+                chapter = "bai2"
+            elif figure_id.startswith("bai3_"):
+                chapter = "bai3"
+            elif figure_id.startswith("bai4_"):
+                chapter = "bai4"
+            elif "phuluc" in figure_id.lower():
+                chapter = "phuluc"
+            
+            content = figure.get("content", "")
+            if figure.get("title"):
+                content = f"Hình: {figure.get('title')}\n\nMô tả: {content}"
+            
+            # Xử lý age_range
+            age_range = figure.get("age_range", [0, 100])
+            age_min = age_range[0] if len(age_range) > 0 else 0
+            age_max = age_range[1] if len(age_range) > 1 else 100
+            age_range_str = f"{age_min}-{age_max}"
+            
+            # Xử lý related_chunks
+            related_chunks = figure.get("related_chunks", [])
+            related_chunks_str = ",".join(related_chunks) if related_chunks else ""
+            
             embedding_item = {
-                "id": figure.get("id"),
-                "title": figure.get("title", ""),
-                "content": figure.get("content", ""),
-                "content_type": "figure",
-                "age_range": figure.get("age_range", [0, 100]),
-                "summary": figure.get("summary", ""),
-                "pages": figure.get("pages", ""),
-                "related_chunks": figure.get("related_chunks", []),
-                "image_path": figure.get("image_path", "")
+                "content": content,
+                "metadata": {
+                    "chunk_id": figure_id,
+                    "chapter": chapter,
+                    "title": figure.get("title", ""),
+                    "content_type": "figure",
+                    "age_range": age_range_str,
+                    "age_min": age_min,
+                    "age_max": age_max,
+                    "summary": figure.get("summary", ""),
+                    "pages": figure.get("pages", ""),
+                    "related_chunks": related_chunks_str,
+                    "image_path": figure.get("image_path", ""),
+                    "created_at": datetime.datetime.now().isoformat()
+                },
+                "id": figure_id
             }
             all_items.append(embedding_item)
         

@@ -87,7 +87,7 @@ class EmbeddingModel:
             list: Danh sách kết quả tìm kiếm
         """
         try:
-            logger.debug(f"Đang tìm kiếm cho query: {query[:50]}...")
+            logger.debug(f"Dang tim kiem cho query: {query[:50]}...")
             
             # Encode query thành embedding
             query_embedding = self.encode(query)[0]
@@ -96,10 +96,9 @@ class EmbeddingModel:
             where_clause = None
             if age_filter:
                 where_clause = {
-                    "$or": [
-                        {"age_group": {"$contains": str(age_filter)}},
-                        {"age_group": {"$eq": "all"}},
-                        {"age_group": None}  # Cho những tài liệu không có age_group
+                    "$and": [
+                        {"age_min": {"$lte": age_filter}},
+                        {"age_max": {"$gte": age_filter}}
                     ]
                 }
             
@@ -112,7 +111,7 @@ class EmbeddingModel:
             )
             
             if not search_results or not search_results['documents']:
-                logger.warning("Không tìm thấy kết quả nào")
+                logger.warning("Khong tim thay ket qua nao")
                 return []
             
             # Format kết quả
@@ -130,11 +129,11 @@ class EmbeddingModel:
                     'rank': i + 1
                 })
             
-            logger.info(f"Tìm thấy {len(results)} kết quả cho query")
+            logger.info(f"Tim thay {len(results)} ket qua cho query")
             return results
             
         except Exception as e:
-            logger.error(f"Lỗi tìm kiếm: {e}")
+            logger.error(f"Loi tim kiem: {e}")
             return []
     
     def add_documents(self, documents, metadatas=None, ids=None):
@@ -214,7 +213,10 @@ class EmbeddingModel:
                     continue
                 
                 documents.append(chunk['content'])
-                metadatas.append(chunk.get('metadata', {}))
+                
+                # Lấy metadata đã được chuẩn bị sẵn
+                metadata = chunk.get('metadata', {})
+                metadatas.append(metadata)
                 
                 # Sử dụng ID có sẵn hoặc tạo mới
                 chunk_id = chunk.get('id') or str(uuid.uuid4())
