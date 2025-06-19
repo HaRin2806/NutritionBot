@@ -75,7 +75,6 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -91,7 +90,6 @@ body {
     transform: scale(0.95);
     opacity: 0;
   }
-
   to {
     transform: scale(1);
     opacity: 1;
@@ -148,19 +146,22 @@ button:active {
   transform: translateY(0);
 }
 
-/* Link styles */
-a {
+/* Link styles - ONLY for content links, not navigation */
+.content-area a,
+.markdown-content a {
   color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-a:hover {
+.content-area a:hover,
+.markdown-content a:hover {
   text-decoration: underline;
 }
 
-/* Dark mode link styles */
-.dark a {
+/* Dark mode content link styles */
+.dark .content-area a,
+.dark .markdown-content a {
   color: var(--color-mint-400);
 }
 

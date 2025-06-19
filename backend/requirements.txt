@@ -11,3 +11,4 @@ pydantic
 pymongo
 bcrypt
 flask-jwt-extended
+pypdf

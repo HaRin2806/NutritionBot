@@ -120,13 +120,16 @@ export const adminService = {
   deleteUser: (userId) => baseApi.delete(`/admin/users/${userId}`),
   bulkDeleteUsers: (userIds) => baseApi.post('/admin/users/bulk-delete', { user_ids: userIds }),
 
-  // Document Management  
+  // Document Management
   getAllDocuments: () => baseApi.get('/admin/documents'),
+  getDocumentDetail: (docId) => baseApi.get(`/admin/documents/${docId}`),
   uploadDocument: (file, metadata) => baseApi.upload('/admin/documents/upload', file, metadata),
   processDocument: (docId, options) => baseApi.post(`/admin/documents/${docId}/process`, options),
   deleteDocument: (docId) => baseApi.delete(`/admin/documents/${docId}`),
   bulkDeleteDocuments: (docIds) => baseApi.post('/admin/documents/bulk-delete', { doc_ids: docIds }),
-  rebuildEmbeddings: (force = false) => baseApi.post('/admin/documents/embeddings/rebuild', { force }),
+
+  // Debug
+  debugMetadata: () => baseApi.get('/admin/documents/debug/metadata'),
 
   // Admin Management
   createAdmin: (adminData) => baseApi.post('/admin/auth/create-admin', adminData),

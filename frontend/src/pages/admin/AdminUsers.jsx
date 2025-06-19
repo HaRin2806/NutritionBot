@@ -4,39 +4,67 @@ import {
   BiCheck, BiCalendar, BiMessageSquareDetail, BiShield, BiGroup
 } from 'react-icons/bi';
 import { useApp } from '../../contexts/AppContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { Loader, Button, Input, Modal } from '../../components/common';
 import { adminService } from '../../services/index';
 
-const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
-  <div className={`bg-white rounded-xl border-2 p-6 hover:shadow-lg transition-all duration-300 ${
-    isSelected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'
-  }`}>
+const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect, darkMode, currentThemeConfig }) => (
+  <div className={`rounded-xl border-2 p-6 hover:shadow-lg transition-all duration-300 ${
+    isSelected 
+      ? 'border-opacity-100 shadow-lg'
+      : darkMode
+        ? 'bg-gray-800 border-gray-600 hover:border-gray-500'
+        : 'bg-white border-gray-200 hover:border-gray-300'
+  }`}
+  style={{
+    borderColor: isSelected ? currentThemeConfig?.primary : undefined,
+    backgroundColor: isSelected 
+      ? (darkMode ? `${currentThemeConfig?.primary}15` : `${currentThemeConfig?.light}`) 
+      : undefined
+  }}>
     <div className="flex items-start justify-between mb-4">
       <div className="flex items-start space-x-3 flex-1">
         <input
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(user.id)}
-          className="mt-1 rounded border-gray-300 text-green-600 focus:ring-green-500"
+          className="mt-1 rounded border-gray-300 focus:ring-2"
+          style={{ 
+            accentColor: currentThemeConfig?.primary,
+            '--tw-ring-color': `${currentThemeConfig?.primary}40`
+          }}
         />
         
         <div className="flex items-center space-x-3 flex-1">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          <div 
+            className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+            style={{ background: `linear-gradient(135deg, ${currentThemeConfig?.primary}, ${currentThemeConfig?.dark})` }}
+          >
             {user.name.charAt(0).toUpperCase()}
           </div>
           
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 truncate">{user.name}</h3>
+            <h3 className={`font-semibold truncate ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              {user.name}
+            </h3>
             <div className="flex items-center space-x-2 mt-1">
               <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                 user.role === 'admin' 
-                  ? 'bg-purple-100 text-purple-800' 
-                  : 'bg-gray-100 text-gray-800'
+                  ? darkMode 
+                    ? 'bg-purple-900/50 text-purple-300' 
+                    : 'bg-purple-100 text-purple-800'
+                  : darkMode
+                    ? 'bg-gray-700 text-gray-300'
+                    : 'bg-gray-100 text-gray-800'
               }`}>
                 {user.role === 'admin' ? 'Admin' : 'Người dùng'}
               </span>
               {user.gender && (
-                <span className="text-xs text-gray-500">
+                <span className={`text-xs ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`}>
                   {user.gender === 'male' ? 'Nam' : user.gender === 'female' ? 'Nữ' : 'Khác'}
                 </span>
               )}
@@ -48,21 +76,34 @@ const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
       <div className="flex items-center space-x-1 ml-2">
         <button
           onClick={() => onView(user)}
-          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+          className={`p-2 rounded-lg transition-colors ${
+            darkMode
+              ? 'text-blue-400 hover:bg-blue-900/20'
+              : 'text-blue-600 hover:bg-blue-50'
+          }`}
           title="Xem chi tiết"
         >
           <BiInfoCircle className="w-4 h-4" />
         </button>
         <button
           onClick={() => onEdit(user)}
-          className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+          className={`p-2 rounded-lg transition-colors ${
+            darkMode
+              ? 'hover:bg-gray-700'
+              : 'hover:bg-gray-50'
+          }`}
+          style={{ color: currentThemeConfig?.primary }}
           title="Chỉnh sửa"
         >
           <BiEdit className="w-4 h-4" />
         </button>
         <button
           onClick={() => onDelete(user)}
-          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+          className={`p-2 rounded-lg transition-colors ${
+            darkMode
+              ? 'text-red-400 hover:bg-red-900/20'
+              : 'text-red-600 hover:bg-red-50'
+          }`}
           title="Xóa"
         >
           <BiTrash className="w-4 h-4" />
@@ -73,23 +114,23 @@ const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
     <div className="grid grid-cols-2 gap-4 text-sm">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-gray-500">Hội thoại:</span>
+          <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Hội thoại:</span>
           <span className="font-semibold text-blue-600">{user.conversation_count || 0}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-gray-500">Tin nhắn:</span>
+          <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Tin nhắn:</span>
           <span className="font-semibold text-green-600">{user.message_count || 0}</span>
         </div>
       </div>
       
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-gray-500">TB tin nhắn:</span>
+          <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>TB tin nhắn:</span>
           <span className="font-semibold text-purple-600">{user.avg_messages_per_conversation || 0}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-gray-500">Ngày tạo:</span>
-          <span className="text-gray-900">
+          <span className={darkMode ? 'text-gray-400' : 'text-gray-500'}>Ngày tạo:</span>
+          <span className={darkMode ? 'text-white' : 'text-gray-900'}>
             {user.created_at ? new Date(user.created_at).toLocaleDateString('vi-VN') : 'N/A'}
           </span>
         </div>
@@ -97,8 +138,12 @@ const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
     </div>
 
     {user.last_activity && (
-      <div className="mt-4 pt-3 border-t border-gray-100">
-        <div className="flex items-center text-xs text-gray-500">
+      <div className={`mt-4 pt-3 border-t ${
+        darkMode ? 'border-gray-700' : 'border-gray-100'
+      }`}>
+        <div className={`flex items-center text-xs ${
+          darkMode ? 'text-gray-400' : 'text-gray-500'
+        }`}>
           <BiMessageSquareDetail className="w-4 h-4 mr-1" />
           <span>Hoạt động cuối: {new Date(user.last_activity).toLocaleString('vi-VN')}</span>
         </div>
@@ -107,7 +152,7 @@ const UserCard = ({ user, onEdit, onDelete, onView, isSelected, onSelect }) => (
   </div>
 );
 
-const UserDetailModal = ({ user, isOpen, onClose }) => {
+const UserDetailModal = ({ user, isOpen, onClose, darkMode, currentThemeConfig }) => {
   const [userDetail, setUserDetail] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showError } = useApp();
@@ -147,22 +192,42 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
         </div>
       ) : userDetail ? (
         <div className="space-y-6">
-          {/* User Info Header */}
-          <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+          <div 
+            className={`flex items-center space-x-4 p-4 rounded-xl ${
+              darkMode ? 'bg-gray-700' : 'bg-gradient-to-r from-green-50 to-blue-50'
+            }`}
+          >
+            <div 
+              className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl"
+              style={{ background: `linear-gradient(135deg, ${currentThemeConfig?.primary}, ${currentThemeConfig?.dark})` }}
+            >
               {userDetail.name.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900">{userDetail.name}</h3>
-              <p className="text-gray-600">{userDetail.email}</p>
+              <h3 className={`text-xl font-bold ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                {userDetail.name}
+              </h3>
+              <p className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
+                {userDetail.email}
+              </p>
               <div className="flex items-center space-x-2 mt-2">
                 <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${
-                  userDetail.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'
+                  userDetail.role === 'admin' 
+                    ? darkMode 
+                      ? 'bg-purple-900/50 text-purple-300' 
+                      : 'bg-purple-100 text-purple-800'
+                    : darkMode
+                      ? 'bg-gray-600 text-gray-200'
+                      : 'bg-gray-100 text-gray-800'
                 }`}>
                   {userDetail.role === 'admin' ? 'Quản trị viên' : 'Người dùng'}
                 </span>
                 {userDetail.gender && (
-                  <span className="text-sm text-gray-500">
+                  <span className={`text-sm ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`}>
                     {userDetail.gender === 'male' ? 'Nam' : userDetail.gender === 'female' ? 'Nữ' : 'Khác'}
                   </span>
                 )}
@@ -170,36 +235,68 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-xl">
-              <p className="text-2xl font-bold text-blue-600">{userDetail.stats?.total_conversations || 0}</p>
-              <p className="text-sm text-blue-800">Cuộc hội thoại</p>
+            <div className={`text-center p-4 rounded-xl ${
+              darkMode ? 'bg-blue-900/30' : 'bg-blue-50'
+            }`}>
+              <p className="text-2xl font-bold text-blue-600">
+                {userDetail.stats?.total_conversations || 0}
+              </p>
+              <p className={`text-sm ${
+                darkMode ? 'text-blue-300' : 'text-blue-800'
+              }`}>
+                Cuộc hội thoại
+              </p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-xl">
-              <p className="text-2xl font-bold text-green-600">{userDetail.stats?.total_messages || 0}</p>
-              <p className="text-sm text-green-800">Tin nhắn</p>
+            <div className={`text-center p-4 rounded-xl ${
+              darkMode ? 'bg-green-900/30' : 'bg-green-50'
+            }`}>
+              <p className="text-2xl font-bold text-green-600">
+                {userDetail.stats?.total_messages || 0}
+              </p>
+              <p className={`text-sm ${
+                darkMode ? 'text-green-300' : 'text-green-800'
+              }`}>
+                Tin nhắn
+              </p>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-xl">
+            <div className={`text-center p-4 rounded-xl ${
+              darkMode ? 'bg-purple-900/30' : 'bg-purple-50'
+            }`}>
               <p className="text-2xl font-bold text-purple-600">
                 {userDetail.stats?.avg_messages_per_conversation?.toFixed(1) || '0.0'}
               </p>
-              <p className="text-sm text-purple-800">TB tin nhắn/cuộc</p>
+              <p className={`text-sm ${
+                darkMode ? 'text-purple-300' : 'text-purple-800'
+              }`}>
+                TB tin nhắn/cuộc
+              </p>
             </div>
           </div>
 
-          {/* User Details */}
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Ngày tạo tài khoản</label>
-                <p className="text-sm text-gray-900">
+                <label className={`block text-sm font-medium ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Ngày tạo tài khoản
+                </label>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                }`}>
                   {userDetail.created_at ? new Date(userDetail.created_at).toLocaleString('vi-VN') : 'N/A'}
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Đăng nhập cuối</label>
-                <p className="text-sm text-gray-900">
+                <label className={`block text-sm font-medium ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Đăng nhập cuối
+                </label>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                }`}>
                   {userDetail.last_login ? new Date(userDetail.last_login).toLocaleString('vi-VN') : 'Chưa đăng nhập'}
                 </p>
               </div>
@@ -207,16 +304,28 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
             
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Hoạt động cuối</label>
-                <p className="text-sm text-gray-900">
+                <label className={`block text-sm font-medium ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Hoạt động cuối
+                </label>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                }`}>
                   {userDetail.stats?.most_recent_conversation 
                     ? new Date(userDetail.stats.most_recent_conversation).toLocaleString('vi-VN') 
                     : 'Chưa có hoạt động'}
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Thời gian sử dụng</label>
-                <p className="text-sm text-gray-900">
+                <label className={`block text-sm font-medium ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
+                  Thời gian sử dụng
+                </label>
+                <p className={`text-sm ${
+                  darkMode ? 'text-gray-100' : 'text-gray-900'
+                }`}>
                   {userDetail.created_at 
                     ? Math.floor((new Date() - new Date(userDetail.created_at)) / (1000 * 60 * 60 * 24)) 
                     : 0} ngày
@@ -225,31 +334,55 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Age Usage Stats */}
           {userDetail.age_usage && Object.keys(userDetail.age_usage).length > 0 && (
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-3">Sử dụng theo độ tuổi</h4>
+              <h4 className={`text-lg font-semibold mb-3 ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                Sử dụng theo độ tuổi
+              </h4>
               <div className="grid grid-cols-4 gap-3">
                 {Object.entries(userDetail.age_usage).map(([age, count]) => (
-                  <div key={age} className="text-center p-3 bg-gray-50 rounded-lg">
-                    <p className="text-lg font-bold text-gray-900">{count}</p>
-                    <p className="text-xs text-gray-500">{age} tuổi</p>
+                  <div key={age} className={`text-center p-3 rounded-lg ${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                  }`}>
+                    <p className={`text-lg font-bold ${
+                      darkMode ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {count}
+                    </p>
+                    <p className={`text-xs ${
+                      darkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}>
+                      {age} tuổi
+                    </p>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* Recent Conversations */}
           {userDetail.recent_conversations && userDetail.recent_conversations.length > 0 && (
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-3">Cuộc hội thoại gần đây</h4>
+              <h4 className={`text-lg font-semibold mb-3 ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>
+                Cuộc hội thoại gần đây
+              </h4>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {userDetail.recent_conversations.slice(0, 5).map((conversation, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div key={index} className={`flex items-center justify-between p-3 rounded-lg ${
+                    darkMode ? 'bg-gray-700' : 'bg-gray-50'
+                  }`}>
                     <div className="flex-1 min-w-0">
-                      <h5 className="font-medium text-gray-900 truncate">{conversation.title}</h5>
-                      <div className="flex items-center space-x-2 text-xs text-gray-500 mt-1">
+                      <h5 className={`font-medium truncate ${
+                        darkMode ? 'text-white' : 'text-gray-900'
+                      }`}>
+                        {conversation.title}
+                      </h5>
+                      <div className={`flex items-center space-x-2 text-xs mt-1 ${
+                        darkMode ? 'text-gray-400' : 'text-gray-500'
+                      }`}>
                         <span>{conversation.message_count} tin nhắn</span>
                         {conversation.age_context && (
                           <>
@@ -261,7 +394,9 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
                         <span>{new Date(conversation.updated_at).toLocaleDateString('vi-VN')}</span>
                       </div>
                     </div>
-                    <BiMessageSquareDetail className="w-5 h-5 text-gray-400 ml-2" />
+                    <BiMessageSquareDetail className={`w-5 h-5 ml-2 ${
+                      darkMode ? 'text-gray-500' : 'text-gray-400'
+                    }`} />
                   </div>
                 ))}
               </div>
@@ -270,14 +405,16 @@ const UserDetailModal = ({ user, isOpen, onClose }) => {
         </div>
       ) : (
         <div className="text-center py-8">
-          <p className="text-gray-500">Không thể tải chi tiết người dùng</p>
+          <p className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
+            Không thể tải chi tiết người dùng
+          </p>
         </div>
       )}
     </Modal>
   );
 };
 
-const UserEditModal = ({ user, isOpen, onClose, onSuccess }) => {
+const UserEditModal = ({ user, isOpen, onClose, onSuccess, darkMode, currentThemeConfig }) => {
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -348,22 +485,45 @@ const UserEditModal = ({ user, isOpen, onClose, onSuccess }) => {
         />
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <label className={`block text-sm font-medium mb-1 ${
+            darkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Email
+          </label>
           <input
             type="email"
             value={user.email}
             disabled
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed"
+            className={`w-full px-3 py-2 border rounded-lg cursor-not-allowed ${
+              darkMode 
+                ? 'border-gray-600 bg-gray-700 text-gray-400'
+                : 'border-gray-300 bg-gray-100 text-gray-500'
+            }`}
           />
-          <p className="text-xs text-gray-500 mt-1">Email không thể thay đổi</p>
+          <p className={`text-xs mt-1 ${
+            darkMode ? 'text-gray-400' : 'text-gray-500'
+          }`}>
+            Email không thể thay đổi
+          </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
+          <label className={`block text-sm font-medium mb-1 ${
+            darkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Giới tính
+          </label>
           <select
             value={formData.gender}
             onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+              darkMode
+                ? 'border-gray-600 bg-gray-700 text-white'
+                : 'border-gray-300 bg-white text-gray-900'
+            }`}
+            style={{ 
+              '--tw-ring-color': `${currentThemeConfig?.primary}40`
+            }}
           >
             <option value="">Chọn giới tính</option>
             <option value="male">Nam</option>
@@ -373,11 +533,22 @@ const UserEditModal = ({ user, isOpen, onClose, onSuccess }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Vai trò</label>
+          <label className={`block text-sm font-medium mb-1 ${
+            darkMode ? 'text-gray-300' : 'text-gray-700'
+          }`}>
+            Vai trò
+          </label>
           <select
             value={formData.role}
             onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+              darkMode
+                ? 'border-gray-600 bg-gray-700 text-white'
+                : 'border-gray-300 bg-white text-gray-900'
+            }`}
+            style={{ 
+              '--tw-ring-color': `${currentThemeConfig?.primary}40`
+            }}
           >
             <option value="user">Người dùng</option>
             <option value="admin">Quản trị viên</option>
@@ -388,14 +559,22 @@ const UserEditModal = ({ user, isOpen, onClose, onSuccess }) => {
           <Button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+            className={`px-4 py-2 border rounded-lg transition-colors ${
+              darkMode
+                ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`}
             disabled={isLoading}
           >
             Hủy
           </Button>
           <Button
             type="submit"
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            className="px-4 py-2 text-white rounded-lg transition-colors"
+            style={{ 
+              backgroundColor: currentThemeConfig?.primary,
+              ':hover': { backgroundColor: currentThemeConfig?.dark }
+            }}
             disabled={isLoading}
           >
             {isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
@@ -408,6 +587,7 @@ const UserEditModal = ({ user, isOpen, onClose, onSuccess }) => {
 
 const AdminUsers = () => {
   const { showSuccess, showError, showConfirm } = useApp();
+  const { darkMode, currentThemeConfig } = useTheme();
 
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({
@@ -541,12 +721,30 @@ const AdminUsers = () => {
   };
 
   const StatCard = ({ title, value, subtitle, icon, color }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+    <div className={`rounded-xl shadow-sm border p-6 hover:shadow-md transition-shadow ${
+      darkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-100'
+    }`}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+          <p className={`text-sm font-medium mb-1 ${
+            darkMode ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            {title}
+          </p>
+          <p className={`text-2xl font-bold ${
+            darkMode ? 'text-white' : 'text-gray-900'
+          }`}>
+            {value}
+          </p>
+          {subtitle && (
+            <p className={`text-sm mt-1 ${
+              darkMode ? 'text-gray-500' : 'text-gray-500'
+            }`}>
+              {subtitle}
+            </p>
+          )}
         </div>
         <div className={`p-3 rounded-xl ${color}`}>
           {icon}
@@ -556,23 +754,38 @@ const AdminUsers = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-green-50">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-gray-50 via-blue-50 to-green-50'
+    }`}>
       <div className="p-6">
-        {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+              <h1 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${
+                darkMode 
+                  ? 'from-white to-gray-300' 
+                  : 'from-gray-900 to-gray-700'
+              }`}>
                 Quản lý người dùng
               </h1>
-              <p className="text-gray-600 mt-1">Quản lý tài khoản và thông tin người dùng</p>
+              <p className={`mt-1 ${
+                darkMode ? 'text-gray-400' : 'text-gray-600'
+              }`}>
+                Quản lý tài khoản và thông tin người dùng
+              </p>
             </div>
 
             <div className="flex items-center space-x-3 mt-4 lg:mt-0">
               <button
                 onClick={loadUsers}
                 disabled={isLoading}
-                className="flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+                className={`flex items-center px-4 py-2 border rounded-lg transition-colors shadow-sm ${
+                  darkMode
+                    ? 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700'
+                    : 'bg-white border-gray-300 hover:bg-gray-50'
+                }`}
               >
                 <BiRefresh className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 Làm mới
@@ -580,14 +793,13 @@ const AdminUsers = () => {
             </div>
           </div>
 
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               title="Tổng Người Dùng"
               value={stats.total_users.toLocaleString()}
               subtitle="Tất cả tài khoản"
               icon={<BiUser className="w-6 h-6 text-blue-600" />}
-              color="bg-blue-50"
+              color={darkMode ? 'bg-blue-900/30' : 'bg-blue-50'}
             />
             
             <StatCard
@@ -595,7 +807,7 @@ const AdminUsers = () => {
               value={stats.total_admins.toLocaleString()}
               subtitle="Tài khoản admin"
               icon={<BiShield className="w-6 h-6 text-purple-600" />}
-              color="bg-purple-50"
+              color={darkMode ? 'bg-purple-900/30' : 'bg-purple-50'}
             />
             
             <StatCard
@@ -603,7 +815,7 @@ const AdminUsers = () => {
               value={stats.total_regular_users.toLocaleString()}
               subtitle="Tài khoản thường"
               icon={<BiGroup className="w-6 h-6 text-green-600" />}
-              color="bg-green-50"
+              color={darkMode ? 'bg-green-900/30' : 'bg-green-50'}
             />
             
             <StatCard
@@ -611,17 +823,20 @@ const AdminUsers = () => {
               value={stats.active_users.toLocaleString()}
               subtitle="Đã đăng nhập"
               icon={<BiCheck className="w-6 h-6 text-orange-600" />}
-              color="bg-orange-50"
+              color={darkMode ? 'bg-orange-900/30' : 'bg-orange-50'}
             />
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">
+        <div className={`rounded-xl border p-6 mb-6 shadow-sm ${
+          darkMode 
+            ? 'bg-gray-800 border-gray-700' 
+            : 'bg-white border-gray-200'
+        }`}>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <Input
-                placeholder="Tìm kiếm theo tên hoặc email..."
+                placeholder="Nhập tên hoặc email..."
                 icon={<BiSearch />}
                 value={filters.search}
                 onChange={(e) => handleSearch(e.target.value)}
@@ -630,7 +845,14 @@ const AdminUsers = () => {
 
             <div>
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                  darkMode
+                    ? 'border-gray-600 bg-gray-700 text-white'
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
+                style={{ 
+                  '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                }}
                 value={filters.gender}
                 onChange={(e) => handleFilterChange('gender', e.target.value)}
               >
@@ -643,7 +865,14 @@ const AdminUsers = () => {
 
             <div>
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                  darkMode
+                    ? 'border-gray-600 bg-gray-700 text-white'
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
+                style={{ 
+                  '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                }}
                 value={filters.role}
                 onChange={(e) => handleFilterChange('role', e.target.value)}
               >
@@ -655,7 +884,14 @@ const AdminUsers = () => {
 
             <div>
               <select
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:border-transparent ${
+                  darkMode
+                    ? 'border-gray-600 bg-gray-700 text-white'
+                    : 'border-gray-300 bg-white text-gray-900'
+                }`}
+                style={{ 
+                  '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                }}
                 value={`${filters.sort_by}_${filters.sort_order}`}
                 onChange={(e) => {
                   const [sort_by, sort_order] = e.target.value.split('_');
@@ -672,23 +908,36 @@ const AdminUsers = () => {
           </div>
         </div>
 
-        {/* Bulk Actions */}
         {selectedUsers.length > 0 && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
+          <div className={`border rounded-xl p-4 mb-6 ${
+            darkMode
+              ? 'bg-green-900/20 border-green-700'
+              : 'bg-green-50 border-green-200'
+          }`}>
             <div className="flex items-center justify-between">
-              <span className="text-green-700 font-medium">
+              <span className={`font-medium ${
+                darkMode ? 'text-green-300' : 'text-green-700'
+              }`}>
                 Đã chọn {selectedUsers.length} người dùng
               </span>
               <div className="flex space-x-2">
                 <button
                   onClick={() => setSelectedUsers([])}
-                  className="px-3 py-1 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className={`px-3 py-1 border rounded-lg transition-colors ${
+                    darkMode
+                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700'
+                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
                 >
                   Bỏ chọn
                 </button>
                 <button
                   onClick={handleBulkDelete}
-                  className="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center"
+                  className={`px-3 py-1 rounded-lg transition-colors flex items-center ${
+                    darkMode
+                      ? 'bg-red-600 text-white hover:bg-red-700'
+                      : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
                 >
                   <BiTrash className="w-4 h-4 mr-1" />
                   Xóa đã chọn
@@ -698,29 +947,36 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* Users List */}
         {isLoading ? (
           <div className="flex justify-center py-12">
             <Loader type="spinner" color="mint" text="Đang tải danh sách người dùng..." />
           </div>
         ) : users.length > 0 ? (
           <>
-            {/* Select All */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm">
+            <div className={`rounded-xl border p-4 mb-6 shadow-sm ${
+              darkMode 
+                ? 'bg-gray-800 border-gray-700' 
+                : 'bg-white border-gray-200'
+            }`}>
               <label className="flex items-center">
                 <input
                   type="checkbox"
                   checked={selectedUsers.length === users.length && users.length > 0}
                   onChange={handleSelectAll}
-                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  className="rounded border-gray-300 focus:ring-2"
+                  style={{ 
+                    accentColor: currentThemeConfig?.primary,
+                    '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                  }}
                 />
-                <span className="ml-2 text-sm text-gray-700">
+                <span className={`ml-2 text-sm ${
+                  darkMode ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   Chọn tất cả ({users.length} người dùng)
                 </span>
               </label>
             </div>
 
-            {/* Users Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {users.map(user => (
                 <UserCard
@@ -731,15 +987,23 @@ const AdminUsers = () => {
                   onDelete={handleDeleteUser}
                   isSelected={selectedUsers.includes(user.id)}
                   onSelect={handleSelectUser}
+                  darkMode={darkMode}
+                  currentThemeConfig={currentThemeConfig}
                 />
               ))}
             </div>
           </>
         ) : (
           <div className="text-center py-12">
-            <BiUser className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Không có người dùng nào</h3>
-            <p className="text-gray-500">
+            <BiUser className={`w-16 h-16 mx-auto mb-4 ${
+              darkMode ? 'text-gray-600' : 'text-gray-300'
+            }`} />
+            <h3 className={`text-lg font-medium mb-2 ${
+              darkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              Không có người dùng nào
+            </h3>
+            <p className={darkMode ? 'text-gray-400' : 'text-gray-500'}>
               {filters.search || filters.gender || filters.role
                 ? 'Không tìm thấy người dùng phù hợp với bộ lọc'
                 : 'Chưa có người dùng nào đăng ký'
@@ -748,7 +1012,6 @@ const AdminUsers = () => {
           </div>
         )}
 
-        {/* Modals */}
         <UserDetailModal
           user={selectedUser}
           isOpen={showDetailModal}
@@ -756,6 +1019,8 @@ const AdminUsers = () => {
             setShowDetailModal(false);
             setSelectedUser(null);
           }}
+          darkMode={darkMode}
+          currentThemeConfig={currentThemeConfig}
         />
 
         <UserEditModal
@@ -766,6 +1031,8 @@ const AdminUsers = () => {
             setSelectedUser(null);
           }}
           onSuccess={loadUsers}
+          darkMode={darkMode}
+          currentThemeConfig={currentThemeConfig}
         />
       </div>
     </div>
