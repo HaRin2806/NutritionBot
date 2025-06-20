@@ -102,6 +102,7 @@ class RAGPipeline:
             # Post-process response để xử lý hình ảnh
             response_text = self._process_image_links(response_text)
             
+            print(f"Response kèm ảnh: {response_text}")
             logger.info("Đã tạo phản hồi thành công")
             
             return {
@@ -173,25 +174,60 @@ Người dùng hiện tại {age} tuổi. {age_guidance}
     def _process_image_links(self, response_text):
         """Xử lý các đường dẫn hình ảnh trong response"""
         try:
-            # Tìm các pattern như figures/filename hoặc hình X.Y
-            image_patterns = [
-                r'figures/([^)\s]+)',
-                r'hình\s+(\d+\.?\d*)',
-                r'Hình\s+(\d+\.?\d*)'
-            ]
+            import re
             
-            for pattern in image_patterns:
-                matches = re.finditer(pattern, response_text, re.IGNORECASE)
-                for match in matches:
-                    # Có thể thêm logic xử lý hình ảnh ở đây
-                    pass
+            # Tìm các pattern markdown image
+            image_pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
             
-            return response_text
+            def replace_image_path(match):
+                alt_text = match.group(1)
+                image_path = match.group(2)
+                
+                # Xử lý đường dẫn local Windows/Linux
+                if '\\' in image_path or image_path.startswith('/') or ':' in image_path:
+                    # Extract filename từ đường dẫn local
+                    filename = image_path.split('\\')[-1].split('/')[-1]
+                    
+                    # Tìm bai_id từ filename
+                    bai_match = re.match(r'^(bai\d+)_', filename)
+                    if bai_match:
+                        bai_id = bai_match.group(1)
+                    else:
+                        bai_id = 'bai1'  # default
+                    
+                    # Tạo API URL
+                    api_url = f"/api/figures/{bai_id}/{filename}"
+                    return f"![{alt_text}]({api_url})"
+                
+                # Nếu đã là đường dẫn API, giữ nguyên
+                elif image_path.startswith('/api/figures/'):
+                    return match.group(0)
+                
+                # Xử lý đường dẫn tương đối
+                elif '../figures/' in image_path:
+                    filename = image_path.split('../figures/')[-1]
+                    bai_match = re.match(r'^(bai\d+)_', filename)
+                    if bai_match:
+                        bai_id = bai_match.group(1)
+                    else:
+                        bai_id = 'bai1'
+                    
+                    api_url = f"/api/figures/{bai_id}/{filename}"
+                    return f"![{alt_text}]({api_url})"
+                
+                # Các trường hợp khác, giữ nguyên
+                return match.group(0)
+            
+            # Thay thế tất cả image links
+            processed_text = re.sub(image_pattern, replace_image_path, response_text)
+            
+            logger.info(f"Processed {len(re.findall(image_pattern, response_text))} image links")
+            return processed_text
             
         except Exception as e:
             logger.error(f"Lỗi xử lý image links: {e}")
             return response_text
-    
+
     def generate_follow_up_questions(self, query, answer, age=1):
         """
         Tạo câu hỏi gợi ý dựa trên query và answer
