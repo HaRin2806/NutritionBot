@@ -102,7 +102,6 @@ class RAGPipeline:
             # Post-process response để xử lý hình ảnh
             response_text = self._process_image_links(response_text)
             
-            print(f"Response kèm ảnh: {response_text}")
             logger.info("Đã tạo phản hồi thành công")
             
             return {

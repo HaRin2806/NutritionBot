@@ -1,0 +1,950 @@
+================================================================================
+GEMINI RESPONSE DEBUG LOG
+Document ID: bosung_1750409400
+Timestamp: 2025-06-20T15:51:50.907734
+================================================================================
+
+RAW RESPONSE FROM GEMINI:
+----------------------------------------
+```json
+{
+  "bai_info": {
+    "id": "huong_dan_do_an_tot_nghiep",
+    "title": "Hướng dẫn viết Đồ án tốt nghiệp Đại học",
+    "overview": "Tài liệu này cung cấp hướng dẫn chi tiết về cấu trúc, nội dung, định dạng và các quy định liên quan đến việc viết đồ án tốt nghiệp đại học tại Trường Đại học Công nghiệp Hà Nội, đặc biệt cho ngành Kỹ thuật phần mềm."
+  },
+  "chunks": [
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_01",
+      "title": "Thông tin bìa và đề tài",
+      "content": "BỘ CÔNG THƯƠNG\nTRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI\nHƯỚNG DẪN VIẾT ĐỒ ÁN TỐT\nNGHIỆP ĐẠI HỌC\nThiết kế xây dựng công nghệ thực tế ảo và ứng dụng\nNGUYỄN VĂN A\nNgành Kỹ thuật phần mềm\nGiảng viên hướng dẫn: PGS. TS. Phạm Văn ABC\nChữ kí GVHD\nKhoa: Công nghệ thông tin\nTrường: Công nghệ Thông tin và Truyền thông\nHÀ NỘI, 06/2025",
+      "summary": "Thông tin cơ bản về đồ án tốt nghiệp, bao gồm tên trường, tên đề tài, thông tin sinh viên, ngành học, giảng viên hướng dẫn và thời gian.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 47,
+      "token_count": 61,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_02",
+      "title": "Lời cảm ơn",
+      "content": "LỜI CẢM ƠN\nLời cảm ơn của sinh viên (SV) tới người yêu, gia đình, bạn bè, thầy cô, và chính\nbản thân mình vì đã chăm chỉ và quyết tâm thực hiện ĐATN để đạt kết quả tốt nhất,\nnên viết phần cảm ơn ngắn gọn, tránh dùng các từ sáo rỗng, giới hạn trong khoảng\n100-150 từ.",
+      "summary": "Hướng dẫn cách viết lời cảm ơn trong đồ án tốt nghiệp, nhấn mạnh sự ngắn gọn và chân thành.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 59,
+      "token_count": 77,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_03",
+      "title": "Tóm tắt nội dung đồ án",
+      "content": "TÓM TẮT NỘI DUNG ĐỒ ÁN\nSinh viên viết tóm tắt ĐATN của mình trong mục này, với 200 đến 350 từ. Theo trình\ntự, các nội dung tóm tắt cần có: (i) Giới thiệu vấn đề (tại sao có vấn đề đó, hiện tại\nđược giải quyết chưa, có những hướng tiếp cận nào, các hướng này giải quyết như thế\nnào, hạn chế là gì), (ii) Hướng tiếp cận sinh viên lựa chọn là gì, vì sao chọn hướng đó,\n(iii) Tổng quan giải pháp của sinh viên theo hướng tiếp cận đã chọn, và (iv) Đóng góp\nchính của ĐATN là gì, kết quả đạt được sau cùng là gì. Sinh viên cần viết thành đoạn\nvăn, không được viết ý hoặc gạch đầu dòng.\nSinh viên thực hiện\n(Ký và ghi rõ họ tên)",
+      "summary": "Hướng dẫn chi tiết về cấu trúc và nội dung của phần tóm tắt đồ án tốt nghiệp bằng tiếng Việt, yêu cầu viết thành đoạn văn.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 130,
+      "token_count": 169,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_04",
+      "title": "Abstract",
+      "content": "ABSTRACT\nMục này khuyến khích sinh viên viết lại mục “Tóm tắt” đồ án tốt nghiệp ở trang trước\nbằng tiếng Anh. Phần này phải có đầy đủ các nội dung như trong phần tóm tắt bằng\ntiếng Việt. Sinh viên không nhất thiết phải trình bày mục này.\nNhưng nếu lựa chọn trình bày, sinh viên cần đảm bảo câu từ và ngữ pháp chuẩn\ntắc, nếu không sẽ có tác dụng ngược, gây phản cảm.",
+      "summary": "Hướng dẫn về việc viết tóm tắt đồ án bằng tiếng Anh (Abstract), yêu cầu đảm bảo nội dung đầy đủ và ngữ pháp chuẩn xác.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 70,
+      "token_count": 91,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_05",
+      "title": "Mục lục",
+      "content": "MỤC LỤC\nCHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI............................................................. 1\n1.1 Đặt vấn đề................................................................................................ 1\n1.2 Mục tiêu và phạm vi đề tài......................................................................... 2\n1.3 Định hướng giải pháp................................................................................ 2\n1.4 Bố cục đồ án ............................................................................................ 2\nCHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU................................. 4\n2.1 Khảo sát hiện trạng ................................................................................... 4\n2.2 Tổng quan chức năng ................................................................................ 4\n2.2.1 Biểu đồ use case tổng quát .............................................................. 4\n2.2.2 Biểu đồ use case phân rã XYZ ........................................................ 4\n2.2.3 Quy trình nghiệp vụ ....................................................................... 4\n2.3 Đặc tả chức năng ...................................................................................... 5\n2.3.1 Đặc tả use case A........................................................................... 5\n2.3.2 Đặc tả use case B ........................................................................... 5\n2.4 Yêu cầu phi chức năng .............................................................................. 5\nCHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG........................................................ 6\nCHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG ........ 7\n4.1 Thiết kế kiến trúc...................................................................................... 7\n4.1.1 Lựa chọn kiến trúc phần mềm ......................................................... 7\n4.1.2 Thiết kế tổng quan.......................................................................... 7\n4.1.3 Thiết kế chi tiết gói ........................................................................ 7\n4.2 Thiết kế chi tiết......................................................................................... 8\n4.2.1 Thiết kế giao diện .......................................................................... 8\n4.2.2 Thiết kế lớp ................................................................................... 9\n4.2.3 Thiết kế cơ sở dữ liệu ..................................................................... 9\n4.3 Xây dựng ứng dụng................................................................................... 9\n4.3.1 Thư viện và công cụ sử dụng........................................................... 9\n4.3.2 Kết quả đạt được ............................................................................ 9\n4.3.3 Minh họa các chức năng chính ........................................................ 9\n4.4 Kiểm thử.................................................................................................. 10\n4.5 Triển khai ................................................................................................ 10\nCHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT.......................... 11\nCHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN ................................. 12\n6.1 Kết luận................................................................................................... 12\n6.2 Hướng phát triển....................................................................................... 12\nTÀI LIỆU THAM KHẢO............................................................................. 15\nPHỤ LỤC................................................................C................................ 17\nA. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP ........................................... 17\nA.1 Ngành học............................................................................................... 18\nA.2 Tài liệu tham khảo ................................................................................... 18\nA.3 Cách viết phương trình và công thức toán học............................................. 18\nB. ĐẶC TẢ USE CASE................................................................................ 19\nB.1 Đặc tả use case “Thống kê tình hình mượn sách” ........................................ 19\nB.2 Đặc tả use case “Đăng ký làm thẻ mượn” ................................................... 19",
+      "summary": "Mục lục chi tiết của đồ án tốt nghiệp, liệt kê các chương, mục chính và số trang tương ứng.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 190,
+      "token_count": 247,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_06",
+      "title": "Danh mục hình vẽ, bảng biểu và thuật ngữ viết tắt",
+      "content": "DANH MỤC HÌNH VẼ\nHình 4.1 Ví dụ biểu đồ phụ thuộc gói . . . . . . . . . . . . . . . . . . . . 7\nHình 4.2 Ví dụ thiết kế gói . . . . . . . . . . . . . . . . . . . . . . . . . . 8\niii\nDANH MỤC BẢNG BIỂU\nBảng 4.1 Danh sách thư viện và công cụ sử dụng . . . . . . . . . . . . . . 9\niv\nDANH MỤC THUẬT NGỮ VÀ TỪ VIẾT TẮT\nThuật ngữ Ý nghĩa\nAPI Giao diện lập trình ứng dụng\n(Application Programming Interface)\nEUD Phát triển ứng dụng người dùng\ncuối(End-User Development)\nGWT Công cụ lập trình Javascript bằng Java\ncủa Google (Google Web Toolkit)\nHTML Ngôn ngữ đánh dấu siêu văn bản\n(HyperText Markup Language)\nIaaS Dịch vụ hạ tầng\nv",
+      "summary": "Liệt kê các danh mục hình vẽ, bảng biểu và thuật ngữ viết tắt cùng ý nghĩa của chúng được sử dụng trong tài liệu.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "iii-v",
+      "related_chunks": [],
+      "word_count": 96,
+      "token_count": 125,
+      "contains_table": true,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_01",
+      "title": "CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI - Hướng dẫn chung",
+      "content": "CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI\nLưu ý: Trước khi viết ĐATN, sinh viên cần đọc kỹ hướng dẫn và quy định chi\ntiếtvề cách viết ĐATN trong Phụ lục A. Sinh viên tuân theo mẫu tài liệu này để viết\nbáo cáo đồ án tốt nghiệp, vì tài liệu này đã được căn chỉnh, chỉnh sửa theo đúng chuẩn\nbáo cáo kỹ thuật đồ án tốt nghiệp (ISO 7144:1986). Sinh viên viết trực tiếp vào file\nnày, chỉ chỉnh sửa nội dung, và không viết trên file mới.\nKhi đóng quyển ĐATN , sinh viên cần lưu ý tuân thủ hướng dẫn ở phụ lục A.9\nSV cần đặc biệt lưu ý cách hành văn . Mỗi đoạn văn không được quá dài và cần\ncó ý tứ rõ ràng, bao gồm duy nhất một ý chính và các ý phân tích bổ trợ để làm rõ\nhơn ý chính. Các câu văn trong đoạn phải đầy đủ chủ ngữ vị ngữ, cùng hướng đến chủ\nđề chung. Câu sau phải liên kết với câu trước, đoạn sau liên kết với đoạn trước. Trong\nvăn phong khoa học, sinh viên không được dùng từ trong văn nói, không dùng các từ\nphóng đại, thái quá, các từ thiếu khách quan, thiên về cảm xúc, về quan điểm cá nhân\nnhư “tuyệt vời”, “cực hay”, “cực kỳ hữu ích”, v.v. Các câu văn cần được tối ưu hóa,\nđảm bảo rất khó để thể thêm hoặc bớt đi được dù chỉ một từ. Cách diễn đạt cần ngắn\ngọn, súc tích, không dài dòng.\nMẫu ĐATN này được thiết kế phù hợp nhất với đa số các đề tài xây dựng phần\nmềm ứng dụng. Với các dạng đề tài khác (giải pháp, nghiên cứu, phần mềm đặc thù,\nv.v.), sinh viên dựa trên cấu trúc và hướng dẫn của báo cáo này để đề xuất và trao đổi\nvới giáo viên hướng dẫn để thiết kế khung báo cáo đồ án cho phù hợp. Sinh viên lưu\nýtrong mọi trường hợp, SV luôn phải sử dụng định dạng báo cáo này, và phải\nđọc kỹ toàn bộ các hướng dẫn từ đầu tới cuối. Các hướng dẫn không chỉ áp dụng\nriêng cho đề tài ứng dụng, mà còn phù hợp với các dạng đề tài khác. Ngoài ra, trong\nmẫu ĐATN này đã được tích hợp một số hướng dẫn dành riêng cho đề tài nghiên cứu.\nChương 1 có độ dài từ 3 đến 6 trang với các nội dung sau đây",
+      "summary": "Tổng quan về Chương 1, bao gồm các lưu ý quan trọng về định dạng, văn phong khoa học và cấu trúc chung của báo cáo đồ án tốt nghiệp, áp dụng cho cả đề tài ứng dụng và nghiên cứu.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "1",
+      "related_chunks": [],
+      "word_count": 328,
+      "token_count": 426,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_02",
+      "title": "1.1 Đặt vấn đề",
+      "content": "1.1 Đặt vấn đề\nKhi đặt vấn đề, sinh viên cần làm nổi bật mức độ cấp thiết, tầm quan trọng và/hoặc\nquy mô của bài toán của mình.\nGợi ý cách trình bày cho sinh viên: Xuất phát từ tình hình thực tế gì, dẫn đến vấn\nđề hoặc bài toán gì. Vấn đề hoặc bài toán đó, nếu được giải quyết, đem lại lợi ích gì,\ncho những ai, còn có thể được áp dụng vào các lĩnh vực khác nữa không. Sinh viên\ncần lưu ý phần này chỉ trình bày vấn đề, tuyệt đối không trình bày giải pháp.\n1",
+      "summary": "Hướng dẫn cách trình bày phần 'Đặt vấn đề' trong đồ án, tập trung vào việc làm nổi bật tính cấp thiết và quy mô của bài toán mà không đi sâu vào giải pháp.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "1",
+      "related_chunks": [],
+      "word_count": 87,
+      "token_count": 113,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_03",
+      "title": "1.2 Mục tiêu và phạm vi đề tài",
+      "content": "1.2 Mục tiêu và phạm vi đề tài\nSinh viên trước tiên cần trình bày tổng quan các kết quả của các nghiên cứu hiện\nnay cho bài toán giới thiệu ở phần 1.1 (đối với đề tài nghiên cứu), hoặc về các sản\nphẩm hiện tại/về nhu cầu của người dùng (đối với đề tài ứng dụng). Tiếp đến, sinh\nviên tiến hành so sánh và đánh giá tổng quan các sản phẩm/nghiên cứu này.\nDựa trên các phân tích và đánh giá ở trên, sinh viên khái quát lại các hạn chế hiện\ntại đang gặp phải. Trên cơ sở đó, sinh viên sẽ hướng tới giải quyết vấn đề cụ thể gì,\nkhắc phục hạn chế gì, phát triển phần mềm có các chức năng chính gì , tạo nên đột\nphá gì, v.v.\nTrong phần này, sinh viên lưu ý chỉ trình bày tổng quan, không đi vào chi tiết của\nvấn đề hoặc giải pháp. Nội dung chi tiết sẽ được trình bày trong các chương tiếp theo,\nđặc biệt là trong Chương 5.",
+      "summary": "Hướng dẫn trình bày mục tiêu và phạm vi đề tài, bao gồm khảo sát các nghiên cứu/sản phẩm hiện có, phân tích hạn chế và xác định vấn đề cần giải quyết, nhưng chỉ ở mức tổng quan.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "2",
+      "related_chunks": [],
+      "word_count": 147,
+      "token_count": 191,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_04",
+      "title": "1.3 Định hướng giải pháp",
+      "content": "1.3 Định hướng giải pháp\nTừ việc xác định rõ nhiệm vụ cần giải quyết ở phần 1.2, sinh viên đề xuất định\nhướng giải pháp của mình theo trình tự sau: (i) Sinh viên trước tiên trình bày sẽ giải\nquyết vấn đề theo định hướng, phương pháp, thuật toán, kỹ thuật, hay công nghệ nào;\nTiếp theo, (ii) sinh viên mô tả ngắn gọn giải pháp của mình là gì (khi đi theo định\nhướng/phương pháp nêu trên); và sau cùng, (iii) sinh viên trình bày đóng góp chính\ncủa đồ án là gì, kết quả đạt được là gì.\nSinh viên lưu ý không giải thích hoặc phân tích chi tiết công nghệ/thuật toán trong\nphần này. Sinh viên chỉ cần nêu tên định hướng công nghệ/thuật toán, mô tả ngắn gọn\ntrong một đến hai câu và giải thích nhanh lý do lựa chọn.",
+      "summary": "Hướng dẫn cách đề xuất định hướng giải pháp, bao gồm phương pháp, công nghệ lựa chọn, mô tả ngắn gọn giải pháp và đóng góp chính của đồ án.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "2",
+      "related_chunks": [],
+      "word_count": 136,
+      "token_count": 177,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_05",
+      "title": "1.4 Bố cục đồ án",
+      "content": "1.4 Bố cục đồ án\nPhần còn lại của báo cáo đồ án tốt nghiệp này được tổ chức như sau.\nChương 2 trình bày về v.v.\nTrong Chương 3, em/tôi giới thiệu về v.v.\nChú ý: Sinh viên cần viết mô tả thành đoạn văn đầy đủ về nội dung chương. Tuyệt\nđối không viết ý hay gạch đầu dòng. Chương 1 không cần mô tả trong phần này.\nVí dụ tham khảo mô tả chương trong phần bố cục đồ án tốt nghiệp: Chương ***\ntrình bày đóng góp chính của đồ án, đó là một nền tảng ABC cho phép khai phá và\ntích hợp nhiều nguồn dữ liệu, trong đó mỗi nguồn dữ liệu lại có định dạng đặc thù\nriêng. Nền tảng ABC được phát triển dựa trên khái niệm DEF, là các module ngữ\nnghĩa trợ giúp người dùng tìm kiếm, tích hợp và hiển thị trực quan dữ liệu theo mô\n2\nhình cộng tác và mô hình phân tán.\nChú ý: Trong phần nội dung chính, mỗi chương của đồ án nên có phần Tổng quan\nvà Kết chương. Hai phần này đều có định dạng văn bản “Normal”, sinh viên không\ncần tạo định dạng riêng, ví dụ như không in đậm/in nghiêng, không đóng khung, v.v.\nTrong phần Tổng quan của chương N, sinh viên nên có sự liên kết với chương N-1\nrồi trình bày sơ qua lý do có mặt của chương N và sự cần thiết của chương này trong\nđồ án. Sau đó giới thiệu những vấn đề sẽ trình bày trong chương này là gì, trong các\nđề mục lớn nào.\nVí dụ về phần Tổng quan: Chương 3 đã thảo luận về nguồn gốc ra đời, cơ sở lý\nthuyết và các nhiệm vụ chính của bài toán tích hợp dữ liệu. Chương 4 này sẽ trình bày\nchi tiết các công cụ tích hợp dữ liệu theo hướng tiếp cận “mashup”. Với mục đích và\nphạm vi của đề tài, sáu nhóm công cụ tích hợp dữ liệu chính được trình bày bao gồm:\n(i) nhóm công cụ ABC trong phần 4.1, (ii) nhóm công cụ DEF trong phần 4.2, nhóm\ncông cụ GHK trong phần 4.3, v.v.\nTrong phần Kết chương, sinh viên đưa ra một số kết luận quan trọng của chương.\nNhững vấn đề mở ra trong Tổng quan cần được tóm tắt lại nội dung và cách giải\nquyết/thực hiện như thế nào. Sinh viên lưu ý không viết Kết chương giống hệt Tổng\nquan. Sau khi đọc phần Kết chương, người đọc sẽ nắm được sơ bộ nội dung và giải\npháp cho các vấn đề đã trình bày trong chương. Trong Kết chương, Sinh viên nên có\nthêm câu liên kết tới chương tiếp theo.\nVí dụ về phần Kết chương: Chương này đã phân tích chi tiết sáu nhóm công cụ tích\nhợp dữ liệu. Nhóm công cụ ABC và DEF thích hợp với những bài toán tích hợp dữ\nliệu phạm vi nhỏ. Trong khi đó, nhóm công cụ GHK lại chứng tỏ thế mạnh của mình\nvới những bài toán cần độ chính xác cao, v.v. Từ kết quả nghiên cứu và phân tích về\nsáu nhóm công cụ tích hợp dữ liệu này, tôi đã thực hiện phát triển phần mềm tự động\nbóc tách và tích hợp dữ liệu sử dụng nhóm công cụ GHK. Phần này được trình bày\ntrong chương tiếp theo – Chương 5.\n3",
+      "summary": "Hướng dẫn chi tiết về cách trình bày bố cục đồ án, bao gồm cách mô tả từng chương, cách viết phần Tổng quan và Kết chương để đảm bảo tính liên kết và rõ ràng.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "2-3",
+      "related_chunks": [],
+      "word_count": 478,
+      "token_count": 621,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_01",
+      "title": "CHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU - Hướng dẫn chung",
+      "content": "CHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU\nChương này có độ dài từ 9 đến 11 trang.\nVới phương pháp phân tích thiết kế hướng đối tượng, sinh viên sử dụng biểu đồ use\ncase theo hướng dẫn của template này. Với các phương pháp khác, sinh viên trao đổi\nvới giáo viên hướng dẫn để đổi tên và sắp xếp lại đề mục cho phù hợp. Ví dụ, thay\nvì sử dụng biểu đồ use case, sinh viên đi theo hướng tiếp cận Agile có thể dùng User\nStory.\nLưu ý : Mỗi chương nên có thêm 1 đoạn mở đầu chương và kết thúc chương, mở\nđầu giới thiệu những nội dung sẽ trình bày trong chương, kết thúc tổng kết lại các nội\ndung đã trình bày",
+      "summary": "Tổng quan về Chương 2, hướng dẫn sử dụng biểu đồ use case hoặc User Story tùy theo phương pháp phân tích thiết kế, và lưu ý về cấu trúc mở đầu/kết thúc chương.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 107,
+      "token_count": 139,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_02",
+      "title": "2.1 Khảo sát hiện trạng",
+      "content": "2.1 Khảo sát hiện trạng\nThông thường, khảo sát chi tiết về hiện trạng và yêu cầu của phần mềm sẽ được lấy\ntừ ba nguồn chính, đó là (i) người dùng/khách hàng, (ii) các hệ thống đã có, (iii) và\ncác ứng dụng tương tự. Sinh viên cần tiến hành phân tích, so sánh, đánh giá chi tiết ưu\nnhược điểm của các sản phẩm/nghiên cứu hiện có. Sinh viên có thể lập bảng so sánh\nnếu cần thiết. Kết hợp với khảo sát người dùng/khách hàng (nếu có), sinh viên nêu và\nmô tả sơ lược các tính năng phần mềm quan trọng cần phát triển.",
+      "summary": "Hướng dẫn khảo sát hiện trạng và yêu cầu phần mềm từ ba nguồn chính: người dùng, hệ thống hiện có và ứng dụng tương tự, để xác định các tính năng cần phát triển.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 106,
+      "token_count": 138,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_03",
+      "title": "2.2 Tổng quan chức năng và các biểu đồ use case",
+      "content": "2.2 Tổng quan chức năng\nPhần 2.2 này có nhiệm vụ tóm tắt các chức năng của phần mềm. Trong phần này,\nsinh viên lưu ý chỉ mô tả chức năng mức cao (tổng quan) mà không đặc tả chi tiết cho\ntừng chức năng. Đặc tả chi tiết được trình bày trong phần 2.3.\n2.2.1 Biểu đồ use case tổng quát\nSinh viên vẽ biểu đồ use case tổng quan và giải thích các tác nhân tham gia là gì,\nnêu vai trò của từng tác nhân, và mô tả ngắn gọn các use case chính.\n2.2.2 Biểu đồ use case phân rã XYZ\nVới mỗi use case mức cao trong biểu đồ use case tổng quan, sinh viên tạo một mục\nriêng như mục 2.2.2 và tiến hành phân rã use case đó. Lưu ý tên use case cần phân rã\ntrong biểu đồ use case tổng quan phải khớp với tên đề mục.\nTrong mỗi mục như vậy, sinh viên vẽ và giải thích ngắn gọn các use case phân rã.\n2.2.3 Quy trình nghiệp vụ\nNếu sản phẩm/hệ thống cần xây dựng có quy trình nghiệp vụ quan trọng/đáng chú\ný, sinh viên cần mô tả và vẽ biểu đồ hoạt động minh họa quy trình nghiệp vụ đó. Sinh\n4\nviên lưu ý đây không phải là luồng sự kiện của từng use case, mà là luồng hoạt động\nkết hợp nhiều use case để thực hiện một nghiệp vụ nào đó.\nVí dụ, một hệ thống quản lý thư viện có quy trình nghiệp vụ mượn trả với mô tả\nsơ bộ như sau: Sinh viên làm thẻ mượn, sau đó sinh viên đăng ký mượn sách, thủ thư\ncho mượn, và cuối cùng sinh viên trả lại sách cho thư viện. Một hệ thống có thể có\nmột vài quy trình nghiệp vụ quan trọng như vậy.",
+      "summary": "Hướng dẫn tóm tắt các chức năng phần mềm ở mức tổng quan, bao gồm việc vẽ và giải thích biểu đồ use case tổng quát, biểu đồ use case phân rã, và mô tả quy trình nghiệp vụ.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 240,
+      "token_count": 312,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_04",
+      "title": "2.3 Đặc tả chức năng và 2.4 Yêu cầu phi chức năng",
+      "content": "2.3 Đặc tả chức năng\nSinh viên lựa chọn từ 4 đến 7 use case quan trọng nhất của đồ án để đặc tả chi\ntiết. Mỗi đặc tả bao gồm ít nhất các thông tin sau: (i) Tên use case, (ii) Luồng sự kiện\n(chính và phát sinh), (iii) Tiền điều kiện, và (iv) Hậu điều kiện. Sinh viên chỉ vẽ bổ\nsung biểu đồ hoạt động khi đặc tả use case phức tạp.\n2.3.1 Đặc tả use case A\n2.3.2 Đặc tả use case B\n2.4 Yêu cầu phi chức năng\nTrong phần này, sinh viên đưa ra các yêu cầu khác nếu có, bao gồm các yêu cầu\nphi chức năng như hiệu năng, độ tin cậy, tính dễ dùng, tính dễ bảo trì, hoặc các yêu\ncầu về mặt kỹ thuật như về CSDL, công nghệ sử dụng, v.v.\n5",
+      "summary": "Hướng dẫn đặc tả chi tiết các use case quan trọng và liệt kê các yêu cầu phi chức năng của hệ thống như hiệu năng, độ tin cậy, tính dễ dùng, và các yêu cầu kỹ thuật.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "5",
+      "related_chunks": [],
+      "word_count": 119,
+      "token_count": 155,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_04_01",
+      "title": "CHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG / CƠ SỞ LÝ THUYẾT",
+      "content": "CHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG\nChương này có độ dài không quá 10 trang. Nếu cần trình bày dài hơn, sinh viên\nđưa vào phần phụ lục. Chú ý đây là kiến thức đã có sẵn; SV sau khi tìm hiểu được thì\nphân tích và tóm tắt lại. Sinh viên không trình bày dài dòng, chi tiết.\nVới đồ án ứng dụng, sinh viên để tên chương là “Công nghệ sử dụng”. Trong\nchương này, sinh viên giới thiệu về các công nghệ, nền tảng sử dụng trong đồ án. Sinh\nviên cũng có thể trình bày thêm nền tảng lý thuyết nào đó nếu cần dùng tới.\nVới đồ án nghiên cứu, sinh viên đổi tên chương thành “Cơ sở lý thuyết”. Khi đó,\nnội dung cần trình bày bao gồm: Kiến thức nền tảng, cơ sở lý thuyết, các thuật toán,\nphương pháp nghiên cứu, v.v.\nVới từng công nghệ/nền tảng/lý thuyết được trình bày, sinh viên phải phân tích rõ\ncông nghệ/nền tảng/lý thuyết đó dùng để để giải quyết vấn đề/yêu cầu cụ thể nào ở\nChương 2. Hơn nữa, với từng vấn đề/yêu cầu, sinh viên phải liệt kê danh sách các\ncông nghệ/hướng tiếp cận tương tự có thể dùng làm lựa chọn thay thế, rồi giải thích\nrõ sự lựa chọn của mình.\nLưu ý: Nội dung ĐATN phải có tính chất liên kết, liền mạch, và nhất quán. Vì\nvậy, các công nghệ/thuật toán trình bày trong chương này phải khớp với nội dung giới\nthiệu của sinh viên ở phần trước đó.\nTrong chương này, để tăng tính khoa học và độ tin cậy, sinh viên nên chỉ rõ nguồn\nkiến thức mình thu thập được ở tài liệu nào, đồng thời đưa tài liệu đó vào trong danh\nsách tài liệu tham khảo rồi tạo các tham chiếu chéo (xem hướng dẫn ở phụ lục A.7).\n6",
+      "summary": "Hướng dẫn về nội dung và độ dài của Chương 3, tùy thuộc vào loại đồ án (ứng dụng hay nghiên cứu), tập trung vào việc giới thiệu, phân tích công nghệ/lý thuyết sử dụng và lý do lựa chọn, đảm bảo tính nhất quán và trích dẫn nguồn.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "6",
+      "related_chunks": [],
+      "word_count": 294,
+      "token_count": 382,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_01",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.1 Thiết kế kiến trúc",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.1 Thiết kế kiến trúc\n4.1.1 Lựa chọn kiến trúc phần mềm\nMục này có độ dài từ một đến ba trang. Sinh viên cần lựa chọn kiến trúc phần mềm\ncho ứng dụng của mình như: kiến trúc ba lớp MVC, MVP, SOA, Microservice, v.v. rồi\ngiải thích sơ bộ về kiến trúc đó (không giải thích chi tiết/dài dòng). Sử dụng kiến trúc\nphần mềm đã chọn ở trên, sinh viên mô tả kiến trúc cụ thể cho ứng dụng của mình.\nGợi ý: sinh viên áp dụng lý thuyết chung vào hệ thống/sản phẩm của mình như thế\nnào, có thay đổi, bổ sung hoặc cải tiến gì không. Ví dụ, thành phần M trong kiến trúc\nlý thuyết MVC sẽ là những thành phần cụ thể nào (ví dụ: là interface I + class C1 +\nclass C2, v.v.) trong kiến trúc phần mềm của sinh viên.\n4.1.2 Thiết kế tổng quan\nSinh viên vẽ biểu đồ gói UML (UML package diagram), nêu rõ sự phụ thuộc giữa\ncác gói (package). SV cần vẽ các gói sao cho chúng được phân theo các tầng rõ ràng,\nkhông được sắp đặt package lộn xộn trong hình vẽ. Sinh viên chú ý các quy tắc thiết\nkế (Các gói không phụ thuộc lẫn nhau, gói tầng dưới không phụ thuộc gói tầng trên,\nkhông phụ thuộc bỏ qua tầng, v.v.) và cần giải thích sơ lược về mục đích/nhiệm vụ\ncủa từng package. SV tham khảo ví dụ minh họa trong Hình 4.1\nHình 4.1: Ví dụ biểu đồ phụ thuộc gói\n4.1.3 Thiết kế chi tiết gói\nSinh viên thiết kế và lần lượt vẽ biểu đồ thiết kế cho từng package, hoặc một nhóm\ncác package liên quan để giải quyết một vấn đề gì đó. Khi vẽ thiết kế gói, sinh viên\nchỉ cần đưa tên lớp, không cần chỉ ra các thành viên phương thức và thuộc tính. SV\n7",
+      "summary": "Hướng dẫn về thiết kế kiến trúc phần mềm, bao gồm lựa chọn kiến trúc (MVC, SOA, v.v.), mô tả kiến trúc cụ thể cho ứng dụng, và thiết kế tổng quan/chi tiết gói bằng biểu đồ UML.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "7",
+      "related_chunks": [],
+      "word_count": 297,
+      "token_count": 386,
+      "contains_table": false,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_02",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.2 Thiết kế chi tiết (Giao diện)",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\ntham khảo ví dụ minh họa trong Hình 4.2.\nSinh viên cần vẽ rõ ràng quan hệ giữa các lớp trong biểu đồ. Các quan hệ bao\ngồm: phụ thuộc (dependency), kết hợp (association), kết tập (aggregation), hợp thành\n(composition), kế thừa (inheritance), và thực thi (implementation). Các quan hệ này\nđều đã được minh họa trong 4.2.\nSau khi vẽ hình minh họa, sinh viên cần giải thích ngắn gọn về thiết kế của mình.\nHình 4.2: Ví dụ thiết kế gói\n4.2 Thiết kế chi tiết\n4.2.1 Thiết kế giao diện\nPhần này có độ dài từ hai đến ba trang. Sinh viên đặc tả thông tin về màn hình mà\nứng dụng của mình hướng tới, bao gồm độ phân giải màn hình, kích thước màn hình,\nsố lượng màu sắc hỗ trợ, v.v. Tiếp đến, sinh viên đưa ra các thống nhất/chuẩn hóa của\nmình khi thiết kế giao diện như thiết kế nút, điều khiển, vị trí hiển thị thông điệp phản\nhồi, phối màu, v.v. Sau cùng sinh viên đưa ra một số hình ảnh minh họa thiết kế giao\ndiện cho các chức năng quan trọng nhất. Lưu ý, sinh viên không nhầm lẫn giao diện\nthiết kế với giao diện của sản phẩm sau cùng.\n8",
+      "summary": "Hướng dẫn về thiết kế chi tiết, bao gồm cách vẽ và giải thích quan hệ giữa các lớp trong biểu đồ, và đặc tả thiết kế giao diện người dùng với các thông tin về màn hình và chuẩn hóa thiết kế.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "8",
+      "related_chunks": [],
+      "word_count": 198,
+      "token_count": 257,
+      "contains_table": false,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_03",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.2.2 Thiết kế lớp, 4.2.3 Thiết kế CSDL, 4.3 Xây dựng ứng dụng",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.2.2 Thiết kế lớp\nPhần này có độ dài từ ba đến bốn trang. Sinh viên trình bày thiết kế chi tiết các\nthuộc tính và phương thức cho một số lớp chủ đạo/quan trọng nhất của ứng dụng (từ\n2-4 lớp). Thiết kế chi tiết cho các lớp khác, nếu muốn trình bày, sinh viên đưa vào\nphần phụ lục.\nĐể minh họa thiết kế lớp, sinh viên thiết kế luồng truyền thông điệp giữa các đối\ntượng tham gia cho 2 đến 3 use case quan trọng nào đó bằng biểu đồ trình tự (hoặc\nbiểu đồ giao tiếp).\n4.2.3 Thiết kế cơ sở dữ liệu\nPhần này có độ dài từ hai đến bốn trang. Sinh viên thiết kế, vẽ và giải thích biểu\nđồ thực thể liên kết (E-R diagram). Từ đó, sinh viên thiết kế cơ sở dữ liệu tùy theo hệ\nquản trị cơ sở dữ liệu mà mình sử dụng (SQL, NoSQL, Firebase, v.v.)\n4.3 Xây dựng ứng dụng\n4.3.1 Thư viện và công cụ sử dụng\nSinh viên liệt kê các công cụ, ngôn ngữ lập trình, API, thư viện, IDE, công cụ kiểm\nthử, v.v. mà mình sử dụng để phát triển ứng dụng. Mỗi công cụ phải được chỉ rõ phiên\nbản sử dụng. SV nên kẻ bảng mô tả tương tự như Bảng ??. Nếu có nhiều nội dung\ntrình bày, sinh viên cần xoay ngang bảng.\nMục đích Công cụ Địa chỉ URL\nIDE lập trình Eclipse Oxygen a64 bit http://www.eclipse.org/\nv.v. v.v. v.v.\nBảng 4.1: Danh sách thư viện và công cụ sử dụng\n4.3.2 Kết quả đạt được\nSinh viên trước tiên mô tả kết quả đạt được của mình là gì, ví dụ như các sản phẩm\nđược đóng gói là gì, bao gồm những thành phần nào, ý nghĩa, vai trò?\nSinh viên cần thống kê các thông tin về ứng dụng của mình như: số dòng code, số\nlớp, số gói, dung lượng toàn bộ mã nguồn, dung lượng của từng sản phẩm đóng gói,\nv.v. Tương tự như phần liệt kê về công cụ sử dụng, sinh viên cũng nên dùng bảng để\nmô tả phần thông tin thống kê này.\n4.3.3 Minh họa các chức năng chính\nSinh viên lựa chọn và đưa ra màn hình cho các chức năng chính, quan trọng, và thú\nvị nhất. Mỗi giao diện cần phải có lời giải thích ngắn gọn. Khi giải thích, sinh viên có\nthể kết hợp với các chú thích ở trong hình ảnh giao diện.\n9",
+      "summary": "Hướng dẫn thiết kế chi tiết các lớp và cơ sở dữ liệu, liệt kê các thư viện/công cụ sử dụng, mô tả kết quả đạt được của ứng dụng và minh họa các chức năng chính.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "9",
+      "related_chunks": [],
+      "word_count": 404,
+      "token_count": 525,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_04",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.4 Kiểm thử và 4.5 Triển khai",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.4 Kiểm thử\nPhần này có độ dài từ hai đến ba trang. Sinh viên thiết kế các trường hợp kiểm thử\ncho hai đến ba chức năng quan trọng nhất. Sinh viên cần chỉ rõ các kỹ thuật kiểm thử\nđã sử dụng. Chi tiết các trường hợp kiểm thử khác, nếu muốn trình bày, sinh viên đưa\nvào phần phụ lục. Sinh viên sau cùng tổng kết về số lượng các trường hợp kiểm thử\nvà kết quả kiểm thử. Sinh viên cần phân tích lý do nếu kết quả kiểm thử không đạt.\n4.5 Triển khai\nSinh viên trình bày mô hình và/hoặc cách thức triển khai thử nghiệm/thực tế. Ứng\ndụng của sinh viên được triển khai trên server/thiết bị gì, cấu hình như thế nào. Kết\nquả triển khai thử nghiệm nếu có (số lượng người dùng, số lượng truy cập, thời gian\nphản hồi, phản hồi người dùng, khả năng chịu tải, các thống kê, v.v.)\n10",
+      "summary": "Hướng dẫn về kiểm thử và triển khai hệ thống, bao gồm thiết kế trường hợp kiểm thử, kỹ thuật kiểm thử, và mô tả mô hình/kết quả triển khai thực tế.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "10",
+      "related_chunks": [],
+      "word_count": 180,
+      "token_count": 234,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_06_01",
+      "title": "CHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT",
+      "content": "CHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT\nChương này có độ dài tối thiểu 5 trang, tối đa không giới hạn.1Sinh viên cần trình\nbày tất cả những nội dung đóng góp mà mình thấy tâm đắc nhất trong suốt quá trình\nlàm ĐATN. Đó có thể là một loạt các vấn đề khó khăn mà sinh viên đã từng bước giải\nquyết được, là giải thuật cho một bài toán cụ thể, là giải pháp tổng quát cho một lớp\nbài toán, hoặc là mô hình/kiến trúc hữu hiệu nào đó được sinh viên thiết kế.\nChương này là cơ sở quan trọng để các thầy cô đánh giá sinh viên. Vì vậy, sinh\nviên cần phát huy tính sáng tạo, khả năng phân tích, phản biện, lập luận, tổng quát\nhóa vấn đề và tập trung viết cho thật tốt. Mỗi giải pháp hoặc đóng góp của sinh viên\ncần được trình bày trong một mục độc lập bao gồm ba mục con: (i) dẫn dắt/giới thiệu\nvề bài toán/vấn đề, (ii) giải pháp, và (iii) kết quả đạt được (nếu có).\nSinh viên lưu ý không trình bày lặp lại nội dung . Những nội dung đã trình bày\nchi tiết trong các chương trước không được trình bày lại trong chương này. Vì vậy, với\nnội dung hay, mang tính đóng góp/giải pháp, sinh viên chỉ nên tóm lược/mô tả sơ bộ\ntrong các chương trước, đồng thời tạo tham chiếu chéo tới đề mục tương ứng trong\nChương 5 này. Chi tiết thông tin về đóng góp/giải pháp được trình bày trong mục đó.\nVí dụ, trong Chương 4, sinh viên có thiết kế được kiến trúc đáng lưu ý gì đó, là sự\nkết hợp của các kiến trúc MVC, MVP, SOA, v.v. Khi đó, sinh viên sẽ chỉ mô tả ngắn\ngọn kiến trúc đó ở Chương 4, rồi thêm các câu có dạng: “Chi tiết về kiến trúc này sẽ\nđược trình bày trong phần 5.1\".\n1Trong trường hợp phần này dưới 5 trang thì sinh viên nên gộp vào phần kết luận, không tách ra\nmột chương riêng rẽ nữa.\n11",
+      "summary": "Hướng dẫn về Chương 5, nơi sinh viên trình bày các giải pháp và đóng góp nổi bật của đồ án, nhấn mạnh tính sáng tạo, phân tích và không lặp lại nội dung đã trình bày chi tiết ở các chương trước.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "11",
+      "related_chunks": [],
+      "word_count": 296,
+      "token_count": 385,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_07_01",
+      "title": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN - 6.1 Kết luận",
+      "content": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN\n6.1 Kết luận\nSinh viên so sánh kết quả nghiên cứu hoặc sản phẩm của mình với các nghiên cứu\nhoặc sản phẩm tương tự.\nSinh viên phân tích trong suốt quá trình thực hiện ĐATN, mình đã làm được gì,\nchưa làm được gì, các đóng góp nổi bật là gì, và tổng hợp những bài học kinh nghiệm\nrút ra nếu có.",
+      "summary": "Hướng dẫn về phần kết luận của đồ án, yêu cầu sinh viên so sánh kết quả, phân tích những gì đã đạt được và chưa đạt được, cùng với các đóng góp và bài học kinh nghiệm.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "12",
+      "related_chunks": [],
+      "word_count": 69,
+      "token_count": 90,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_07_02",
+      "title": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN - 6.2 Hướng phát triển",
+      "content": "6.2 Hướng phát triển\nTrong phần này, sinh viên trình bày định hướng công việc trong tương lai để hoàn\nthiện sản phẩm hoặc nghiên cứu của mình.\nTrước tiên, sinh viên trình bày các công việc cần thiết để hoàn thiện các chức\nnăng/nhiệm vụ đã làm. Sau đó sinh viên phân tích các hướng đi mới cho phép cải\nthiện và nâng cấp các chức năng/nhiệm vụ đã làm.\n12",
+      "summary": "Hướng dẫn về phần hướng phát triển, yêu cầu sinh viên trình bày các công việc cần thiết để hoàn thiện sản phẩm/nghiên cứu và các hướng đi mới để cải thiện/nâng cấp.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "12",
+      "related_chunks": [],
+      "word_count": 70,
+      "token_count": 91,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_08_01",
+      "title": "Một số lưu ý về tài liệu tham khảo",
+      "content": "MỘT SỐ LƯU Ý VỀ TÀI LIỆU THAM KHẢO\nLưu ý: Sinh viên không được đưa bài giảng/slide, các trang Wikipedia, hoặc các\ntrang web thông thường làm tài liệu tham khảo.\nMột trang web được phép dùng làm tài liệu tham khảo chỉ khi nó là công bố chính\nthống của cá nhân hoặc tổ chức nào đó. Ví dụ, trang web đặc tả ngôn ngữ XML của\ntổ chức W3C https://www.w3.org/TR/2008/REC-xml-20081126/ là\nTLTK hợp lệ.\nCó năm loại tài liệu tham khảo mà sinh viên phải tuân thủ đúng quy định về cách\nthức liệt kê thông tin như sau. Lưu ý: các phần văn bản trong cặp dấu < > dưới đây chỉ\nlà hướng dẫn khai báo cho từng loại tài liệu tham khảo; sinh viên cần xóa các phần\nvăn bản này trong ĐATN của mình.\n<Bài báo đăng trên tạp chí khoa học : Tên tác giả, tên bài báo, tên tạp chí, volume,\ntừ trang đến trang (nếu có), nhà xuất bản, năm xuất bản >\n[1] E. H. Hovy, “Automated discourse generation using discourse structure rela-\ntions,\" Artificial intelligence , vol. 63, no. 1-2, pp. 341–385, 1993\n<Sách: Tên tác giả, tên sách, volume (nếu có), lần tái bản (nếu có), nhà xuất bản,\nnăm xuất bản>\n[2] L. L. Peterson and B. S. Davie, Computer networks: a systems approach . Else-\nvier, 2007.\n[3] N. T. Hải, Mạng máy tính và các hệ thống mở . Nhà xuất bản giáo dục, 1999.\n<Tập san Báo cáo Hội nghị Khoa học : Tên tác giả, tên báo cáo, tên hội nghị,\nngày (nếu có), địa điểm hội nghị, năm xuất bản>\n[4] M. Poesio and B. Di Eugenio, “Discourse structure and anaphoric accessibil-\nity,\" in ESSLLI workshop on information structure, discourse structure and discourse\nsemantics , Copenhagen, Denmark, 2001, pp. 129–143.\n<Đồ án tốt nghiệp, Luận văn Thạc sĩ, Tiến sĩ : Tên tác giả, tên đồ án/luận văn,\nloại đồ án/luận văn, tên trường, địa điểm, năm xuất bản>\n[5] A. Knott, “A data-driven methodology for motivating a set of coherence rela-\ntions,\" Ph.D. dissertation, The University of Edinburgh, UK, 1996.\n<Tài liệu tham khảo từ Internet : Tên tác giả (nếu có), tựa đề, cơ quan (nếu có),\nđịa chỉ trang web, thời gian lần cuối truy cập trang web>\n13",
+      "summary": "Cung cấp các quy định và ví dụ về cách liệt kê tài liệu tham khảo theo chuẩn IEEE, phân loại các nguồn tài liệu như bài báo, sách, báo cáo hội nghị, luận văn và tài liệu Internet.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "13",
+      "related_chunks": [],
+      "word_count": 342,
+      "token_count": 445,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_08_02",
+      "title": "Tài liệu tham khảo",
+      "content": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN\n[6] T. Berners-Lee, Hypertext transfer protocol (HTTP) . [Online]. Available: ftp:\n/info.cern.ch/pub/www/doc/http-spec.txt.Z (visited on 09/30/2010).\n[7] Princeton University, Wordnet . [Online]. Available: http://www.cogsci\n.princeton.edu/~wn/index.shtml (visited on 09/30/2010).\n14\nTÀI LIỆU THAM KHẢO\n[1] E. H. Hovy, “Automated discourse generation using discourse structure rela-\ntions,” Artificial intelligence , vol. 63, no. 1-2, pp. 341–385, 1993.\n[2] L. L. Peterson and B. S. Davie, Computer networks: a systems approach . Else-\nvier, 2007.\n[3] N. T. Hải, Mạng máy tính và các hệ thống mở . Nhà xuất bản giáo dục, 1999.\n[4] M. Poesio and B. Di Eugenio, “Discourse structure and anaphoric accessibility,”\ninESSLLI workshop on information structure, discourse structure and discourse\nsemantics, Copenhagen, Denmark , 2001, pp. 129–143.\n[5] A. Knott, “A data-driven methodology for motivating a set of coherence rela-\ntions,” Ph.D. dissertation, The University of Edinburgh, UK, 1996.\n[6] T. Berners-Lee, Hypertext transfer protocol (HTTP) . [Online]. Available: ftp:\n/info.cern.ch/pub/www/doc/http- spec.txt.Z (visited on\n09/30/2010).\n[7] Princeton University, Wordnet . [Online]. Available: http://www.cogsci.\nprinceton.edu/~wn/index.shtml (visited on 09/30/2010).\n15",
+      "summary": "Danh sách các tài liệu tham khảo được trích dẫn trong đồ án, bao gồm các bài báo khoa học, sách, báo cáo hội nghị và tài liệu trực tuyến.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "14-15",
+      "related_chunks": [],
+      "word_count": 200,
+      "token_count": 260,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_01",
+      "title": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP - Quy định chung",
+      "content": "PHỤ LỤC\n16\nA. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP\nQuy định chung\nDưới đây là một số quy định và hướng dẫn viết đồ án tốt nghiệp mà bắt buộc sinh\nviên phải đọc kỹ và tuân thủ nghiêm ngặt.\nSinh viên cần đảm bảo tính thống nhất toàn báo cáo (font chữ, căn dòng hai bên,\nhình ảnh, bảng, margin trang, đánh số trang, v.v.). Để làm được như vậy, sinh viên chỉ\ncần sử dụng các định dạng theo đúng template ĐATN này. Khi paste nội dung văn\nbản từ tài liệu khác của mình, sinh viên cần chọn kiểu Copy là “Text Only” để định\ndạng văn bản của template không bị phá vỡ/vi phạm.\nTuyệt đối cấm sinh viên đạo văn. Sinh viên cần ghi rõ nguồn cho tất cả những gì\nkhông tự mình viết/vẽ lên, bao gồm các câu trích dẫn, các hình ảnh, bảng biểu, v.v.\nKhi bị phát hiện, sinh viên sẽ không được phép bảo vệ ĐATN.\nTất cả các hình vẽ, bảng biểu, công thức, và tài liệu tham khảo trong ĐATN nhất\nthiết phải được SV giải thích và tham chiếu tới ít nhất một lần. Không chấp nhận các\ntrường hợp sinh viên đưa ra hình ảnh, bảng biểu tùy hứng và không có lời mô tả/giải\nthích nào.\nSinh viên tuyệt đối không trình bày ĐATN theo kiểu viết ý hoặc gạch đầu dòng.\nĐATN không phải là một slide thuyết trình; khi người đọc không hiểu sẽ không có\nai giải thích hộ. Sinh viên cần viết thành các đoạn văn và phân tích, diễn giải đầy đủ,\nrõ ràng. Câu văn cần đúng ngữ pháp, đầy đủ chủ ngữ, vị ngữ và các thành phần câu.\nKhi thực sự cần liệt kê, sinh viên nên liệt kê theo phong cách khoa học với các ký tự\nLa Mã. Ví dụ, nhiều sinh viên luôn cảm thấy hối hận vì (i) chưa cố gắng hết mình,\n(ii) chưa sắp xếp thời gian học/chơi một cách hợp lý, (iii) chưa tìm được người yêu để\nchia sẻ quãng đời sinh viên vất vả, và (iv) viết ĐATN một cách cẩu thả.\nTrong một số trường hợp nhất thiết phải dùng các bullet để liệt kê, sinh viên cần\nthống nhất Style cho toàn bộ các bullet các cấp mà mình sử dụng đến trong báo cáo.\nNếu dùng bullet cấp 1 là hình tròn đen, toàn bộ báo cáo cần thống nhất cách dùng như\nvậy; ví dụ như sau:\n•Đây là mục 1 – Thực sự không còn cách nào khác tôi mới dùng đến việc bullet\ntrong báo cáo.\n•Đây là mục 2 – Nghĩ lại thì tôi có thể không cần dùng bullet cũng được. Nên tôi\nsẽ xóa bullet và tổ chức lại hai mục này trong báo cáo của mình cho khoa học\nhơn. Tôi muốn thầy cô và người đọc cảm nhận được tâm huyết của tôi trong từng\n17",
+      "summary": "Phụ lục A trình bày các quy định chung và hướng dẫn chi tiết về định dạng, văn phong, chống đạo văn, trích dẫn hình ảnh/bảng biểu và cách trình bày nội dung trong đồ án tốt nghiệp.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "16-17",
+      "related_chunks": [],
+      "word_count": 418,
+      "token_count": 543,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_02",
+      "title": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP - A.1 Ngành học, A.2 Tài liệu tham khảo, A.3 Cách viết phương trình và công thức toán học",
+      "content": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP\ntrang báo cáo ĐATN.\nA.1 Ngành học\nSinh viên lưu ý viết đúng ngành/chuyên ngành trên bìa và trên gáy theo đúng quy\nđịnh của Trường. Ngành học hay chuyên ngành học phụ thuộc vào ngành học mà sinh\nviên đăng ký. Sinh viên có thể đăng nhập trên cổng thông tin sinh viên của mình để\nxem lại chính xác ngành học của mình.\nA.2 Tài liệu tham khảo\nCách liệt kê\nÁp dụng cách liệt kê theo quy định của IEEE. Ví dụ của việc trích dẫn như sau\nscott2013sdn . Cụ thể, sinh viên tham khảo cách sử dụng References nếu dùng Mi-\ncrosoft Word. Chỉ những tài liệu được trích dẫn thì mới xuất hiện trong phần Tài liệu\ntham khảo. Tài liệu tham khảo cần có nguồn gốc rõ ràng và phải từ nguồn đáng tin\ncậy. Hạn chế trích dẫn tài liệu tham khảo từ các website, từ wikipedia.\nCác loại tài liệu tham khảo\nCác nguồn tài liệu tham khảo chính là sách, bài báo trong các tạp chí, bài báo trong\ncác hội nghị khoa học và các tài liệu tham khảo khác trên internet.\nA.3 Cách viết phương trình và công thức toán học\nMột ví dụ về tạo phương trình (A.1) như sau\nF(x) =Za\nb1\n3x3(A.1)\nPhương trình A.1 là ví dụ về phương trình tích phân. Một phương trình khác không\nđược đánh số thứ tự (gán nhãn)\nx[tn] =1√\nNN−1X\nk=0X[fk]ej2πnk/N\nPhương trình này thể hiện phép biến đổi Fourier rời rạc ngược (IDFT).\n18",
+      "summary": "Phụ lục A tiếp tục hướng dẫn về cách ghi ngành học, quy định liệt kê và trích dẫn tài liệu tham khảo theo chuẩn IEEE, và cách viết phương trình/công thức toán học trong đồ án.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "18",
+      "related_chunks": [],
+      "word_count": 260,
+      "token_count": 338,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_03",
+      "title": "PHỤ LỤC B. ĐẶC TẢ USE CASE",
+      "content": "B. ĐẶC TẢ USE CASE\nNếu trong nội dung chính không đủ không gian cho các use case khác (ngoài các\nuse case nghiệp vụ chính) thì đặc tả thêm cho các use case đó ở đây.\nB.1 Đặc tả use case “Thống kê tình hình mượn sách”\n. . .\nB.2 Đặc tả use case “Đăng ký làm thẻ mượn”\n. . .\n19",
+      "summary": "Phụ lục B cung cấp không gian để đặc tả thêm các use case phụ, ngoài các use case nghiệp vụ chính đã được trình bày trong nội dung chính của đồ án.",
+      "content_type": "text",
+      "age_range": [1, 19],
+      "pages": "19",
+      "related_chunks": [],
+      "word_count": 49,
+      "token_count": 64,
+      "contains_table": false,
+      "contains_figure": false
+    }
+  ],
+  "tables": [],
+  "figures": [],
+  "total_items": {
+    "chunks": 19,
+    "tables": 0,
+    "figures": 0
+  }
+}
+```
+
+PARSED JSON DATA:
+----------------------------------------
+{
+  "bai_info": {
+    "id": "huong_dan_do_an_tot_nghiep",
+    "title": "Hướng dẫn viết Đồ án tốt nghiệp Đại học",
+    "overview": "Tài liệu này cung cấp hướng dẫn chi tiết về cấu trúc, nội dung, định dạng và các quy định liên quan đến việc viết đồ án tốt nghiệp đại học tại Trường Đại học Công nghiệp Hà Nội, đặc biệt cho ngành Kỹ thuật phần mềm."
+  },
+  "chunks": [
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_01",
+      "title": "Thông tin bìa và đề tài",
+      "content": "BỘ CÔNG THƯƠNG\nTRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI\nHƯỚNG DẪN VIẾT ĐỒ ÁN TỐT\nNGHIỆP ĐẠI HỌC\nThiết kế xây dựng công nghệ thực tế ảo và ứng dụng\nNGUYỄN VĂN A\nNgành Kỹ thuật phần mềm\nGiảng viên hướng dẫn: PGS. TS. Phạm Văn ABC\nChữ kí GVHD\nKhoa: Công nghệ thông tin\nTrường: Công nghệ Thông tin và Truyền thông\nHÀ NỘI, 06/2025",
+      "summary": "Thông tin cơ bản về đồ án tốt nghiệp, bao gồm tên trường, tên đề tài, thông tin sinh viên, ngành học, giảng viên hướng dẫn và thời gian.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 47,
+      "token_count": 61,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_02",
+      "title": "Lời cảm ơn",
+      "content": "LỜI CẢM ƠN\nLời cảm ơn của sinh viên (SV) tới người yêu, gia đình, bạn bè, thầy cô, và chính\nbản thân mình vì đã chăm chỉ và quyết tâm thực hiện ĐATN để đạt kết quả tốt nhất,\nnên viết phần cảm ơn ngắn gọn, tránh dùng các từ sáo rỗng, giới hạn trong khoảng\n100-150 từ.",
+      "summary": "Hướng dẫn cách viết lời cảm ơn trong đồ án tốt nghiệp, nhấn mạnh sự ngắn gọn và chân thành.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 59,
+      "token_count": 77,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_03",
+      "title": "Tóm tắt nội dung đồ án",
+      "content": "TÓM TẮT NỘI DUNG ĐỒ ÁN\nSinh viên viết tóm tắt ĐATN của mình trong mục này, với 200 đến 350 từ. Theo trình\ntự, các nội dung tóm tắt cần có: (i) Giới thiệu vấn đề (tại sao có vấn đề đó, hiện tại\nđược giải quyết chưa, có những hướng tiếp cận nào, các hướng này giải quyết như thế\nnào, hạn chế là gì), (ii) Hướng tiếp cận sinh viên lựa chọn là gì, vì sao chọn hướng đó,\n(iii) Tổng quan giải pháp của sinh viên theo hướng tiếp cận đã chọn, và (iv) Đóng góp\nchính của ĐATN là gì, kết quả đạt được sau cùng là gì. Sinh viên cần viết thành đoạn\nvăn, không được viết ý hoặc gạch đầu dòng.\nSinh viên thực hiện\n(Ký và ghi rõ họ tên)",
+      "summary": "Hướng dẫn chi tiết về cấu trúc và nội dung của phần tóm tắt đồ án tốt nghiệp bằng tiếng Việt, yêu cầu viết thành đoạn văn.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 130,
+      "token_count": 169,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_04",
+      "title": "Abstract",
+      "content": "ABSTRACT\nMục này khuyến khích sinh viên viết lại mục “Tóm tắt” đồ án tốt nghiệp ở trang trước\nbằng tiếng Anh. Phần này phải có đầy đủ các nội dung như trong phần tóm tắt bằng\ntiếng Việt. Sinh viên không nhất thiết phải trình bày mục này.\nNhưng nếu lựa chọn trình bày, sinh viên cần đảm bảo câu từ và ngữ pháp chuẩn\ntắc, nếu không sẽ có tác dụng ngược, gây phản cảm.",
+      "summary": "Hướng dẫn về việc viết tóm tắt đồ án bằng tiếng Anh (Abstract), yêu cầu đảm bảo nội dung đầy đủ và ngữ pháp chuẩn xác.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 70,
+      "token_count": 91,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_05",
+      "title": "Mục lục",
+      "content": "MỤC LỤC\nCHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI............................................................. 1\n1.1 Đặt vấn đề................................................................................................ 1\n1.2 Mục tiêu và phạm vi đề tài......................................................................... 2\n1.3 Định hướng giải pháp................................................................................ 2\n1.4 Bố cục đồ án ............................................................................................ 2\nCHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU................................. 4\n2.1 Khảo sát hiện trạng ................................................................................... 4\n2.2 Tổng quan chức năng ................................................................................ 4\n2.2.1 Biểu đồ use case tổng quát .............................................................. 4\n2.2.2 Biểu đồ use case phân rã XYZ ........................................................ 4\n2.2.3 Quy trình nghiệp vụ ....................................................................... 4\n2.3 Đặc tả chức năng ...................................................................................... 5\n2.3.1 Đặc tả use case A........................................................................... 5\n2.3.2 Đặc tả use case B ........................................................................... 5\n2.4 Yêu cầu phi chức năng .............................................................................. 5\nCHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG........................................................ 6\nCHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG ........ 7\n4.1 Thiết kế kiến trúc...................................................................................... 7\n4.1.1 Lựa chọn kiến trúc phần mềm ......................................................... 7\n4.1.2 Thiết kế tổng quan.......................................................................... 7\n4.1.3 Thiết kế chi tiết gói ........................................................................ 7\n4.2 Thiết kế chi tiết......................................................................................... 8\n4.2.1 Thiết kế giao diện .......................................................................... 8\n4.2.2 Thiết kế lớp ................................................................................... 9\n4.2.3 Thiết kế cơ sở dữ liệu ..................................................................... 9\n4.3 Xây dựng ứng dụng................................................................................... 9\n4.3.1 Thư viện và công cụ sử dụng........................................................... 9\n4.3.2 Kết quả đạt được ............................................................................ 9\n4.3.3 Minh họa các chức năng chính ........................................................ 9\n4.4 Kiểm thử.................................................................................................. 10\n4.5 Triển khai ................................................................................................ 10\nCHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT.......................... 11\nCHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN ................................. 12\n6.1 Kết luận................................................................................................... 12\n6.2 Hướng phát triển....................................................................................... 12\nTÀI LIỆU THAM KHẢO............................................................................. 15\nPHỤ LỤC................................................................C................................ 17\nA. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP ........................................... 17\nA.1 Ngành học............................................................................................... 18\nA.2 Tài liệu tham khảo ................................................................................... 18\nA.3 Cách viết phương trình và công thức toán học............................................. 18\nB. ĐẶC TẢ USE CASE................................................................................ 19\nB.1 Đặc tả use case “Thống kê tình hình mượn sách” ........................................ 19\nB.2 Đặc tả use case “Đăng ký làm thẻ mượn” ................................................... 19",
+      "summary": "Mục lục chi tiết của đồ án tốt nghiệp, liệt kê các chương, mục chính và số trang tương ứng.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "",
+      "related_chunks": [],
+      "word_count": 190,
+      "token_count": 247,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_01_06",
+      "title": "Danh mục hình vẽ, bảng biểu và thuật ngữ viết tắt",
+      "content": "DANH MỤC HÌNH VẼ\nHình 4.1 Ví dụ biểu đồ phụ thuộc gói . . . . . . . . . . . . . . . . . . . . 7\nHình 4.2 Ví dụ thiết kế gói . . . . . . . . . . . . . . . . . . . . . . . . . . 8\niii\nDANH MỤC BẢNG BIỂU\nBảng 4.1 Danh sách thư viện và công cụ sử dụng . . . . . . . . . . . . . . 9\niv\nDANH MỤC THUẬT NGỮ VÀ TỪ VIẾT TẮT\nThuật ngữ Ý nghĩa\nAPI Giao diện lập trình ứng dụng\n(Application Programming Interface)\nEUD Phát triển ứng dụng người dùng\ncuối(End-User Development)\nGWT Công cụ lập trình Javascript bằng Java\ncủa Google (Google Web Toolkit)\nHTML Ngôn ngữ đánh dấu siêu văn bản\n(HyperText Markup Language)\nIaaS Dịch vụ hạ tầng\nv",
+      "summary": "Liệt kê các danh mục hình vẽ, bảng biểu và thuật ngữ viết tắt cùng ý nghĩa của chúng được sử dụng trong tài liệu.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "iii-v",
+      "related_chunks": [],
+      "word_count": 96,
+      "token_count": 125,
+      "contains_table": true,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_01",
+      "title": "CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI - Hướng dẫn chung",
+      "content": "CHƯƠNG 1. GIỚI THIỆU ĐỀ TÀI\nLưu ý: Trước khi viết ĐATN, sinh viên cần đọc kỹ hướng dẫn và quy định chi\ntiếtvề cách viết ĐATN trong Phụ lục A. Sinh viên tuân theo mẫu tài liệu này để viết\nbáo cáo đồ án tốt nghiệp, vì tài liệu này đã được căn chỉnh, chỉnh sửa theo đúng chuẩn\nbáo cáo kỹ thuật đồ án tốt nghiệp (ISO 7144:1986). Sinh viên viết trực tiếp vào file\nnày, chỉ chỉnh sửa nội dung, và không viết trên file mới.\nKhi đóng quyển ĐATN , sinh viên cần lưu ý tuân thủ hướng dẫn ở phụ lục A.9\nSV cần đặc biệt lưu ý cách hành văn . Mỗi đoạn văn không được quá dài và cần\ncó ý tứ rõ ràng, bao gồm duy nhất một ý chính và các ý phân tích bổ trợ để làm rõ\nhơn ý chính. Các câu văn trong đoạn phải đầy đủ chủ ngữ vị ngữ, cùng hướng đến chủ\nđề chung. Câu sau phải liên kết với câu trước, đoạn sau liên kết với đoạn trước. Trong\nvăn phong khoa học, sinh viên không được dùng từ trong văn nói, không dùng các từ\nphóng đại, thái quá, các từ thiếu khách quan, thiên về cảm xúc, về quan điểm cá nhân\nnhư “tuyệt vời”, “cực hay”, “cực kỳ hữu ích”, v.v. Các câu văn cần được tối ưu hóa,\nđảm bảo rất khó để thể thêm hoặc bớt đi được dù chỉ một từ. Cách diễn đạt cần ngắn\ngọn, súc tích, không dài dòng.\nMẫu ĐATN này được thiết kế phù hợp nhất với đa số các đề tài xây dựng phần\nmềm ứng dụng. Với các dạng đề tài khác (giải pháp, nghiên cứu, phần mềm đặc thù,\nv.v.), sinh viên dựa trên cấu trúc và hướng dẫn của báo cáo này để đề xuất và trao đổi\nvới giáo viên hướng dẫn để thiết kế khung báo cáo đồ án cho phù hợp. Sinh viên lưu\nýtrong mọi trường hợp, SV luôn phải sử dụng định dạng báo cáo này, và phải\nđọc kỹ toàn bộ các hướng dẫn từ đầu tới cuối. Các hướng dẫn không chỉ áp dụng\nriêng cho đề tài ứng dụng, mà còn phù hợp với các dạng đề tài khác. Ngoài ra, trong\nmẫu ĐATN này đã được tích hợp một số hướng dẫn dành riêng cho đề tài nghiên cứu.\nChương 1 có độ dài từ 3 đến 6 trang với các nội dung sau đây",
+      "summary": "Tổng quan về Chương 1, bao gồm các lưu ý quan trọng về định dạng, văn phong khoa học và cấu trúc chung của báo cáo đồ án tốt nghiệp, áp dụng cho cả đề tài ứng dụng và nghiên cứu.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "1",
+      "related_chunks": [],
+      "word_count": 328,
+      "token_count": 426,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_02",
+      "title": "1.1 Đặt vấn đề",
+      "content": "1.1 Đặt vấn đề\nKhi đặt vấn đề, sinh viên cần làm nổi bật mức độ cấp thiết, tầm quan trọng và/hoặc\nquy mô của bài toán của mình.\nGợi ý cách trình bày cho sinh viên: Xuất phát từ tình hình thực tế gì, dẫn đến vấn\nđề hoặc bài toán gì. Vấn đề hoặc bài toán đó, nếu được giải quyết, đem lại lợi ích gì,\ncho những ai, còn có thể được áp dụng vào các lĩnh vực khác nữa không. Sinh viên\ncần lưu ý phần này chỉ trình bày vấn đề, tuyệt đối không trình bày giải pháp.\n1",
+      "summary": "Hướng dẫn cách trình bày phần 'Đặt vấn đề' trong đồ án, tập trung vào việc làm nổi bật tính cấp thiết và quy mô của bài toán mà không đi sâu vào giải pháp.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "1",
+      "related_chunks": [],
+      "word_count": 87,
+      "token_count": 113,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_03",
+      "title": "1.2 Mục tiêu và phạm vi đề tài",
+      "content": "1.2 Mục tiêu và phạm vi đề tài\nSinh viên trước tiên cần trình bày tổng quan các kết quả của các nghiên cứu hiện\nnay cho bài toán giới thiệu ở phần 1.1 (đối với đề tài nghiên cứu), hoặc về các sản\nphẩm hiện tại/về nhu cầu của người dùng (đối với đề tài ứng dụng). Tiếp đến, sinh\nviên tiến hành so sánh và đánh giá tổng quan các sản phẩm/nghiên cứu này.\nDựa trên các phân tích và đánh giá ở trên, sinh viên khái quát lại các hạn chế hiện\ntại đang gặp phải. Trên cơ sở đó, sinh viên sẽ hướng tới giải quyết vấn đề cụ thể gì,\nkhắc phục hạn chế gì, phát triển phần mềm có các chức năng chính gì , tạo nên đột\nphá gì, v.v.\nTrong phần này, sinh viên lưu ý chỉ trình bày tổng quan, không đi vào chi tiết của\nvấn đề hoặc giải pháp. Nội dung chi tiết sẽ được trình bày trong các chương tiếp theo,\nđặc biệt là trong Chương 5.",
+      "summary": "Hướng dẫn trình bày mục tiêu và phạm vi đề tài, bao gồm khảo sát các nghiên cứu/sản phẩm hiện có, phân tích hạn chế và xác định vấn đề cần giải quyết, nhưng chỉ ở mức tổng quan.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "2",
+      "related_chunks": [],
+      "word_count": 147,
+      "token_count": 191,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_04",
+      "title": "1.3 Định hướng giải pháp",
+      "content": "1.3 Định hướng giải pháp\nTừ việc xác định rõ nhiệm vụ cần giải quyết ở phần 1.2, sinh viên đề xuất định\nhướng giải pháp của mình theo trình tự sau: (i) Sinh viên trước tiên trình bày sẽ giải\nquyết vấn đề theo định hướng, phương pháp, thuật toán, kỹ thuật, hay công nghệ nào;\nTiếp theo, (ii) sinh viên mô tả ngắn gọn giải pháp của mình là gì (khi đi theo định\nhướng/phương pháp nêu trên); và sau cùng, (iii) sinh viên trình bày đóng góp chính\ncủa đồ án là gì, kết quả đạt được là gì.\nSinh viên lưu ý không giải thích hoặc phân tích chi tiết công nghệ/thuật toán trong\nphần này. Sinh viên chỉ cần nêu tên định hướng công nghệ/thuật toán, mô tả ngắn gọn\ntrong một đến hai câu và giải thích nhanh lý do lựa chọn.",
+      "summary": "Hướng dẫn cách đề xuất định hướng giải pháp, bao gồm phương pháp, công nghệ lựa chọn, mô tả ngắn gọn giải pháp và đóng góp chính của đồ án.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "2",
+      "related_chunks": [],
+      "word_count": 136,
+      "token_count": 177,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_02_05",
+      "title": "1.4 Bố cục đồ án",
+      "content": "1.4 Bố cục đồ án\nPhần còn lại của báo cáo đồ án tốt nghiệp này được tổ chức như sau.\nChương 2 trình bày về v.v.\nTrong Chương 3, em/tôi giới thiệu về v.v.\nChú ý: Sinh viên cần viết mô tả thành đoạn văn đầy đủ về nội dung chương. Tuyệt\nđối không viết ý hay gạch đầu dòng. Chương 1 không cần mô tả trong phần này.\nVí dụ tham khảo mô tả chương trong phần bố cục đồ án tốt nghiệp: Chương ***\ntrình bày đóng góp chính của đồ án, đó là một nền tảng ABC cho phép khai phá và\ntích hợp nhiều nguồn dữ liệu, trong đó mỗi nguồn dữ liệu lại có định dạng đặc thù\nriêng. Nền tảng ABC được phát triển dựa trên khái niệm DEF, là các module ngữ\nnghĩa trợ giúp người dùng tìm kiếm, tích hợp và hiển thị trực quan dữ liệu theo mô\n2\nhình cộng tác và mô hình phân tán.\nChú ý: Trong phần nội dung chính, mỗi chương của đồ án nên có phần Tổng quan\nvà Kết chương. Hai phần này đều có định dạng văn bản “Normal”, sinh viên không\ncần tạo định dạng riêng, ví dụ như không in đậm/in nghiêng, không đóng khung, v.v.\nTrong phần Tổng quan của chương N, sinh viên nên có sự liên kết với chương N-1\nrồi trình bày sơ qua lý do có mặt của chương N và sự cần thiết của chương này trong\nđồ án. Sau đó giới thiệu những vấn đề sẽ trình bày trong chương này là gì, trong các\nđề mục lớn nào.\nVí dụ về phần Tổng quan: Chương 3 đã thảo luận về nguồn gốc ra đời, cơ sở lý\nthuyết và các nhiệm vụ chính của bài toán tích hợp dữ liệu. Chương 4 này sẽ trình bày\nchi tiết các công cụ tích hợp dữ liệu theo hướng tiếp cận “mashup”. Với mục đích và\nphạm vi của đề tài, sáu nhóm công cụ tích hợp dữ liệu chính được trình bày bao gồm:\n(i) nhóm công cụ ABC trong phần 4.1, (ii) nhóm công cụ DEF trong phần 4.2, nhóm\ncông cụ GHK trong phần 4.3, v.v.\nTrong phần Kết chương, sinh viên đưa ra một số kết luận quan trọng của chương.\nNhững vấn đề mở ra trong Tổng quan cần được tóm tắt lại nội dung và cách giải\nquyết/thực hiện như thế nào. Sinh viên lưu ý không viết Kết chương giống hệt Tổng\nquan. Sau khi đọc phần Kết chương, người đọc sẽ nắm được sơ bộ nội dung và giải\npháp cho các vấn đề đã trình bày trong chương. Trong Kết chương, Sinh viên nên có\nthêm câu liên kết tới chương tiếp theo.\nVí dụ về phần Kết chương: Chương này đã phân tích chi tiết sáu nhóm công cụ tích\nhợp dữ liệu. Nhóm công cụ ABC và DEF thích hợp với những bài toán tích hợp dữ\nliệu phạm vi nhỏ. Trong khi đó, nhóm công cụ GHK lại chứng tỏ thế mạnh của mình\nvới những bài toán cần độ chính xác cao, v.v. Từ kết quả nghiên cứu và phân tích về\nsáu nhóm công cụ tích hợp dữ liệu này, tôi đã thực hiện phát triển phần mềm tự động\nbóc tách và tích hợp dữ liệu sử dụng nhóm công cụ GHK. Phần này được trình bày\ntrong chương tiếp theo – Chương 5.\n3",
+      "summary": "Hướng dẫn chi tiết về cách trình bày bố cục đồ án, bao gồm cách mô tả từng chương, cách viết phần Tổng quan và Kết chương để đảm bảo tính liên kết và rõ ràng.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "2-3",
+      "related_chunks": [],
+      "word_count": 478,
+      "token_count": 621,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_01",
+      "title": "CHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU - Hướng dẫn chung",
+      "content": "CHƯƠNG 2. KHẢO SÁT VÀ PHÂN TÍCH YÊU CẦU\nChương này có độ dài từ 9 đến 11 trang.\nVới phương pháp phân tích thiết kế hướng đối tượng, sinh viên sử dụng biểu đồ use\ncase theo hướng dẫn của template này. Với các phương pháp khác, sinh viên trao đổi\nvới giáo viên hướng dẫn để đổi tên và sắp xếp lại đề mục cho phù hợp. Ví dụ, thay\nvì sử dụng biểu đồ use case, sinh viên đi theo hướng tiếp cận Agile có thể dùng User\nStory.\nLưu ý : Mỗi chương nên có thêm 1 đoạn mở đầu chương và kết thúc chương, mở\nđầu giới thiệu những nội dung sẽ trình bày trong chương, kết thúc tổng kết lại các nội\ndung đã trình bày",
+      "summary": "Tổng quan về Chương 2, hướng dẫn sử dụng biểu đồ use case hoặc User Story tùy theo phương pháp phân tích thiết kế, và lưu ý về cấu trúc mở đầu/kết thúc chương.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 107,
+      "token_count": 139,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_02",
+      "title": "2.1 Khảo sát hiện trạng",
+      "content": "2.1 Khảo sát hiện trạng\nThông thường, khảo sát chi tiết về hiện trạng và yêu cầu của phần mềm sẽ được lấy\ntừ ba nguồn chính, đó là (i) người dùng/khách hàng, (ii) các hệ thống đã có, (iii) và\ncác ứng dụng tương tự. Sinh viên cần tiến hành phân tích, so sánh, đánh giá chi tiết ưu\nnhược điểm của các sản phẩm/nghiên cứu hiện có. Sinh viên có thể lập bảng so sánh\nnếu cần thiết. Kết hợp với khảo sát người dùng/khách hàng (nếu có), sinh viên nêu và\nmô tả sơ lược các tính năng phần mềm quan trọng cần phát triển.",
+      "summary": "Hướng dẫn khảo sát hiện trạng và yêu cầu phần mềm từ ba nguồn chính: người dùng, hệ thống hiện có và ứng dụng tương tự, để xác định các tính năng cần phát triển.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 106,
+      "token_count": 138,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_03",
+      "title": "2.2 Tổng quan chức năng và các biểu đồ use case",
+      "content": "2.2 Tổng quan chức năng\nPhần 2.2 này có nhiệm vụ tóm tắt các chức năng của phần mềm. Trong phần này,\nsinh viên lưu ý chỉ mô tả chức năng mức cao (tổng quan) mà không đặc tả chi tiết cho\ntừng chức năng. Đặc tả chi tiết được trình bày trong phần 2.3.\n2.2.1 Biểu đồ use case tổng quát\nSinh viên vẽ biểu đồ use case tổng quan và giải thích các tác nhân tham gia là gì,\nnêu vai trò của từng tác nhân, và mô tả ngắn gọn các use case chính.\n2.2.2 Biểu đồ use case phân rã XYZ\nVới mỗi use case mức cao trong biểu đồ use case tổng quan, sinh viên tạo một mục\nriêng như mục 2.2.2 và tiến hành phân rã use case đó. Lưu ý tên use case cần phân rã\ntrong biểu đồ use case tổng quan phải khớp với tên đề mục.\nTrong mỗi mục như vậy, sinh viên vẽ và giải thích ngắn gọn các use case phân rã.\n2.2.3 Quy trình nghiệp vụ\nNếu sản phẩm/hệ thống cần xây dựng có quy trình nghiệp vụ quan trọng/đáng chú\ný, sinh viên cần mô tả và vẽ biểu đồ hoạt động minh họa quy trình nghiệp vụ đó. Sinh\n4\nviên lưu ý đây không phải là luồng sự kiện của từng use case, mà là luồng hoạt động\nkết hợp nhiều use case để thực hiện một nghiệp vụ nào đó.\nVí dụ, một hệ thống quản lý thư viện có quy trình nghiệp vụ mượn trả với mô tả\nsơ bộ như sau: Sinh viên làm thẻ mượn, sau đó sinh viên đăng ký mượn sách, thủ thư\ncho mượn, và cuối cùng sinh viên trả lại sách cho thư viện. Một hệ thống có thể có\nmột vài quy trình nghiệp vụ quan trọng như vậy.",
+      "summary": "Hướng dẫn tóm tắt các chức năng phần mềm ở mức tổng quan, bao gồm việc vẽ và giải thích biểu đồ use case tổng quát, biểu đồ use case phân rã, và mô tả quy trình nghiệp vụ.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "4",
+      "related_chunks": [],
+      "word_count": 240,
+      "token_count": 312,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_03_04",
+      "title": "2.3 Đặc tả chức năng và 2.4 Yêu cầu phi chức năng",
+      "content": "2.3 Đặc tả chức năng\nSinh viên lựa chọn từ 4 đến 7 use case quan trọng nhất của đồ án để đặc tả chi\ntiết. Mỗi đặc tả bao gồm ít nhất các thông tin sau: (i) Tên use case, (ii) Luồng sự kiện\n(chính và phát sinh), (iii) Tiền điều kiện, và (iv) Hậu điều kiện. Sinh viên chỉ vẽ bổ\nsung biểu đồ hoạt động khi đặc tả use case phức tạp.\n2.3.1 Đặc tả use case A\n2.3.2 Đặc tả use case B\n2.4 Yêu cầu phi chức năng\nTrong phần này, sinh viên đưa ra các yêu cầu khác nếu có, bao gồm các yêu cầu\nphi chức năng như hiệu năng, độ tin cậy, tính dễ dùng, tính dễ bảo trì, hoặc các yêu\ncầu về mặt kỹ thuật như về CSDL, công nghệ sử dụng, v.v.\n5",
+      "summary": "Hướng dẫn đặc tả chi tiết các use case quan trọng và liệt kê các yêu cầu phi chức năng của hệ thống như hiệu năng, độ tin cậy, tính dễ dùng, và các yêu cầu kỹ thuật.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "5",
+      "related_chunks": [],
+      "word_count": 119,
+      "token_count": 155,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_04_01",
+      "title": "CHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG / CƠ SỞ LÝ THUYẾT",
+      "content": "CHƯƠNG 3. CÔNG NGHỆ SỬ DỤNG\nChương này có độ dài không quá 10 trang. Nếu cần trình bày dài hơn, sinh viên\nđưa vào phần phụ lục. Chú ý đây là kiến thức đã có sẵn; SV sau khi tìm hiểu được thì\nphân tích và tóm tắt lại. Sinh viên không trình bày dài dòng, chi tiết.\nVới đồ án ứng dụng, sinh viên để tên chương là “Công nghệ sử dụng”. Trong\nchương này, sinh viên giới thiệu về các công nghệ, nền tảng sử dụng trong đồ án. Sinh\nviên cũng có thể trình bày thêm nền tảng lý thuyết nào đó nếu cần dùng tới.\nVới đồ án nghiên cứu, sinh viên đổi tên chương thành “Cơ sở lý thuyết”. Khi đó,\nnội dung cần trình bày bao gồm: Kiến thức nền tảng, cơ sở lý thuyết, các thuật toán,\nphương pháp nghiên cứu, v.v.\nVới từng công nghệ/nền tảng/lý thuyết được trình bày, sinh viên phải phân tích rõ\ncông nghệ/nền tảng/lý thuyết đó dùng để để giải quyết vấn đề/yêu cầu cụ thể nào ở\nChương 2. Hơn nữa, với từng vấn đề/yêu cầu, sinh viên phải liệt kê danh sách các\ncông nghệ/hướng tiếp cận tương tự có thể dùng làm lựa chọn thay thế, rồi giải thích\nrõ sự lựa chọn của mình.\nLưu ý: Nội dung ĐATN phải có tính chất liên kết, liền mạch, và nhất quán. Vì\nvậy, các công nghệ/thuật toán trình bày trong chương này phải khớp với nội dung giới\nthiệu của sinh viên ở phần trước đó.\nTrong chương này, để tăng tính khoa học và độ tin cậy, sinh viên nên chỉ rõ nguồn\nkiến thức mình thu thập được ở tài liệu nào, đồng thời đưa tài liệu đó vào trong danh\nsách tài liệu tham khảo rồi tạo các tham chiếu chéo (xem hướng dẫn ở phụ lục A.7).\n6",
+      "summary": "Hướng dẫn về nội dung và độ dài của Chương 3, tùy thuộc vào loại đồ án (ứng dụng hay nghiên cứu), tập trung vào việc giới thiệu, phân tích công nghệ/lý thuyết sử dụng và lý do lựa chọn, đảm bảo tính nhất quán và trích dẫn nguồn.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "6",
+      "related_chunks": [],
+      "word_count": 294,
+      "token_count": 382,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_01",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.1 Thiết kế kiến trúc",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.1 Thiết kế kiến trúc\n4.1.1 Lựa chọn kiến trúc phần mềm\nMục này có độ dài từ một đến ba trang. Sinh viên cần lựa chọn kiến trúc phần mềm\ncho ứng dụng của mình như: kiến trúc ba lớp MVC, MVP, SOA, Microservice, v.v. rồi\ngiải thích sơ bộ về kiến trúc đó (không giải thích chi tiết/dài dòng). Sử dụng kiến trúc\nphần mềm đã chọn ở trên, sinh viên mô tả kiến trúc cụ thể cho ứng dụng của mình.\nGợi ý: sinh viên áp dụng lý thuyết chung vào hệ thống/sản phẩm của mình như thế\nnào, có thay đổi, bổ sung hoặc cải tiến gì không. Ví dụ, thành phần M trong kiến trúc\nlý thuyết MVC sẽ là những thành phần cụ thể nào (ví dụ: là interface I + class C1 +\nclass C2, v.v.) trong kiến trúc phần mềm của sinh viên.\n4.1.2 Thiết kế tổng quan\nSinh viên vẽ biểu đồ gói UML (UML package diagram), nêu rõ sự phụ thuộc giữa\ncác gói (package). SV cần vẽ các gói sao cho chúng được phân theo các tầng rõ ràng,\nkhông được sắp đặt package lộn xộn trong hình vẽ. Sinh viên chú ý các quy tắc thiết\nkế (Các gói không phụ thuộc lẫn nhau, gói tầng dưới không phụ thuộc gói tầng trên,\nkhông phụ thuộc bỏ qua tầng, v.v.) và cần giải thích sơ lược về mục đích/nhiệm vụ\ncủa từng package. SV tham khảo ví dụ minh họa trong Hình 4.1\nHình 4.1: Ví dụ biểu đồ phụ thuộc gói\n4.1.3 Thiết kế chi tiết gói\nSinh viên thiết kế và lần lượt vẽ biểu đồ thiết kế cho từng package, hoặc một nhóm\ncác package liên quan để giải quyết một vấn đề gì đó. Khi vẽ thiết kế gói, sinh viên\nchỉ cần đưa tên lớp, không cần chỉ ra các thành viên phương thức và thuộc tính. SV\n7",
+      "summary": "Hướng dẫn về thiết kế kiến trúc phần mềm, bao gồm lựa chọn kiến trúc (MVC, SOA, v.v.), mô tả kiến trúc cụ thể cho ứng dụng, và thiết kế tổng quan/chi tiết gói bằng biểu đồ UML.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "7",
+      "related_chunks": [],
+      "word_count": 297,
+      "token_count": 386,
+      "contains_table": false,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_02",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.2 Thiết kế chi tiết (Giao diện)",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\ntham khảo ví dụ minh họa trong Hình 4.2.\nSinh viên cần vẽ rõ ràng quan hệ giữa các lớp trong biểu đồ. Các quan hệ bao\ngồm: phụ thuộc (dependency), kết hợp (association), kết tập (aggregation), hợp thành\n(composition), kế thừa (inheritance), và thực thi (implementation). Các quan hệ này\nđều đã được minh họa trong 4.2.\nSau khi vẽ hình minh họa, sinh viên cần giải thích ngắn gọn về thiết kế của mình.\nHình 4.2: Ví dụ thiết kế gói\n4.2 Thiết kế chi tiết\n4.2.1 Thiết kế giao diện\nPhần này có độ dài từ hai đến ba trang. Sinh viên đặc tả thông tin về màn hình mà\nứng dụng của mình hướng tới, bao gồm độ phân giải màn hình, kích thước màn hình,\nsố lượng màu sắc hỗ trợ, v.v. Tiếp đến, sinh viên đưa ra các thống nhất/chuẩn hóa của\nmình khi thiết kế giao diện như thiết kế nút, điều khiển, vị trí hiển thị thông điệp phản\nhồi, phối màu, v.v. Sau cùng sinh viên đưa ra một số hình ảnh minh họa thiết kế giao\ndiện cho các chức năng quan trọng nhất. Lưu ý, sinh viên không nhầm lẫn giao diện\nthiết kế với giao diện của sản phẩm sau cùng.\n8",
+      "summary": "Hướng dẫn về thiết kế chi tiết, bao gồm cách vẽ và giải thích quan hệ giữa các lớp trong biểu đồ, và đặc tả thiết kế giao diện người dùng với các thông tin về màn hình và chuẩn hóa thiết kế.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "8",
+      "related_chunks": [],
+      "word_count": 198,
+      "token_count": 257,
+      "contains_table": false,
+      "contains_figure": true
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_03",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.2.2 Thiết kế lớp, 4.2.3 Thiết kế CSDL, 4.3 Xây dựng ứng dụng",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.2.2 Thiết kế lớp\nPhần này có độ dài từ ba đến bốn trang. Sinh viên trình bày thiết kế chi tiết các\nthuộc tính và phương thức cho một số lớp chủ đạo/quan trọng nhất của ứng dụng (từ\n2-4 lớp). Thiết kế chi tiết cho các lớp khác, nếu muốn trình bày, sinh viên đưa vào\nphần phụ lục.\nĐể minh họa thiết kế lớp, sinh viên thiết kế luồng truyền thông điệp giữa các đối\ntượng tham gia cho 2 đến 3 use case quan trọng nào đó bằng biểu đồ trình tự (hoặc\nbiểu đồ giao tiếp).\n4.2.3 Thiết kế cơ sở dữ liệu\nPhần này có độ dài từ hai đến bốn trang. Sinh viên thiết kế, vẽ và giải thích biểu\nđồ thực thể liên kết (E-R diagram). Từ đó, sinh viên thiết kế cơ sở dữ liệu tùy theo hệ\nquản trị cơ sở dữ liệu mà mình sử dụng (SQL, NoSQL, Firebase, v.v.)\n4.3 Xây dựng ứng dụng\n4.3.1 Thư viện và công cụ sử dụng\nSinh viên liệt kê các công cụ, ngôn ngữ lập trình, API, thư viện, IDE, công cụ kiểm\nthử, v.v. mà mình sử dụng để phát triển ứng dụng. Mỗi công cụ phải được chỉ rõ phiên\nbản sử dụng. SV nên kẻ bảng mô tả tương tự như Bảng ??. Nếu có nhiều nội dung\ntrình bày, sinh viên cần xoay ngang bảng.\nMục đích Công cụ Địa chỉ URL\nIDE lập trình Eclipse Oxygen a64 bit http://www.eclipse.org/\nv.v. v.v. v.v.\nBảng 4.1: Danh sách thư viện và công cụ sử dụng\n4.3.2 Kết quả đạt được\nSinh viên trước tiên mô tả kết quả đạt được của mình là gì, ví dụ như các sản phẩm\nđược đóng gói là gì, bao gồm những thành phần nào, ý nghĩa, vai trò?\nSinh viên cần thống kê các thông tin về ứng dụng của mình như: số dòng code, số\nlớp, số gói, dung lượng toàn bộ mã nguồn, dung lượng của từng sản phẩm đóng gói,\nv.v. Tương tự như phần liệt kê về công cụ sử dụng, sinh viên cũng nên dùng bảng để\nmô tả phần thông tin thống kê này.\n4.3.3 Minh họa các chức năng chính\nSinh viên lựa chọn và đưa ra màn hình cho các chức năng chính, quan trọng, và thú\nvị nhất. Mỗi giao diện cần phải có lời giải thích ngắn gọn. Khi giải thích, sinh viên có\nthể kết hợp với các chú thích ở trong hình ảnh giao diện.\n9",
+      "summary": "Hướng dẫn thiết kế chi tiết các lớp và cơ sở dữ liệu, liệt kê các thư viện/công cụ sử dụng, mô tả kết quả đạt được của ứng dụng và minh họa các chức năng chính.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "9",
+      "related_chunks": [],
+      "word_count": 404,
+      "token_count": 525,
+      "contains_table": true,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_05_04",
+      "title": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG - 4.4 Kiểm thử và 4.5 Triển khai",
+      "content": "CHƯƠNG 4. THIẾT KẾ, TRIỂN KHAI VÀ ĐÁNH GIÁ HỆ THỐNG\n4.4 Kiểm thử\nPhần này có độ dài từ hai đến ba trang. Sinh viên thiết kế các trường hợp kiểm thử\ncho hai đến ba chức năng quan trọng nhất. Sinh viên cần chỉ rõ các kỹ thuật kiểm thử\nđã sử dụng. Chi tiết các trường hợp kiểm thử khác, nếu muốn trình bày, sinh viên đưa\nvào phần phụ lục. Sinh viên sau cùng tổng kết về số lượng các trường hợp kiểm thử\nvà kết quả kiểm thử. Sinh viên cần phân tích lý do nếu kết quả kiểm thử không đạt.\n4.5 Triển khai\nSinh viên trình bày mô hình và/hoặc cách thức triển khai thử nghiệm/thực tế. Ứng\ndụng của sinh viên được triển khai trên server/thiết bị gì, cấu hình như thế nào. Kết\nquả triển khai thử nghiệm nếu có (số lượng người dùng, số lượng truy cập, thời gian\nphản hồi, phản hồi người dùng, khả năng chịu tải, các thống kê, v.v.)\n10",
+      "summary": "Hướng dẫn về kiểm thử và triển khai hệ thống, bao gồm thiết kế trường hợp kiểm thử, kỹ thuật kiểm thử, và mô tả mô hình/kết quả triển khai thực tế.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "10",
+      "related_chunks": [],
+      "word_count": 180,
+      "token_count": 234,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_06_01",
+      "title": "CHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT",
+      "content": "CHƯƠNG 5. CÁC GIẢI PHÁP VÀ ĐÓNG GÓP NỔI BẬT\nChương này có độ dài tối thiểu 5 trang, tối đa không giới hạn.1Sinh viên cần trình\nbày tất cả những nội dung đóng góp mà mình thấy tâm đắc nhất trong suốt quá trình\nlàm ĐATN. Đó có thể là một loạt các vấn đề khó khăn mà sinh viên đã từng bước giải\nquyết được, là giải thuật cho một bài toán cụ thể, là giải pháp tổng quát cho một lớp\nbài toán, hoặc là mô hình/kiến trúc hữu hiệu nào đó được sinh viên thiết kế.\nChương này là cơ sở quan trọng để các thầy cô đánh giá sinh viên. Vì vậy, sinh\nviên cần phát huy tính sáng tạo, khả năng phân tích, phản biện, lập luận, tổng quát\nhóa vấn đề và tập trung viết cho thật tốt. Mỗi giải pháp hoặc đóng góp của sinh viên\ncần được trình bày trong một mục độc lập bao gồm ba mục con: (i) dẫn dắt/giới thiệu\nvề bài toán/vấn đề, (ii) giải pháp, và (iii) kết quả đạt được (nếu có).\nSinh viên lưu ý không trình bày lặp lại nội dung . Những nội dung đã trình bày\nchi tiết trong các chương trước không được trình bày lại trong chương này. Vì vậy, với\nnội dung hay, mang tính đóng góp/giải pháp, sinh viên chỉ nên tóm lược/mô tả sơ bộ\ntrong các chương trước, đồng thời tạo tham chiếu chéo tới đề mục tương ứng trong\nChương 5 này. Chi tiết thông tin về đóng góp/giải pháp được trình bày trong mục đó.\nVí dụ, trong Chương 4, sinh viên có thiết kế được kiến trúc đáng lưu ý gì đó, là sự\nkết hợp của các kiến trúc MVC, MVP, SOA, v.v. Khi đó, sinh viên sẽ chỉ mô tả ngắn\ngọn kiến trúc đó ở Chương 4, rồi thêm các câu có dạng: “Chi tiết về kiến trúc này sẽ\nđược trình bày trong phần 5.1\".\n1Trong trường hợp phần này dưới 5 trang thì sinh viên nên gộp vào phần kết luận, không tách ra\nmột chương riêng rẽ nữa.\n11",
+      "summary": "Hướng dẫn về Chương 5, nơi sinh viên trình bày các giải pháp và đóng góp nổi bật của đồ án, nhấn mạnh tính sáng tạo, phân tích và không lặp lại nội dung đã trình bày chi tiết ở các chương trước.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "11",
+      "related_chunks": [],
+      "word_count": 296,
+      "token_count": 385,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_07_01",
+      "title": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN - 6.1 Kết luận",
+      "content": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN\n6.1 Kết luận\nSinh viên so sánh kết quả nghiên cứu hoặc sản phẩm của mình với các nghiên cứu\nhoặc sản phẩm tương tự.\nSinh viên phân tích trong suốt quá trình thực hiện ĐATN, mình đã làm được gì,\nchưa làm được gì, các đóng góp nổi bật là gì, và tổng hợp những bài học kinh nghiệm\nrút ra nếu có.",
+      "summary": "Hướng dẫn về phần kết luận của đồ án, yêu cầu sinh viên so sánh kết quả, phân tích những gì đã đạt được và chưa đạt được, cùng với các đóng góp và bài học kinh nghiệm.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "12",
+      "related_chunks": [],
+      "word_count": 69,
+      "token_count": 90,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_07_02",
+      "title": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN - 6.2 Hướng phát triển",
+      "content": "6.2 Hướng phát triển\nTrong phần này, sinh viên trình bày định hướng công việc trong tương lai để hoàn\nthiện sản phẩm hoặc nghiên cứu của mình.\nTrước tiên, sinh viên trình bày các công việc cần thiết để hoàn thiện các chức\nnăng/nhiệm vụ đã làm. Sau đó sinh viên phân tích các hướng đi mới cho phép cải\nthiện và nâng cấp các chức năng/nhiệm vụ đã làm.\n12",
+      "summary": "Hướng dẫn về phần hướng phát triển, yêu cầu sinh viên trình bày các công việc cần thiết để hoàn thiện sản phẩm/nghiên cứu và các hướng đi mới để cải thiện/nâng cấp.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "12",
+      "related_chunks": [],
+      "word_count": 70,
+      "token_count": 91,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_08_01",
+      "title": "Một số lưu ý về tài liệu tham khảo",
+      "content": "MỘT SỐ LƯU Ý VỀ TÀI LIỆU THAM KHẢO\nLưu ý: Sinh viên không được đưa bài giảng/slide, các trang Wikipedia, hoặc các\ntrang web thông thường làm tài liệu tham khảo.\nMột trang web được phép dùng làm tài liệu tham khảo chỉ khi nó là công bố chính\nthống của cá nhân hoặc tổ chức nào đó. Ví dụ, trang web đặc tả ngôn ngữ XML của\ntổ chức W3C https://www.w3.org/TR/2008/REC-xml-20081126/ là\nTLTK hợp lệ.\nCó năm loại tài liệu tham khảo mà sinh viên phải tuân thủ đúng quy định về cách\nthức liệt kê thông tin như sau. Lưu ý: các phần văn bản trong cặp dấu < > dưới đây chỉ\nlà hướng dẫn khai báo cho từng loại tài liệu tham khảo; sinh viên cần xóa các phần\nvăn bản này trong ĐATN của mình.\n<Bài báo đăng trên tạp chí khoa học : Tên tác giả, tên bài báo, tên tạp chí, volume,\ntừ trang đến trang (nếu có), nhà xuất bản, năm xuất bản >\n[1] E. H. Hovy, “Automated discourse generation using discourse structure rela-\ntions,\" Artificial intelligence , vol. 63, no. 1-2, pp. 341–385, 1993\n<Sách: Tên tác giả, tên sách, volume (nếu có), lần tái bản (nếu có), nhà xuất bản,\nnăm xuất bản>\n[2] L. L. Peterson and B. S. Davie, Computer networks: a systems approach . Else-\nvier, 2007.\n[3] N. T. Hải, Mạng máy tính và các hệ thống mở . Nhà xuất bản giáo dục, 1999.\n<Tập san Báo cáo Hội nghị Khoa học : Tên tác giả, tên báo cáo, tên hội nghị,\nngày (nếu có), địa điểm hội nghị, năm xuất bản>\n[4] M. Poesio and B. Di Eugenio, “Discourse structure and anaphoric accessibil-\nity,\" in ESSLLI workshop on information structure, discourse structure and discourse\nsemantics , Copenhagen, Denmark, 2001, pp. 129–143.\n<Đồ án tốt nghiệp, Luận văn Thạc sĩ, Tiến sĩ : Tên tác giả, tên đồ án/luận văn,\nloại đồ án/luận văn, tên trường, địa điểm, năm xuất bản>\n[5] A. Knott, “A data-driven methodology for motivating a set of coherence rela-\ntions,\" Ph.D. dissertation, The University of Edinburgh, UK, 1996.\n<Tài liệu tham khảo từ Internet : Tên tác giả (nếu có), tựa đề, cơ quan (nếu có),\nđịa chỉ trang web, thời gian lần cuối truy cập trang web>\n13",
+      "summary": "Cung cấp các quy định và ví dụ về cách liệt kê tài liệu tham khảo theo chuẩn IEEE, phân loại các nguồn tài liệu như bài báo, sách, báo cáo hội nghị, luận văn và tài liệu Internet.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "13",
+      "related_chunks": [],
+      "word_count": 342,
+      "token_count": 445,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_08_02",
+      "title": "Tài liệu tham khảo",
+      "content": "CHƯƠNG 6. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN\n[6] T. Berners-Lee, Hypertext transfer protocol (HTTP) . [Online]. Available: ftp:\n/info.cern.ch/pub/www/doc/http-spec.txt.Z (visited on 09/30/2010).\n[7] Princeton University, Wordnet . [Online]. Available: http://www.cogsci\n.princeton.edu/~wn/index.shtml (visited on 09/30/2010).\n14\nTÀI LIỆU THAM KHẢO\n[1] E. H. Hovy, “Automated discourse generation using discourse structure rela-\ntions,” Artificial intelligence , vol. 63, no. 1-2, pp. 341–385, 1993.\n[2] L. L. Peterson and B. S. Davie, Computer networks: a systems approach . Else-\nvier, 2007.\n[3] N. T. Hải, Mạng máy tính và các hệ thống mở . Nhà xuất bản giáo dục, 1999.\n[4] M. Poesio and B. Di Eugenio, “Discourse structure and anaphoric accessibility,”\ninESSLLI workshop on information structure, discourse structure and discourse\nsemantics, Copenhagen, Denmark , 2001, pp. 129–143.\n[5] A. Knott, “A data-driven methodology for motivating a set of coherence rela-\ntions,” Ph.D. dissertation, The University of Edinburgh, UK, 1996.\n[6] T. Berners-Lee, Hypertext transfer protocol (HTTP) . [Online]. Available: ftp:\n/info.cern.ch/pub/www/doc/http- spec.txt.Z (visited on\n09/30/2010).\n[7] Princeton University, Wordnet . [Online]. Available: http://www.cogsci.\nprinceton.edu/~wn/index.shtml (visited on 09/30/2010).\n15",
+      "summary": "Danh sách các tài liệu tham khảo được trích dẫn trong đồ án, bao gồm các bài báo khoa học, sách, báo cáo hội nghị và tài liệu trực tuyến.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "14-15",
+      "related_chunks": [],
+      "word_count": 200,
+      "token_count": 260,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_01",
+      "title": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP - Quy định chung",
+      "content": "PHỤ LỤC\n16\nA. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP\nQuy định chung\nDưới đây là một số quy định và hướng dẫn viết đồ án tốt nghiệp mà bắt buộc sinh\nviên phải đọc kỹ và tuân thủ nghiêm ngặt.\nSinh viên cần đảm bảo tính thống nhất toàn báo cáo (font chữ, căn dòng hai bên,\nhình ảnh, bảng, margin trang, đánh số trang, v.v.). Để làm được như vậy, sinh viên chỉ\ncần sử dụng các định dạng theo đúng template ĐATN này. Khi paste nội dung văn\nbản từ tài liệu khác của mình, sinh viên cần chọn kiểu Copy là “Text Only” để định\ndạng văn bản của template không bị phá vỡ/vi phạm.\nTuyệt đối cấm sinh viên đạo văn. Sinh viên cần ghi rõ nguồn cho tất cả những gì\nkhông tự mình viết/vẽ lên, bao gồm các câu trích dẫn, các hình ảnh, bảng biểu, v.v.\nKhi bị phát hiện, sinh viên sẽ không được phép bảo vệ ĐATN.\nTất cả các hình vẽ, bảng biểu, công thức, và tài liệu tham khảo trong ĐATN nhất\nthiết phải được SV giải thích và tham chiếu tới ít nhất một lần. Không chấp nhận các\ntrường hợp sinh viên đưa ra hình ảnh, bảng biểu tùy hứng và không có lời mô tả/giải\nthích nào.\nSinh viên tuyệt đối không trình bày ĐATN theo kiểu viết ý hoặc gạch đầu dòng.\nĐATN không phải là một slide thuyết trình; khi người đọc không hiểu sẽ không có\nai giải thích hộ. Sinh viên cần viết thành các đoạn văn và phân tích, diễn giải đầy đủ,\nrõ ràng. Câu văn cần đúng ngữ pháp, đầy đủ chủ ngữ, vị ngữ và các thành phần câu.\nKhi thực sự cần liệt kê, sinh viên nên liệt kê theo phong cách khoa học với các ký tự\nLa Mã. Ví dụ, nhiều sinh viên luôn cảm thấy hối hận vì (i) chưa cố gắng hết mình,\n(ii) chưa sắp xếp thời gian học/chơi một cách hợp lý, (iii) chưa tìm được người yêu để\nchia sẻ quãng đời sinh viên vất vả, và (iv) viết ĐATN một cách cẩu thả.\nTrong một số trường hợp nhất thiết phải dùng các bullet để liệt kê, sinh viên cần\nthống nhất Style cho toàn bộ các bullet các cấp mà mình sử dụng đến trong báo cáo.\nNếu dùng bullet cấp 1 là hình tròn đen, toàn bộ báo cáo cần thống nhất cách dùng như\nvậy; ví dụ như sau:\n•Đây là mục 1 – Thực sự không còn cách nào khác tôi mới dùng đến việc bullet\ntrong báo cáo.\n•Đây là mục 2 – Nghĩ lại thì tôi có thể không cần dùng bullet cũng được. Nên tôi\nsẽ xóa bullet và tổ chức lại hai mục này trong báo cáo của mình cho khoa học\nhơn. Tôi muốn thầy cô và người đọc cảm nhận được tâm huyết của tôi trong từng\n17",
+      "summary": "Phụ lục A trình bày các quy định chung và hướng dẫn chi tiết về định dạng, văn phong, chống đạo văn, trích dẫn hình ảnh/bảng biểu và cách trình bày nội dung trong đồ án tốt nghiệp.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "16-17",
+      "related_chunks": [],
+      "word_count": 418,
+      "token_count": 543,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_02",
+      "title": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP - A.1 Ngành học, A.2 Tài liệu tham khảo, A.3 Cách viết phương trình và công thức toán học",
+      "content": "PHỤ LỤC A. HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT NGHIỆP\ntrang báo cáo ĐATN.\nA.1 Ngành học\nSinh viên lưu ý viết đúng ngành/chuyên ngành trên bìa và trên gáy theo đúng quy\nđịnh của Trường. Ngành học hay chuyên ngành học phụ thuộc vào ngành học mà sinh\nviên đăng ký. Sinh viên có thể đăng nhập trên cổng thông tin sinh viên của mình để\nxem lại chính xác ngành học của mình.\nA.2 Tài liệu tham khảo\nCách liệt kê\nÁp dụng cách liệt kê theo quy định của IEEE. Ví dụ của việc trích dẫn như sau\nscott2013sdn . Cụ thể, sinh viên tham khảo cách sử dụng References nếu dùng Mi-\ncrosoft Word. Chỉ những tài liệu được trích dẫn thì mới xuất hiện trong phần Tài liệu\ntham khảo. Tài liệu tham khảo cần có nguồn gốc rõ ràng và phải từ nguồn đáng tin\ncậy. Hạn chế trích dẫn tài liệu tham khảo từ các website, từ wikipedia.\nCác loại tài liệu tham khảo\nCác nguồn tài liệu tham khảo chính là sách, bài báo trong các tạp chí, bài báo trong\ncác hội nghị khoa học và các tài liệu tham khảo khác trên internet.\nA.3 Cách viết phương trình và công thức toán học\nMột ví dụ về tạo phương trình (A.1) như sau\nF(x) =Za\nb1\n3x3(A.1)\nPhương trình A.1 là ví dụ về phương trình tích phân. Một phương trình khác không\nđược đánh số thứ tự (gán nhãn)\nx[tn] =1√\nNN−1X\nk=0X[fk]ej2πnk/N\nPhương trình này thể hiện phép biến đổi Fourier rời rạc ngược (IDFT).\n18",
+      "summary": "Phụ lục A tiếp tục hướng dẫn về cách ghi ngành học, quy định liệt kê và trích dẫn tài liệu tham khảo theo chuẩn IEEE, và cách viết phương trình/công thức toán học trong đồ án.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "18",
+      "related_chunks": [],
+      "word_count": 260,
+      "token_count": 338,
+      "contains_table": false,
+      "contains_figure": false
+    },
+    {
+      "id": "huong_dan_do_an_tot_nghiep_09_03",
+      "title": "PHỤ LỤC B. ĐẶC TẢ USE CASE",
+      "content": "B. ĐẶC TẢ USE CASE\nNếu trong nội dung chính không đủ không gian cho các use case khác (ngoài các\nuse case nghiệp vụ chính) thì đặc tả thêm cho các use case đó ở đây.\nB.1 Đặc tả use case “Thống kê tình hình mượn sách”\n. . .\nB.2 Đặc tả use case “Đăng ký làm thẻ mượn”\n. . .\n19",
+      "summary": "Phụ lục B cung cấp không gian để đặc tả thêm các use case phụ, ngoài các use case nghiệp vụ chính đã được trình bày trong nội dung chính của đồ án.",
+      "content_type": "text",
+      "age_range": [
+        1,
+        19
+      ],
+      "pages": "19",
+      "related_chunks": [],
+      "word_count": 49,
+      "token_count": 64,
+      "contains_table": false,
+      "contains_figure": false
+    }
+  ],
+  "tables": [],
+  "figures": [],
+  "total_items": {
+    "chunks": 19,
+    "tables": 0,
+    "figures": 0
+  }
+}
+
+CHUNKS CONTENT vs SUMMARY ANALYSIS:
+----------------------------------------
+CHUNK 1 (huong_dan_do_an_tot_nghiep_01_01):
+Title: Thông tin bìa và đề tài
+Summary Length: 136
+Content Length: 318
+Summary: Thông tin cơ bản về đồ án tốt nghiệp, bao gồm tên trường, tên đề tài, thông tin sinh viên, ngành học, giảng viên hướng dẫn và thời gian....
+Content: BỘ CÔNG THƯƠNG
+TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI
+HƯỚNG DẪN VIẾT ĐỒ ÁN TỐT
+NGHIỆP ĐẠI HỌC
+Thiết kế xây dựng công nghệ thực tế ảo và ứng dụng
+NGUYỄN VĂN A
+Ngành Kỹ thuật phần mềm
+Giảng viên hướng dẫn: P...
+
+CHUNK 2 (huong_dan_do_an_tot_nghiep_01_02):
+Title: Lời cảm ơn
+Summary Length: 91
+Content Length: 266
+Summary: Hướng dẫn cách viết lời cảm ơn trong đồ án tốt nghiệp, nhấn mạnh sự ngắn gọn và chân thành....
+Content: LỜI CẢM ƠN
+Lời cảm ơn của sinh viên (SV) tới người yêu, gia đình, bạn bè, thầy cô, và chính
+bản thân mình vì đã chăm chỉ và quyết tâm thực hiện ĐATN để đạt kết quả tốt nhất,
+nên viết phần cảm ơn ngắn ...
+
+CHUNK 3 (huong_dan_do_an_tot_nghiep_01_03):
+Title: Tóm tắt nội dung đồ án
+Summary Length: 122
+Content Length: 621
+Summary: Hướng dẫn chi tiết về cấu trúc và nội dung của phần tóm tắt đồ án tốt nghiệp bằng tiếng Việt, yêu cầu viết thành đoạn văn....
+Content: TÓM TẮT NỘI DUNG ĐỒ ÁN
+Sinh viên viết tóm tắt ĐATN của mình trong mục này, với 200 đến 350 từ. Theo trình
+tự, các nội dung tóm tắt cần có: (i) Giới thiệu vấn đề (tại sao có vấn đề đó, hiện tại
+được gi...
+

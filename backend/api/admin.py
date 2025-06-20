@@ -13,7 +13,9 @@ from werkzeug.utils import secure_filename
 import google.generativeai as genai
 from config import GEMINI_API_KEY
 import time
+import sys
 
+# Thiết lập logging
 logger = logging.getLogger(__name__)
 
 # Tạo blueprint
@@ -21,6 +23,70 @@ admin_routes = Blueprint('admin', __name__)
 
 # Configure Gemini
 genai.configure(api_key=GEMINI_API_KEY)
+
+def setup_debug_logging():
+    """Thiết lập logging debug cho Gemini response"""
+    log_dir = "logs"
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    return log_dir
+
+def save_gemini_response_to_file(response_text, parsed_data, doc_id):
+    """Lưu response của Gemini vào file để debug"""
+    try:
+        log_dir = setup_debug_logging()
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Tạo tên file log
+        log_filename = f"gemini_response_{doc_id}_{timestamp}.log"
+        log_path = os.path.join(log_dir, log_filename)
+        
+        with open(log_path, 'w', encoding='utf-8') as f:
+            f.write("=" * 80 + "\n")
+            f.write(f"GEMINI RESPONSE DEBUG LOG\n")
+            f.write(f"Document ID: {doc_id}\n")
+            f.write(f"Timestamp: {datetime.datetime.now().isoformat()}\n")
+            f.write("=" * 80 + "\n\n")
+            
+            f.write("RAW RESPONSE FROM GEMINI:\n")
+            f.write("-" * 40 + "\n")
+            f.write(response_text)
+            f.write("\n\n")
+            
+            f.write("PARSED JSON DATA:\n")
+            f.write("-" * 40 + "\n")
+            f.write(json.dumps(parsed_data, indent=2, ensure_ascii=False))
+            f.write("\n\n")
+            
+            # Debug chunks content vs summary
+            f.write("CHUNKS CONTENT vs SUMMARY ANALYSIS:\n")
+            f.write("-" * 40 + "\n")
+            for i, chunk in enumerate(parsed_data.get('chunks', [])[:3]):  # Chỉ log 3 chunks đầu
+                f.write(f"CHUNK {i+1} ({chunk.get('id', 'no-id')}):\n")
+                f.write(f"Title: {chunk.get('title', 'no-title')}\n")
+                f.write(f"Summary Length: {len(chunk.get('summary', ''))}\n")
+                f.write(f"Content Length: {len(chunk.get('content', ''))}\n")
+                f.write(f"Summary: {chunk.get('summary', 'no-summary')[:200]}...\n")
+                f.write(f"Content: {chunk.get('content', 'no-content')[:200]}...\n")
+                f.write("\n")
+            
+            # Debug tables
+            if parsed_data.get('tables'):
+                f.write("TABLES ANALYSIS:\n")
+                f.write("-" * 40 + "\n")
+                for i, table in enumerate(parsed_data.get('tables', [])[:2]):
+                    f.write(f"TABLE {i+1} ({table.get('id', 'no-id')}):\n")
+                    f.write(f"Title: {table.get('title', 'no-title')}\n")
+                    f.write(f"Summary: {table.get('summary', 'no-summary')[:100]}...\n")
+                    f.write(f"Content: {table.get('content', 'no-content')[:100]}...\n")
+                    f.write("\n")
+        
+        logger.info(f"Saved Gemini response debug log to: {log_path}")
+        return log_path
+        
+    except Exception as e:
+        logger.error(f"Error saving debug log: {e}")
+        return None
 
 def require_admin(f):
     """Decorator để kiểm tra quyền admin"""
@@ -630,11 +696,6 @@ def get_all_documents():
                 }
             })
         
-        # Debug: In ra một vài metadata đầu tiên để kiểm tra
-        logger.info("Sample metadata from ChromaDB:")
-        for i, metadata in enumerate(results['metadatas'][:3]):
-            logger.info(f"Metadata {i}: {metadata}")
-        
         # Phân tích metadata để nhóm theo chapter
         documents_by_chapter = {}
         stats = {
@@ -699,16 +760,39 @@ def get_all_documents():
         }), 500
 
 def get_chapter_title(chapter):
-    """Lấy tiêu đề chapter"""
-    chapter_titles = {
-        'bai1': 'Bài 1: Dinh dưỡng theo lứa tuổi học sinh',
-        'bai2': 'Bài 2: An toàn thực phẩm',
-        'bai3': 'Bài 3: Vệ sinh dinh dưỡng',
-        'bai4': 'Bài 4: Giáo dục dinh dưỡng',
-        'phuluc': 'Phụ lục',
-        'unknown': 'Tài liệu khác'
-    }
-    return chapter_titles.get(chapter, f'Chương {chapter}')
+    try:
+        # Nếu là document upload, lấy title từ metadata
+        if chapter.startswith('bosung') or chapter.startswith('upload_'):
+            embedding_model = get_embedding_model()
+            results = embedding_model.collection.get(
+                where={"chapter": chapter},
+                limit=1
+            )
+            
+            if results and results.get('metadatas') and results['metadatas'][0]:
+                metadata = results['metadatas'][0]
+                document_title = metadata.get('document_title') or metadata.get('document_source')
+                if document_title and document_title != 'Tài liệu upload':
+                    return document_title
+        
+        # Fallback cho các chapter chuẩn
+        chapter_titles = {
+            'bai1': 'Bài 1: Dinh dưỡng theo lứa tuổi học sinh',
+            'bai2': 'Bài 2: An toàn thực phẩm',
+            'bai3': 'Bài 3: Vệ sinh dinh dưỡng',
+            'bai4': 'Bài 4: Giáo dục dinh dưỡng',
+            'phuluc': 'Phụ lục'
+        }
+        
+        # Kiểm tra pattern bosung
+        if chapter.startswith('bosung'):
+            return f'Tài liệu bổ sung {chapter.replace("bosung", "")}'
+        
+        return chapter_titles.get(chapter, f'Tài liệu {chapter}')
+        
+    except Exception as e:
+        logger.error(f"Error getting chapter title: {e}")
+        return f'Tài liệu {chapter}'
 
 def get_chapter_type(chapter):
     """Lấy loại chapter"""
@@ -957,8 +1041,8 @@ def upload_document():
         description = request.form.get('description', '')
         author = request.form.get('author', '')
         
-        # Tạo document record
-        document_id = f"upload_{int(datetime.datetime.now().timestamp())}"
+        # Tạo document_id duy nhất dựa trên số lượng tài liệu bổ sung hiện có
+        document_id = generate_unique_document_id(title)
         
         logger.info(f"Uploaded file: {filename} -> {temp_path}")
         
@@ -982,10 +1066,53 @@ def upload_document():
             "error": f"Lỗi upload: {str(e)}"
         }), 500
 
+def generate_unique_document_id(title):
+    """Tạo document ID duy nhất dựa trên title và số thứ tự"""
+    try:
+        embedding_model = get_embedding_model()
+        
+        # Đếm số tài liệu bổ sung hiện có
+        results = embedding_model.collection.get(
+            where={"chapter": {"$like": "bosung%"}}
+        )
+        
+        if results and results.get('metadatas'):
+            # Lấy tất cả chapter IDs bắt đầu bằng "bosung"
+            existing_chapters = set()
+            for metadata in results['metadatas']:
+                if metadata and metadata.get('chapter'):
+                    chapter = metadata['chapter']
+                    if chapter.startswith('bosung'):
+                        existing_chapters.add(chapter)
+            
+            # Tìm số thứ tự cao nhất
+            max_num = 0
+            for chapter in existing_chapters:
+                try:
+                    num = int(chapter.replace('bosung', ''))
+                    max_num = max(max_num, num)
+                except:
+                    continue
+            
+            next_num = max_num + 1
+        else:
+            next_num = 1
+        
+        # Tạo ID mới
+        document_id = f"bosung{next_num}"
+        logger.info(f"Generated unique document ID: {document_id}")
+        
+        return document_id
+        
+    except Exception as e:
+        logger.error(f"Error generating document ID: {e}")
+        # Fallback: sử dụng timestamp
+        return f"bosung_{int(time.time())}"
+
 @admin_routes.route('/documents/<doc_id>/process', methods=['POST'])
 @require_admin
 def process_document(doc_id):
-    """Process document với Gemini"""
+    """Process document với Gemini - THÊM DEBUG LOGGING"""
     try:
         data = request.json
         temp_path = data.get('temp_path')
@@ -1021,6 +1148,9 @@ def process_document(doc_id):
                         
             logger.info(f"Extracted {len(pdf_text)} characters from PDF")
             
+            # DEBUG: Log phần đầu của PDF text
+            logger.info(f"PDF text preview (first 500 chars): {pdf_text[:500]}...")
+            
         except Exception as pdf_error:
             logger.error(f"Lỗi đọc PDF: {pdf_error}")
             return jsonify({
@@ -1038,6 +1168,10 @@ def process_document(doc_id):
         try:
             prompt = create_document_processing_prompt(pdf_text)
             logger.info("Created prompt for Gemini")
+            
+            # DEBUG: Log độ dài prompt
+            logger.info(f"Prompt length: {len(prompt)} characters")
+            
         except Exception as prompt_error:
             logger.error(f"Lỗi tạo prompt: {prompt_error}")
             return jsonify({
@@ -1054,7 +1188,7 @@ def process_document(doc_id):
                 prompt,
                 generation_config=genai.types.GenerationConfig(
                     temperature=0.1,
-                    max_output_tokens=10000
+                    max_output_tokens=100000  # Sử dụng giá trị bạn đã tăng
                 )
             )
             
@@ -1067,6 +1201,9 @@ def process_document(doc_id):
             result_text = response.text.strip()
             logger.info(f"Got response from Gemini: {len(result_text)} characters")
             
+            # DEBUG: Log phần đầu của response
+            logger.info(f"Gemini response preview (first 1000 chars): {result_text[:1000]}...")
+            
         except Exception as gemini_error:
             logger.error(f"Lỗi gọi Gemini API: {gemini_error}")
             return jsonify({
@@ -1077,17 +1214,60 @@ def process_document(doc_id):
         # Parse JSON response
         try:
             # Làm sạch JSON response
+            original_result_text = result_text  # Lưu bản gốc để log
+            
             if result_text.startswith('```json'):
                 result_text = result_text.replace('```json', '').replace('```', '').strip()
             elif result_text.startswith('```'):
                 result_text = result_text[3:].rstrip('```').strip()
             
+            logger.info(f"Cleaned response length: {len(result_text)} characters")
+            
             processed_data = json.loads(result_text)
             logger.info("Successfully parsed JSON response")
+            
+            # DEBUG: Log sample chunks để kiểm tra content vs summary
+            chunks = processed_data.get('chunks', [])
+            logger.info(f"Found {len(chunks)} chunks in response")
+            
+            if chunks:
+                for i, chunk in enumerate(chunks[:2]):  # Log 2 chunks đầu
+                    chunk_id = chunk.get('id', f'chunk_{i}')
+                    summary_len = len(chunk.get('summary', ''))
+                    content_len = len(chunk.get('content', ''))
+                    logger.info(f"Chunk {chunk_id}: summary_len={summary_len}, content_len={content_len}")
+                    
+                    # Log content preview
+                    content_preview = chunk.get('content', '')[:300]
+                    summary_preview = chunk.get('summary', '')[:300]
+                    logger.info(f"Chunk {chunk_id} content preview: {content_preview}...")
+                    logger.info(f"Chunk {chunk_id} summary preview: {summary_preview}...")
+            
+            # Lưu debug log vào file
+            debug_log_path = save_gemini_response_to_file(original_result_text, processed_data, doc_id)
+            logger.info(f"Debug log saved to: {debug_log_path}")
             
         except json.JSONDecodeError as json_error:
             logger.error(f"JSON decode error: {json_error}")
             logger.error(f"Raw response: {result_text}")
+            
+            # Lưu response lỗi vào file debug
+            try:
+                log_dir = setup_debug_logging()
+                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                error_log_path = os.path.join(log_dir, f"gemini_error_{doc_id}_{timestamp}.log")
+                
+                with open(error_log_path, 'w', encoding='utf-8') as f:
+                    f.write("GEMINI JSON PARSE ERROR\n")
+                    f.write("=" * 40 + "\n")
+                    f.write(f"Error: {json_error}\n\n")
+                    f.write("Raw Response:\n")
+                    f.write(result_text)
+                
+                logger.info(f"Error log saved to: {error_log_path}")
+            except:
+                pass
+            
             return jsonify({
                 "success": False,
                 "error": f"AI trả về format không hợp lệ: {str(json_error)}"
@@ -1132,7 +1312,8 @@ def process_document(doc_id):
             "processed_chunks": len(processed_data.get('chunks', [])),
             "processed_tables": len(processed_data.get('tables', [])),
             "processed_figures": len(processed_data.get('figures', [])),
-            "document_id": doc_id
+            "document_id": doc_id,
+            "debug_log": debug_log_path  # Trả về đường dẫn log file
         })
         
     except Exception as e:
@@ -1143,104 +1324,85 @@ def process_document(doc_id):
         }), 500
 
 def create_document_processing_prompt(pdf_text):
-    """Tạo prompt chi tiết cho Gemini"""
+    """Tạo prompt chi tiết cho Gemini - CẢI THIỆN THÊM"""
     # Cắt ngắn text để tránh vượt quá limit
-    max_text_length = 8000
+    max_text_length = 80000  # Tăng lên do bạn đã tăng token limit
     if len(pdf_text) > max_text_length:
         pdf_text = pdf_text[:max_text_length] + "..."
     
     prompt = f"""
-Bạn là một chuyên gia phân tích tài liệu dinh dưỡng. Nhiệm vụ của bạn là phân tích và chia nhỏ tài liệu PDF về dinh dưỡng thành các phần có nghĩa.
+Bạn là một chuyên gia phân tích tài liệu. Nhiệm vụ của bạn là phân tích và chia nhỏ tài liệu PDF thành các phần có nghĩa.
 
-TÁCH LIỆU CẦN XỬ LÝ:
+TÀI LIỆU CẦN XỬ LÝ:
 {pdf_text}
 
 YÊU CẦU PHÂN TÍCH:
 
 1. PHÂN CHIA NỘI DUNG:
-   - Chia tài liệu thành các chunk có nghĩa (mỗi chunk 200-500 từ)
-   - Bạn phải giữ nguyên nội dung chunk và trả lại nội dung chunk đó, không được thay đổi ý nghĩa
-   - Mỗi chunk phải có tiêu đề rõ ràng
-   - Phân biệt rõ text, table, figure
+   - Chia tài liệu thành các chunk có nghĩa (mỗi chunk 200-1000 từ)
+   - QUAN TRỌNG: Trong field "content" của mỗi chunk, bạn PHẢI SAO CHÉP NGUYÊN VĂN nội dung từ tài liệu gốc
+   - Field "summary" chỉ là tóm tắt ngắn gọn (1-2 câu)
+   - Field "content" phải chứa toàn bộ văn bản gốc của phần đó
+   - KHÔNG viết lại, KHÔNG diễn giải, KHÔNG tóm tắt trong field "content"
 
-2. ĐẶT TÊN THEO QUY CHUẨN:
-   - Text chunks: "bosungX_mucY_Z" (X=số thứ tự bài bổ sung, Y=mục, Z=phần)
-   - Tables: "bosungX_bangY" 
-   - Figures: "bosungX_hinhY"
+2. CẤU TRÚC JSON:
+Mỗi chunk PHẢI có đủ các field sau:
+- "id": ID duy nhất 
+- "title": Tiêu đề của chunk
+- "content": NỘI DUNG NGUYÊN VĂN từ PDF (bắt buộc phải có)
+- "summary": Tóm tắt ngắn gọn (khác với content)
+- "content_type": "text", "table", hoặc "figure"
+- "age_range": [min_age, max_age] từ 1-19
+- "pages": trang nếu biết
+- "related_chunks": []
+- "word_count": số từ trong content
+- "token_count": ước tính token
 
-3. XÁC ĐỊNH METADATA:
-   - age_range: Phân tích nội dung để xác định độ tuổi áp dụng [min_age, max_age]
-   - content_type: "text", "table", hoặc "figure"
-   - summary: Tóm tắt ngắn gọn nội dung (1-2 câu)
-   - related_chunks: Danh sách ID các chunk liên quan
+3. VÍ DỤ ĐÚNG:
+{{
+  "id": "bosung1_muc1_1",
+  "title": "Giới thiệu về dinh dưỡng",
+  "content": "Dinh dưỡng là quá trình cung cấp cho cơ thể các chất cần thiết để duy trì sự sống, phát triển và hoạt động. Các chất dinh dưỡng bao gồm...", 
+  "summary": "Giới thiệu khái niệm cơ bản về dinh dưỡng",
+  "content_type": "text",
+  "age_range": [1, 19]
+}}
 
-4. ĐỊNH DẠNG OUTPUT:
-Trả về JSON với cấu trúc chính xác như sau:
-
+4. ĐỊNH DẠNG OUTPUT JSON:
 {{
     "bai_info": {{
-        "id": "bosungX",
-        "title": "Tiêu đề tài liệu bổ sung",
-        "pages": "trang áp dụng",
-        "overview": "Tổng quan tài liệu"
+        "id": "bosung1",
+        "title": "Tiêu đề tài liệu",
+        "overview": "Tổng quan"
     }},
     "chunks": [
         {{
-            "id": "bosungX_mucY_Z",
+            "id": "bosung1_muc1_1",
             "title": "Tiêu đề chunk",
+            "content": "NỘI DUNG NGUYÊN VĂN TỪ PDF - BẮTED BUỘC PHẢI CÓ",
+            "summary": "Tóm tắt ngắn gọn",
             "content_type": "text",
             "age_range": [1, 19],
-            "pages": "trang",
+            "pages": "",
             "related_chunks": [],
-            "summary": "Tóm tắt nội dung",
             "word_count": 100,
             "token_count": 150,
             "contains_table": false,
             "contains_figure": false
         }}
     ],
-    "tables": [
-        {{
-            "id": "bosungX_bangY",
-            "title": "Tiêu đề bảng",
-            "content_type": "table",
-            "age_range": [1, 19],
-            "pages": "trang",
-            "related_chunks": [],
-            "table_columns": ["cột1", "cột2"],
-            "summary": "Mô tả bảng",
-            "word_count": 50,
-            "token_count": 75
-        }}
-    ],
-    "figures": [
-        {{
-            "id": "bosungX_hinhY",
-            "title": "Tiêu đề hình",
-            "content_type": "figure",
-            "age_range": [1, 19],
-            "pages": "trang",
-            "related_chunks": [],
-            "summary": "Mô tả hình ảnh"
-        }}
-    ],
-    "total_items": {{
-        "chunks": 1,
-        "tables": 1,
-        "figures": 1
-    }},
-    "document_source": "Tài liệu bổ sung"
+    "tables": [],
+    "figures": [],
+    "total_items": {{"chunks": 1, "tables": 0, "figures": 0}}
 }}
 
-LUU Ý QUAN TRỌNG:
-- Đảm bảo JSON format hoàn toàn chính xác
-- Không thêm bất kỳ text nào ngoài JSON
-- age_range phải là array 2 số nguyên từ 1 đến 19
-- Tất cả field bắt buộc phải có
-- related_chunks phải là array string
-- Phân tích kỹ nội dung để xác định độ tuổi phù hợp
+LƯU Ý QUAN TRỌNG:
+- Field "content" PHẢI chứa văn bản nguyên gốc từ PDF
+- Field "summary" mới là phần tóm tắt
+- KHÔNG được để field "content" trống hoặc giống "summary"
+- Trả về JSON hợp lệ, không có text thừa
 
-Hãy phân tích và trả về JSON theo đúng format trên.
+Hãy phân tích và trả về JSON, đảm bảo field "content" chứa nội dung đầy đủ từ PDF.
 """
     return prompt
 
@@ -1307,17 +1469,20 @@ def validate_processed_format(data):
         return False
 
 def save_processed_document(doc_id, processed_data):
-    """Lưu processed document vào ChromaDB"""
     try:
         embedding_model = get_embedding_model()
+        
+        document_title = processed_data.get('bai_info', {}).get('title', f'Tài liệu {doc_id}')
         
         # Chuẩn bị tất cả items để index
         all_items = []
         
         # Xử lý chunks
         for chunk in processed_data.get('chunks', []):
-            # Tạo content đầy đủ
-            chunk_content = f"Tiêu đề: {chunk['title']}\nNội dung: {chunk.get('summary', '')}"
+            chunk_content = chunk.get('content', chunk.get('summary', ''))
+            if not chunk_content:
+                # Fallback nếu không có content
+                chunk_content = f"Tiêu đề: {chunk['title']}\nNội dung: {chunk.get('summary', '')}"
             
             # Chuẩn bị metadata theo format cần thiết
             metadata = {
@@ -1336,7 +1501,8 @@ def save_processed_document(doc_id, processed_data):
                 "contains_table": chunk.get('contains_table', False),
                 "contains_figure": chunk.get('contains_figure', False),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu upload"
+                "document_source": document_title,
+                "document_title": document_title
             }
             
             # Thêm vào danh sách
@@ -1348,7 +1514,7 @@ def save_processed_document(doc_id, processed_data):
         
         # Xử lý tables
         for table in processed_data.get('tables', []):
-            table_content = f"Bảng: {table['title']}\nMô tả: {table.get('summary', '')}"
+            table_content = table.get('content', f"Bảng: {table['title']}\nMô tả: {table.get('summary', '')}")
             
             metadata = {
                 "chunk_id": table['id'],
@@ -1365,7 +1531,8 @@ def save_processed_document(doc_id, processed_data):
                 "word_count": table.get('word_count', 0),
                 "token_count": table.get('token_count', 0),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu upload"
+                "document_source": document_title,
+                "document_title": document_title  
             }
             
             all_items.append({
@@ -1376,7 +1543,7 @@ def save_processed_document(doc_id, processed_data):
         
         # Xử lý figures
         for figure in processed_data.get('figures', []):
-            figure_content = f"Hình: {figure['title']}\nMô tả: {figure.get('summary', '')}"
+            figure_content = figure.get('content', f"Hình: {figure['title']}\nMô tả: {figure.get('summary', '')}")
             
             metadata = {
                 "chunk_id": figure['id'],
@@ -1390,7 +1557,8 @@ def save_processed_document(doc_id, processed_data):
                 "pages": figure.get('pages', ''),
                 "related_chunks": ','.join(figure.get('related_chunks', [])),
                 "created_at": datetime.datetime.now().isoformat(),
-                "document_source": "Tài liệu upload"
+                "document_source": document_title, 
+                "document_title": document_title  
             }
             
             all_items.append({
@@ -1403,7 +1571,7 @@ def save_processed_document(doc_id, processed_data):
         if all_items:
             success = embedding_model.index_chunks(all_items)
             if success:
-                logger.info(f"Successfully indexed {len(all_items)} items for document {doc_id}")
+                logger.info(f"Successfully indexed {len(all_items)} items for document {doc_id} (title: {document_title})")
             else:
                 raise Exception("Failed to index chunks")
         else:
@@ -1420,13 +1588,13 @@ def delete_document(doc_id):
     try:
         embedding_model = get_embedding_model()
         
-        # Lấy tất cả chunks của document
+        # Lấy tất cả chunks của document - BỎ include=['ids']
         results = embedding_model.collection.get(
-            where={"chapter": doc_id},
-            include=['ids']
+            where={"chapter": doc_id}
+            # Không cần include=['ids'] vì mặc định đã trả về ids
         )
         
-        if results and results['ids']:
+        if results and results.get('ids'):
             # Xóa từng chunk
             for chunk_id in results['ids']:
                 embedding_model.collection.delete(ids=[chunk_id])
@@ -1467,12 +1635,12 @@ def bulk_delete_documents():
         
         for doc_id in doc_ids:
             try:
+                # SỬA: Bỏ include=['ids']
                 results = embedding_model.collection.get(
-                    where={"chapter": doc_id},
-                    include=['ids']
+                    where={"chapter": doc_id}
                 )
                 
-                if results and results['ids']:
+                if results and results.get('ids'):
                     for chunk_id in results['ids']:
                         embedding_model.collection.delete(ids=[chunk_id])
                     deleted_count += 1

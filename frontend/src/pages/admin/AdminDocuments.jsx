@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     BiFile, BiUpload, BiTrash, BiRefresh,
-    BiSearch, BiShow, BiLoader, BiX, BiCloudUpload
+    BiSearch, BiShow, BiLoader, BiX, BiCloudUpload, BiLeftArrowAlt
 } from 'react-icons/bi';
 import { useApp } from '../../contexts/AppContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -257,9 +257,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
                         className="w-6 h-6 mr-2"
                         style={{ color: currentTheme?.primary }}
                     />
-                    <span style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
-                        Upload tài liệu PDF
-                    </span>
+                    <span>Upload tài liệu PDF</span>
                 </div>
             }
             size="lg"
@@ -267,7 +265,6 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
             showCloseButton={!isUploading}
         >
             <div className="space-y-6">
-                {/* File Upload Area */}
                 <div
                     className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${dragActive
                             ? 'transform scale-105'
@@ -309,7 +306,7 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
                                 className="text-sm"
                                 style={{ color: '#10b981' }}
                             >
-                                ✓ Sẵn sàng để upload
+                                Sẵn sàng để upload
                             </p>
                         </div>
                     ) : (
@@ -357,7 +354,6 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
                     )}
                 </div>
 
-                {/* Form Fields */}
                 <div className="space-y-4">
                     <div>
                         <label
@@ -426,7 +422,6 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
                     </div>
                 </div>
 
-                {/* Actions */}
                 <div
                     className="flex justify-end space-x-3 pt-6 border-t"
                     style={{ borderColor: darkMode ? '#4b5563' : '#e5e7eb' }}
@@ -486,6 +481,94 @@ const UploadModal = ({ isOpen, onClose, onUpload, currentTheme, darkMode }) => {
     );
 };
 
+const convertMarkdownTableToHtml = (content) => {
+    if (!content) return content;
+
+    const tableRegex = /\|(.+)\|[\s\S]*?\n\|[-\s|:]+\|([\s\S]*?)(?=\n\n|\n$|$)/g;
+    
+    return content.replace(tableRegex, (match) => {
+        const lines = match.trim().split('\n').filter(line => line.trim());
+        if (lines.length < 2) return match;
+
+        const headerLine = lines[0];
+        const separatorLine = lines[1];
+        const dataLines = lines.slice(2);
+
+        const headers = headerLine.split('|').slice(1, -1).map(h => h.trim());
+        const rows = dataLines.map(line => 
+            line.split('|').slice(1, -1).map(cell => cell.trim())
+        );
+
+        let html = '<table class="markdown-table">';
+        
+        html += '<thead><tr>';
+        headers.forEach(header => {
+            html += `<th>${header}</th>`;
+        });
+        html += '</tr></thead>';
+        
+        html += '<tbody>';
+        rows.forEach(row => {
+            html += '<tr>';
+            row.forEach(cell => {
+                html += `<td>${cell}</td>`;
+            });
+            html += '</tr>';
+        });
+        html += '</tbody>';
+        
+        html += '</table>';
+        
+        return html;
+    });
+};
+
+const processImagePath = (src) => {
+    if (!src) return src;
+    
+    if (src.includes('\\') || src.includes('D:')) {
+        const filename = src.split('\\').pop();
+        const baiMatch = filename.match(/^(bai\d+)_/);
+        const baiId = baiMatch ? baiMatch[1] : 'bai1';
+        return `http://localhost:5000/api/figures/${baiId}/${filename}`;
+    }
+    
+    if (src.startsWith('../figures/')) {
+        const filename = src.split('../figures/')[1];
+        const baiMatch = filename.match(/^(bai\d+)_/);
+        const baiId = baiMatch ? baiMatch[1] : 'bai1';
+        return `http://localhost:5000/api/figures/${baiId}/${filename}`;
+    }
+    
+    return src;
+};
+
+const renderContent = (content, darkMode) => {
+    if (!content) return '';
+
+    let processedContent = convertMarkdownTableToHtml(content);
+    
+    const imgRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+    processedContent = processedContent.replace(imgRegex, (match, alt, src) => {
+        const processedSrc = processImagePath(src);
+        return `<img src="${processedSrc}" alt="${alt}" class="max-w-full h-auto rounded-lg shadow-md my-4" style="max-height: 400px;" onError="this.style.display='none';" />`;
+    });
+
+    const htmlContent = processedContent
+        .split('\n')
+        .map(line => {
+            if (line.trim() === '') return '<br>';
+            if (line.startsWith('##')) return `<h2>${line.replace(/^##\s*/, '')}</h2>`;
+            if (line.startsWith('#')) return `<h1>${line.replace(/^#\s*/, '')}</h1>`;
+            if (line.includes('<table')) return line;
+            if (line.includes('<img')) return line;
+            return `<p>${line}</p>`;
+        })
+        .join('');
+
+    return htmlContent;
+};
+
 const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
     const [documentDetail, setDocumentDetail] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -504,7 +587,6 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
             const response = await adminService.getDocumentDetail(document.id);
             if (response.success) {
                 setDocumentDetail(response.document);
-                // Set active tab to first non-empty category
                 const { chunks } = response.document;
                 if (chunks.text.length > 0) setActiveTab('text');
                 else if (chunks.table.length > 0) setActiveTab('table');
@@ -585,269 +667,254 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
         );
     };
 
-    const ChunkDetailModal = ({ chunk, isOpen, onClose }) => (
+    const ChunkDetailModal = ({ chunk, isOpen, onClose, onBack }) => (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title={chunk?.title || 'Chi tiết chunk'}
-            size="xl"
-        >
-            {chunk && (
-                <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                ID Chunk
-                            </label>
-                            <p className={`mt-1 ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                                {chunk.id}
-                            </p>
-                        </div>
-                        <div>
-                            <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Loại nội dung
-                            </label>
-                            <p className={`mt-1 ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                                {chunk.content_type === 'table' ? 'Bảng' : chunk.content_type === 'figure' ? 'Hình ảnh' : 'Văn bản'}
-                            </p>
-                        </div>
-                        <div>
-                            <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Độ tuổi
-                            </label>
-                            <p className={`mt-1 ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                                {chunk.age_min} - {chunk.age_max} tuổi
-                            </p>
-                        </div>
-                        <div>
-                            <label className={`block text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Số từ
-                            </label>
-                            <p className={`mt-1 ${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                                {chunk.word_count} từ
-                            </p>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Tóm tắt
-                        </label>
-                        <p className={`${darkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                            {chunk.summary}
-                        </p>
-                    </div>
-
-                    <div>
-                        <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                            Nội dung đầy đủ
-                        </label>
-                        <div
-                            className="p-4 rounded-lg border max-h-64 overflow-y-auto"
-                            style={{
-                                backgroundColor: darkMode ? '#1f2937' : '#f9fafb',
-                                borderColor: darkMode ? '#374151' : '#e5e7eb'
-                            }}
-                        >
-                            <pre
-                                className="whitespace-pre-wrap text-sm"
-                                style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
-                            >
-                                {chunk.content}
-                            </pre>
-                        </div>
-                    </div>
-
-                    {chunk.table_columns && chunk.table_columns.length > 0 && (
-                        <div>
-                            <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Cột trong bảng
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                                {chunk.table_columns.map((column, index) => (
-                                    <span
-                                        key={index}
-                                        className="px-2 py-1 rounded text-xs"
-                                        style={{
-                                            backgroundColor: currentTheme?.primary + '20',
-                                            color: currentTheme?.primary
-                                        }}
-                                    >
-                                        {column}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {chunk.related_chunks && chunk.related_chunks.length > 0 && (
-                        <div>
-                            <label className={`block text-sm font-medium mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                Chunks liên quan
-                            </label>
-                            <div className="flex flex-wrap gap-2">
-                                {chunk.related_chunks.map((relatedId, index) => (
-                                    <span
-                                        key={index}
-                                        className="px-2 py-1 rounded text-xs"
-                                        style={{
-                                            backgroundColor: darkMode ? '#374151' : '#f3f4f6',
-                                            color: darkMode ? '#d1d5db' : '#6b7280'
-                                        }}
-                                    >
-                                        {relatedId}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+            title={
+                <div className="flex items-center">
+                    <button
+                        onClick={onBack}
+                        className="mr-3 p-1 rounded transition-colors"
+                        style={{
+                            color: currentTheme?.primary,
+                            backgroundColor: 'transparent'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = darkMode
+                                ? currentTheme?.primary + '20'
+                                : currentTheme?.light + '80';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = 'transparent';
+                        }}
+                    >
+                        <BiLeftArrowAlt className="w-5 h-5" />
+                    </button>
+                    <span>{chunk?.title || 'Chi tiết chunk'}</span>
                 </div>
-            )}
+            }
+            size="xl"
+            showCloseButton={false}
+        >
+            <div className="space-y-4">
+                {chunk && (
+                    <>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">ID Chunk</label>
+                                <p>{chunk.id}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Loại nội dung</label>
+                                <p>{chunk.content_type === 'table' ? 'Bảng' : chunk.content_type === 'figure' ? 'Hình ảnh' : 'Văn bản'}</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Độ tuổi</label>
+                                <p>{chunk.age_min} - {chunk.age_max} tuổi</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Số từ</label>
+                                <p>{chunk.word_count} từ</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Tóm tắt</label>
+                            <p>{chunk.summary}</p>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Nội dung đầy đủ</label>
+                            <div
+                                className="p-4 rounded-lg border max-h-96 overflow-y-auto markdown-content"
+                                style={{
+                                    backgroundColor: darkMode ? '#374151' : '#f9fafb',
+                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                }}
+                                dangerouslySetInnerHTML={{
+                                    __html: renderContent(chunk.content, darkMode)
+                                }}
+                            />
+                        </div>
+
+                        {chunk.table_columns && chunk.table_columns.length > 0 && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Cột trong bảng</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {chunk.table_columns.map((column, index) => (
+                                        <span
+                                            key={index}
+                                            className="px-2 py-1 rounded text-xs"
+                                            style={{
+                                                backgroundColor: currentTheme?.primary + '20',
+                                                color: currentTheme?.primary
+                                            }}
+                                        >
+                                            {column}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {chunk.related_chunks && chunk.related_chunks.length > 0 && (
+                            <div>
+                                <label className="block text-sm font-medium mb-2">Chunks liên quan</label>
+                                <div className="flex flex-wrap gap-2">
+                                    {chunk.related_chunks.map((relatedId, index) => (
+                                        <span
+                                            key={index}
+                                            className="px-2 py-1 rounded text-xs"
+                                            style={{
+                                                backgroundColor: darkMode ? '#4b5563' : '#f3f4f6',
+                                                color: darkMode ? '#d1d5db' : '#6b7280'
+                                            }}
+                                        >
+                                            {relatedId}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
         </Modal>
     );
 
     return (
         <>
             <Modal
-                isOpen={isOpen}
+                isOpen={isOpen && !selectedChunk}
                 onClose={onClose}
                 title={
                     <div className="flex items-center">
                         <BiFile className="w-5 h-5 mr-2" style={{ color: currentTheme?.primary }} />
-                        <span style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
-                            Chi tiết: {document?.title}
-                        </span>
+                        <span>Chi tiết: {document?.title}</span>
                     </div>
                 }
                 size="full"
             >
-                {isLoading ? (
-                    <div className="flex justify-center py-8">
-                        <Loader type="spinner" text="Đang tải chi tiết..." />
-                    </div>
-                ) : documentDetail ? (
-                    <div className="space-y-6">
-                        {/* Stats */}
-                        <div className="grid grid-cols-4 gap-4">
-                            <div
-                                className="p-4 rounded-lg border text-center"
-                                style={{
-                                    backgroundColor: darkMode ? '#374151' : '#ffffff',
-                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
-                                }}
-                            >
-                                <p className="text-2xl font-bold" style={{ color: currentTheme?.primary }}>
-                                    {documentDetail.stats.total_chunks}
-                                </p>
-                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Tổng chunks
-                                </p>
-                            </div>
-                            <div
-                                className="p-4 rounded-lg border text-center"
-                                style={{
-                                    backgroundColor: darkMode ? '#374151' : '#ffffff',
-                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
-                                }}
-                            >
-                                <p className="text-2xl font-bold" style={{ color: '#3b82f6' }}>
-                                    {documentDetail.stats.text_chunks}
-                                </p>
-                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Văn bản
-                                </p>
-                            </div>
-                            <div
-                                className="p-4 rounded-lg border text-center"
-                                style={{
-                                    backgroundColor: darkMode ? '#374151' : '#ffffff',
-                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
-                                }}
-                            >
-                                <p className="text-2xl font-bold" style={{ color: '#10b981' }}>
-                                    {documentDetail.stats.table_chunks}
-                                </p>
-                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Bảng
-                                </p>
-                            </div>
-                            <div
-                                className="p-4 rounded-lg border text-center"
-                                style={{
-                                    backgroundColor: darkMode ? '#374151' : '#ffffff',
-                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
-                                }}
-                            >
-                                <p className="text-2xl font-bold" style={{ color: '#8b5cf6' }}>
-                                    {documentDetail.stats.figure_chunks}
-                                </p>
-                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                    Hình ảnh
-                                </p>
-                            </div>
+                <div className="space-y-6">
+                    {isLoading ? (
+                        <div className="flex justify-center py-8">
+                            <Loader type="spinner" text="Đang tải chi tiết..." />
                         </div>
-
-                        {/* Tabs */}
-                        <div className="border-b" style={{ borderColor: darkMode ? '#4b5563' : '#e5e7eb' }}>
-                            <nav className="flex space-x-8">
-                                {[
-                                    { key: 'text', label: 'Văn bản', count: documentDetail.stats.text_chunks },
-                                    { key: 'table', label: 'Bảng', count: documentDetail.stats.table_chunks },
-                                    { key: 'figure', label: 'Hình ảnh', count: documentDetail.stats.figure_chunks }
-                                ].map(tab => (
-                                    <button
-                                        key={tab.key}
-                                        onClick={() => setActiveTab(tab.key)}
-                                        className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.key
-                                                ? 'border-current'
-                                                : 'border-transparent hover:border-gray-300'
-                                            }`}
-                                        style={{
-                                            color: activeTab === tab.key
-                                                ? currentTheme?.primary
-                                                : (darkMode ? '#9ca3af' : '#6b7280')
-                                        }}
-                                    >
-                                        {tab.label} ({tab.count})
-                                    </button>
-                                ))}
-                            </nav>
-                        </div>
-
-                        {/* Content */}
-                        <div className="max-h-96 overflow-y-auto">
-                            {documentDetail.chunks[activeTab].length > 0 ? (
-                                <div className="space-y-4">
-                                    {documentDetail.chunks[activeTab].map((chunk, index) => (
-                                        <ChunkCard
-                                            key={chunk.id}
-                                            chunk={chunk}
-                                            type={activeTab}
-                                        />
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <p style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}>
-                                        Không có {activeTab === 'text' ? 'văn bản' : activeTab === 'table' ? 'bảng' : 'hình ảnh'} nào
+                    ) : documentDetail ? (
+                        <>
+                            <div className="grid grid-cols-4 gap-4">
+                                <div
+                                    className="p-4 rounded-lg border text-center"
+                                    style={{
+                                        backgroundColor: darkMode ? '#374151' : '#ffffff',
+                                        borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                    }}
+                                >
+                                    <p className="text-2xl font-bold" style={{ color: currentTheme?.primary }}>
+                                        {documentDetail.stats.total_chunks}
                                     </p>
+                                    <p className="text-sm text-gray-500">Tổng chunks</p>
                                 </div>
-                            )}
+                                <div
+                                    className="p-4 rounded-lg border text-center"
+                                    style={{
+                                        backgroundColor: darkMode ? '#374151' : '#ffffff',
+                                        borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                    }}
+                                >
+                                    <p className="text-2xl font-bold" style={{ color: '#3b82f6' }}>
+                                        {documentDetail.stats.text_chunks}
+                                    </p>
+                                    <p className="text-sm text-gray-500">Văn bản</p>
+                                </div>
+                                <div
+                                    className="p-4 rounded-lg border text-center"
+                                    style={{
+                                        backgroundColor: darkMode ? '#374151' : '#ffffff',
+                                        borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                    }}
+                                >
+                                    <p className="text-2xl font-bold" style={{ color: '#10b981' }}>
+                                        {documentDetail.stats.table_chunks}
+                                    </p>
+                                    <p className="text-sm text-gray-500">Bảng</p>
+                                </div>
+                                <div
+                                    className="p-4 rounded-lg border text-center"
+                                    style={{
+                                        backgroundColor: darkMode ? '#374151' : '#ffffff',
+                                        borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                    }}
+                                >
+                                    <p className="text-2xl font-bold" style={{ color: '#8b5cf6' }}>
+                                        {documentDetail.stats.figure_chunks}
+                                    </p>
+                                    <p className="text-sm text-gray-500">Hình ảnh</p>
+                                </div>
+                            </div>
+
+                            <div className="border-b" style={{ borderColor: darkMode ? '#4b5563' : '#e5e7eb' }}>
+                                <nav className="flex space-x-8">
+                                    {[
+                                        { key: 'text', label: 'Văn bản', count: documentDetail.stats.text_chunks },
+                                        { key: 'table', label: 'Bảng', count: documentDetail.stats.table_chunks },
+                                        { key: 'figure', label: 'Hình ảnh', count: documentDetail.stats.figure_chunks }
+                                    ].map(tab => (
+                                        <button
+                                            key={tab.key}
+                                            onClick={() => setActiveTab(tab.key)}
+                                            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.key
+                                                    ? 'border-current'
+                                                    : 'border-transparent hover:border-gray-300'
+                                                }`}
+                                            style={{
+                                                color: activeTab === tab.key
+                                                    ? currentTheme?.primary
+                                                    : (darkMode ? '#9ca3af' : '#6b7280')
+                                            }}
+                                        >
+                                            {tab.label} ({tab.count})
+                                        </button>
+                                    ))}
+                                </nav>
+                            </div>
+
+                            <div className="max-h-96 overflow-y-auto">
+                                {documentDetail.chunks[activeTab].length > 0 ? (
+                                    <div className="space-y-4">
+                                        {documentDetail.chunks[activeTab].map((chunk, index) => (
+                                            <ChunkCard
+                                                key={chunk.id}
+                                                chunk={chunk}
+                                                type={activeTab}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-8">
+                                        <p style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                                            Không có {activeTab === 'text' ? 'văn bản' : activeTab === 'table' ? 'bảng' : 'hình ảnh'} nào
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div className="text-center py-8">
+                            <p style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}>
+                                Không thể tải chi tiết tài liệu
+                            </p>
                         </div>
-                    </div>
-                ) : (
-                    <div className="text-center py-8">
-                        <p style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}>
-                            Không thể tải chi tiết tài liệu
-                        </p>
-                    </div>
-                )}
+                    )}
+                </div>
             </Modal>
 
             <ChunkDetailModal
                 chunk={selectedChunk}
                 isOpen={!!selectedChunk}
-                onClose={() => setSelectedChunk(null)}
+                onClose={onClose}
+                onBack={() => setSelectedChunk(null)}
             />
         </>
     );
@@ -1024,7 +1091,6 @@ const AdminDocuments = () => {
             }}
         >
             <div className="p-6">
-                {/* Header */}
                 <div className="mb-6">
                     <div className="flex justify-between items-center mb-4">
                         <div>
@@ -1071,7 +1137,6 @@ const AdminDocuments = () => {
                         </div>
                     </div>
 
-                    {/* Stats */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div
                             className="p-4 rounded-lg border"
@@ -1156,7 +1221,6 @@ const AdminDocuments = () => {
                     </div>
                 </div>
 
-                {/* Filters */}
                 <div
                     className="rounded-lg border p-4 mb-6"
                     style={{
@@ -1194,7 +1258,6 @@ const AdminDocuments = () => {
                     </div>
                 </div>
 
-                {/* Bulk Actions */}
                 {selectedDocuments.length > 0 && (
                     <div
                         className="border rounded-lg p-4 mb-4"
@@ -1234,14 +1297,12 @@ const AdminDocuments = () => {
                     </div>
                 )}
 
-                {/* Documents List */}
                 {isLoading ? (
                     <div className="flex justify-center py-12">
                         <Loader type="spinner" text="Đang tải danh sách tài liệu..." />
                     </div>
                 ) : filteredDocuments.length > 0 ? (
                     <>
-                        {/* Select All */}
                         <div
                             className="rounded-lg border p-4 mb-4"
                             style={{
@@ -1269,7 +1330,6 @@ const AdminDocuments = () => {
                             </label>
                         </div>
 
-                        {/* Documents Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {filteredDocuments.map(document => (
                                 <DocumentCard
@@ -1310,7 +1370,6 @@ const AdminDocuments = () => {
                 )}
             </div>
 
-            {/* Upload Modal */}
             <UploadModal
                 isOpen={showUploadModal}
                 onClose={() => setShowUploadModal(false)}
@@ -1319,18 +1378,47 @@ const AdminDocuments = () => {
                 darkMode={darkMode}
             />
 
-            {/* Detail Modal - thay thế phần này */}
             <DetailModal
                 isOpen={showDetailModal}
-                onClose={() => setShowDetailModal(false)}
+                onClose={() => {
+                    setShowDetailModal(false);
+                    setSelectedDocument(null);
+                }}
                 document={selectedDocument}
                 currentTheme={currentThemeConfig}
                 darkMode={darkMode}
             />
+
+            <style jsx>{`
+                .markdown-table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 1rem 0;
+                    font-size: 0.9rem;
+                }
+                .markdown-table th {
+                    background-color: ${darkMode ? '#374151' : '#E8F5F0'};
+                    color: ${darkMode ? '#86efac' : '#1F6A4C'};
+                    font-weight: 600;
+                    padding: 0.75rem 1rem;
+                    text-align: left;
+                    border: 1px solid ${darkMode ? '#4b5563' : '#BBEADD'};
+                }
+                .markdown-table td {
+                    padding: 0.75rem 1rem;
+                    border: 1px solid ${darkMode ? '#4b5563' : '#E5E7EB'};
+                    vertical-align: top;
+                    color: ${darkMode ? '#e5e7eb' : '#374151'};
+                }
+                .markdown-table tr:nth-child(even) {
+                    background-color: ${darkMode ? '#1f2937' : '#F9FFFC'};
+                }
+                .markdown-table tr:hover {
+                    background-color: ${darkMode ? '#374151' : '#F0FFF8'};
+                }
+            `}</style>
         </div>
     );
 };
-
-
 
 export default AdminDocuments;

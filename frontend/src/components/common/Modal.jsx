@@ -1,19 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { BiX } from 'react-icons/bi';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const Modal = ({ 
   isOpen,
   title,
   children,
   onClose,
-  size = 'md', // sm, md, lg, xl
+  size = 'md',
   footer = null,
   closeOnClickOutside = true,
   showCloseButton = true
 }) => {
+  const { darkMode, currentThemeConfig } = useTheme();
   const modalRef = useRef(null);
 
-  // Xử lý click outside để đóng modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (closeOnClickOutside && modalRef.current && !modalRef.current.contains(event.target)) {
@@ -21,7 +22,6 @@ const Modal = ({
       }
     };
 
-    // Xử lý phím Escape
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
         onClose();
@@ -31,19 +31,16 @@ const Modal = ({
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
       document.addEventListener('keydown', handleEscape);
-      // Ngăn scroll khi modal mở
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
-      // Khôi phục scroll khi đóng modal
       document.body.style.overflow = 'unset';
     };
   }, [isOpen, onClose, closeOnClickOutside]);
 
-  // Xác định classes cho kích thước
   const sizeClasses = {
     sm: 'max-w-md',
     md: 'max-w-xl',
@@ -57,38 +54,71 @@ const Modal = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Overlay với blur effect */}
         <div 
-          className="fixed inset-0 transition-opacity backdrop-blur-md bg-white bg-opacity-10"
+          className="fixed inset-0 transition-opacity backdrop-blur-md"
+          style={{
+            backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.3)'
+          }}
           aria-hidden="true"
         ></div>
 
-        {/* Modal */}
         <div 
-          className={`inline-block w-full ${sizeClasses[size]} my-8 overflow-hidden text-left align-middle bg-white rounded-lg shadow-xl transform transition-all sm:my-12`}
+          className={`inline-block w-full ${sizeClasses[size]} my-8 overflow-hidden text-left align-middle rounded-lg shadow-xl transform transition-all sm:my-12`}
+          style={{
+            backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+            border: `1px solid ${darkMode ? '#374151' : '#e5e7eb'}`
+          }}
           ref={modalRef}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-6 pt-5 pb-3 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <div 
+            className="flex items-center justify-between px-6 pt-5 pb-3 border-b"
+            style={{
+              borderColor: darkMode ? '#374151' : '#e5e7eb'
+            }}
+          >
+            <h3 
+              className="text-lg font-medium"
+              style={{ color: darkMode ? '#f3f4f6' : '#111827' }}
+            >
+              {title}
+            </h3>
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-gray-500 focus:outline-none transition-colors"
+                className="focus:outline-none transition-colors p-1 rounded"
+                style={{
+                  color: darkMode ? '#9ca3af' : '#6b7280'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = darkMode ? '#374151' : '#f3f4f6';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                }}
               >
                 <BiX className="w-6 h-6" />
               </button>
             )}
           </div>
 
-          {/* Content */}
-          <div className="px-6 py-4">
+          <div 
+            className="px-6 py-4"
+            style={{
+              backgroundColor: darkMode ? '#1f2937' : '#ffffff',
+              color: darkMode ? '#f3f4f6' : '#111827'
+            }}
+          >
             {children}
           </div>
 
-          {/* Footer */}
           {footer && (
-            <div className="px-6 py-3 border-t border-gray-200">
+            <div 
+              className="px-6 py-3 border-t"
+              style={{
+                borderColor: darkMode ? '#374151' : '#e5e7eb',
+                backgroundColor: darkMode ? '#1f2937' : '#ffffff'
+              }}
+            >
               {footer}
             </div>
           )}
