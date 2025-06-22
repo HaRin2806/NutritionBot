@@ -251,3 +251,58 @@ def ensure_indexes():
     except Exception as e:
         logger.error(f"Lỗi tạo indexes: {e}")
         return False
+
+# backend/models/feedback_model.py - THÊM METHOD NẾU CHƯA CÓ
+
+@staticmethod
+def get_stats():
+    """Lấy thống kê về feedback"""
+    try:
+        db = get_db()
+        feedback_collection = db.feedback
+        
+        # Thống kê cơ bản
+        total_feedback = feedback_collection.count_documents({})
+        pending_feedback = feedback_collection.count_documents({"status": "pending"})
+        resolved_feedback = feedback_collection.count_documents({"status": "resolved"})
+        
+        # Tính đánh giá trung bình
+        pipeline = [
+            {"$group": {"_id": None, "avg_rating": {"$avg": "$rating"}}}
+        ]
+        avg_result = list(feedback_collection.aggregate(pipeline))
+        average_rating = avg_result[0]["avg_rating"] if avg_result else 0
+        
+        # Feedback tháng này
+        from datetime import datetime, timedelta
+        start_of_month = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        this_month_feedback = feedback_collection.count_documents({
+            "created_at": {"$gte": start_of_month}
+        })
+        
+        # Thống kê theo rating
+        rating_stats = {}
+        for rating in range(1, 6):
+            count = feedback_collection.count_documents({"rating": rating})
+            rating_stats[f"{rating}_star"] = count
+        
+        # Thống kê theo category
+        category_pipeline = [
+            {"$group": {"_id": "$category", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}}
+        ]
+        category_stats = list(feedback_collection.aggregate(category_pipeline))
+        
+        return {
+            "total_feedback": total_feedback,
+            "pending_feedback": pending_feedback,
+            "resolved_feedback": resolved_feedback,
+            "average_rating": average_rating,
+            "this_month_feedback": this_month_feedback,
+            "rating_distribution": rating_stats,
+            "category_distribution": category_stats
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting feedback stats: {e}")
+        return {}

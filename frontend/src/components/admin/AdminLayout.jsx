@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  BiHome, BiUser, BiFile, BiMessageSquareDetail, 
+  BiHome, BiUser, BiFile, BiMessageSquareDetail, BiStar,
   BiCog, BiBarChart, BiMenu, BiX, BiLeaf, BiShield, BiLogOut
 } from 'react-icons/bi';
 import { useApp } from '../../contexts/AppContext';
@@ -49,7 +49,7 @@ const AdminLayout = ({ children }) => {
     { path: '/admin/users', name: 'Người dùng', icon: BiUser },
     { path: '/admin/documents', name: 'Tài liệu', icon: BiFile },
     { path: '/admin/conversations', name: 'Hội thoại', icon: BiMessageSquareDetail },
-    { path: '/admin/analytics', name: 'Phân tích', icon: BiBarChart },
+    { path: '/admin/feedback', label: 'Đóng góp ý kiến', icon: BiStar },
     { path: '/admin/settings', name: 'Cài đặt', icon: BiCog }
   ];
 

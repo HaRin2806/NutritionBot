@@ -23,7 +23,7 @@ import {
   AdminUsers,
   AdminDocuments,
   AdminConversations,
-  AdminAnalytics,
+   AdminFeedback,
   AdminSettings
 } from './pages/admin';
 
@@ -66,7 +66,7 @@ function App() {
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="documents" element={<AdminDocuments />} />
                   <Route path="conversations" element={<AdminConversations />} />
-                  <Route path="analytics" element={<AdminAnalytics />} />
+                  <Route path="feedback" element={<AdminFeedback />} />
                   <Route path="settings" element={<AdminSettings />} />
                   <Route path="" element={<AdminDashboard />} />
                 </Routes>

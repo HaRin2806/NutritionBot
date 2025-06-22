@@ -1,50 +1,53 @@
+# backend/api/feedback.py
 from flask import Blueprint, request, jsonify
 import logging
-from models.feedback_model import Feedback
+from models.feedback_model import Feedback, ensure_indexes
 from models.user_model import User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 logger = logging.getLogger(__name__)
 
+# Create blueprint
 feedback_routes = Blueprint('feedback', __name__)
 
 @feedback_routes.route('/feedback', methods=['POST'])
 @jwt_required()
 def create_feedback():
-    """API endpoint để tạo feedback mới"""
+    """Create new feedback"""
     try:
         data = request.json
         user_id = get_jwt_identity()
         
         rating = data.get('rating')
         category = data.get('category')
-        title = data.get('title', '')
         content = data.get('content')
+        title = data.get('title', '')
         
-        # Validation
-        if not rating or not category or not content:
+        if not all([rating, category, content]):
             return jsonify({
                 "success": False,
-                "error": "Vui lòng điền đầy đủ thông tin"
+                "error": "Missing required fields"
             }), 400
         
-        if not (1 <= rating <= 5):
+        if not isinstance(rating, int) or rating < 1 or rating > 5:
             return jsonify({
                 "success": False,
-                "error": "Đánh giá phải từ 1-5 sao"
+                "error": "Rating must be between 1 and 5"
             }), 400
         
-        if len(content.strip()) < 10:
-            return jsonify({
-                "success": False,
-                "error": "Nội dung phải có ít nhất 10 ký tự"
-            }), 400
+        feedback = Feedback(
+            user_id=user_id,
+            rating=rating,
+            category=category,
+            title=title,
+            content=content
+        )
         
-        feedback_id = Feedback.create(user_id, rating, category, title, content.strip())
+        feedback_id = feedback.save()
         
         return jsonify({
             "success": True,
-            "message": "Cảm ơn bạn đã đóng góp ý kiến!",
+            "message": "Feedback created successfully",
             "feedback_id": str(feedback_id)
         })
         
@@ -58,7 +61,7 @@ def create_feedback():
 @feedback_routes.route('/feedback', methods=['GET'])
 @jwt_required()
 def get_user_feedback():
-    """API endpoint để lấy feedback của người dùng"""
+    """Get user's feedback"""
     try:
         user_id = get_jwt_identity()
         page = int(request.args.get('page', 1))
@@ -95,13 +98,13 @@ def get_user_feedback():
 
 @feedback_routes.route('/feedback/categories', methods=['GET'])
 def get_feedback_categories():
-    """API endpoint để lấy danh sách categories"""
+    """Get feedback categories"""
     categories = [
-        {"value": "tư vấn", "label": "Chất lượng tư vấn"},
-        {"value": "giao diện", "label": "Giao diện ứng dụng"},
-        {"value": "tính năng", "label": "Tính năng mới"},
-        {"value": "lỗi", "label": "Báo lỗi"},
-        {"value": "khác", "label": "Khác"}
+        {"value": "bug_report", "label": "Báo lỗi"},
+        {"value": "feature_request", "label": "Đề xuất tính năng"},
+        {"value": "content_feedback", "label": "Phản hồi nội dung"},
+        {"value": "user_experience", "label": "Trải nghiệm người dùng"},
+        {"value": "other", "label": "Khác"}
     ]
     
     return jsonify({
