@@ -14,6 +14,7 @@ import google.generativeai as genai
 from config import GEMINI_API_KEY
 import time
 import sys
+from models.feedback_model import Feedback
 
 # Thiết lập logging
 logger = logging.getLogger(__name__)
@@ -1766,6 +1767,105 @@ def update_user(user_id):
         
     except Exception as e:
         logger.error(f"Lỗi cập nhật user: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@admin_routes.route('/feedback', methods=['GET'])
+@require_admin
+def get_all_feedback():
+    """API endpoint để admin xem tất cả feedback"""
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 20))
+        status_filter = request.args.get('status')
+        skip = (page - 1) * per_page
+        
+        feedbacks = Feedback.get_all_for_admin(limit=per_page, skip=skip, status_filter=status_filter)
+        
+        result = []
+        for feedback in feedbacks:
+            result.append({
+                "id": str(feedback.feedback_id),
+                "user_name": getattr(feedback, 'user_name', 'Ẩn danh'),
+                "user_email": getattr(feedback, 'user_email', ''),
+                "rating": feedback.rating,
+                "category": feedback.category,
+                "title": feedback.title,
+                "content": feedback.content,
+                "status": feedback.status,
+                "admin_response": feedback.admin_response,
+                "created_at": feedback.created_at.isoformat(),
+                "updated_at": feedback.updated_at.isoformat()
+            })
+        
+        return jsonify({
+            "success": True,
+            "feedbacks": result
+        })
+        
+    except Exception as e:
+        logger.error(f"Error getting feedback for admin: {e}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@admin_routes.route('/feedback/stats', methods=['GET'])
+@require_admin
+def get_feedback_stats():
+    """API endpoint để lấy thống kê feedback"""
+    try:
+        stats = Feedback.get_stats()
+        return jsonify({
+            "success": True,
+            "stats": stats
+        })
+    except Exception as e:
+        logger.error(f"Error getting feedback stats: {e}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+@admin_routes.route('/feedback/<feedback_id>/respond', methods=['PUT'])
+@require_admin
+def respond_to_feedback(feedback_id):
+    """API endpoint để admin phản hồi feedback"""
+    try:
+        data = request.json
+        response_text = data.get('response', '')
+        new_status = data.get('status', 'reviewed')
+        
+        if not response_text.strip():
+            return jsonify({
+                "success": False,
+                "error": "Vui lòng nhập phản hồi"
+            }), 400
+        
+        feedback = Feedback.find_by_id(feedback_id)
+        if not feedback:
+            return jsonify({
+                "success": False,
+                "error": "Không tìm thấy feedback"
+            }), 404
+        
+        success = feedback.update_admin_response(response_text.strip(), new_status)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Đã phản hồi feedback thành công"
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Không thể cập nhật phản hồi"
+            }), 500
+        
+    except Exception as e:
+        logger.error(f"Error responding to feedback: {e}")
         return jsonify({
             "success": False,
             "error": str(e)

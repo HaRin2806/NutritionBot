@@ -288,3 +288,57 @@ button:active {
 .preload * {
   transition: none !important;
 }
+/* frontend/src/styles/global.css - Thay thế phần SweetAlert2 */
+
+/* SweetAlert2 - Đơn giản và sạch sẽ */
+.swal-simple-popup {
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(229, 231, 235, 0.2) !important;
+  font-family: inherit !important;
+}
+
+.swal-simple-button {
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  padding: 0.625rem 1.25rem !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal-simple-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal-simple-cancel {
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  padding: 0.625rem 1.25rem !important;
+  background: #f3f4f6 !important;
+  color: #4b5563 !important;
+  border: 1px solid #d1d5db !important;
+  transition: all 0.2s ease !important;
+}
+
+.swal-simple-cancel:hover {
+  background: #e5e7eb !important;
+}
+
+/* Dark mode */
+.dark .swal-simple-popup {
+  border-color: rgba(75, 85, 99, 0.2) !important;
+}
+
+.dark .swal-simple-cancel {
+  background: #374151 !important;
+  color: #d1d5db !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .swal-simple-cancel:hover {
+  background: #4b5563 !important;
+}

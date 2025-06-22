@@ -1,3 +1,5 @@
+// frontend/src/contexts/AppContext.jsx - Fixed useToast function
+
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -13,50 +15,65 @@ export const useApp = () => {
   }
   return context;
 };
+// frontend/src/contexts/AppContext.jsx - Fixed useToast function
 
 const useToast = () => {
-  const getCurrentTheme = () => {
+  const getThemeColor = () => {
     const theme = localStorage.getItem('theme') || 'mint';
     const darkMode = localStorage.getItem('darkMode') === 'true';
-
-    const themes = {
-      mint: { primary: '#36B37E', light: '#E6F7EF', dark: '#2FAB76' },
-      blue: { primary: '#2563EB', light: '#EFF6FF', dark: '#1D4ED8' },
-      purple: { primary: '#8B5CF6', light: '#F5F3FF', dark: '#7C3AED' },
-      pink: { primary: '#EC4899', light: '#FCE7F3', dark: '#DB2777' },
-      orange: { primary: '#F97316', light: '#FFF7ED', dark: '#EA580C' }
+    
+    const themeColors = {
+      mint: '#36B37E',
+      blue: '#2563EB', 
+      purple: '#8B5CF6',
+      pink: '#EC4899',
+      orange: '#F97316'
     };
-
+    
     return {
-      currentTheme: themes[theme] || themes.mint,
-      darkMode
+      primary: themeColors[theme] || themeColors.mint,
+      isDark: darkMode
     };
   };
 
   return {
-    showSuccess: (message, timer = 1500) => {
-      const { currentTheme, darkMode } = getCurrentTheme();
+    showSuccess: (message, timer = 2000) => {
+      const { primary, isDark } = getThemeColor();
+      
       return Swal.fire({
         icon: 'success',
         title: 'Thành công',
         text: message,
-        confirmButtonColor: currentTheme.primary,
-        background: darkMode ? '#1f2937' : '#ffffff',
-        color: darkMode ? '#f3f4f6' : '#111827',
+        confirmButtonColor: primary,
+        background: isDark ? '#1f2937' : '#ffffff',
+        color: isDark ? '#f3f4f6' : '#111827',
         timer,
-        showConfirmButton: timer > 2000
+        showConfirmButton: timer > 3000,
+        timerProgressBar: true,
+        customClass: {
+          popup: 'swal-simple-popup',
+          confirmButton: 'swal-simple-button'
+        },
+        // ✅ SỬA: Đặt màu icon trực tiếp
+        iconColor: primary
       });
     },
 
     showError: (message) => {
-      const { currentTheme, darkMode } = getCurrentTheme();
+      const { primary, isDark } = getThemeColor();
+      
       return Swal.fire({
         icon: 'error',
-        title: 'Lỗi',
+        title: 'Có lỗi xảy ra',
         text: message,
-        confirmButtonColor: currentTheme.primary,
-        background: darkMode ? '#1f2937' : '#ffffff',
-        color: darkMode ? '#f3f4f6' : '#111827'
+        confirmButtonColor: primary,
+        background: isDark ? '#1f2937' : '#ffffff',
+        color: isDark ? '#f3f4f6' : '#111827',
+        confirmButtonText: 'Đã hiểu',
+        customClass: {
+          popup: 'swal-simple-popup',
+          confirmButton: 'swal-simple-button'
+        }
       });
     },
 
@@ -65,7 +82,7 @@ const useToast = () => {
         title = 'Xác nhận',
         text = 'Bạn có chắc chắn?',
         confirmButtonText = 'Xác nhận',
-        cancelButtonText = 'Hủy',
+        cancelButtonText = 'Hủy bỏ',
         icon = 'question',
         input = null,
         inputValue = '',
@@ -73,44 +90,49 @@ const useToast = () => {
         showCancelButton = true
       } = options;
 
-      const { currentTheme, darkMode } = getCurrentTheme();
+      const { primary, isDark } = getThemeColor();
 
       const swalConfig = {
         title,
         showCancelButton,
-        confirmButtonColor: currentTheme.primary,
-        cancelButtonColor: '#d33',
+        confirmButtonColor: primary,
+        cancelButtonColor: '#6b7280',
         confirmButtonText,
         cancelButtonText,
-        background: darkMode ? '#1f2937' : '#ffffff',
-        color: darkMode ? '#f3f4f6' : '#111827'
+        background: isDark ? '#1f2937' : '#ffffff',
+        color: isDark ? '#f3f4f6' : '#111827',
+        reverseButtons: true,
+        customClass: {
+          popup: 'swal-simple-popup',
+          confirmButton: 'swal-simple-button',
+          cancelButton: 'swal-simple-cancel'
+        },
+        // ✅ SỬA: Đặt màu icon cho question
+        iconColor: primary
       };
 
-      // Thêm text nếu không có input
       if (!input) {
         swalConfig.text = text;
         swalConfig.icon = icon;
       }
 
-      // Thêm input nếu có
       if (input) {
         swalConfig.input = input;
         swalConfig.inputValue = inputValue;
         swalConfig.inputPlaceholder = inputPlaceholder;
 
-        // Style cho input trong dark mode
-        if (darkMode) {
+        if (isDark) {
           swalConfig.inputAttributes = {
             style: `
-          background-color: #374151;
-          color: #ffffff;
-          border: 1px solid #4b5563;
-          border-radius: 0.5rem;
-        `
+              background-color: #374151;
+              color: #ffffff;
+              border: 1px solid #4b5563;
+              border-radius: 0.5rem;
+              padding: 0.75rem;
+            `
           };
         }
 
-        // Validation cho input
         swalConfig.preConfirm = (value) => {
           if (!value || !value.trim()) {
             Swal.showValidationMessage('Vui lòng nhập giá trị hợp lệ');
@@ -124,41 +146,50 @@ const useToast = () => {
     },
 
     showAgePrompt: (currentAge = null) => {
-      const { currentTheme, darkMode } = getCurrentTheme();
+      const { primary, isDark } = getThemeColor();
 
       return Swal.fire({
-        title: 'Thiết lập độ tuổi',
+        title: 'Chọn độ tuổi',
         html: `
-          <select id="swal-age" class="swal2-input" style="
-            background-color: ${darkMode ? '#374151' : '#ffffff'};
-            color: ${darkMode ? '#ffffff' : '#111827'};
-            border: 1px solid ${darkMode ? '#4b5563' : '#d1d5db'};
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            font-size: 1rem;
-            width: 100%;
-          ">
-            ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-          `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
-        ).join('')}
-          </select>
+          <div style="margin-top: 1rem;">
+            <p style="color: ${isDark ? '#d1d5db' : '#6b7280'}; font-size: 0.875rem; margin-bottom: 1rem;">
+              Chọn độ tuổi để nhận tư vấn dinh dưỡng phù hợp
+            </p>
+            <select id="swal-age" style="
+              width: 100%;
+              padding: 0.75rem;
+              border-radius: 0.5rem;
+              border: 1px solid ${isDark ? '#4b5563' : '#d1d5db'};
+              font-size: 0.875rem;
+              background: ${isDark ? '#374151' : '#f9fafb'};
+              color: ${isDark ? '#ffffff' : '#111827'};
+              outline: none;
+            ">
+              ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
+                `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
+              ).join('')}
+            </select>
+          </div>
         `,
-        confirmButtonText: 'Lưu',
-        confirmButtonColor: currentTheme.primary,
-        background: darkMode ? '#1f2937' : '#ffffff',
-        color: darkMode ? '#f3f4f6' : '#111827',
+        confirmButtonText: 'Lưu lại',
+        cancelButtonText: 'Hủy bỏ',
+        showCancelButton: true,
+        confirmButtonColor: primary,
+        cancelButtonColor: '#6b7280',
+        background: isDark ? '#1f2937' : '#ffffff',
+        color: isDark ? '#f3f4f6' : '#111827',
         allowOutsideClick: false,
-        didOpen: () => {
-          const popup = Swal.getPopup();
-          if (darkMode) {
-            popup.style.backgroundColor = '#1f2937';
-            popup.style.color = '#f3f4f6';
-          }
+        reverseButtons: true,
+        customClass: {
+          popup: 'swal-simple-popup',
+          confirmButton: 'swal-simple-button',
+          cancelButton: 'swal-simple-cancel'
         },
         preConfirm: () => {
           const age = parseInt(document.getElementById('swal-age').value);
           if (isNaN(age) || age < 1 || age > 19) {
             Swal.showValidationMessage('Vui lòng chọn tuổi từ 1-19');
+            return false;
           }
           return age;
         }
@@ -669,28 +700,58 @@ export const AppProvider = ({ children }) => {
     }
   }, [fetchConversationDetail]);
 
-  const helpers = {
-    isAuthenticated: () => !!state.userData,
-    requireAuth: (callback) => {
-      if (!helpers.isAuthenticated()) {
-        Swal.fire({
-          title: 'Cần đăng nhập',
-          text: 'Vui lòng đăng nhập để tiếp tục',
-          confirmButtonColor: '#36B37E',
-          confirmButtonText: 'Đăng nhập'
-        }).then(() => {
-          if (callback) callback();
-          else navigate('/login');
-        });
-        return false;
-      }
-      return true;
-    },
-    setUserAge: (age) => {
-      updateState({ userAge: age });
-      storageService.saveUserAge(age);
+
+const helpers = {
+  isAuthenticated: () => !!state.userData,
+  
+  requireAuth: (callback) => {
+    if (!helpers.isAuthenticated()) {
+      const { primary, isDark } = (() => {
+        const theme = localStorage.getItem('theme') || 'mint';
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        
+        const themeColors = {
+          mint: '#36B37E',
+          blue: '#2563EB', 
+          purple: '#8B5CF6',
+          pink: '#EC4899',
+          orange: '#F97316'
+        };
+        
+        return {
+          primary: themeColors[theme] || themeColors.mint,
+          isDark: darkMode
+        };
+      })();
+
+      Swal.fire({
+        icon: 'info',
+        title: 'Cần đăng nhập',
+        text: 'Vui lòng đăng nhập để tiếp tục sử dụng',
+        confirmButtonColor: primary,
+        background: isDark ? '#1f2937' : '#ffffff',
+        color: isDark ? '#f3f4f6' : '#111827',
+        confirmButtonText: 'Đăng nhập',
+        allowOutsideClick: false,
+        customClass: {
+          popup: 'swal-simple-popup',
+          confirmButton: 'swal-simple-button'
+        },
+        iconColor: primary
+      }).then(() => {
+        if (callback) callback();
+        else navigate('/login');
+      });
+      return false;
     }
-  };
+    return true;
+  },
+  
+  setUserAge: (age) => {
+    updateState({ userAge: age });
+    storageService.saveUserAge(age);
+  }
+};
 
   useEffect(() => {
     const verifyToken = async () => {

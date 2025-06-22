@@ -176,3 +176,25 @@ export const storageService = {
     localStorage.removeItem('user_age');
   }
 };
+
+// Feedback Service
+export const feedbackService = {
+  // Create feedback
+  createFeedback: (feedbackData) => baseApi.post('/feedback', feedbackData),
+  
+  // Get user's feedback
+  getUserFeedback: (page = 1, perPage = 10) => 
+    baseApi.get('/feedback', { page, per_page: perPage }),
+  
+  // Get feedback categories
+  getCategories: () => baseApi.get('/feedback/categories'),
+  
+  // Admin endpoints
+  getAllFeedback: (page = 1, perPage = 20, status = null) => 
+    baseApi.get('/admin/feedback', { page, per_page: perPage, ...(status && { status }) }),
+  
+  getFeedbackStats: () => baseApi.get('/admin/feedback/stats'),
+  
+  respondToFeedback: (feedbackId, response, status) => 
+    baseApi.put(`/admin/feedback/${feedbackId}/respond`, { response, status })
+};

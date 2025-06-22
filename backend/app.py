@@ -45,6 +45,7 @@ from api.auth import auth_routes
 from api.chat import chat_routes
 from api.data import data_routes
 from api.history import history_routes
+from api.feedback import feedback_routes
 
 
 # Đăng ký các blueprint cho user
@@ -52,6 +53,7 @@ app.register_blueprint(auth_routes, url_prefix='/api/auth')
 app.register_blueprint(chat_routes, url_prefix='/api')
 app.register_blueprint(data_routes, url_prefix='/api')
 app.register_blueprint(history_routes, url_prefix='/api')
+app.register_blueprint(feedback_routes, url_prefix='/api')
 
 # Đăng ký các blueprint cho admin
 app.register_blueprint(admin_routes, url_prefix='/api/admin')
@@ -112,6 +114,13 @@ if __name__ == '__main__':
             logger.info("======================")
     except Exception as e:
         logger.error(f"Lỗi tạo super admin: {e}")
+
+    # Tạo indexes cho feedback
+    try:
+        from models.feedback_model import ensure_indexes
+        ensure_indexes()
+    except Exception as e:
+        logger.error(f"Lỗi tạo feedback indexes: {e}")
     
     # Chạy Flask app
     app.run(host='0.0.0.0', port=5000, debug=False)

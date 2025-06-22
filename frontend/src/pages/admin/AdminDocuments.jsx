@@ -702,35 +702,76 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
                     <>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium mb-1">ID Chunk</label>
-                                <p>{chunk.id}</p>
+                                <label 
+                                    className="block text-sm font-medium mb-1"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    ID Chunk
+                                </label>
+                                <p style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
+                                    {chunk.id}
+                                </p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Loại nội dung</label>
-                                <p>{chunk.content_type === 'table' ? 'Bảng' : chunk.content_type === 'figure' ? 'Hình ảnh' : 'Văn bản'}</p>
+                                <label 
+                                    className="block text-sm font-medium mb-1"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    Loại nội dung
+                                </label>
+                                <p style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
+                                    {chunk.content_type === 'table' ? 'Bảng' : chunk.content_type === 'figure' ? 'Hình ảnh' : 'Văn bản'}
+                                </p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Độ tuổi</label>
-                                <p>{chunk.age_min} - {chunk.age_max} tuổi</p>
+                                <label 
+                                    className="block text-sm font-medium mb-1"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    Độ tuổi
+                                </label>
+                                <p style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
+                                    {chunk.age_min} - {chunk.age_max} tuổi
+                                </p>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium mb-1">Số từ</label>
-                                <p>{chunk.word_count} từ</p>
+                                <label 
+                                    className="block text-sm font-medium mb-1"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    Số từ
+                                </label>
+                                <p style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
+                                    {chunk.word_count} từ
+                                </p>
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Tóm tắt</label>
-                            <p>{chunk.summary}</p>
+                            <label 
+                                className="block text-sm font-medium mb-2"
+                                style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                            >
+                                Tóm tắt
+                            </label>
+                            <p style={{ color: darkMode ? '#f3f4f6' : '#111827' }}>
+                                {chunk.summary}
+                            </p>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Nội dung đầy đủ</label>
+                            <label 
+                                className="block text-sm font-medium mb-2"
+                                style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                            >
+                                Nội dung đầy đủ
+                            </label>
                             <div
                                 className="p-4 rounded-lg border max-h-96 overflow-y-auto markdown-content"
                                 style={{
-                                    backgroundColor: darkMode ? '#374151' : '#f9fafb',
-                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb'
+                                    backgroundColor: darkMode ? '#1f2937' : '#f9fafb',
+                                    borderColor: darkMode ? '#4b5563' : '#e5e7eb',
+                                    color: darkMode ? '#f3f4f6' : '#111827'
                                 }}
                                 dangerouslySetInnerHTML={{
                                     __html: renderContent(chunk.content, darkMode)
@@ -740,7 +781,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
 
                         {chunk.table_columns && chunk.table_columns.length > 0 && (
                             <div>
-                                <label className="block text-sm font-medium mb-2">Cột trong bảng</label>
+                                <label 
+                                    className="block text-sm font-medium mb-2"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    Cột trong bảng
+                                </label>
                                 <div className="flex flex-wrap gap-2">
                                     {chunk.table_columns.map((column, index) => (
                                         <span
@@ -760,7 +806,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
 
                         {chunk.related_chunks && chunk.related_chunks.length > 0 && (
                             <div>
-                                <label className="block text-sm font-medium mb-2">Chunks liên quan</label>
+                                <label 
+                                    className="block text-sm font-medium mb-2"
+                                    style={{ color: darkMode ? '#e5e7eb' : '#374151' }}
+                                >
+                                    Chunks liên quan
+                                </label>
                                 <div className="flex flex-wrap gap-2">
                                     {chunk.related_chunks.map((relatedId, index) => (
                                         <span
@@ -814,7 +865,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
                                     <p className="text-2xl font-bold" style={{ color: currentTheme?.primary }}>
                                         {documentDetail.stats.total_chunks}
                                     </p>
-                                    <p className="text-sm text-gray-500">Tổng chunks</p>
+                                    <p 
+                                        className="text-sm"
+                                        style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}
+                                    >
+                                        Tổng chunks
+                                    </p>
                                 </div>
                                 <div
                                     className="p-4 rounded-lg border text-center"
@@ -826,7 +882,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
                                     <p className="text-2xl font-bold" style={{ color: '#3b82f6' }}>
                                         {documentDetail.stats.text_chunks}
                                     </p>
-                                    <p className="text-sm text-gray-500">Văn bản</p>
+                                    <p 
+                                        className="text-sm"
+                                        style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}
+                                    >
+                                        Văn bản
+                                    </p>
                                 </div>
                                 <div
                                     className="p-4 rounded-lg border text-center"
@@ -838,7 +899,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
                                     <p className="text-2xl font-bold" style={{ color: '#10b981' }}>
                                         {documentDetail.stats.table_chunks}
                                     </p>
-                                    <p className="text-sm text-gray-500">Bảng</p>
+                                    <p 
+                                        className="text-sm"
+                                        style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}
+                                    >
+                                        Bảng
+                                    </p>
                                 </div>
                                 <div
                                     className="p-4 rounded-lg border text-center"
@@ -850,7 +916,12 @@ const DetailModal = ({ isOpen, onClose, document, currentTheme, darkMode }) => {
                                     <p className="text-2xl font-bold" style={{ color: '#8b5cf6' }}>
                                         {documentDetail.stats.figure_chunks}
                                     </p>
-                                    <p className="text-sm text-gray-500">Hình ảnh</p>
+                                    <p 
+                                        className="text-sm"
+                                        style={{ color: darkMode ? '#9ca3af' : '#6b7280' }}
+                                    >
+                                        Hình ảnh
+                                    </p>
                                 </div>
                             </div>
 
@@ -1395,6 +1466,7 @@ const AdminDocuments = () => {
                     border-collapse: collapse;
                     margin: 1rem 0;
                     font-size: 0.9rem;
+                    border: 1px solid ${darkMode ? '#4b5563' : '#e5e7eb'};
                 }
                 .markdown-table th {
                     background-color: ${darkMode ? '#374151' : '#E8F5F0'};
@@ -1408,13 +1480,25 @@ const AdminDocuments = () => {
                     padding: 0.75rem 1rem;
                     border: 1px solid ${darkMode ? '#4b5563' : '#E5E7EB'};
                     vertical-align: top;
-                    color: ${darkMode ? '#e5e7eb' : '#374151'};
-                }
-                .markdown-table tr:nth-child(even) {
-                    background-color: ${darkMode ? '#1f2937' : '#F9FFFC'};
+                    color: ${darkMode ? '#f3f4f6' : '#374151'};
+                    background-color: ${darkMode ? '#1f2937' : '#ffffff'};
                 }
                 .markdown-table tr:hover {
                     background-color: ${darkMode ? '#374151' : '#F0FFF8'};
+                }
+                .markdown-content {
+                    color: ${darkMode ? '#f3f4f6' : '#374151'};
+                }
+                .markdown-content h1,
+                .markdown-content h2,
+                .markdown-content h3,
+                .markdown-content h4,
+                .markdown-content h5,
+                .markdown-content h6 {
+                    color: ${darkMode ? '#f3f4f6' : '#111827'};
+                }
+                .markdown-content p {
+                    color: ${darkMode ? '#f3f4f6' : '#374151'};
                 }
             `}</style>
         </div>
