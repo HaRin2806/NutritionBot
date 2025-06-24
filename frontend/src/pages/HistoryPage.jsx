@@ -4,7 +4,7 @@ import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiAr
 import { useApp } from '../contexts/AppContext';
 import { Header } from '../components/layout';
 import { Loader } from '../components/common';
-import { Button, Input, Modal } from '../components/base/index.jsx';
+import { Button, Input, Modal } from '../components/common';
 import { formatDate, formatTime, getRelativeDate } from '../utils/index';
 import { chatService, adminService } from '../services';
 

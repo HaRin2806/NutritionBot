@@ -106,7 +106,7 @@ export const authService = {
   changePassword: (passwordData) => baseApi.post('/auth/change-password', passwordData),
 };
 
-// Admin Service - cập nhật
+// Admin Service - ✅ THÊM CÁC FUNCTION FEEDBACK
 export const adminService = {
   // Stats & Dashboard
   getStats: () => baseApi.get('/admin/stats/overview'),
@@ -136,6 +136,22 @@ export const adminService = {
 
   // Admin Management
   createAdmin: (adminData) => baseApi.post('/admin/auth/create-admin', adminData),
+
+  // ✅ THÊM: Feedback Management
+  getAllFeedback: (page = 1, perPage = 20, status = null) => 
+    baseApi.get('/admin/feedback', { page, per_page: perPage, ...(status && { status }) }),
+  
+  getFeedbackStats: () => baseApi.get('/admin/feedback/stats'),
+  
+  respondToFeedback: (feedbackId, response, status) => 
+    baseApi.put(`/admin/feedback/${feedbackId}/respond`, { response, status }),
+
+  // ✅ THÊM: Conversations Management for Admin
+  getAllConversations: (page = 1, perPage = 20, filters = {}) =>
+    baseApi.get('/admin/conversations', { page, per_page: perPage, ...filters }),
+  
+  deleteConversation: (conversationId) => 
+    baseApi.delete(`/admin/conversations/${conversationId}`)
 };
 
 // Storage Service - đã tối ưu
@@ -177,7 +193,7 @@ export const storageService = {
   }
 };
 
-// Feedback Service
+// Feedback Service - ✅ ĐÃ CÓ SẴN
 export const feedbackService = {
   // Create feedback
   createFeedback: (feedbackData) => baseApi.post('/feedback', feedbackData),

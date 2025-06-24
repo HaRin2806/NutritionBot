@@ -585,11 +585,10 @@ def bulk_delete_users():
         }), 500
 
 # ===== CONVERSATION MANAGEMENT ROUTES =====
-
 @admin_routes.route('/conversations', methods=['GET'])
 @require_admin
 def get_all_conversations():
-    """Lấy danh sách cuộc hội thoại"""
+    """Lấy danh sách cuộc hội thoại - Fixed ObjectId serialization"""
     try:
         db = get_db()
         
@@ -614,19 +613,63 @@ def get_all_conversations():
         
         conversations_list = []
         for conv in conversations:
-            user = User.find_by_id(conv.get("user_id"))
-            
-            conversations_list.append({
-                "id": str(conv["_id"]),
-                "title": conv.get("title", ""),
-                "user_name": user.name if user else "Unknown",
-                "age_context": conv.get("age_context"),
-                "message_count": len(conv.get("messages", [])),
-                "is_archived": conv.get("is_archived", False),
-                "created_at": conv.get("created_at").isoformat() if conv.get("created_at") else None,
-                "updated_at": conv.get("updated_at").isoformat() if conv.get("updated_at") else None,
-                "messages": conv.get("messages", [])  # Cho detail modal
-            })
+            try:
+                # ✅ FIX: Safely convert ObjectId to string và handle user lookup
+                user_id = conv.get("user_id")
+                user_name = "Unknown"
+                
+                if user_id:
+                    try:
+                        # Ensure user_id is ObjectId
+                        if isinstance(user_id, str):
+                            user_id = ObjectId(user_id)
+                        
+                        user = User.find_by_id(str(user_id))  # Convert to string for the method
+                        if user:
+                            user_name = user.name
+                    except Exception as user_error:
+                        logger.warning(f"Could not fetch user {user_id}: {user_error}")
+                        user_name = "Unknown"
+                
+                # ✅ FIX: Safely handle datetime objects
+                def safe_isoformat(dt):
+                    if dt is None:
+                        return None
+                    if hasattr(dt, 'isoformat'):
+                        return dt.isoformat()
+                    return str(dt)
+                
+                # ✅ FIX: Safely handle messages array
+                messages = conv.get("messages", [])
+                processed_messages = []
+                
+                for msg in messages:
+                    if isinstance(msg, dict):
+                        processed_msg = {
+                            "role": msg.get("role", ""),
+                            "content": msg.get("content", ""),
+                            "timestamp": safe_isoformat(msg.get("timestamp"))
+                        }
+                        processed_messages.append(processed_msg)
+                
+                conversation_data = {
+                    "id": str(conv["_id"]),  # ✅ Always convert ObjectId to string
+                    "title": conv.get("title", ""),
+                    "user_name": user_name,
+                    "age_context": conv.get("age_context"),
+                    "message_count": len(messages),
+                    "is_archived": conv.get("is_archived", False),
+                    "created_at": safe_isoformat(conv.get("created_at")),
+                    "updated_at": safe_isoformat(conv.get("updated_at")),
+                    "messages": processed_messages
+                }
+                
+                conversations_list.append(conversation_data)
+                
+            except Exception as conv_error:
+                logger.error(f"Error processing conversation {conv.get('_id')}: {conv_error}")
+                # Skip this conversation but continue with others
+                continue
         
         return jsonify({
             "success": True,
@@ -649,8 +692,9 @@ def get_all_conversations():
 @admin_routes.route('/conversations/<conversation_id>', methods=['DELETE'])
 @require_admin
 def delete_conversation(conversation_id):
-    """Xóa cuộc hội thoại"""
+    """Xóa cuộc hội thoại - Fixed ObjectId handling"""
     try:
+        # ✅ FIX: Use Conversation model instead of direct DB access
         conversation = Conversation.find_by_id(conversation_id)
         if not conversation:
             return jsonify({
@@ -658,12 +702,18 @@ def delete_conversation(conversation_id):
                 "error": "Không tìm thấy cuộc hội thoại"
             }), 404
         
-        conversation.delete()
+        success = conversation.delete()
         
-        return jsonify({
-            "success": True,
-            "message": "Đã xóa cuộc hội thoại"
-        })
+        if success:
+            return jsonify({
+                "success": True,
+                "message": "Đã xóa cuộc hội thoại"
+            })
+        else:
+            return jsonify({
+                "success": False,
+                "error": "Không thể xóa cuộc hội thoại"
+            }), 500
         
     except Exception as e:
         logger.error(f"Lỗi xóa conversation: {str(e)}")
@@ -672,6 +722,54 @@ def delete_conversation(conversation_id):
             "error": str(e)
         }), 500
 
+@admin_routes.route('/conversations/bulk-delete', methods=['POST'])
+@require_admin
+def bulk_delete_conversations():
+    """Xóa nhiều cuộc hội thoại - Fixed ObjectId handling"""
+    try:
+        data = request.json
+        conversation_ids = data.get('conversation_ids', [])
+        
+        if not conversation_ids:
+            return jsonify({
+                "success": False,
+                "error": "Không có conversation nào được chọn"
+            }), 400
+        
+        db = get_db()
+        deleted_count = 0
+        failed_ids = []
+        
+        for conv_id in conversation_ids:
+            try:
+                # ✅ FIX: Ensure proper ObjectId conversion
+                if isinstance(conv_id, str):
+                    conv_id = ObjectId(conv_id)
+                
+                result = db.conversations.delete_one({"_id": conv_id})
+                if result.deleted_count > 0:
+                    deleted_count += 1
+                else:
+                    failed_ids.append(str(conv_id))
+                    
+            except Exception as e:
+                logger.error(f"Error deleting conversation {conv_id}: {e}")
+                failed_ids.append(str(conv_id))
+                continue
+        
+        return jsonify({
+            "success": True,
+            "message": f"Đã xóa {deleted_count}/{len(conversation_ids)} cuộc hội thoại",
+            "deleted_count": deleted_count,
+            "failed_ids": failed_ids
+        })
+        
+    except Exception as e:
+        logger.error(f"Lỗi xóa bulk conversations: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 # ===== DOCUMENT MANAGEMENT ROUTES =====
 
 @admin_routes.route('/documents', methods=['GET'])

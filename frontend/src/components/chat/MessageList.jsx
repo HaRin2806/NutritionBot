@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import MessageBubble from './MessageBubble';
 import { Loader } from '../common';
 import { BiRocket } from 'react-icons/bi';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const MessageList = ({
   messages,
@@ -17,15 +18,24 @@ const MessageList = ({
   const messagesEndRef = useRef(null);
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [regeneratingMessageId, setRegeneratingMessageId] = useState(null);
+  const { darkMode, currentThemeConfig } = useTheme();
 
-  // Cuộn xuống dưới khi có tin nhắn mới
-  useEffect(() => {
+  // Sử dụng useLayoutEffect để scroll sync hơn
+  useLayoutEffect(() => {
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        // Sử dụng setTimeout để đảm bảo DOM đã render xong
+        setTimeout(() => {
+          messagesEndRef.current?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'end'
+          });
+        }, 100);
+      }
+    };
+
     scrollToBottom();
-  }, [messages, isLoading]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, [messages, isLoading]); // Scroll khi messages thay đổi hoặc loading state thay đổi
 
   // Handle edit message
   const handleEditMessage = async (messageId, conversationId, newContent) => {
@@ -79,33 +89,56 @@ const MessageList = ({
   // Nếu không có tin nhắn nào
   if (!messages || messages.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-500 p-4">
-        <BiRocket className="text-5xl mb-4" style={{ color: '#36B37E' }} />
-        <p className="text-lg mb-2">Bắt đầu cuộc trò chuyện mới</p>
-        <p className="text-sm text-center max-w-md mb-4">
-          Hãy đặt câu hỏi về dinh dưỡng và an toàn thực phẩm để tôi có thể giúp bạn
-        </p>
-        {onCreateNewChat && (
-          <button
-            onClick={onCreateNewChat}
-            className="px-4 py-2 bg-mint-600 text-white rounded-md hover:bg-mint-700 transition flex items-center shadow-sm"
-            style={{ backgroundColor: '#36B37E' }}
-          >
-            <BiRocket className="mr-2" />
-            Bắt đầu trò chuyện
-          </button>
-        )}
+      <div className={`flex flex-col items-center justify-center h-full p-8 ${
+        darkMode ? 'text-gray-300' : 'text-gray-600'
+      }`}>
+        <div className={`${
+          darkMode 
+            ? 'bg-white/5 backdrop-blur-xl border-white/10' 
+            : 'bg-white/60 backdrop-blur-xl border-white/50'
+        } rounded-3xl p-12 border text-center shadow-2xl transition-all duration-300`}>
+          
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ${
+            darkMode ? 'bg-white/10' : 'bg-white/80'
+          }`}>
+            <BiRocket 
+              className="text-4xl" 
+              style={{ color: currentThemeConfig?.primary || '#36B37E' }} 
+            />
+          </div>
+
+          <h3 className={`text-2xl font-bold mb-4 ${
+            darkMode ? 'text-white' : 'text-gray-800'
+          }`}>
+            Bắt đầu cuộc trò chuyện mới
+          </h3>
+
+          <p className={`text-lg mb-6 leading-relaxed max-w-md ${
+            darkMode ? 'text-gray-200' : 'text-gray-600'
+          }`}>
+            Hãy đặt câu hỏi về dinh dưỡng và an toàn thực phẩm để tôi có thể giúp bạn
+          </p>
+
+          {onCreateNewChat && (
+            <button
+              onClick={onCreateNewChat}
+              className="px-6 py-3 text-white rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl flex items-center font-medium shadow-lg"
+              style={{ backgroundColor: currentThemeConfig?.primary || '#36B37E' }}
+            >
+              <BiRocket className="mr-2" />
+              Bắt đầu trò chuyện
+            </button>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col space-y-6 p-4">
+    <div className="flex flex-col space-y-6 p-6 max-w-4xl mx-auto">
       {/* Danh sách tin nhắn */}
       {messages.map((message, index) => {
         const messageId = getMessageId(message);
-
-        // Kiểm tra xem message này có đang regenerating không
         const isRegenerating = message.isRegenerating || false;
 
         return (
@@ -130,14 +163,22 @@ const MessageList = ({
       {/* Hiển thị loading khi đang gửi tin nhắn */}
       {isLoading && (
         <div className="flex justify-start">
-          <div className="p-3 bg-white rounded-2xl border border-gray-200 shadow-sm">
-            <Loader type="dots" color="mint" text="Đang soạn phản hồi..." />
+          <div className={`p-4 rounded-2xl border transition-all duration-300 ${
+            darkMode 
+              ? 'bg-white/10 backdrop-blur-sm border-white/20' 
+              : 'bg-white/80 backdrop-blur-sm border-white/50'
+          } shadow-lg`}>
+            <Loader 
+              type="dots" 
+              color={currentThemeConfig?.primary || '#36B37E'} 
+              text="Đang soạn phản hồi..." 
+            />
           </div>
         </div>
       )}
 
-      {/* Ref để cuộn xuống dưới */}
-      <div ref={messagesEndRef} />
+      {/* Ref để cuộn xuống dưới - đặt ở cuối cùng */}
+      <div ref={messagesEndRef} className="h-4" />
     </div>
   );
 };

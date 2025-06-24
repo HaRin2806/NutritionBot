@@ -9,7 +9,7 @@ import {
 import { useApp } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Header } from '../components/layout';
-import { Button, Input, Modal } from '../components/base/index.jsx';
+import { Button, Input, Modal } from '../components/common';
 import config from '../config';
 import { feedbackService } from '../services';
 import { BiStar, BiMessageSquareDetail, BiSend } from 'react-icons/bi';

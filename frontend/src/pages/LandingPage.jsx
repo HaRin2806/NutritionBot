@@ -12,7 +12,7 @@ import {
   BiMenu,
   BiX
 } from 'react-icons/bi';
-import { Button } from '../components/base/index.jsx';
+import { Button } from '../components/common';
 import { useApp } from '../contexts/AppContext';
 
 const LandingPage = () => {

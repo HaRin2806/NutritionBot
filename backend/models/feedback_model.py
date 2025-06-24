@@ -1,33 +1,77 @@
 import os
 import datetime
-from pymongo import MongoClient, DESCENDING
+from pymongo import MongoClient
 from bson.objectid import ObjectId
 import logging
 from dotenv import load_dotenv
 
+# Cấu hình logging
 logger = logging.getLogger(__name__)
+
+# Tải biến môi trường
 load_dotenv()
 
-# Sử dụng cùng DB connection như user_model
-from models.user_model import get_db
+# Kết nối MongoDB
+MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+DATABASE_NAME = os.getenv("MONGO_DB_NAME", "nutribot_db")
+
+# Singleton pattern cho kết nối MongoDB
+_mongo_client = None
+_db = None
+
+def get_db():
+    """Trả về instance của MongoDB database (singleton pattern)"""
+    global _mongo_client, _db
+    if _mongo_client is None:
+        try:
+            _mongo_client = MongoClient(MONGO_URI)
+            _db = _mongo_client[DATABASE_NAME]
+            logger.info(f"Đã kết nối đến database: {DATABASE_NAME}")
+        except Exception as e:
+            logger.error(f"Lỗi kết nối MongoDB: {e}")
+            raise
+    return _db
+
+def ensure_indexes():
+    """Tạo các index cần thiết cho feedback collection"""
+    try:
+        db = get_db()
+        feedback_collection = db.feedback
+        
+        # Index cho user_id
+        feedback_collection.create_index("user_id")
+        
+        # Index cho status
+        feedback_collection.create_index("status")
+        
+        # Index cho category
+        feedback_collection.create_index("category")
+        
+        # Index cho created_at (để sắp xếp)
+        feedback_collection.create_index([("created_at", -1)])
+        
+        logger.info("Đã tạo indexes cho feedback collection")
+        
+    except Exception as e:
+        logger.error(f"Lỗi tạo indexes: {e}")
 
 class Feedback:
-    def __init__(self, user_id=None, rating=5, category="general", title="", 
-                 content="", status="pending", admin_response="", 
-                 feedback_id=None, created_at=None, updated_at=None):
+    def __init__(self, user_id=None, rating=5, category='', title='', content='',
+                 status='pending', admin_response='', created_at=None, updated_at=None,
+                 feedback_id=None):
         self.feedback_id = feedback_id
         self.user_id = user_id
-        self.rating = rating  # 1-5 stars
-        self.category = category  # "tư vấn", "giao diện", "tính năng", "khác"
+        self.rating = rating
+        self.category = category
         self.title = title
         self.content = content
-        self.status = status  # "pending", "reviewed", "resolved"
+        self.status = status  # pending, reviewed, resolved
         self.admin_response = admin_response
         self.created_at = created_at or datetime.datetime.now()
         self.updated_at = updated_at or datetime.datetime.now()
 
     def to_dict(self):
-        """Convert feedback object to dictionary"""
+        """Chuyển đổi thông tin feedback thành dictionary"""
         feedback_dict = {
             "user_id": self.user_id,
             "rating": self.rating,
@@ -45,14 +89,15 @@ class Feedback:
 
     @classmethod
     def from_dict(cls, feedback_dict):
-        """Create Feedback object from dictionary"""
+        """Tạo đối tượng Feedback từ dictionary"""
         if not feedback_dict:
             return None
+            
         return cls(
             feedback_id=feedback_dict.get("_id"),
             user_id=feedback_dict.get("user_id"),
             rating=feedback_dict.get("rating", 5),
-            category=feedback_dict.get("category", "general"),
+            category=feedback_dict.get("category", ""),
             title=feedback_dict.get("title", ""),
             content=feedback_dict.get("content", ""),
             status=feedback_dict.get("status", "pending"),
@@ -62,40 +107,184 @@ class Feedback:
         )
 
     def save(self):
-        """Save feedback to database"""
+        """Lưu thông tin feedback vào database"""
         try:
             db = get_db()
-            feedbacks_collection = db.feedbacks
+            feedback_collection = db.feedback
             
             self.updated_at = datetime.datetime.now()
             
             if not self.feedback_id:
-                # New feedback
-                insert_result = feedbacks_collection.insert_one(self.to_dict())
+                insert_result = feedback_collection.insert_one(self.to_dict())
                 self.feedback_id = insert_result.inserted_id
-                logger.info(f"Created new feedback: {self.feedback_id}")
+                logger.info(f"Đã tạo feedback mới với ID: {self.feedback_id}")
                 return self.feedback_id
             else:
-                # Update existing feedback
-                feedbacks_collection.update_one(
+                feedback_collection.update_one(
                     {"_id": self.feedback_id}, 
                     {"$set": self.to_dict()}
                 )
-                logger.info(f"Updated feedback: {self.feedback_id}")
+                logger.info(f"Đã cập nhật feedback: {self.feedback_id}")
                 return self.feedback_id
         except Exception as e:
-            logger.error(f"Error saving feedback: {e}")
+            logger.error(f"Lỗi khi lưu feedback: {e}")
             raise
 
     @classmethod
-    def create(cls, user_id, rating, category, title, content):
-        """Create new feedback"""
+    def find_by_id(cls, feedback_id):
+        """Tìm feedback theo ID"""
         try:
+            db = get_db()
+            feedback_collection = db.feedback
+            
+            if isinstance(feedback_id, str):
+                feedback_id = ObjectId(feedback_id)
+                
+            feedback_dict = feedback_collection.find_one({"_id": feedback_id})
+            
+            if feedback_dict:
+                return cls.from_dict(feedback_dict)
+            return None
+        except Exception as e:
+            logger.error(f"Lỗi khi tìm feedback: {e}")
+            return None
+
+    @classmethod
+    def find_by_user(cls, user_id, limit=10, skip=0):
+        """Tìm feedback theo user_id"""
+        try:
+            db = get_db()
+            feedback_collection = db.feedback
+            
             if isinstance(user_id, str):
                 user_id = ObjectId(user_id)
             
-            feedback = cls(
-                user_id=user_id,
+            feedbacks_cursor = feedback_collection.find({"user_id": user_id})\
+                .sort("created_at", -1)\
+                .skip(skip)\
+                .limit(limit)
+            
+            result = []
+            for feedback_dict in feedbacks_cursor:
+                feedback_obj = cls.from_dict(feedback_dict)
+                if feedback_obj:
+                    result.append(feedback_obj)
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Lỗi tìm feedback theo user: {e}")
+            return []
+
+    @classmethod
+    def get_all_for_admin(cls, limit=20, skip=0, status_filter=None):
+        """Lấy tất cả feedback cho admin với join user info"""
+        try:
+            db = get_db()
+            feedback_collection = db.feedback
+            
+            # Tạo query filter
+            query_filter = {}
+            if status_filter:
+                query_filter["status"] = status_filter
+            
+            # Aggregate để join với user collection
+            pipeline = [
+                {"$match": query_filter},
+                {
+                    "$lookup": {
+                        "from": "users",
+                        "localField": "user_id",
+                        "foreignField": "_id",
+                        "as": "user_info"
+                    }
+                },
+                {"$sort": {"created_at": -1}},
+                {"$skip": skip},
+                {"$limit": limit}
+            ]
+            
+            result = []
+            for feedback_doc in feedback_collection.aggregate(pipeline):
+                feedback = cls.from_dict(feedback_doc)
+                
+                # Thêm thông tin user nếu có
+                if feedback and feedback_doc.get("user_info"):
+                    user_info = feedback_doc["user_info"][0]
+                    feedback.user_name = user_info.get("name", "Ẩn danh")
+                    feedback.user_email = user_info.get("email", "")
+                else:
+                    feedback.user_name = "Ẩn danh"
+                    feedback.user_email = ""
+                
+                result.append(feedback)
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Lỗi lấy feedback cho admin: {e}")
+            return []
+
+    def update_admin_response(self, response, status):
+        """Cập nhật phản hồi từ admin"""
+        try:
+            self.admin_response = response
+            self.status = status
+            self.save()
+            return True
+        except Exception as e:
+            logger.error(f"Lỗi cập nhật admin response: {e}")
+            return False
+
+    @staticmethod
+    def get_stats():
+        """Lấy thống kê về feedback"""
+        try:
+            db = get_db()
+            feedback_collection = db.feedback
+            
+            # Tổng số feedback
+            total_feedback = feedback_collection.count_documents({})
+            
+            # Feedback pending
+            pending_feedback = feedback_collection.count_documents({"status": "pending"})
+            
+            # Feedback trong tháng này
+            now = datetime.datetime.now()
+            month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            this_month_feedback = feedback_collection.count_documents({
+                "created_at": {"$gte": month_start}
+            })
+            
+            # Đánh giá trung bình
+            pipeline = [
+                {"$group": {"_id": None, "avg_rating": {"$avg": "$rating"}}}
+            ]
+            rating_result = list(feedback_collection.aggregate(pipeline))
+            average_rating = rating_result[0]["avg_rating"] if rating_result else 0
+            
+            return {
+                "total_feedback": total_feedback,
+                "pending_feedback": pending_feedback,
+                "this_month_feedback": this_month_feedback,
+                "average_rating": average_rating
+            }
+            
+        except Exception as e:
+            logger.error(f"Lỗi lấy thống kê feedback: {e}")
+            return {
+                "total_feedback": 0,
+                "pending_feedback": 0,
+                "this_month_feedback": 0,
+                "average_rating": 0
+            }
+
+    @staticmethod
+    def create_feedback(user_id, rating, category, title, content):
+        """Tạo feedback mới"""
+        try:
+            feedback = Feedback(
+                user_id=ObjectId(user_id) if isinstance(user_id, str) else user_id,
                 rating=rating,
                 category=category,
                 title=title,
@@ -103,206 +292,8 @@ class Feedback:
             )
             
             feedback_id = feedback.save()
-            logger.info(f"Created feedback: {feedback_id}")
-            return feedback_id
+            return True, {"feedback_id": str(feedback_id)}
+            
         except Exception as e:
-            logger.error(f"Error creating feedback: {e}")
-            raise
-
-    @classmethod
-    def find_by_user(cls, user_id, limit=10, skip=0):
-        """Get user's feedback"""
-        try:
-            db = get_db()
-            feedbacks_collection = db.feedbacks
-            
-            if isinstance(user_id, str):
-                user_id = ObjectId(user_id)
-            
-            feedbacks_cursor = feedbacks_collection.find({"user_id": user_id})\
-                .sort("created_at", DESCENDING)\
-                .skip(skip)\
-                .limit(limit)
-            
-            return [cls.from_dict(feedback) for feedback in feedbacks_cursor]
-        except Exception as e:
-            logger.error(f"Error finding feedback by user: {e}")
-            return []
-
-    @classmethod
-    def find_by_id(cls, feedback_id):
-        """Find feedback by ID"""
-        try:
-            db = get_db()
-            feedbacks_collection = db.feedbacks
-            
-            if isinstance(feedback_id, str):
-                feedback_id = ObjectId(feedback_id)
-                
-            feedback_dict = feedbacks_collection.find_one({"_id": feedback_id})
-            return cls.from_dict(feedback_dict)
-        except Exception as e:
-            logger.error(f"Error finding feedback by ID: {e}")
-            return None
-
-    @classmethod
-    def get_all_for_admin(cls, limit=50, skip=0, status_filter=None):
-        """Get all feedback for admin dashboard"""
-        try:
-            db = get_db()
-            feedbacks_collection = db.feedbacks
-            
-            query = {}
-            if status_filter:
-                query["status"] = status_filter
-            
-            feedbacks_cursor = feedbacks_collection.find(query)\
-                .sort("created_at", DESCENDING)\
-                .skip(skip)\
-                .limit(limit)
-            
-            feedbacks = []
-            for feedback_dict in feedbacks_cursor:
-                feedback = cls.from_dict(feedback_dict)
-                if feedback:
-                    # Get user info
-                    from models.user_model import User
-                    user = User.find_by_id(feedback.user_id)
-                    feedback.user_name = user.name if user else "Người dùng ẩn danh"
-                    feedback.user_email = user.email if user else ""
-                    feedbacks.append(feedback)
-            
-            return feedbacks
-        except Exception as e:
-            logger.error(f"Error getting feedback for admin: {e}")
-            return []
-
-    @classmethod
-    def get_stats(cls):
-        """Get feedback statistics"""
-        try:
-            db = get_db()
-            feedbacks_collection = db.feedbacks
-            
-            total = feedbacks_collection.count_documents({})
-            pending = feedbacks_collection.count_documents({"status": "pending"})
-            reviewed = feedbacks_collection.count_documents({"status": "reviewed"})
-            resolved = feedbacks_collection.count_documents({"status": "resolved"})
-            
-            # Average rating
-            pipeline = [
-                {"$group": {"_id": None, "avg_rating": {"$avg": "$rating"}}}
-            ]
-            avg_result = list(feedbacks_collection.aggregate(pipeline))
-            avg_rating = round(avg_result[0]["avg_rating"], 1) if avg_result else 0
-            
-            # Rating distribution
-            rating_pipeline = [
-                {"$group": {"_id": "$rating", "count": {"$sum": 1}}},
-                {"$sort": {"_id": 1}}
-            ]
-            rating_distribution = list(feedbacks_collection.aggregate(rating_pipeline))
-            
-            return {
-                "total_feedback": total,
-                "pending_feedback": pending,
-                "reviewed_feedback": reviewed,
-                "resolved_feedback": resolved,
-                "average_rating": avg_rating,
-                "rating_distribution": rating_distribution
-            }
-        except Exception as e:
-            logger.error(f"Error getting feedback stats: {e}")
-            return {
-                "total_feedback": 0,
-                "pending_feedback": 0,
-                "reviewed_feedback": 0,
-                "resolved_feedback": 0,
-                "average_rating": 0,
-                "rating_distribution": []
-            }
-
-    def update_admin_response(self, response, status="reviewed"):
-        """Update admin response and status"""
-        try:
-            self.admin_response = response
-            self.status = status
-            self.save()
-            return True
-        except Exception as e:
-            logger.error(f"Error updating admin response: {e}")
-            return False
-
-def ensure_indexes():
-    """Đảm bảo các indexes cần thiết được tạo"""
-    try:
-        db = get_db()
-        feedbacks_collection = db.feedbacks
-        
-        # Tạo các indexes
-        feedbacks_collection.create_index("user_id")
-        feedbacks_collection.create_index([("created_at", -1)])
-        feedbacks_collection.create_index("status")
-        feedbacks_collection.create_index([("user_id", 1), ("created_at", -1)])
-        feedbacks_collection.create_index("category")
-        
-        logger.info("Đã tạo indexes cho feedbacks collection")
-        return True
-    except Exception as e:
-        logger.error(f"Lỗi tạo indexes: {e}")
-        return False
-
-# backend/models/feedback_model.py - THÊM METHOD NẾU CHƯA CÓ
-
-@staticmethod
-def get_stats():
-    """Lấy thống kê về feedback"""
-    try:
-        db = get_db()
-        feedback_collection = db.feedback
-        
-        # Thống kê cơ bản
-        total_feedback = feedback_collection.count_documents({})
-        pending_feedback = feedback_collection.count_documents({"status": "pending"})
-        resolved_feedback = feedback_collection.count_documents({"status": "resolved"})
-        
-        # Tính đánh giá trung bình
-        pipeline = [
-            {"$group": {"_id": None, "avg_rating": {"$avg": "$rating"}}}
-        ]
-        avg_result = list(feedback_collection.aggregate(pipeline))
-        average_rating = avg_result[0]["avg_rating"] if avg_result else 0
-        
-        # Feedback tháng này
-        from datetime import datetime, timedelta
-        start_of_month = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        this_month_feedback = feedback_collection.count_documents({
-            "created_at": {"$gte": start_of_month}
-        })
-        
-        # Thống kê theo rating
-        rating_stats = {}
-        for rating in range(1, 6):
-            count = feedback_collection.count_documents({"rating": rating})
-            rating_stats[f"{rating}_star"] = count
-        
-        # Thống kê theo category
-        category_pipeline = [
-            {"$group": {"_id": "$category", "count": {"$sum": 1}}},
-            {"$sort": {"count": -1}}
-        ]
-        category_stats = list(feedback_collection.aggregate(category_pipeline))
-        
-        return {
-            "total_feedback": total_feedback,
-            "pending_feedback": pending_feedback,
-            "resolved_feedback": resolved_feedback,
-            "average_rating": average_rating,
-            "this_month_feedback": this_month_feedback,
-            "rating_distribution": rating_stats,
-            "category_distribution": category_stats
-        }
-        
-    except Exception as e:
-        logger.error(f"Error getting feedback stats: {e}")
-        return {}
+            logger.error(f"Lỗi tạo feedback: {e}")
+            return False, str(e)

@@ -49,7 +49,7 @@ const AdminLayout = ({ children }) => {
     { path: '/admin/users', name: 'Người dùng', icon: BiUser },
     { path: '/admin/documents', name: 'Tài liệu', icon: BiFile },
     { path: '/admin/conversations', name: 'Hội thoại', icon: BiMessageSquareDetail },
-    { path: '/admin/feedback', label: 'Đóng góp ý kiến', icon: BiStar },
+    { path: '/admin/feedback', name: 'Đóng góp ý kiến', icon: BiStar },
     { path: '/admin/settings', name: 'Cài đặt', icon: BiCog }
   ];
 

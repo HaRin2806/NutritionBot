@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { BiDotsVerticalRounded, BiTrash, BiEdit } from 'react-icons/bi';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const ConversationItem = ({ 
   conversation, 
@@ -8,7 +9,8 @@ const ConversationItem = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
-  const [menuPosition, setMenuPosition] = useState('bottom'); // 'bottom' hoặc 'top'
+  const [menuPosition, setMenuPosition] = useState('bottom');
+  const { darkMode, currentThemeConfig } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -56,27 +58,45 @@ const ConversationItem = ({
     <div className="relative" ref={menuRef}>
       <button
         onClick={toggleMenu}
-        className="text-gray-400 hover:text-gray-600 transition p-1 rounded-full hover:bg-gray-100"
+        className={`transition-all duration-300 p-2 rounded-lg hover:scale-110 ${
+          darkMode 
+            ? 'text-gray-400 hover:text-gray-200 hover:bg-white/10' 
+            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100/50'
+        }`}
       >
-        <BiDotsVerticalRounded />
+        <BiDotsVerticalRounded className="w-4 h-4" />
       </button>
 
       {isOpen && (
         <div
-          className={`absolute ${menuPosition === 'bottom' ? 'top-full mt-1' : 'bottom-full mb-1'} right-0 w-40 bg-white rounded-md shadow-lg z-10 py-1 border border-gray-200`}
+          className={`absolute ${
+            menuPosition === 'bottom' ? 'top-full mt-2' : 'bottom-full mb-2'
+          } right-0 w-44 rounded-xl shadow-2xl z-30 py-2 border backdrop-blur-xl transition-all duration-300 ${
+            darkMode 
+              ? 'bg-gray-800/90 border-gray-700/50'
+              : 'bg-white/90 border-gray-200/50'
+          }`}
         >
           <button
             onClick={handleRename}
-            className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 hover:scale-105 ${
+              darkMode
+                ? 'text-gray-300 hover:bg-gray-700/50'
+                : 'text-gray-700 hover:bg-gray-100/50'
+            }`}
           >
-            <BiEdit className="mr-2" />
+            <BiEdit className="mr-3 w-4 h-4" />
             Đổi tên
           </button>
           <button
             onClick={handleDelete}
-            className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+            className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 hover:scale-105 ${
+              darkMode
+                ? 'text-red-400 hover:bg-red-900/20'
+                : 'text-red-600 hover:bg-red-50/50'
+            }`}
           >
-            <BiTrash className="mr-2" />
+            <BiTrash className="mr-3 w-4 h-4" />
             Xóa
           </button>
         </div>

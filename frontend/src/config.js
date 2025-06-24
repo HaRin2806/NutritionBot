@@ -1,7 +1,7 @@
 // Cấu hình toàn cục cho ứng dụng
 const config = {
   // API URLs
-  apiBaseUrl: 'http://localhost:5000/api',
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL,
   
   // Các tùy chọn mặc định
   defaultPageSize: 10,
@@ -9,7 +9,7 @@ const config = {
   // Các giá trị tuổi có sẵn
   ageOptions: Array.from({ length: 19 }, (_, i) => i + 1),
   
-  // Các theme màu sắc
+  // Các theme màu sắc - sửa lại cho đúng
   themes: {
     mint: {
       primary: '#36B37E',
@@ -17,13 +17,13 @@ const config = {
       dark: '#2FAB76',
     },
     blue: {
-      primary: '#2563EB',
-      light: '#EFF6FF',
-      dark: '#1D4ED8',
+      primary: '#3B82F6',
+      light: '#EBF8FF',
+      dark: '#2563EB',
     },
     purple: {
       primary: '#8B5CF6',
-      light: '#F5F3FF',
+      light: '#F3E8FF',
       dark: '#7C3AED',
     },
     pink: {

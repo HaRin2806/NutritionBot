@@ -4,7 +4,7 @@ import config from '../config';
 // Tạo base API instance
 const createApiInstance = () => {
   const instance = axios.create({
-    baseURL: config.apiBaseUrl,
+    baseURL: config.apiBaseUrl, // Lấy từ config thay vì hardcode
     withCredentials: true,
     headers: { 'Content-Type': 'application/json' }
   });
