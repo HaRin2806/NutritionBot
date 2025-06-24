@@ -26,9 +26,11 @@ const MessageBubble = ({
   const [editContent, setEditContent] = useState(message.content || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVersionSwitching, setIsVersionSwitching] = useState(false);
+  const [menuPosition, setMenuPosition] = useState('bottom'); // 'bottom' hoặc 'top'
   const { darkMode, currentThemeConfig } = useTheme();
   const menuRef = useRef(null);
   const textareaRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const messageId = message._id || message.id;
   const hasVersions = message.versions && Array.isArray(message.versions) && message.versions.length > 1;
@@ -73,6 +75,24 @@ const MessageBubble = ({
       textareaRef.current.focus();
     }
   }, [isEditing]);
+
+  // Xử lý vị trí menu khi click
+  const handleMenuToggle = () => {
+    if (!showMenu && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const spaceBelow = windowHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+
+      // Nếu không đủ chỗ ở dưới (< 200px) và có đủ chỗ ở trên, thì hiển thị ở trên
+      if (spaceBelow < 200 && spaceAbove > 200) {
+        setMenuPosition('top');
+      } else {
+        setMenuPosition('bottom');
+      }
+    }
+    setShowMenu(!showMenu);
+  };
 
   const handleEditStart = () => {
     console.log(`Starting edit for message: ${messageId}`);
@@ -149,7 +169,7 @@ const MessageBubble = ({
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} group mb-6 transition-all duration-300`}>
       <div
-        className={`max-w-[85%] md:max-w-[75%] rounded-2xl relative transition-all duration-300 hover:scale-[1.02] ${
+        className={`max-w-[85%] md:max-w-[75%] rounded-2xl relative transition-all duration-300 ${
           isUser
             ? 'shadow-lg hover:shadow-xl'
             : `shadow-md hover:shadow-lg ${
@@ -165,7 +185,7 @@ const MessageBubble = ({
         }}
       >
         {isRegenerating ? (
-          <div className="p-4">
+          <div className="p-6">
             <div className="flex items-center space-x-3">
               <div className="typing-dots">
                 <div className="dot" style={{ backgroundColor: currentThemeConfig?.primary }}></div>
@@ -182,7 +202,7 @@ const MessageBubble = ({
           </div>
         ) : (
           <>
-            <div className="px-4 py-2">
+            <div className="px-4 py-4">
               {isEditing ? (
                 <div className="space-y-4">
                   <textarea
@@ -201,7 +221,7 @@ const MessageBubble = ({
                     <button
                       onClick={handleEditCancel}
                       disabled={isSubmitting}
-                      className={`flex items-center px-4 py-2 text-sm rounded-xl transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center px-4 py-2 text-sm rounded-xl transition-all duration-300 ${
                         darkMode
                           ? 'bg-gray-600/50 text-gray-300 hover:bg-gray-500/50'
                           : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300/80'
@@ -213,7 +233,7 @@ const MessageBubble = ({
                     <button
                       onClick={handleEditSubmit}
                       disabled={isSubmitting || !editContent.trim()}
-                      className={`flex items-center px-4 py-2 text-sm rounded-xl transition-all duration-300 hover:scale-105 ${
+                      className={`flex items-center px-4 py-2 text-sm rounded-xl transition-all duration-300 ${
                         isSubmitting || !editContent.trim()
                           ? 'bg-gray-400/50 text-gray-600 cursor-not-allowed'
                           : 'text-white hover:shadow-lg'
@@ -252,7 +272,7 @@ const MessageBubble = ({
             </div>
 
             {hasVersions && !isEditing && (
-              <div className={`px-6 py-4 border-t transition-all duration-300 ${
+              <div className={`px-4 py-2 border-t transition-all duration-300 ${
                 isUser 
                   ? 'border-white/20 bg-black/10' 
                   : (darkMode ? 'border-white/10 bg-white/5' : 'border-gray-200/50 bg-white/30')
@@ -290,7 +310,7 @@ const MessageBubble = ({
                     <button
                       onClick={() => handleVersionSwitch(currentVersion - 1)}
                       disabled={!canSwitchToPrevious || isVersionSwitching}
-                      className={`p-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110 ${
+                      className={`p-1 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white/20 text-white'
                           : (darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-gray-200' : 'hover:bg-gray-100/50 text-gray-500 hover:text-gray-700')
@@ -311,7 +331,7 @@ const MessageBubble = ({
                     <button
                       onClick={() => handleVersionSwitch(currentVersion + 1)}
                       disabled={!canSwitchToNext || isVersionSwitching}
-                      className={`p-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-110 ${
+                      className={`p-1 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${
                         isUser
                           ? 'hover:bg-white/20 text-white'
                           : (darkMode ? 'hover:bg-white/10 text-gray-400 hover:text-gray-200' : 'hover:bg-gray-100/50 text-gray-500 hover:text-gray-700')
@@ -325,9 +345,7 @@ const MessageBubble = ({
               </div>
             )}
 
-            <div className={`px-4 pb-1 flex items-center justify-between ${
-              hasVersions && !isEditing ? '' : 'pt-1'
-            }`}>
+            <div className={`px-4 pb-2 flex items-center justify-between`}>
               <div className={`text-xs transition-colors duration-300 ${
                 isUser 
                   ? 'text-white/70' 
@@ -340,8 +358,9 @@ const MessageBubble = ({
               {!isEditing && (
                 <div className="relative" ref={menuRef}>
                   <button
-                    onClick={() => setShowMenu(!showMenu)}
-                    className={`opacity-0 group-hover:opacity-100 transition-all duration-300 p-1 rounded-lg hover:scale-110 ${
+                    ref={buttonRef}
+                    onClick={handleMenuToggle}
+                    className={`opacity-0 group-hover:opacity-100 transition-all duration-300 p-2 rounded-lg ${
                       isUser
                         ? 'hover:bg-white/20 text-white/70 hover:text-white'
                         : (darkMode 
@@ -354,7 +373,9 @@ const MessageBubble = ({
                   </button>
 
                   {showMenu && (
-                    <div className={`absolute right-0 bottom-full mb-2 w-48 rounded-xl shadow-2xl z-20 py-2 border backdrop-blur-xl transition-all duration-300 ${
+                    <div className={`absolute right-0 ${
+                      menuPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
+                    } w-48 rounded-xl shadow-2xl z-20 py-2 border backdrop-blur-xl transition-all duration-300 ${
                       darkMode 
                         ? 'bg-gray-800/90 border-gray-700/50'
                         : 'bg-white/90 border-gray-200/50'
@@ -362,7 +383,7 @@ const MessageBubble = ({
                       {isUser && (
                         <button
                           onClick={handleEditStart}
-                          className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 hover:scale-105 ${
+                          className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 ${
                             darkMode
                               ? 'text-gray-300 hover:bg-gray-700/50'
                               : 'text-gray-700 hover:bg-gray-100/50'
@@ -376,7 +397,7 @@ const MessageBubble = ({
                       {!isUser && (
                         <button
                           onClick={handleRegenerate}
-                          className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 hover:scale-105 ${
+                          className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 ${
                             darkMode
                               ? 'text-gray-300 hover:bg-gray-700/50'
                               : 'text-gray-700 hover:bg-gray-100/50'
@@ -389,7 +410,7 @@ const MessageBubble = ({
 
                       <button
                         onClick={handleDelete}
-                        className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 hover:scale-105 ${
+                        className={`flex items-center w-full text-left px-4 py-3 text-sm transition-all duration-300 ${
                           darkMode
                             ? 'text-red-400 hover:bg-red-900/20'
                             : 'text-red-600 hover:bg-red-50/50'

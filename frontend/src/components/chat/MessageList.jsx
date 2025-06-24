@@ -176,9 +176,9 @@ const MessageList = ({
           </div>
         </div>
       )}
-
+      
       {/* Ref để cuộn xuống dưới - đặt ở cuối cùng */}
-      <div ref={messagesEndRef} className="h-4" />
+      <div ref={messagesEndRef} />
     </div>
   );
 };
