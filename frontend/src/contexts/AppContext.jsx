@@ -21,15 +21,15 @@ const useToast = () => {
   const getThemeColor = () => {
     const theme = localStorage.getItem('theme') || 'mint';
     const darkMode = localStorage.getItem('darkMode') === 'true';
-    
+
     const themeColors = {
       mint: '#36B37E',
-      blue: '#2563EB', 
+      blue: '#2563EB',
       purple: '#8B5CF6',
       pink: '#EC4899',
       orange: '#F97316'
     };
-    
+
     return {
       primary: themeColors[theme] || themeColors.mint,
       isDark: darkMode
@@ -39,7 +39,7 @@ const useToast = () => {
   return {
     showSuccess: (message, timer = 2000) => {
       const { primary, isDark } = getThemeColor();
-      
+
       return Swal.fire({
         icon: 'success',
         title: 'Thành công',
@@ -61,7 +61,7 @@ const useToast = () => {
 
     showError: (message) => {
       const { primary, isDark } = getThemeColor();
-      
+
       return Swal.fire({
         icon: 'error',
         title: 'Có lỗi xảy ra',
@@ -166,8 +166,8 @@ const useToast = () => {
               outline: none;
             ">
               ${Array.from({ length: 19 }, (_, i) => i + 1).map(age =>
-                `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
-              ).join('')}
+          `<option value="${age}" ${currentAge === age ? 'selected' : ''}>${age} tuổi</option>`
+        ).join('')}
             </select>
           </div>
         `,
@@ -278,17 +278,17 @@ export const AppProvider = ({ children }) => {
     if (!id) return null;
 
     try {
-      console.log('🔄 fetchConversationDetail:', id);
+      console.log('fetchConversationDetail:', id);
       const response = await chatService.getConversationDetail(id);
 
       if (response.success) {
         updateState({ activeConversation: response.conversation });
-        console.log('✅ fetchConversationDetail: Loaded conversation detail:', response.conversation.id);
-        return response.conversation;
+        console.log('fetchConversationDetail: Loaded conversation detail:', response.conversation.id);
+        return response.conversation; // Return conversation data
       }
       return null;
     } catch (error) {
-      console.error("❌ fetchConversationDetail error:", error);
+      console.error("fetchConversationDetail error:", error);
       return null;
     }
   }, [updateState]);
@@ -701,57 +701,57 @@ export const AppProvider = ({ children }) => {
   }, [fetchConversationDetail]);
 
 
-const helpers = {
-  isAuthenticated: () => !!state.userData,
-  
-  requireAuth: (callback) => {
-    if (!helpers.isAuthenticated()) {
-      const { primary, isDark } = (() => {
-        const theme = localStorage.getItem('theme') || 'mint';
-        const darkMode = localStorage.getItem('darkMode') === 'true';
-        
-        const themeColors = {
-          mint: '#36B37E',
-          blue: '#2563EB', 
-          purple: '#8B5CF6',
-          pink: '#EC4899',
-          orange: '#F97316'
-        };
-        
-        return {
-          primary: themeColors[theme] || themeColors.mint,
-          isDark: darkMode
-        };
-      })();
+  const helpers = {
+    isAuthenticated: () => !!state.userData,
 
-      Swal.fire({
-        icon: 'info',
-        title: 'Cần đăng nhập',
-        text: 'Vui lòng đăng nhập để tiếp tục sử dụng',
-        confirmButtonColor: primary,
-        background: isDark ? '#1f2937' : '#ffffff',
-        color: isDark ? '#f3f4f6' : '#111827',
-        confirmButtonText: 'Đăng nhập',
-        allowOutsideClick: false,
-        customClass: {
-          popup: 'swal-simple-popup',
-          confirmButton: 'swal-simple-button'
-        },
-        iconColor: primary
-      }).then(() => {
-        if (callback) callback();
-        else navigate('/login');
-      });
-      return false;
+    requireAuth: (callback) => {
+      if (!helpers.isAuthenticated()) {
+        const { primary, isDark } = (() => {
+          const theme = localStorage.getItem('theme') || 'mint';
+          const darkMode = localStorage.getItem('darkMode') === 'true';
+
+          const themeColors = {
+            mint: '#36B37E',
+            blue: '#2563EB',
+            purple: '#8B5CF6',
+            pink: '#EC4899',
+            orange: '#F97316'
+          };
+
+          return {
+            primary: themeColors[theme] || themeColors.mint,
+            isDark: darkMode
+          };
+        })();
+
+        Swal.fire({
+          icon: 'info',
+          title: 'Cần đăng nhập',
+          text: 'Vui lòng đăng nhập để tiếp tục sử dụng',
+          confirmButtonColor: primary,
+          background: isDark ? '#1f2937' : '#ffffff',
+          color: isDark ? '#f3f4f6' : '#111827',
+          confirmButtonText: 'Đăng nhập',
+          allowOutsideClick: false,
+          customClass: {
+            popup: 'swal-simple-popup',
+            confirmButton: 'swal-simple-button'
+          },
+          iconColor: primary
+        }).then(() => {
+          if (callback) callback();
+          else navigate('/login');
+        });
+        return false;
+      }
+      return true;
+    },
+
+    setUserAge: (age) => {
+      updateState({ userAge: age });
+      storageService.saveUserAge(age);
     }
-    return true;
-  },
-  
-  setUserAge: (age) => {
-    updateState({ userAge: age });
-    storageService.saveUserAge(age);
-  }
-};
+  };
 
   useEffect(() => {
     const verifyToken = async () => {

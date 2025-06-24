@@ -98,7 +98,14 @@ const ChatPage = () => {
       loadedRef.current.conversationId = conversationId;
 
       try {
-        await fetchConversationDetail(conversationId);
+        const conversation = await fetchConversationDetail(conversationId);
+        // Force a small delay to ensure DOM is ready before scrolling
+        if (conversation && conversation.messages?.length > 0) {
+          setTimeout(() => {
+            // Trigger a scroll by updating a timestamp or similar
+            setCurrentConversationAge(conversation.age_context || userAge);
+          }, 100);
+        }
       } catch (error) {
         console.error('Error loading conversation detail:', error);
         loadedRef.current.conversationId = null;
@@ -108,7 +115,7 @@ const ChatPage = () => {
     };
 
     loadConversationDetail();
-  }, [userData, conversationId, fetchConversationDetail]);
+  }, [userData, conversationId, fetchConversationDetail, userAge]);
 
   // Cập nhật age context
   useEffect(() => {
@@ -278,11 +285,10 @@ const ChatPage = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div className={`flex items-center justify-center h-screen transition-all duration-500 ${
-        darkMode 
-          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+      <div className={`flex items-center justify-center h-screen transition-all duration-500 ${darkMode
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
           : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50'
-      }`}>
+        }`}>
         <div className="text-center">
           <div
             className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4 shadow-lg"
@@ -304,11 +310,10 @@ const ChatPage = () => {
   }
 
   return (
-    <div className={`flex flex-col h-screen transition-all duration-500 ${
-      darkMode 
-        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+    <div className={`flex flex-col h-screen transition-all duration-500 ${darkMode
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
         : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50'
-    }`}>
+      }`}>
       {/* Header với backdrop blur */}
       <div className="relative z-10">
         <Header
@@ -325,24 +330,20 @@ const ChatPage = () => {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Sidebar với glassmorphism effect */}
-        <div className={`${
-          isSidebarVisible ? 'w-80 translate-x-0' : 'w-0 -translate-x-full'
-        } ${
-          darkMode 
-            ? 'bg-black/20 backdrop-blur-xl border-white/10' 
+        <div className={`${isSidebarVisible ? 'w-80 translate-x-0' : 'w-0 -translate-x-full'
+          } ${darkMode
+            ? 'bg-black/20 backdrop-blur-xl border-white/10'
             : 'bg-white/30 backdrop-blur-xl border-white/50'
-        } border-r flex flex-col shadow-2xl transition-all duration-300 overflow-hidden ${
-          isMobile ? 'absolute inset-y-0 left-0 z-40' : 'relative'
-        }`}>
+          } border-r flex flex-col shadow-2xl transition-all duration-300 overflow-hidden ${isMobile ? 'absolute inset-y-0 left-0 z-40' : 'relative'
+          }`}>
 
           {/* Mobile close button */}
           {isMobile && isSidebarVisible && (
             <div className="flex justify-end p-4">
               <button
                 onClick={() => setIsSidebarVisible(false)}
-                className={`p-2 rounded-lg transition-colors ${
-                  darkMode ? 'hover:bg-white/10' : 'hover:bg-black/10'
-                }`}
+                className={`p-2 rounded-lg transition-colors ${darkMode ? 'hover:bg-white/10' : 'hover:bg-black/10'
+                  }`}
               >
                 <BiPlus className="w-5 h-5 rotate-45" />
               </button>
@@ -391,35 +392,30 @@ const ChatPage = () => {
                   />
                 ) : (
                   // Empty conversation state
-                  <div className={`h-full flex flex-col items-center justify-center p-8 ${
-                    darkMode 
-                      ? 'bg-gradient-to-b from-gray-800/30 to-gray-900/30' 
+                  <div className={`h-full flex flex-col items-center justify-center p-8 ${darkMode
+                      ? 'bg-gradient-to-b from-gray-800/30 to-gray-900/30'
                       : 'bg-gradient-to-b from-white/30 to-blue-50/30'
-                  }`}>
-                    <div className={`${
-                      darkMode 
-                        ? 'bg-white/5 backdrop-blur-xl border-white/10' 
+                    }`}>
+                    <div className={`${darkMode
+                        ? 'bg-white/5 backdrop-blur-xl border-white/10'
                         : 'bg-white/60 backdrop-blur-xl border-white/50'
-                    } rounded-3xl p-12 border text-center max-w-md shadow-2xl transition-all duration-300`}>
-                      
-                      <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ${
-                        darkMode ? 'bg-white/10' : 'bg-white/80'
-                      }`}>
+                      } rounded-3xl p-12 border text-center max-w-md shadow-2xl transition-all duration-300`}>
+
+                      <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg ${darkMode ? 'bg-white/10' : 'bg-white/80'
+                        }`}>
                         <BiChat
                           className="text-4xl"
                           style={{ color: currentThemeConfig?.primary || '#36B37E' }}
                         />
                       </div>
 
-                      <h3 className={`text-2xl font-bold mb-4 ${
-                        darkMode ? 'text-white' : 'text-gray-800'
-                      }`}>
+                      <h3 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-800'
+                        }`}>
                         Bắt đầu cuộc trò chuyện
                       </h3>
 
-                      <p className={`text-lg mb-6 leading-relaxed ${
-                        darkMode ? 'text-gray-200' : 'text-gray-600'
-                      }`}>
+                      <p className={`text-lg mb-6 leading-relaxed ${darkMode ? 'text-gray-200' : 'text-gray-600'
+                        }`}>
                         Hãy nhập câu hỏi vào ô bên dưới để bắt đầu trò chuyện với Nutribot
                       </p>
 
@@ -440,11 +436,10 @@ const ChatPage = () => {
               </div>
 
               {/* Chat input với glass effect */}
-              <div className={`${
-                darkMode 
-                  ? 'bg-black/20 backdrop-blur-xl border-white/10' 
+              <div className={`${darkMode
+                  ? 'bg-black/20 backdrop-blur-xl border-white/10'
                   : 'bg-white/40 backdrop-blur-xl border-white/50'
-              } border-t transition-all duration-300`}>
+                } border-t transition-all duration-300`}>
                 <ChatInput
                   onSendMessage={handleSendMessage}
                   disabled={false}
@@ -453,37 +448,31 @@ const ChatPage = () => {
             </>
           ) : (
             // No conversation selected state
-            <div className={`flex-1 flex items-center justify-center flex-col p-8 ${
-              darkMode ? 'text-gray-200' : 'text-gray-600'
-            } ${
-              darkMode 
-                ? 'bg-gradient-to-b from-gray-800/30 to-gray-900/30' 
+            <div className={`flex-1 flex items-center justify-center flex-col p-8 ${darkMode ? 'text-gray-200' : 'text-gray-600'
+              } ${darkMode
+                ? 'bg-gradient-to-b from-gray-800/30 to-gray-900/30'
                 : 'bg-gradient-to-b from-white/30 to-blue-50/30'
-            }`}>
-              <div className={`${
-                darkMode 
-                  ? 'bg-white/5 backdrop-blur-xl border-white/10' 
+              }`}>
+              <div className={`${darkMode
+                  ? 'bg-white/5 backdrop-blur-xl border-white/10'
                   : 'bg-white/60 backdrop-blur-xl border-white/50'
-              } rounded-3xl p-16 border text-center shadow-2xl transition-all duration-300`}>
-                
-                <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg ${
-                  darkMode ? 'bg-white/10' : 'bg-white/80'
-                }`}>
+                } rounded-3xl p-16 border text-center shadow-2xl transition-all duration-300`}>
+
+                <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg ${darkMode ? 'bg-white/10' : 'bg-white/80'
+                  }`}>
                   <BiChat
                     className="text-6xl"
                     style={{ color: currentThemeConfig?.primary || '#36B37E' }}
                   />
                 </div>
 
-                <h2 className={`text-3xl font-bold mb-6 ${
-                  darkMode ? 'text-white' : 'text-gray-800'
-                }`}>
+                <h2 className={`text-3xl font-bold mb-6 ${darkMode ? 'text-white' : 'text-gray-800'
+                  }`}>
                   Chọn cuộc trò chuyện
                 </h2>
 
-                <p className={`text-xl ${
-                  darkMode ? 'text-gray-200' : 'text-gray-600'
-                }`}>
+                <p className={`text-xl ${darkMode ? 'text-gray-200' : 'text-gray-600'
+                  }`}>
                   Chọn một cuộc trò chuyện từ sidebar hoặc tạo mới để bắt đầu
                 </p>
               </div>

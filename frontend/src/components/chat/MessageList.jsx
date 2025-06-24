@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 import { Loader } from '../common';
 import { BiRocket } from 'react-icons/bi';
@@ -18,24 +18,61 @@ const MessageList = ({
   const messagesEndRef = useRef(null);
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [regeneratingMessageId, setRegeneratingMessageId] = useState(null);
+  const [shouldScroll, setShouldScroll] = useState(true);
   const { darkMode, currentThemeConfig } = useTheme();
 
-  // Sử dụng useLayoutEffect để scroll sync hơn
+  // Track if user has manually scrolled up
+  const containerRef = useRef(null);
+  
+  useEffect(() => {
+    const container = containerRef.current?.parentElement;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShouldScroll(isNearBottom);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scroll to bottom when messages change or conversation loads
   useLayoutEffect(() => {
     const scrollToBottom = () => {
-      if (messagesEndRef.current) {
-        // Sử dụng setTimeout để đảm bảo DOM đã render xong
-        setTimeout(() => {
-          messagesEndRef.current?.scrollIntoView({ 
+      if (!messagesEndRef.current || !shouldScroll) return;
+      
+      // Use longer timeout for page reload scenarios
+      const timeout = messages?.length > 0 ? 300 : 100;
+      
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ 
             behavior: 'smooth',
             block: 'end'
           });
-        }, 100);
-      }
+        }
+      }, timeout);
     };
 
     scrollToBottom();
-  }, [messages, isLoading]); // Scroll khi messages thay đổi hoặc loading state thay đổi
+  }, [messages, isLoading, conversationId, shouldScroll]);
+
+  // Force scroll when conversation changes (for page reload)
+  useEffect(() => {
+    if (conversationId && messages?.length > 0) {
+      setShouldScroll(true);
+      setTimeout(() => {
+        if (messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ 
+            behavior: 'auto', // Use 'auto' for immediate scroll on conversation change
+            block: 'end'
+          });
+        }
+      }, 500); // Longer timeout for conversation load
+    }
+  }, [conversationId]);
 
   // Handle edit message
   const handleEditMessage = async (messageId, conversationId, newContent) => {
@@ -135,7 +172,7 @@ const MessageList = ({
   }
 
   return (
-    <div className="flex flex-col space-y-6 p-6 max-w-4xl mx-auto">
+    <div ref={containerRef} className="flex flex-col space-y-6 p-6 max-w-4xl mx-auto">
       {/* Danh sách tin nhắn */}
       {messages.map((message, index) => {
         const messageId = getMessageId(message);
