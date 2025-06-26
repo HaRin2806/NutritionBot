@@ -6,7 +6,7 @@ with open('test.json', 'r', encoding='utf-8-sig') as f:
     data = json.load(f)
 
 # Mở file CSV để ghi dữ liệu
-with open('benchmark.csv', 'w', newline='', encoding='utf-8-sig') as csvfile:
+with open('finetune_data.csv', 'w', newline='', encoding='utf-8-sig') as csvfile:
     fieldnames = ['question', 'positive', 'negative', 'age_group']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 

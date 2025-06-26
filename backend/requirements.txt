@@ -12,3 +12,4 @@ pymongo
 bcrypt
 flask-jwt-extended
 PyPDF2
+psutil

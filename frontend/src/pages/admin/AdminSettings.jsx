@@ -1,844 +1,610 @@
 import React, { useState, useEffect } from 'react';
-import {
-    BiCog, BiSave, BiRefresh, BiShield, BiUser, BiKey,
-    BiServer, BiData, BiCloud, BiMailSend, BiLock
+import { 
+  BiCog, BiShield, BiServer, BiChart, BiRefresh, BiDownload, 
+  BiCheck, BiX, BiTime, BiBrain, BiLock,
+  BiMemoryCard, BiHdd, BiWifi, BiSave,
+  BiData
 } from 'react-icons/bi';
 import { useApp } from '../../contexts/AppContext';
-import { Loader, Button, Input, Modal } from '../../components/common';
+import { Loader, Button } from '../../components/common';
 import { adminService } from '../../services/index';
 
-const SettingCard = ({ title, description, children, icon }) => (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center mb-4">
-            <div className="p-2 bg-mint-100 rounded-lg mr-3">
-                {icon}
-            </div>
-            <div>
-                <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-                <p className="text-sm text-gray-600">{description}</p>
-            </div>
-        </div>
-        {children}
+const StatusIndicator = ({ status, children }) => {
+  const getStatusColor = () => {
+    switch (status.toLowerCase()) {
+      case 'connected':
+      case 'active':
+      case 'success':
+        return 'text-green-500';
+      case 'error':
+      case 'failed':
+        return 'text-red-500';
+      case 'warning':
+        return 'text-yellow-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
+  const getStatusIcon = () => {
+    switch (status.toLowerCase()) {
+      case 'connected':
+      case 'active':
+      case 'success':
+        return <BiCheck className="w-5 h-5" />;
+      case 'error':
+      case 'failed':
+        return <BiX className="w-5 h-5" />;
+      case 'warning':
+        return <BiShield className="w-5 h-5" />;
+      default:
+        return <BiTime className="w-5 h-5" />;
+    }
+  };
+
+  return (
+    <div className={`flex items-center ${getStatusColor()}`}>
+      {getStatusIcon()}
+      <span className="ml-2">{children}</span>
     </div>
+  );
+};
+
+const MetricCard = ({ icon, title, value, unit, color = "mint" }) => (
+  <div className="bg-white rounded-lg border border-gray-200 p-4">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center">
+        <div className={`p-2 rounded-lg bg-${color}-100 text-${color}-600`}>
+          {icon}
+        </div>
+        <div className="ml-3">
+          <p className="text-sm text-gray-600">{title}</p>
+          <p className="text-xl font-bold text-gray-900">
+            {value} <span className="text-sm font-normal text-gray-500">{unit}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 );
 
-const CreateAdminModal = ({ isOpen, onClose, onSuccess }) => {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
-    const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const { showSuccess, showError } = useApp();
+const LogEntry = ({ log }) => {
+  const getLevelColor = () => {
+    switch (log.level?.toLowerCase()) {
+      case 'error':
+        return 'text-red-600 bg-red-50';
+      case 'warning':
+        return 'text-yellow-600 bg-yellow-50';
+      case 'info':
+        return 'text-blue-600 bg-blue-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
+    }
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-        if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: '' }));
-        }
-    };
-
-    const validateForm = () => {
-        const newErrors = {};
-
-        if (!formData.name.trim()) {
-            newErrors.name = 'Vui lòng nhập tên';
-        }
-
-        if (!formData.email.trim()) {
-            newErrors.email = 'Vui lòng nhập email';
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.email = 'Email không hợp lệ';
-        }
-
-        if (!formData.password) {
-            newErrors.password = 'Vui lòng nhập mật khẩu';
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
-        }
-
-        if (formData.password !== formData.confirmPassword) {
-            newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
-        }
-
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validateForm()) return;
-
-        try {
-            setIsLoading(true);
-            const response = await adminService.createAdmin(formData);
-
-            if (response.success) {
-                showSuccess('Tạo admin mới thành công');
-                onSuccess();
-                onClose();
-                setFormData({ name: '', email: '', password: '', confirmPassword: '' });
-            } else {
-                showError(response.error || 'Tạo admin thất bại');
-            }
-        } catch (error) {
-            showError(error.message || 'Có lỗi xảy ra');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Tạo Admin mới" size="md">
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <Input
-                    label="Tên"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    error={errors.name}
-                    required
-                />
-
-                <Input
-                    label="Email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                    required
-                />
-
-                <Input
-                    label="Mật khẩu"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    error={errors.password}
-                    required
-                />
-
-                <Input
-                    label="Xác nhận mật khẩu"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    error={errors.confirmPassword}
-                    required
-                />
-
-                <div className="flex justify-end space-x-3 pt-4">
-                    <Button
-                        type="button"
-                        onClick={onClose}
-                        color="gray"
-                        outline
-                        disabled={isLoading}
-                    >
-                        Hủy
-                    </Button>
-                    <Button
-                        type="submit"
-                        color="mint"
-                        disabled={isLoading}
-                        icon={isLoading ? <Loader type="dots" size="sm" /> : <BiUser />}
-                    >
-                        {isLoading ? 'Đang tạo...' : 'Tạo Admin'}
-                    </Button>
-                </div>
-            </form>
-        </Modal>
-    );
+  return (
+    <div className="border-b border-gray-100 py-2">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center space-x-2 mb-1">
+            <span className={`px-2 py-1 text-xs rounded-full ${getLevelColor()}`}>
+              {log.level}
+            </span>
+            <span className="text-xs text-gray-500">{log.source}</span>
+            <span className="text-xs text-gray-400">
+              {new Date(log.timestamp).toLocaleString('vi-VN')}
+            </span>
+          </div>
+          <p className="text-sm text-gray-700 font-mono">{log.message}</p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const AdminSettings = () => {
-    const { showSuccess, showError, showConfirm } = useApp();
+  const { showSuccess, showError } = useApp();
+  
+  const [activeTab, setActiveTab] = useState('system');
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({
+    systemConfig: null,
+    performance: null,
+    logs: [],
+    security: null
+  });
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [showCreateAdminModal, setShowCreateAdminModal] = useState(false);
+  const tabs = [
+    { id: 'system', label: 'Hệ thống', icon: <BiServer /> },
+    { id: 'performance', label: 'Hiệu năng', icon: <BiChart /> },
+    { id: 'security', label: 'Bảo mật', icon: <BiShield /> },
+    { id: 'logs', label: 'Logs', icon: <BiCog /> }
+  ];
 
-    const [systemSettings, setSystemSettings] = useState({
-        siteName: 'Nutribot',
-        siteDescription: 'AI Chatbot tư vấn dinh dưỡng',
-        allowRegistration: true,
-        maxUsersPerDay: 100,
-        maintenanceMode: false
-    });
+  const loadData = async () => {
+    try {
+      setIsLoading(true);
+      
+      const [systemConfig, performance, logs, security] = await Promise.all([
+        adminService.getSystemConfig(),
+        adminService.getPerformanceMetrics(),
+        adminService.getSystemLogs(),
+        adminService.getSecuritySettings()
+      ]);
 
-    const [aiSettings, setAiSettings] = useState({
-        model: 'gemini-2.0-flash',
-        temperature: 0.7,
-        maxTokens: 2048,
-        embeddingModel: 'intfloat/multilingual-e5-base'
-    });
+      setData({
+        systemConfig: systemConfig.success ? systemConfig.system_config : null,
+        performance: performance.success ? performance.performance : null,
+        logs: logs.success ? logs.logs : [],
+        security: security.success ? security.security : null
+      });
 
-    const [emailSettings, setEmailSettings] = useState({
-        smtpHost: '',
-        smtpPort: 587,
-        smtpUser: '',
-        smtpPassword: '',
-        fromEmail: 'noreply@nutribot.com',
-        fromName: 'Nutribot'
-    });
-
-    // Load settings
-    const loadSettings = async () => {
-        try {
-            setIsLoading(true);
-            // Mock load settings - replace with actual API calls
-            // const response = await adminService.getSettings();
-            // setSystemSettings(response.systemSettings);
-            // setAiSettings(response.aiSettings);
-            // setEmailSettings(response.emailSettings);
-        } catch (error) {
-            showError('Không thể tải cài đặt hệ thống');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        loadSettings();
-    }, []);
-
-    // Save system settings
-    const handleSaveSystemSettings = async () => {
-        try {
-            // Mock save - replace with actual API call
-            // await adminService.updateSystemSettings(systemSettings);
-            showSuccess('Đã lưu cài đặt hệ thống');
-        } catch (error) {
-            showError('Không thể lưu cài đặt hệ thống');
-        }
-    };
-
-    // Save AI settings
-    const handleSaveAiSettings = async () => {
-        try {
-            // Mock save - replace with actual API call
-            // await adminService.updateAiSettings(aiSettings);
-            showSuccess('Đã lưu cài đặt AI');
-        } catch (error) {
-            showError('Không thể lưu cài đặt AI');
-        }
-    };
-
-    // Save email settings
-    const handleSaveEmailSettings = async () => {
-        try {
-            // Mock save - replace with actual API call
-            // await adminService.updateEmailSettings(emailSettings);
-            showSuccess('Đã lưu cài đặt email');
-        } catch (error) {
-            showError('Không thể lưu cài đặt email');
-        }
-    };
-
-    // Test email settings
-    const handleTestEmail = async () => {
-        try {
-            // Mock test email
-            showSuccess('Email test đã được gửi thành công');
-        } catch (error) {
-            showError('Không thể gửi email test');
-        }
-    };
-
-    // Reset to defaults
-    const handleResetSettings = async () => {
-        const result = await showConfirm({
-            title: 'Reset cài đặt?',
-            text: 'Bạn có chắc muốn reset tất cả cài đặt về mặc định?',
-            confirmButtonText: 'Reset',
-            cancelButtonText: 'Hủy'
-        });
-
-        if (result.isConfirmed) {
-            try {
-                // Reset to default values
-                setSystemSettings({
-                    siteName: 'Nutribot',
-                    siteDescription: 'AI Chatbot tư vấn dinh dưỡng',
-                    allowRegistration: true,
-                    maxUsersPerDay: 100,
-                    maintenanceMode: false
-                });
-
-                setAiSettings({
-                    model: 'gemini-2.0-flash',
-                    temperature: 0.7,
-                    maxTokens: 2048,
-                    embeddingModel: 'intfloat/multilingual-e5-base'
-                });
-
-                showSuccess('Đã reset cài đặt về mặc định');
-            } catch (error) {
-                showError('Không thể reset cài đặt');
-            }
-        }
-    };
-
-    if (isLoading) {
-        return (
-            <div className="p-6">
-                <div className="flex justify-center py-12">
-                    <Loader type="spinner" color="mint" text="Đang tải cài đặt..." />
-                </div>
-            </div>
-        );
+    } catch (error) {
+      console.error('Error loading settings data:', error);
+      showError('Không thể tải dữ liệu cài đặt');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  const handleBackup = async () => {
+    try {
+      const response = await adminService.createBackup();
+      if (response.success) {
+        showSuccess(`Backup thành công! File: ${response.backup.filename}`);
+      } else {
+        showError('Không thể tạo backup');
+      }
+    } catch (error) {
+      console.error('Error creating backup:', error);
+      showError('Lỗi khi tạo backup');
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  if (isLoading) {
     return (
-        <div className="p-6">
-            {/* Header */}
-            <div className="mb-6">
-                <div className="flex justify-between items-center mb-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900">Cài đặt hệ thống</h1>
-                        <p className="text-gray-600">Quản lý cấu hình và tùy chọn hệ thống</p>
-                    </div>
-
-                    <div className="flex space-x-3">
-                        <Button
-                            onClick={loadSettings}
-                            color="gray"
-                            outline
-                            icon={<BiRefresh />}
-                        >
-                            Làm mới
-                        </Button>
-
-                        <Button
-                            onClick={handleResetSettings}
-                            color="red"
-                            outline
-                            icon={<BiRefresh />}
-                        >
-                            Reset mặc định
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* System Settings */}
-                <SettingCard
-                    title="Cài đặt hệ thống"
-                    description="Cấu hình chung của ứng dụng"
-                    icon={<BiCog className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <Input
-                            label="Tên website"
-                            value={systemSettings.siteName}
-                            onChange={(e) => setSystemSettings(prev => ({ ...prev, siteName: e.target.value }))}
-                        />
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Mô tả website
-                            </label>
-                            <textarea
-                                value={systemSettings.siteDescription}
-                                onChange={(e) => setSystemSettings(prev => ({ ...prev, siteDescription: e.target.value }))}
-                                rows={3}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
-                            />
-                        </div>
-
-                        <Input
-                            label="Số người dùng tối đa mỗi ngày"
-                            type="number"
-                            value={systemSettings.maxUsersPerDay}
-                            onChange={(e) => setSystemSettings(prev => ({ ...prev, maxUsersPerDay: parseInt(e.target.value) }))}
-                        />
-
-                        <div className="space-y-3">
-                            <label className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    checked={systemSettings.allowRegistration}
-                                    onChange={(e) => setSystemSettings(prev => ({ ...prev, allowRegistration: e.target.checked }))}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                                <span className="ml-2 text-sm text-gray-700">Cho phép đăng ký mới</span>
-                            </label>
-
-                            <label className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    checked={systemSettings.maintenanceMode}
-                                    onChange={(e) => setSystemSettings(prev => ({ ...prev, maintenanceMode: e.target.checked }))}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                                <span className="ml-2 text-sm text-gray-700">Chế độ bảo trì</span>
-                            </label>
-                        </div>
-
-                        <Button
-                            onClick={handleSaveSystemSettings}
-                            color="mint"
-                            icon={<BiSave />}
-                            className="w-full"
-                        >
-                            Lưu cài đặt hệ thống
-                        </Button>
-                    </div>
-                </SettingCard>
-
-                {/* AI Settings */}
-                <SettingCard
-                    title="Cài đặt AI"
-                    description="Cấu hình model AI và embedding"
-                    icon={<BiServer className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Model AI
-                            </label>
-                            <select
-                                value={aiSettings.model}
-                                onChange={(e) => setAiSettings(prev => ({ ...prev, model: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
-                            >
-                                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-                                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-                                <option value="gpt-4">GPT-4</option>
-                                <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Temperature ({aiSettings.temperature})
-                            </label>
-                            <input
-                                type="range"
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                value={aiSettings.temperature}
-                                onChange={(e) => setAiSettings(prev => ({ ...prev, temperature: parseFloat(e.target.value) }))}
-                                className="w-full"
-                            />
-                            <div className="flex justify-between text-xs text-gray-500">
-                                <span>Bảo thủ</span>
-                                <span>Sáng tạo</span>
-                            </div>
-                        </div>
-
-                        <Input
-                            label="Max Tokens"
-                            type="number"
-                            value={aiSettings.maxTokens}
-                            onChange={(e) => setAiSettings(prev => ({ ...prev, maxTokens: parseInt(e.target.value) }))}
-                        />
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Embedding Model
-                            </label>
-                            <select
-                                value={aiSettings.embeddingModel}
-                                onChange={(e) => setAiSettings(prev => ({ ...prev, embeddingModel: e.target.value }))}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
-                            >
-                                <option value="intfloat/multilingual-e5-base">Multilingual E5 Base</option>
-                                <option value="sentence-transformers/all-mpnet-base-v2">All-MiniLM-L6-v2</option>
-                                <option value="text-embedding-ada-002">OpenAI Ada-002</option>
-                            </select>
-                        </div>
-
-                        <Button
-                            onClick={handleSaveAiSettings}
-                            color="mint"
-                            icon={<BiSave />}
-                            className="w-full"
-                        >
-                            Lưu cài đặt AI
-                        </Button>
-                    </div>
-                </SettingCard>
-
-                {/* Email Settings */}
-                <SettingCard
-                    title="Cài đặt Email"
-                    description="Cấu hình SMTP để gửi email"
-                    icon={<BiMailSend className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <Input
-                            label="SMTP Host"
-                            value={emailSettings.smtpHost}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpHost: e.target.value }))}
-                            placeholder="smtp.gmail.com"
-                        />
-
-                        <Input
-                            label="SMTP Port"
-                            type="number"
-                            value={emailSettings.smtpPort}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpPort: parseInt(e.target.value) }))}
-                        />
-
-                        <Input
-                            label="SMTP Username"
-                            value={emailSettings.smtpUser}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpUser: e.target.value }))}
-                            placeholder="your-email@gmail.com"
-                        />
-
-                        <Input
-                            label="SMTP Password"
-                            type="password"
-                            value={emailSettings.smtpPassword}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, smtpPassword: e.target.value }))}
-                            placeholder="App password"
-                        />
-
-                        <Input
-                            label="From Email"
-                            value={emailSettings.fromEmail}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, fromEmail: e.target.value }))}
-                        />
-
-                        <Input
-                            label="From Name"
-                            value={emailSettings.fromName}
-                            onChange={(e) => setEmailSettings(prev => ({ ...prev, fromName: e.target.value }))}
-                        />
-
-                        <div className="flex space-x-2">
-                            <Button
-                                onClick={handleTestEmail}
-                                color="gray"
-                                outline
-                                icon={<BiMailSend />}
-                                className="flex-1"
-                            >
-                                Test Email
-                            </Button>
-
-                            <Button
-                                onClick={handleSaveEmailSettings}
-                                color="mint"
-                                icon={<BiSave />}
-                                className="flex-1"
-                            >
-                                Lưu cài đặt
-                            </Button>
-                        </div>
-                    </div>
-                </SettingCard>
-
-                {/* Admin Management */}
-                <SettingCard
-                    title="Quản lý Admin"
-                    description="Tạo và quản lý tài khoản admin"
-                    icon={<BiShield className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                            <div className="flex items-start">
-                                <BiShield className="w-5 h-5 text-yellow-600 mt-0.5 mr-2" />
-                                <div>
-                                    <h4 className="text-sm font-medium text-yellow-800">Chú ý bảo mật</h4>
-                                    <p className="text-sm text-yellow-700 mt-1">
-                                        Chỉ tạo tài khoản admin cho những người được tin tưởng.
-                                        Admin có toàn quyền truy cập hệ thống.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <Button
-                            onClick={() => setShowCreateAdminModal(true)}
-                            color="mint"
-                            icon={<BiUser />}
-                            className="w-full"
-                        >
-                            Tạo Admin mới
-                        </Button>
-
-                        <div className="border-t pt-4">
-                            <h4 className="font-medium text-gray-900 mb-3">Admin hiện tại</h4>
-                            <div className="space-y-2">
-                                {/* Mock admin list */}
-                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div>
-                                        <p className="font-medium text-gray-900">Super Admin</p>
-                                        <p className="text-sm text-gray-600">admin@nutribot.com</p>
-                                    </div>
-                                    <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                                        Super Admin
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </SettingCard>
-
-                {/* Database & Storage */}
-                <SettingCard
-                    title="Database & Storage"
-                    description="Thông tin và quản lý database"
-                    icon={<BiData className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <span className="text-gray-600">Database Type:</span>
-                                <span className="ml-2 font-medium">MongoDB</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-600">Collections:</span>
-                                <span className="ml-2 font-medium">5</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-600">Total Documents:</span>
-                                <span className="ml-2 font-medium">12,450</span>
-                            </div>
-                            <div>
-                                <span className="text-gray-600">Database Size:</span>
-                                <span className="ml-2 font-medium">245 MB</span>
-                            </div>
-                        </div>
-
-                        <div className="border-t pt-4">
-                            <h4 className="font-medium text-gray-900 mb-3">Thao tác Database</h4>
-                            <div className="grid grid-cols-2 gap-2">
-                                <Button
-                                    color="gray"
-                                    outline
-                                    size="sm"
-                                    onClick={() => showConfirm({
-                                        title: 'Backup Database?',
-                                        text: 'Tạo bản sao lưu database?'
-                                    })}
-                                >
-                                    Backup DB
-                                </Button>
-
-                                <Button
-                                    color="gray"
-                                    outline
-                                    size="sm"
-                                    onClick={() => showConfirm({
-                                        title: 'Optimize Database?',
-                                        text: 'Tối ưu hóa database?'
-                                    })}
-                                >
-                                    Optimize
-                                </Button>
-
-                                <Button
-                                    color="red"
-                                    outline
-                                    size="sm"
-                                    onClick={() => showConfirm({
-                                        title: 'Xóa cache?',
-                                        text: 'Xóa tất cả cache?'
-                                    })}
-                                >
-                                    Clear Cache
-                                </Button>
-
-                                <Button
-                                    color="red"
-                                    outline
-                                    size="sm"
-                                    onClick={() => showConfirm({
-                                        title: 'Rebuild Index?',
-                                        text: 'Rebuild database indexes?'
-                                    })}
-                                >
-                                    Rebuild Index
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </SettingCard>
-
-                {/* Security Settings */}
-                <SettingCard
-                    title="Cài đặt bảo mật"
-                    description="Cấu hình các tùy chọn bảo mật"
-                    icon={<BiLock className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <div className="space-y-3">
-                            <label className="flex items-center justify-between">
-                                <div>
-                                    <span className="text-sm font-medium text-gray-700">Rate Limiting</span>
-                                    <p className="text-xs text-gray-500">Giới hạn số request per IP</p>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    defaultChecked={true}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                            </label>
-
-                            <label className="flex items-center justify-between">
-                                <div>
-                                    <span className="text-sm font-medium text-gray-700">CORS Protection</span>
-                                    <p className="text-xs text-gray-500">Bảo vệ cross-origin requests</p>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    defaultChecked={true}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                            </label>
-
-                            <label className="flex items-center justify-between">
-                                <div>
-                                    <span className="text-sm font-medium text-gray-700">JWT Expiry</span>
-                                    <p className="text-xs text-gray-500">Tự động logout sau 24h</p>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    defaultChecked={true}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                            </label>
-
-                            <label className="flex items-center justify-between">
-                                <div>
-                                    <span className="text-sm font-medium text-gray-700">Audit Logging</span>
-                                    <p className="text-xs text-gray-500">Ghi log các hoạt động admin</p>
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    defaultChecked={false}
-                                    className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
-                                />
-                            </label>
-                        </div>
-
-                        <div className="border-t pt-4">
-                            <h4 className="font-medium text-gray-900 mb-3">API Keys</h4>
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div>
-                                        <p className="font-medium text-gray-900">Gemini API Key</p>
-                                        <p className="text-sm text-gray-600">AIza***************xyz</p>
-                                    </div>
-                                    <Button size="sm" color="gray" outline>
-                                        Đổi Key
-                                    </Button>
-                                </div>
-
-                                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                    <div>
-                                        <p className="font-medium text-gray-900">JWT Secret</p>
-                                        <p className="text-sm text-gray-600">****************</p>
-                                    </div>
-                                    <Button size="sm" color="gray" outline>
-                                        Regenerate
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </SettingCard>
-
-                {/* System Information */}
-                <SettingCard
-                    title="Thông tin hệ thống"
-                    description="Phiên bản và thông tin môi trường"
-                    icon={<BiCloud className="w-5 h-5 text-mint-600" />}
-                >
-                    <div className="space-y-4">
-                        <div className="grid grid-cols-1 gap-3 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Version:</span>
-                                <span className="font-medium">1.0.0</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Environment:</span>
-                                <span className="font-medium">Development</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Node.js:</span>
-                                <span className="font-medium">v18.17.0</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Python:</span>
-                                <span className="font-medium">3.9.7</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Last Restart:</span>
-                                <span className="font-medium">2 hours ago</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span className="text-gray-600">Uptime:</span>
-                                <span className="font-medium text-green-600">99.9%</span>
-                            </div>
-                        </div>
-
-                        <div className="border-t pt-4">
-                            <Button
-                                color="mint"
-                                outline
-                                className="w-full"
-                                onClick={() => showConfirm({
-                                    title: 'Restart System?',
-                                    text: 'Khởi động lại hệ thống? Điều này sẽ ngắt kết nối tất cả người dùng.'
-                                })}
-                            >
-                                Restart System
-                            </Button>
-                        </div>
-                    </div>
-                </SettingCard>
-            </div>
-
-            {/* Global Save All */}
-            <div className="mt-8 bg-gradient-to-r from-mint-50 to-mint-100 rounded-lg p-6">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Lưu tất cả cài đặt</h3>
-                        <p className="text-sm text-gray-600">
-                            Lưu toàn bộ cài đặt và áp dụng ngay lập tức
-                        </p>
-                    </div>
-                    <div className="flex space-x-3">
-                        <Button
-                            onClick={() => {
-                                handleSaveSystemSettings();
-                                handleSaveAiSettings();
-                                handleSaveEmailSettings();
-                            }}
-                            color="mint"
-                            size="lg"
-                            icon={<BiSave />}
-                        >
-                            Lưu tất cả
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Create Admin Modal */}
-            <CreateAdminModal
-                isOpen={showCreateAdminModal}
-                onClose={() => setShowCreateAdminModal(false)}
-                onSuccess={() => {
-                    // Reload admin list
-                    console.log('Admin created successfully');
-                }}
-            />
-        </div>
+      <div className="flex items-center justify-center h-64">
+        <Loader type="spinner" color="mint" text="Đang tải cài đặt..." />
+      </div>
     );
+  }
+
+  return (
+    <div className="p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Cài đặt hệ thống</h1>
+            <p className="text-gray-600">Quản lý và giám sát hệ thống Nutribot</p>
+          </div>
+          
+          <div className="flex space-x-3">
+            <Button
+              onClick={loadData}
+              color="gray"
+              outline
+              icon={<BiRefresh />}
+              disabled={isLoading}
+            >
+              Làm mới
+            </Button>
+            
+            <Button
+              onClick={handleBackup}
+              color="mint"
+              outline
+              icon={<BiRefresh />}
+            >
+              Tạo Backup
+            </Button>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="border-b border-gray-200">
+          <nav className="flex space-x-8">
+            {tabs.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-mint-500 text-mint-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.icon}
+                <span className="ml-2">{tab.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'system' && data.systemConfig && (
+        <div className="space-y-6">
+          {/* Application Configuration */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <BiCog className="mr-2" />
+              Cấu hình ứng dụng
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Debug Mode:</span>
+                  <StatusIndicator status={data.systemConfig.application.debug_mode ? 'warning' : 'success'}>
+                    {data.systemConfig.application.debug_mode ? 'Bật' : 'Tắt'}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">JWT Secret:</span>
+                  <StatusIndicator status={data.systemConfig.application.secret_key_configured ? 'success' : 'error'}>
+                    {data.systemConfig.application.secret_key_configured ? 'Đã cấu hình' : 'Chưa cấu hình'}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Database:</span>
+                  <span className="text-gray-900 font-medium">{data.systemConfig.application.database_name}</span>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Embedding Model:</span>
+                  <span className="text-gray-900 font-medium">{data.systemConfig.application.embedding_model}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Gemini API:</span>
+                  <StatusIndicator status={data.systemConfig.application.gemini_configured ? 'success' : 'error'}>
+                    {data.systemConfig.application.gemini_configured ? 'Đã cấu hình' : 'Chưa cấu hình'}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Collection:</span>
+                  <span className="text-gray-900 font-medium">{data.systemConfig.application.collection_name}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Database Status */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* MongoDB */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <BiData className="mr-2" />
+                MongoDB
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Trạng thái:</span>
+                  <StatusIndicator status={data.systemConfig.database.mongodb.status}>
+                    {data.systemConfig.database.mongodb.status}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="text-sm text-gray-600">
+                  <p className="font-medium mb-2">Collections ({data.systemConfig.database.mongodb.collections.length}):</p>
+                  <div className="space-y-1">
+                    {data.systemConfig.database.mongodb.collections.map(collection => (
+                      <div key={collection} className="flex justify-between">
+                        <span>{collection}</span>
+                        <span className="font-medium">
+                          {data.systemConfig.database.mongodb.statistics[collection]?.document_count || 0} docs
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Vector Database */}
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <BiBrain className="mr-2" />
+                Vector Database
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Trạng thái:</span>
+                  <StatusIndicator status={data.systemConfig.database.vector_db.status}>
+                    {data.systemConfig.database.vector_db.status}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Documents:</span>
+                  <span className="text-gray-900 font-medium">
+                    {data.systemConfig.database.vector_db.document_count.toLocaleString()}
+                  </span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Model:</span>
+                  <span className="text-gray-900 font-medium">
+                    {data.systemConfig.database.vector_db.statistics.embedding_model || 'multilingual-e5-base'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* System Information */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <BiServer className="mr-2" />
+              Thông tin hệ thống
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">{data.systemConfig.system.python_version}</div>
+                <div className="text-sm text-gray-600">Python</div>
+              </div>
+              
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">{data.systemConfig.system.cpu_count}</div>
+                <div className="text-sm text-gray-600">CPU Cores</div>
+              </div>
+              
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">{data.systemConfig.system.memory_total}GB</div>
+                <div className="text-sm text-gray-600">RAM</div>
+              </div>
+              
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">{data.systemConfig.system.disk_usage}%</div>
+                <div className="text-sm text-gray-600">Disk Usage</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'performance' && data.performance && (
+        <div className="space-y-6">
+          {/* System Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard
+              icon={<BiMemoryCard />}
+              title="CPU Usage"
+              value={data.performance.system.cpu_usage}
+              unit="%"
+              color="blue"
+            />
+            
+            <MetricCard
+              icon={<BiMemoryCard />}
+              title="Memory Usage"
+              value={data.performance.system.memory_usage}
+              unit="%"
+              color="green"
+            />
+            
+            <MetricCard
+              icon={<BiHdd />}
+              title="Disk Usage"
+              value={data.performance.system.disk_usage}
+              unit="%"
+              color="yellow"
+            />
+            
+            <MetricCard
+              icon={<BiWifi />}
+              title="Uptime"
+              value={data.performance.system.uptime}
+              unit=""
+              color="purple"
+            />
+          </div>
+
+          {/* Database Performance */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Database</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Total Documents:</span>
+                  <span className="font-medium">{data.performance.database.total_documents?.toLocaleString() || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Query Speed:</span>
+                  <span className="font-medium">{data.performance.database.query_speed || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Recent Activity:</span>
+                  <span className="font-medium">{data.performance.database.recent_activity || 0}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Vector Search</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Total Vectors:</span>
+                  <span className="font-medium">{data.performance.vector_search.total_vectors?.toLocaleString() || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Search Speed:</span>
+                  <span className="font-medium">{data.performance.vector_search.search_speed_ms || 'N/A'}ms</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Accuracy:</span>
+                  <span className="font-medium">{data.performance.vector_search.retrieval_accuracy || 'N/A'}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Generation</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Response Time:</span>
+                  <span className="font-medium">{data.performance.ai_generation.average_response_time}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Success Rate:</span>
+                  <span className="font-medium">{data.performance.ai_generation.success_rate}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Daily Requests:</span>
+                  <span className="font-medium">{data.performance.ai_generation.daily_requests}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'security' && data.security && (
+        <div className="space-y-6">
+          {/* Security Configuration */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <BiLock className="mr-2" />
+              Cấu hình bảo mật
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">JWT Token:</span>
+                  <StatusIndicator status={data.security.configuration.jwt_configured ? 'success' : 'error'}>
+                    {data.security.configuration.jwt_configured ? 'Đã cấu hình' : 'Chưa cấu hình'}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">SSL/HTTPS:</span>
+                  <StatusIndicator status={data.security.configuration.ssl_enabled ? 'success' : 'warning'}>
+                    {data.security.configuration.ssl_enabled ? 'Đã bật' : 'Chưa bật'}
+                  </StatusIndicator>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Rate Limiting:</span>
+                  <StatusIndicator status={data.security.configuration.rate_limiting ? 'success' : 'warning'}>
+                    {data.security.configuration.rate_limiting ? 'Đã bật' : 'Chưa bật'}
+                  </StatusIndicator>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Admin Accounts:</span>
+                  <span className="font-medium">{data.security.configuration.admin_accounts}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Session Timeout:</span>
+                  <span className="font-medium">{data.security.configuration.session_timeout}</span>
+                </div>
+                
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Min Password Length:</span>
+                  <span className="font-medium">{data.security.configuration.password_policy.min_length} ký tự</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Login Attempts */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Lịch sử đăng nhập gần đây</h3>
+            
+            <div className="space-y-2">
+              {data.security.recent_logins.map((login, index) => (
+                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                  <div className="flex items-center space-x-3">
+                    <StatusIndicator status={login.status}>
+                      {login.user}
+                    </StatusIndicator>
+                    <span className="text-sm text-gray-500">từ {login.ip}</span>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(login.timestamp).toLocaleString('vi-VN')}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Security Recommendations */}
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Khuyến nghị bảo mật</h3>
+            
+            <div className="space-y-3">
+              {data.security.recommendations.map((rec, index) => (
+                <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                  <BiShield className={`w-5 h-5 mt-0.5 ${
+                    rec.priority === 'high' ? 'text-red-500' : 
+                    rec.priority === 'medium' ? 'text-yellow-500' : 'text-blue-500'
+                  }`} />
+                  <div>
+                    <h4 className="font-medium text-gray-900">{rec.title}</h4>
+                    <p className="text-sm text-gray-600">{rec.description}</p>
+                    <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
+                      rec.priority === 'high' ? 'bg-red-100 text-red-800' :
+                      rec.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {rec.priority === 'high' ? 'Cao' : rec.priority === 'medium' ? 'Trung bình' : 'Thấp'}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'logs' && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">System Logs</h3>
+              <Button
+                onClick={loadData}
+                color="gray"
+                size="sm"
+                icon={<BiRefresh />}
+              >
+                Refresh
+              </Button>
+            </div>
+            
+            <div className="max-h-96 overflow-y-auto space-y-1">
+              {data.logs.length > 0 ? (
+                data.logs.map((log, index) => (
+                  <LogEntry key={index} log={log} />
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  <BiCog className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                  <p>Không có logs nào</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default AdminSettings;

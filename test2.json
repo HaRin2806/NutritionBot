@@ -1,962 +1,4916 @@
 [
   {
-    "question": "Con tôi 4 tuổi hay bị táo bón, nguyên nhân chính là gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai2_muc3_1",
+    "question": "Con tôi hay bị táo bón, có phải do thiếu chất xơ không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc1_1",
     "age_group": "3-5"
   },
   {
-    "question": "Trẻ 2 tuổi bị suy dinh dưỡng có ảnh hưởng gì đến não bộ không?",
-    "positive": "bai1_muc1_2_1",
-    "negative": "bai4_muc1_1",
+    "question": "Trẻ bị suy dinh dưỡng thấp còi có ảnh hưởng lâu dài không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi", 
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi không chịu ăn rau, chỉ thích ăn bánh kẹo thì có sao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc3_1", 
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi bị sâu răng hàm sữa có cần nhổ không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Làm thế nào để biết con có đủ dinh dưỡng cho sự phát triển không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
     "age_group": "1-2"
   },
   {
-    "question": "Làm sao để biết trẻ 7 tuổi có đang thiếu sắt không?",
-    "positive": "bai2_muc1_2_1",
-    "negative": "bai3_muc3_1_3",
+    "question": "Cần bao nhiêu calo mỗi ngày cho trẻ đi học?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai2_muc3_2",
     "age_group": "1-19"
   },
   {
-    "question": "Tại sao trẻ mầm non lại dễ bị ngộ độc thực phẩm hơn người lớn?",
-    "positive": "bai4_muc1_1",
-    "negative": "bai1_muc1_1_1",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 15 tuổi cần uống bao nhiêu calo mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_1",
+    "question": "Con tôi 15 tuổi cần ăn bao nhiêu để đủ năng lượng?",
+    "positive_id": "bai1_bang7_15-19tuoi",
+    "negative_id": "bai1_muc3_2_1_3-5tuoi",
     "age_group": "15-19"
   },
   {
-    "question": "Trẻ 5 tuổi có thể ăn bao nhiêu gram muối trong một ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc3_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Ở tuổi 13, con tôi cần ăn bao nhiêu đơn vị rau mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc4_3",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trường học cần kiểm tra gì trước khi cho học sinh ăn?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc3_1_4_1-2tuoi",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con gái tôi 16 tuổi, chiều cao 1m55 cân nặng 60kg có béo phì không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc2_1",
+    "question": "Làm sao tính được con tôi có béo phì hay suy dinh dưỡng?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_muc3_2_4",
     "age_group": "5-19"
   },
   {
-    "question": "Trẻ 6 tuổi bị từ chối ăn rau thì làm thế nào?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc1_2",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Căng-tin trường học có được bán nước ngọt có gas không?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai2_muc4_2",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Bé 18 tháng tuổi nên ăn cháo hay cơm nát?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc3_1",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Tại sao cần đo cân nặng và chiều cao cho học sinh?",
-    "positive": "bai2_muc1_2_1",
-    "negative": "bai4_muc6",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 8 tuổi có thể uống bao nhiêu ly sữa mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc4_1_7_2",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ 12 tuổi nếu chỉ ăn đồ ngọt có vấn đề gì?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai2_muc4_3",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Bếp ăn trường học phải lưu mẫu thức ăn trong bao lâu?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_2_3_3-5tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 3 tuổi bị sâu răng hàm có nguy hiểm không?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai3_muc2_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Làm sao tính tuổi của trẻ để đánh giá dinh dưỡng?",
-    "positive": "bai2_muc3_2",
-    "negative": "bai4_muc1_2_2",
+    "question": "Con tôi thấp hơn bạn cùng tuổi, có phải thiếu dinh dưỡng?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai4_muc4_1_1_a_2",
     "age_group": "0-5"
   },
   {
-    "question": "Trẻ 14 tuổi có thể ăn tối đa bao nhiêu gram đường mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai1_muc1_2_3",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Tại sao cần sử dụng muối i-ốt trong bữa ăn học đường?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc4_4",
+    "question": "Đo chiều cao con như thế nào mới chính xác?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 17 tuổi cần ăn bao nhiêu đơn vị ngũ cốc mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "15-19"
+    "question": "Bữa ăn ở trường có đủ chất dinh dưỡng cho con không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "1-19"
   },
   {
-    "question": "Trẻ em thuộc vùng nào có tỉ lệ suy dinh dưỡng cao nhất?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai3_muc3_1_2",
+    "question": "Con tôi ăn ở trường có an toàn không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Trẻ con có thể bị ngộ độc thực phẩm ở trường không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_bang3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Bếp ăn trường học cần kiểm tra những gì?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quy trình kiểm thực ba bước là gì?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi cần ăn bao nhiêu protein mỗi ngày?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
     "age_group": "3-5"
   },
   {
-    "question": "Z-score âm 2 có nghĩa là gì trong đánh giá dinh dưỡng?",
-    "positive": "bai2_muc4_1",
-    "negative": "bai3_muc1_1",
+    "question": "Trẻ 12 tuổi cần bao nhiêu canxi để phát triển xương?",
+    "positive_id": "bai1_bang6_12-14tuoi",
+    "negative_id": "bai3_muc3_3_7",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con gái tuổi dậy thì cần bổ sung sắt nhiều hơn con trai không?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tháp dinh dưỡng có những tầng nào?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Con tôi nặng 15kg cao 105cm có bình thường không?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Phần mềm WHO anthro dùng để làm gì?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai1_muc3_3_4_2_6-11tuoi",
     "age_group": "0-5"
   },
   {
-    "question": "Nhân viên bếp ăn trường học cần có trang phục gì?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc3_5_4_15-19tuoi",
+    "question": "Làm sao biết con có đang phát triển bình thường không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi thiếu máu có phải do thiếu sắt không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp tăng khả năng tập trung học tập không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn thiếu chất có ảnh hưởng đến não bộ không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thực phẩm không an toàn có thể tích lũy độc tố trong cơ thể không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_1_3_1-2tuoi",
     "age_group": "6-18"
   },
   {
-    "question": "Con tôi 9 tuổi cần uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc5_1",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ 4 tuổi không chịu ăn thịt, có thể thay bằng gì?",
-    "positive": "bai1_muc3_2_4_3_3-5tuoi",
-    "negative": "bai4_muc1_2_4",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Vì sao trẻ 1-2 tuổi dễ bị thiếu máu?",
-    "positive": "bai1_muc1_2_1",
-    "negative": "bai3_muc3_1_1",
-    "age_group": "1-2"
-  },
-  {
-    "question": "Bữa ăn học đường của trẻ mầm non cần có những gì?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc4_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 11 tuổi có cân nặng 50kg có bình thường không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai4_muc4_3",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Trẻ 13 tuổi ăn nhiều đồ ngọt có thể gây ra vấn đề gì?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai3_muc2_1",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Thực phẩm nào không nên bán trong căng-tin trường học?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_1_3_1-2tuoi",
+    "question": "Trẻ em có dễ bị tiêu chảy và ngộ độc thực phẩm không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc3_2",
     "age_group": "6-18"
   },
   {
-    "question": "Trẻ 5 tuổi bị táo bón có thể do thiếu gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai2_muc3_1",
+    "question": "Con tôi kén ăn chỉ thích ăn một vài thứ thôi có sao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
     "age_group": "3-5"
   },
   {
-    "question": "Làm sao để khuyến khích trẻ 6 tuổi ăn rau?",
-    "positive": "bai1_muc3_3_4_2_6-11tuoi",
-    "negative": "bai4_muc1_1",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Tại sao cần đánh giá nhân trắc học cho học sinh?",
-    "positive": "bai2_muc2_2",
-    "negative": "bai3_muc3_1_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 16 tuổi cần ăn bao nhiêu đơn vị thịt cá mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc6",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Trường học có trách nhiệm gì trong việc đảm bảo an toàn thực phẩm?",
-    "positive": "bai3_muc2_2",
-    "negative": "bai1_muc3_2_1_3-5tuoi",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 7 tuổi có thể ăn bao nhiêu quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_4",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ em vùng miền núi có nguy cơ thiếu chất gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc1_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Bếp ăn trường học cần kiểm tra gì trong quá trình nấu ăn?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc1_1_2",
+    "question": "Nguyên tắc bếp một chiều là gì?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "bai1_muc1_1_1",
     "age_group": "6-18"
   },
   {
-    "question": "Con tôi 10 tuổi cần uống bao nhiêu đơn vị sữa mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc3_1_4",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ 14 tuổi có BMI 23 có bình thường không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai4_muc4_3",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Tại sao cần hạn chế đường trong bữa ăn học đường?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc3_2",
+    "question": "Cần lưu mẫu thức ăn ở trường không?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 12 tuổi chỉ thích ăn bánh kẹo có nguy hiểm không?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai3_muc2_2",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 3 tuổi bị thiếu sắt có triệu chứng gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Phần mềm WHO Anthro dùng để làm gì?",
-    "positive": "bai2_muc4_3",
-    "negative": "bai3_muc3_1_2",
+    "question": "Tính tuổi của trẻ theo tháng như thế nào?",
+    "positive_id": "bai2_muc3_2",
+    "negative_id": "bai3_muc3_2_4",
     "age_group": "0-5"
   },
   {
-    "question": "Con tôi 18 tuổi cần ăn bao nhiều calo mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_1",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Trẻ em thuộc gia đình nghèo có nguy cơ gì về dinh dưỡng?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai2_muc5_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Căng-tin trường học cần lưu mẫu thức ăn như thế nào?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_3_4_1_6-11tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 8 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_1",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Tại sao cần sử dụng thực phẩm địa phương cho bữa ăn học đường?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai4_muc1_2_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Trẻ 15 tuổi bị thừa cân có thể do ăn gì?",
-    "positive": "bai1_muc3_5_2_15-19tuoi",
-    "negative": "bai3_muc2_1",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Con tôi 2 tuổi hay ốm vặt có liên quan đến dinh dưỡng không?",
-    "positive": "bai1_muc1_2_1",
-    "negative": "bai4_muc4_1_7_2",
+    "question": "Con tôi ít uống nước có ảnh hưởng gì không?",
+    "positive_id": "bai1_muc3_1_3_1-2tuoi",
+    "negative_id": "bai4_muc2_2_1",
     "age_group": "1-2"
   },
   {
-    "question": "Cách đo chiều cao chính xác cho học sinh như thế nào?",
-    "positive": "bai2_muc3_1",
-    "negative": "bai3_muc3_3_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 13 tuổi có thể ăn tối đa bao nhiêu gram muối mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai1_muc3_4_1_12-14tuoi",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 4 tuổi không thích uống sữa có thể thay bằng gì?",
-    "positive": "bai1_muc3_2_4_3_3-5tuoi",
-    "negative": "bai2_muc4_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Bữa ăn học đường cần có bao nhiêu loại thực phẩm?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai4_muc1_2_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 6 tuổi cao 110cm cân 18kg có bình thường không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc3_1_1",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Tại sao trẻ tuổi học đường dễ bị ngộ độc thực phẩm?",
-    "positive": "bai4_muc1_1",
-    "negative": "bai1_muc1_1_1",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 9 tuổi có thể ăn bao nhiêu đơn vị rau mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc6",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Nhân viên y tế trường học có trách nhiệm gì về an toàn thực phẩm?",
-    "positive": "bai4_muc1_2_3",
-    "negative": "bai2_muc4_3",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 17 tuổi cần uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc2_2",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Trẻ 5 tuổi bị kén ăn có thể gây ra vấn đề gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc1_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Biểu đồ tăng trưởng WHO dùng để đánh giá gì?",
-    "positive": "bai2_muc4_4",
-    "negative": "bai3_muc3_1_4",
+    "question": "Thế nào là Z-score trong đánh giá dinh dưỡng?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai3_muc1_1",
     "age_group": "0-5"
   },
   {
-    "question": "Con tôi 11 tuổi cần ăn bao nhiêu đơn vị ngũ cốc mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc4_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Tại sao cần kiểm thực ba bước trong bếp ăn trường học?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc3_5_1_15-19tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 14 tuổi thích ăn đồ chiên có tác hại gì?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai2_muc3_1",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 1 tuổi có thể ăn cơm như người lớn không?",
-    "positive": "bai1_muc3_1_4_1-2tuoi",
-    "negative": "bai4_muc1_2",
+    "question": "Con tôi có cần bổ sung vitamin không?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai4_muc4_1_6",
     "age_group": "1-2"
   },
   {
-    "question": "Phụ huynh có thể hỗ trợ bữa ăn học đường như thế nào?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc4_4",
+    "question": "Quy định về tổ chức bữa ăn học đường có những gì?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc3_2_3_3-5tuoi",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 16 tuổi có cân nặng 45kg cao 1m60 có gầy không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Trẻ em Việt Nam có tỉ lệ thiếu máu cao ở vùng nào?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai3_muc3_1_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Dụng cụ chế biến thực phẩm trong trường học cần đảm bảo gì?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc1_2_3",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 3 tuổi có thể ăn bao nhiêu đơn vị thịt cá mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc5_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Tại sao cần bổ sung vitamin A trong dầu ăn?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai4_muc1_2_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 12 tuổi có thể uống nước ngọt hàng ngày không?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc4_1",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 19 tuổi cần ăn bao nhiêu đơn vị sữa mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc4_1_7_2",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Z-score dương 3 có nghĩa là gì trong đánh giá dinh dưỡng?",
-    "positive": "bai2_muc4_1",
-    "negative": "bai3_muc2_1",
+    "question": "Biểu đồ tăng trưởng WHO dùng để theo dõi gì?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
     "age_group": "0-5"
   },
   {
-    "question": "Con tôi 4 tuổi bị còi cọc có thể do nguyên nhân gì?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc6",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Bữa ăn trường học cần đảm bảo bao nhiêu nhóm thực phẩm?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc3_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 7 tuổi có thể ăn bao nhiêu gram đường mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai1_muc3_3_1_6-11tuoi",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ tuổi dậy thì cần chú ý gì về dinh dưỡng?",
-    "positive": "bai1_muc3_4_1_12-14tuoi",
-    "negative": "bai4_muc1_1",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Căng-tin trường học có được bán thực phẩm chế biến sẵn không?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_5_3_15-19tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 15 tuổi có thể ăn bao nhiêu đơn vị rau mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_2",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Tại sao cần đa dạng thực phẩm trong bữa ăn học đường?",
-    "positive": "bai3_muc3_1_1",
-    "negative": "bai4_muc1_2_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 18 tháng có thể ăn phở ở trường không?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc4_3",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Trẻ 10 tuổi có BMI 19 có bình thường không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc3_1_4",
+    "question": "Con tôi béo phì theo tiêu chuẩn nào?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai3_bang1",
     "age_group": "5-19"
   },
   {
-    "question": "Ban giám hiệu có trách nhiệm gì về an toàn thực phẩm?",
-    "positive": "bai4_muc1_2_2",
-    "negative": "bai1_muc1_1_2",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 5 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Tại sao trẻ em dân tộc thiểu số hay bị suy dinh dưỡng?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai2_muc3_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Kiểm thực ba bước gồm những bước nào?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai3_muc3_1_1",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 13 tuổi cần ăn bao nhiêu đơn vị sữa mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_4",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Bữa phụ ở trường mầm non thường là gì?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai4_muc1_1",
+    "question": "Nhân trắc học dinh dưỡng quan trọng như thế nào?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 6 tuổi có cân nặng 25kg có béo không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc2_2",
+    "question": "Con tôi tuổi mầm non cần ăn khác gì so với tuổi tiểu học?",
+    "positive_id": "bai1_muc3_2_1_3-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần kiểm soát an toàn thực phẩm từng khâu không?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi đi cấp 3 cần ăn như thế nào?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Các mối nguy về thực phẩm trong trường học có gì?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi cấp 2 đang dậy thì có đặc điểm gì?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Cách tính lượng thực phẩm cho cả lớp như thế nào?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi lớp 1 cần ăn uống ra sao?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tháp dinh dưỡng cho trẻ tiểu học khác mầm non ở chỗ nào?",
+    "positive_id": "bai1_hinh10",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Thực đơn trường học cần đảm bảo những gì?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi cao nhưng gầy có sao không?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Việt Nam có bao nhiêu trẻ em bị suy dinh dưỡng?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tỉ lệ thiếu máu ở trẻ em hiện tại như thế nào?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ vùng miền núi có nguy cơ suy dinh dưỡng cao hơn không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Nhóm tuổi nào dễ mắc vấn đề tiêu hóa nhất?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Dinh dưỡng có ảnh hưởng đến giống nòi không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con gái cần sắt nhiều hơn con trai bao nhiêu lần?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Cân đo con như thế nào cho đúng?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "BMI của con tôi thế nào là bình thường?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai3_muc3_3_7",
     "age_group": "5-19"
   },
   {
-    "question": "Thực phẩm chức năng có thể thay thế bữa ăn chính không?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai4_muc4_3",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Con tôi 1 tuổi cần uống bao nhiêu ml sữa mỗi ngày?",
-    "positive": "bai1_muc3_1_3_1-2tuoi",
-    "negative": "bai2_muc5_1",
-    "age_group": "1-2"
-  },
-  {
-    "question": "Tại sao cần sử dụng bột mì có bổ sung sắt?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai4_muc1_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 14 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_1",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 8 tuổi chỉ thích ăn cơm trắng có vấn đề gì?",
-    "positive": "bai1_muc3_3_4_2_6-11tuoi",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Nguyên liệu thực phẩm trong căng-tin cần đảm bảo gì?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_2_4_1_3-5tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 16 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc3_1_2",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Tại sao trẻ em cần ăn ngũ cốc nguyên hạt?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc4_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 2 tuổi có thể ăn thức ăn có gia vị không?",
-    "positive": "bai1_muc3_1_4_1-2tuoi",
-    "negative": "bai4_muc6",
-    "age_group": "1-2"
-  },
-  {
-    "question": "Phần mềm WHO AnthroPlus dùng cho lứa tuổi nào?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc3_3_4",
+    "question": "Phần mềm WHO anthro plus khác gì với WHO anthro?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
     "age_group": "5-19"
   },
   {
-    "question": "Con tôi 12 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_2_2",
+    "question": "Con tôi cần bao nhiêu ngũ cốc mỗi ngày?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Chất béo chiếm bao nhiêu phần trăm năng lượng?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn ít rau có thể bù bằng trái cây được không?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Bữa phụ ở trường cần bao nhiêu phần trăm năng lượng?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Sữa và chế phẩm sữa cần ăn bao nhiêu mỗi ngày?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Thịt cá trứng thuộc tầng mấy của tháp dinh dưỡng?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi cần hạn chế đường và muối như thế nào?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Nước có quan trọng trong chế độ ăn không?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con trai tuổi dậy thì cần năng lượng nhiều hơn con gái không?",
+    "positive_id": "bai1_bang6_12-14tuoi",
+    "negative_id": "bai2_muc3_2",
     "age_group": "12-14"
   },
   {
-    "question": "Trẻ tuổi vị thành niên hay gặp vấn đề dinh dưỡng nào?",
-    "positive": "bai1_muc3_5_2_15-19tuoi",
-    "negative": "bai3_muc2_1",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Bệnh tim mạch ở trẻ có liên quan đến dinh dưỡng không?",
-    "positive": "bai3_muc2_2",
-    "negative": "bai2_muc4_3",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 4 tuổi có thể uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Tại sao cần che đậy thực phẩm đã chín trong căng-tin?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_4_4_12-14tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 17 tuổi có thể ăn bao nhiêu đơn vị thịt cá mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc3_2",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Trẻ 9 tuổi bị thừa cân có thể do nguyên nhân gì?",
-    "positive": "bai1_muc3_3_2_6-11tuoi",
-    "negative": "bai4_muc1_2_4",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Việt Nam có bao nhiêu triệu trẻ dưới 5 tuổi bị suy dinh dưỡng?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai3_muc3_1_4",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Biểu mẫu lưu mẫu thức ăn cần ghi những thông tin gì?",
-    "positive": "phuluc5_mau_luumau_thuc_an",
-    "negative": "bai1_muc1_2_1",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 11 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_4",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Tại sao cần hạn chế muối trong bữa ăn trẻ em?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 19 tuổi có thể ăn bao nhiêu gram muối mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai1_muc3_5_1_15-19tuoi",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Trẻ 6 tuổi bị kém tập trung có liên quan đến dinh dưỡng không?",
-    "positive": "bai1_muc1_2_3",
-    "negative": "bai4_muc4_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Kiểm tra biểu mẫu an toàn thực phẩm bếp ăn gồm những nội dung gì?",
-    "positive": "phuluc3_mau_bieuban_kiemtra_attp",
-    "negative": "bai2_muc5_1",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 5 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Tại sao cần sử dụng thực phẩm có vi sinh vật có lợi?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai2_muc4_1",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 13 tuổi có thể uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc4_1_7_2",
+    "question": "Trẻ vị thành niên có vấn đề dinh dưỡng gì thường gặp?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
     "age_group": "12-14"
   },
   {
-    "question": "Trẻ 7 tuổi bị gầy có thể do nguyên nhân gì?",
-    "positive": "bai1_muc3_3_2_6-11tuoi",
-    "negative": "bai3_muc2_2",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Cơ quan quản lý giáo dục có trách nhiệm gì về an toàn thực phẩm?",
-    "positive": "bai4_muc1_2",
-    "negative": "bai1_muc3_2_3_3-5tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 18 tuổi có thể ăn bao nhiêu đơn vị rau mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc3_1",
+    "question": "Hoạt động thể lực ảnh hưởng đến nhu cầu năng lượng như thế nào?",
+    "positive_id": "bai1_bang7_15-19tuoi",
+    "negative_id": "bai2_muc4_4",
     "age_group": "15-19"
   },
   {
-    "question": "Tại sao trẻ em cần ăn rau quả nhiều màu sắc?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai4_muc6",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 3 tuổi có thể uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_2",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Trường học có thể tự trồng rau để cung cấp cho bữa ăn không?",
-    "positive": "bai3_muc3_1_3",
-    "negative": "bai4_muc1_2_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 15 tuổi có cân nặng 70kg cao 1m65 có béo không?",
-    "positive": "bai2_muc5_1",
-    "negative": "bai3_muc3_1_1",
-    "age_group": "5-19"
-  },
-  {
-    "question": "Năm 2020 tỉ lệ thiếu máu ở trẻ em dưới 5 tuổi là bao nhiêu?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai4_muc1_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Dụng cụ lưu mẫu thức ăn cần đảm bảo điều kiện gì?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_5_4_15-19tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 10 tuổi có thể ăn bao nhiêu đơn vị thịt cá mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Tại sao bữa ăn học đường cần có chất béo?",
-    "positive": "bai3_muc3_1_2",
-    "negative": "bai4_muc1_2_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 14 tuổi có thể uống bao nhiêu ly nước mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc3_1_4",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Trẻ 4 tuổi bị răng sữa sâu có ảnh hưởng gì đến răng vĩnh viễn?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai2_muc5_1",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Phụ gia thực phẩm trong căng-tin cần tuân thủ quy định nào?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc1_1_1",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 16 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc2_1",
+    "question": "Con tôi 16 tuổi tập thể thao nhiều cần ăn ra sao?",
+    "positive_id": "bai1_bang7_15-19tuoi",
+    "negative_id": "bai3_muc1_1",
     "age_group": "15-19"
   },
   {
-    "question": "Tại sao cần phối hợp nguồn chất đạm trong bữa ăn?",
-    "positive": "bai3_muc3_1_2",
-    "negative": "bai2_muc4_4",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 8 tuổi có thể ăn bao nhiêu gram đường mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai4_muc1_2_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ em vùng Tây Nguyên có nguy cơ gì về dinh dưỡng?",
-    "positive": "bai1_muc3_2_2_3-5tuoi",
-    "negative": "bai3_muc3_1_3",
-    "age_group": "3-5"
-  },
-  {
-    "question": "Quy trình kiểm thực ba bước được ghi vào biểu mẫu nào?",
-    "positive": "phuluc4_mau_kiemthuc_babuoc",
-    "negative": "bai2_muc3_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 12 tuổi có thể ăn bao nhiêu đơn vị dầu mỡ mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc6",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Bữa ăn học đường có thể thay thế hoàn toàn bữa ăn gia đình không?",
-    "positive": "bai3_muc1_1",
-    "negative": "bai4_muc1_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 9 tuổi có thể ăn bao nhiêu gram muối mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai1_muc3_3_3_6-11tuoi",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ tuổi tiền dậy thì cần lưu ý gì về dinh dưỡng?",
-    "positive": "bai1_muc3_3_1_6-11tuoi",
-    "negative": "bai4_muc4_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Thực phẩm tươi sống trong căng-tin cần đảm bảo tiêu chí gì?",
-    "positive": "bai4_muc4_3",
-    "negative": "bai1_muc3_4_3_12-14tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 18 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai2_muc4_1",
+    "question": "Vitamin D có trong thực phẩm nào?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai4_muc4_1_6",
     "age_group": "15-19"
   },
   {
-    "question": "Tại sao cần đánh giá cảm quan món ăn khi chế biến?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai3_muc3_1_1",
-    "age_group": "6-18"
+    "question": "Con tôi cần bao nhiều vitamin C mỗi ngày?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "15-19"
   },
   {
-    "question": "Con tôi 1 tuổi có thể ăn thực phẩm có đường không?",
-    "positive": "bai1_muc3_1_4_1-2tuoi",
-    "negative": "bai2_muc5_1",
-    "age_group": "1-2"
+    "question": "Folate quan trọng như thế nào với trẻ vị thành niên?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai3_bang3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Các tầng của tháp dinh dưỡng có khẩu phần khác nhau như thế nào?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Tầng nào của tháp dinh dưỡng cần ăn nhiều nhất?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Dầu mỡ nên ăn bao nhiêu mỗi ngày?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Con tôi từ chối ăn các loại thực phẩm mới phải làm sao?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ ăn nhiều thực phẩm chế biến sẵn có tốt không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Gia đình nghèo có con dễ bị còi cọc hơn không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Răng hàm sữa bị nhổ có ảnh hưởng đến răng vĩnh viễn không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi phân khô cứng khi đi đại tiện có sao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "3-5"
   },
   {
     "question": "Chu kỳ vòng đời có những giai đoạn nào?",
-    "positive": "bai1_muc1_1_2",
-    "negative": "bai4_muc1_2_4",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 7 tuổi có thể ăn bao nhiêu đơn vị sữa mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc2_2",
-    "age_group": "6-11"
+    "question": "Dinh dưỡng giúp duy trì chức năng gì của cơ thể?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
   },
   {
-    "question": "Trẻ 13 tuổi thường gặp vấn đề dinh dưỡng nào?",
-    "positive": "bai1_muc3_4_2_12-14tuoi",
-    "negative": "bai2_muc4_2",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Vệ sinh khu vực chế biến thực phẩm cần chú ý gì?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai1_muc3_5_3_15-19tuoi",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 19 tuổi có thể ăn bao nhiêu đơn vị thịt cá mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc3_1_4",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Tại sao dinh dưỡng quan trọng với sự phát triển nhận thức?",
-    "positive": "bai1_muc1_2_1",
-    "negative": "bai4_muc1_1",
+    "question": "Con tôi 1 tuổi bắt đầu ăn dặm cần chú ý gì?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "bai3_muc2_2",
     "age_group": "1-2"
   },
   {
-    "question": "Con tôi 6 tuổi có thể ăn bao nhiêu gram muối mỗi ngày?",
-    "positive": "bai3_muc3_3_4",
-    "negative": "bai2_muc4_3",
-    "age_group": "6-11"
-  },
-  {
-    "question": "Trẻ em có thể sử dụng thực phẩm chức năng thay thế vitamin không?",
-    "positive": "bai1_muc3_5_2_15-19tuoi",
-    "negative": "bai4_muc4_3",
-    "age_group": "15-19"
-  },
-  {
-    "question": "Việc ghi chép kiểm thực ba bước có tác dụng gì?",
-    "positive": "phuluc4_mau_kiemthuc_babuoc",
-    "negative": "bai1_muc1_2_2",
-    "age_group": "1-19"
-  },
-  {
-    "question": "Con tôi 14 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai3_muc3_1_2",
-    "age_group": "12-14"
-  },
-  {
-    "question": "Tại sao cần kiểm tra dụng cụ ăn uống trước khi phục vụ?",
-    "positive": "bai4_muc4_1_7_2",
-    "negative": "bai2_muc5_1",
-    "age_group": "6-18"
-  },
-  {
-    "question": "Con tôi 2 tuổi có thể ăn cùng thực đơn với người lớn không?",
-    "positive": "bai1_muc3_1_4_1-2tuoi",
-    "negative": "bai3_muc3_1_3",
+    "question": "Trẻ nhỏ có cần uống nhiều nước không?",
+    "positive_id": "bai1_muc3_1_3_1-2tuoi",
+    "negative_id": "bai4_bang1",
     "age_group": "1-2"
   },
   {
-    "question": "Đánh giá nhân trắc học dinh dưỡng có vai trò gì?",
-    "positive": "bai2_muc2_2",
-    "negative": "bai4_muc1_2_3",
+    "question": "Con tôi 2 tuổi cần ăn khác gì so với lúc 1 tuổi?",
+    "positive_id": "bai1_muc3_1_4_1-2tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ mầm non có hoạt động thể chất nhiều không?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi đi tiểu học cần chuẩn bị gì về dinh dưỡng?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ tuổi học đường có tăng trưởng nhanh không?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "bai3_bang1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi lên cấp 2 có thay đổi gì về thể chất?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tuổi dậy thì có đặc điểm dinh dưỡng gì riêng?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần chế độ ăn đặc biệt không?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ vị thành niên có vấn đề gì về hành vi ăn uống?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Cách đánh giá có chính xác tình trạng dinh dưỡng của con không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
     "age_group": "1-19"
   },
   {
-    "question": "Con tôi 11 tuổi có thể ăn bao nhiêu đơn vị quả mỗi ngày?",
-    "positive": "bai1_bang9_tonghop",
-    "negative": "bai4_muc1_2",
+    "question": "Cân đo định kỳ có cần thiết không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi có cần lập kế hoạch can thiệp dinh dưỡng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cân nặng theo tuổi đánh giá được gì?",
+    "positive_id": "bai2_bang1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chiều cao theo tuổi cho biết điều gì?",
+    "positive_id": "bai2_bang2",
+    "negative_id": "bai3_muc3_3_7",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Cân nặng theo chiều cao có ý nghĩa như thế nào?",
+    "positive_id": "bai2_bang3",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Làm thế nào điền biểu đồ tăng trưởng cho con?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chấm biểu đồ tăng trưởng có khó không?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai1_muc3_2_3_3-5tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Làm sao nhận định kết quả từ biểu đồ tăng trưởng?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai3_bang2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Bữa ăn học đường có thúc đẩy tình đoàn kết không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn ở trường có giảm được bất bình đẳng xã hội không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp tăng sức đề kháng không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường học có thể dạy văn hóa ẩm thực qua bữa ăn không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bộ Giáo dục có hướng dẫn gì về bữa ăn học đường?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quyết định 41 của Thủ tướng nói về gì?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường học có trách nhiệm gì với bữa ăn học đường?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chi phí bữa ăn học đường do ai quy định?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Có hỗ trợ gì cho gia đình khó khăn về bữa ăn học đường không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc3_1_4_1-2tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách tính tổng lượng thực phẩm cho cả trường như thế nào?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa trưa cần bao nhiêu phần trăm năng lượng trong ngày?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chất đạm cần chiếm bao nhiêu phần trăm năng lượng?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chất bột đường chiếm tỉ lệ cao nhất trong năng lượng phải không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách lập thực đơn cân bằng dinh dưỡng như thế nào?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Xây dựng khẩu phần ăn cho trẻ 4 tuổi ra sao?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Trẻ 15kg 105cm cần bao nhiêu năng lượng?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Bữa phụ chiều cần cung cấp những gì?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Tác nhân sinh học có thể lây nhiễm qua đường nào?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Vi sinh vật có thể gây nguy hiểm gì cho thực phẩm?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Hóa chất trong thực phẩm đến từ đâu?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Độc tố tự nhiên có trong loại thực phẩm nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm bị biến chất có dấu hiệu gì?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Môi trường có thể lây nhiễm tác nhân gì vào thực phẩm?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Súc vật bị bệnh có ảnh hưởng đến an toàn thực phẩm không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Quá trình chế biến có thể gây ô nhiễm thực phẩm không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Bảo quản thực phẩm sai cách có nguy hiểm không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Khâu nào quan trọng nhất trong kiểm soát an toàn thực phẩm?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Từ tiếp nhận nguyên liệu đến bảo quản cần kiểm soát những gì?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Quy trình bếp một chiều có lợi ích gì?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "bai3_bang3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Biểu mẫu kiểm tra an toàn thực phẩm gồm những phần nào?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hồ sơ pháp lý của bếp ăn cần có gì?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đánh giá điều kiện an toàn thực phẩm như thế nào?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm thực ba bước cần làm ở thời điểm nào?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra trước khi chế biến cần chú ý gì?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra khi chế biến khác gì so với trước chế biến?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra trước khi ăn có cần thiết không?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Lưu mẫu thức ăn trong bao lâu?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khi nào thì hủy mẫu thức ăn lưu?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai3_muc3_3_7",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Theo dõi mẫu thức ăn lưu có quan trọng không?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quản lý mẫu thức ăn trong bếp ăn tập thể như thế nào?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi cấp 1 ăn ít cơm nhưng ăn nhiều bánh mì có được không?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai4_muc1_1",
     "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ mẫu giáo nên ăn trái cây bao nhiêu lần trong ngày?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 13 tuổi có cần ăn nhiều hơn bình thường không?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Thiếu hụt vi chất dinh dưỡng có biểu hiện như thế nào?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi đang tuổi dậy thì ăn gì để tăng chiều cao?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ lớp 5 cần bao nhiêu protein để phát triển cơ bắp?",
+    "positive_id": "bai1_muc3_3_3_2_6-11tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi 18 tuổi chuẩn bị thi đại học cần ăn gì bổ não?",
+    "positive_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ nhỏ có thể ăn chay được không?",
+    "positive_id": "bai1_muc3_1_4_1-2tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi hay ốm vặt có phải do thiếu dinh dưỡng không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "bai3_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Tại sao trẻ em lại dễ mắc các bệnh về đường tiêu hóa?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Ăn không đủ chất có ảnh hưởng đến khả năng học tập không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi lên cấp 3 tăng cân đột ngột có sao không?",
+    "positive_id": "bai1_muc3_5_1_15-19tuoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ vị thành niên có cần bổ sung thêm vitamin không?",
+    "positive_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi hay quên ăn sáng đi học có ảnh hưởng gì?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn ở trường có thể thay thế bữa ăn gia đình được không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi không thích ăn thịt chỉ ăn cá có đủ protein không?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ ăn nhiều đồ chiên rán có hại như thế nào?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con gái dậy thì sớm hơn con trai cần ăn khác gì không?",
+    "positive_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Cách tính BMI cho trẻ em có khác người lớn không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Con tôi thừa cân nhẹ có cần lo lắng không?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai1_muc3_1_3_1-2tuoi",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Thiếu cân nặng có nghiêm trọng hơn thừa cân không?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Con tôi gầy nhẹ theo WHO có cần can thiệp không?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai3_bang3",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Béo phì ở trẻ em có nguy hiểm không?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Cách đo cân nặng cho trẻ nhỏ có khác trẻ lớn không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi không đứng thẳng khi đo chiều cao có sao không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao phải tính tuổi theo tháng mà không phải năm?",
+    "positive_id": "bai2_muc3_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con sinh tháng 3 giờ tháng 8 tính là bao nhiêu tuổi?",
+    "positive_id": "bai2_muc3_2",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Z-score âm có nghĩa là gì?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi Z-score cân nặng/tuổi là -1.5 có bình thường không?",
+    "positive_id": "bai2_bang1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Suy dinh dưỡng thể nhẹ cân có nguy hiểm không?",
+    "positive_id": "bai2_bang1",
+    "negative_id": "bai3_bang2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi có dấu hiệu thấp còi nhẹ phải làm gì?",
+    "positive_id": "bai2_bang2",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Thấp còi vừa có thể hồi phục được không?",
+    "positive_id": "bai2_bang2",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi gầy nhẹ nhưng cao bình thường có sao không?",
+    "positive_id": "bai2_bang3",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Suy dinh dưỡng cấp tính nghiêm trọng cần xử lý ra sao?",
+    "positive_id": "bai2_bang3",
+    "negative_id": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Thừa cân ở trẻ nhỏ có phổ biến không?",
+    "positive_id": "bai2_bang3",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Tại sao WHO lại có 2 phần mềm anthro khác nhau?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai1_muc3_3_3_2_6-11tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Phần mềm WHO anthro có miễn phí không?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Có cần học cách sử dụng biểu đồ tăng trưởng không?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Cách điền thông tin vào biểu đồ tăng trưởng như thế nào?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chấm điểm trên biểu đồ tăng trưởng có khó không?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai3_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Từ biểu đồ tăng trưởng có thể biết được gì về con?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai4_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Bữa ăn học đường có thể dạy trẻ về ý thức môi trường không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao bữa ăn học đường lại quan trọng với việc học tập?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con ăn đủ ở trường có cần ăn thêm ở nhà không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường có giúp trẻ rèn luyện kỹ năng xã hội không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn ở trường có đủ chất xơ và vitamin không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao cần có môi trường học tập công bằng về dinh dưỡng?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai1_muc3_2_3_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quyết định 4280 của Bộ GD-ĐT quy định gì?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Công văn 988 về tăng cường an toàn thực phẩm nói về gì?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chương trình bữa ăn học đường có quy định về calo không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường học có thể hợp tác với đơn vị nào cung cấp suất ăn?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Việc đánh giá chất lượng bữa ăn học đường có bắt buộc không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phụ huynh khó khăn có được hỗ trợ chi phí bữa ăn không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách tính khối lượng thực phẩm đã sơ chế như thế nào?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ nhà trẻ và mẫu giáo có nhu cầu dinh dưỡng khác nhau không?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tổng khối lượng nguyên liệu tính như thế nào?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa trưa cần cung cấp bao nhiêu phần trăm năng lượng cả ngày?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa phụ chiều có cần thiết cho trẻ không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tỉ lệ protein lipid carbohydrate chuẩn là bao nhiêu?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ lớn hơn có cần nhiều năng lượng hơn không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn cân bằng dinh dưỡng cần có những yếu tố gì?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách lập thực đơn cho cả tuần như thế nào?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Có cần xoay vòng các món ăn trong thực đơn không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn mùa hè có khác mùa đông không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bé trai 4 tuổi cần bao nhiêu năng lượng mỗi ngày?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Cách tính năng lượng cho bữa trưa và bữa phụ ra sao?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai4_bang1",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Từ nhu cầu năng lượng làm sao biết lượng thực phẩm cụ thể?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Trẻ 15kg cao 105cm có phát triển bình thường không?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "4-4"
+  },
+  {
+    "question": "An toàn thực phẩm có ảnh hưởng đến an ninh quốc gia không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Học sinh bị ngộ độc thực phẩm có ảnh hưởng xã hội không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_muc3_3_7",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Vì sao trẻ em lại dễ bị ảnh hưởng bởi thực phẩm không an toàn?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm không vệ sinh có thể gây thiếu dinh dưỡng không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Chất độc hại tích lũy trong cơ quan nào của cơ thể?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tác nhân sinh học nguy hiểm nhất là gì?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Vi khuẩn có thể có trong loại thực phẩm nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Virus trong thực phẩm có thể lây từ đâu?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Ký sinh trùng trong thực phẩm có nguy hiểm không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thuốc trừ sâu có thể tồn dư trong thực phẩm bao lâu?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Hormone tăng trưởng trong thức ăn có hại như thế nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Kim loại nặng từ đâu vào thực phẩm?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Độc tố nấm có thể gây chết người không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm ôi thiu có dấu hiệu gì dễ nhận biết?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Màu sắc bất thường của thực phẩm có nguy hiểm không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi 2 tuổi không thích ăn rau xanh có thể thay bằng gì?",
+    "positive_id": "bai1_muc3_1_4_1-2tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Protein từ thịt có khác protein từ đậu không?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi uống sữa công thức có cần bổ sung canxi thêm không?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 18 tháng tuổi cần bao nhiêu vitamin A mỗi ngày?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Thiamin có vai trò gì trong cơ thể trẻ nhỏ?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con gái 1 tuổi có cần sắt nhiều hơn con trai không?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Kẽm thiếu hụt có biểu hiện như thế nào ở trẻ nhỏ?",
+    "positive_id": "bai1_bang1_1-2tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi mẫu giáo cần ăn bao nhiêu carbohydrate?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Lipid chiếm bao nhiêu phần trăm trong khẩu phần trẻ mầm non?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 4 tuổi có cần vitamin D nhiều hơn trẻ 3 tuổi không?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Folate có tác dụng gì với trẻ mầm non?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Niacin thiếu hụt có ảnh hưởng đến trí não không?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi 5 tuổi cần bao nhiêu mg canxi mỗi ngày?",
+    "positive_id": "bai1_bang2_3-5tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ mầm non có thể ăn chung khẩu phần với người lớn không?",
+    "positive_id": "bai1_muc3_2_3_3-5tuoi",
+    "negative_id": "bai3_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Nhu cầu nước uống của trẻ 4 tuổi là bao nhiêu?",
+    "positive_id": "bai1_muc3_2_3_3-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tháp dinh dưỡng cho trẻ mầm non có mấy tầng?",
+    "positive_id": "bai1_muc3_2_4_1_3-5tuoi",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tầng đáy của tháp dinh dưỡng gồm những thực phẩm gì?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi mầm non nên ăn bao nhiêu khẩu phần rau mỗi ngày?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trái cây có thể thay thế hoàn toàn rau xanh được không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tầng thứ 3 của tháp dinh dưỡng có gì đặc biệt?",
+    "positive_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi không uống sữa có thể ăn yaourt thay thế không?",
+    "positive_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Đậu phụ có thể thay thế thịt cho trẻ ăn chay không?",
+    "positive_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Dầu ăn nào tốt nhất cho trẻ mầm non?",
+    "positive_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi lớp 2 có thể ăn cùng khẩu phần với lớp 5 không?",
+    "positive_id": "bai1_muc3_3_3_2_6-11tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ tiểu học cần bao nhiêu gam protein mỗi ngày?",
+    "positive_id": "bai1_bang3_6-11tuoi",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Vitamin B12 có vai trò gì với trẻ học sinh?",
+    "positive_id": "bai1_bang4_6-11tuoi",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi lớp 3 cần sắt nhiều hơn lớp 1 bao nhiêu?",
+    "positive_id": "bai1_bang4_6-11tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Phospho có tác dụng gì với xương răng trẻ em?",
+    "positive_id": "bai1_bang4_6-11tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tháp dinh dưỡng trẻ tiểu học khác mầm non ở điểm nào?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi lớp 4 nên ăn bánh mì hay cơm nhiều hơn?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Khoai lang có thể thay thế cơm cho trẻ tiểu học không?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi chỉ thích ăn rau củ luộc có đủ dinh dưỡng không?",
+    "positive_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ tiểu học cần uống bao nhiều ly sữa mỗi ngày?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trứng gà có thể thay thế hoàn toàn thịt không?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi không thích ăn cá có thể ăn tôm cua thay thế không?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Đường và muối có cần hạn chế nghiêm ngặt không?",
+    "positive_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Con tôi lên cấp 2 sẽ có những thay đổi gì về cơ thể?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tuổi dậy thì bắt đầu từ khi nào?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Sự phát triển tâm thần tuổi dậy thì có đặc điểm gì?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Vận động của trẻ 13 tuổi khác trẻ 10 tuổi như thế nào?",
+    "positive_id": "bai1_muc3_4_1_12-14tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi dậy thì sớm có cần chế độ ăn đặc biệt không?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Biếng ăn ở tuổi dậy thì có phổ biến không?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "bai3_bang1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Thiếu sắt ở trẻ gái dậy thì có nguy hiểm không?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Rối loạn ăn uống ở tuổi dậy thì cần xử lý ra sao?",
+    "positive_id": "bai1_muc3_4_2_12-14tuoi",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con trai tuổi dậy thì cần năng lượng tối đa bao nhiêu?",
+    "positive_id": "bai1_muc3_4_3_1_12-14tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Nhu cầu protein của trẻ 14 tuổi cao như thế nào?",
+    "positive_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con gái dậy thì cần bổ sung gì để tránh thiếu máu?",
+    "positive_id": "bai1_bang6_12-14tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Vitamin E có tác dụng gì với trẻ tuổi dậy thì?",
+    "positive_id": "bai1_bang6_12-14tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Magie thiếu hụt có ảnh hưởng đến cơ bắp không?",
+    "positive_id": "bai1_bang6_12-14tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tháp dinh dưỡng cho tuổi dậy thì có gì đặc biệt?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 15 tuổi có thể ăn như người lớn được chưa?",
+    "positive_id": "bai1_muc3_5_1_15-19tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ vị thành niên có đặc điểm sinh lý gì nổi bật?",
+    "positive_id": "bai1_muc3_5_1_15-19tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Phát triển tâm thần ở tuổi 16-18 như thế nào?",
+    "positive_id": "bai1_muc3_5_1_15-19tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi cấp 3 hay ăn vặt có ảnh hưởng gì không?",
+    "positive_id": "bai1_muc3_5_2_15-19tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Stress học tập có ảnh hưởng đến việc ăn uống không?",
+    "positive_id": "bai1_muc3_5_2_15-19tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 17 tuổi bỏ bữa sáng có nguy hiểm không?",
+    "positive_id": "bai1_muc3_5_2_15-19tuoi",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Thói quen ăn uống sai lầm ở tuổi vị thành niên là gì?",
+    "positive_id": "bai1_muc3_5_2_15-19tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con trai 18 tuổi tập gym nhiều cần ăn ra sao?",
+    "positive_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "negative_id": "bai3_bang3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hoạt động thể lực nặng cần bổ sung thêm gì?",
+    "positive_id": "bai1_bang7_15-19tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con gái 16 tuổi cần bao nhiêu mg sắt mỗi ngày?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Riboflavin thiếu hụt có biểu hiện như thế nào?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Pantothenic acid có vai trò gì trong cơ thể?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Biotin thiếu hụt có ảnh hưởng đến da tóc không?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi cấp 3 có cần bổ sung Selenium không?",
+    "positive_id": "bai1_bang8_15-19tuoi",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Các nhóm tuổi khác nhau cần khẩu phần như thế nào?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Tầng 1 tháp dinh dưỡng các độ tuổi có giống nhau không?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Sữa và chế phẩm sữa khuyến nghị khác nhau thế nào?",
+    "positive_id": "bai1_bang9_tonghop",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Nhân trắc học dinh dưỡng là khái niệm gì?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao cần đánh giá tình trạng dinh dưỡng của học sinh?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nhân trắc học có thể phát hiện được vấn đề gì?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai1_muc3_2_4_3_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Theo dõi sự tăng trưởng có quan trọng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Xu hướng dinh dưỡng giúp lập kế hoạch gì?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Can thiệp dinh dưỡng cần dựa trên dữ liệu gì?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cân trẻ cần lưu ý những gì để chính xác?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai3_bang2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thước đo chiều cao cần chuẩn bị như thế nào?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ cần đứng như thế nào khi đo chiều cao?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con sinh ngày 15/3/2020 đến 20/8/2024 tính sao?",
+    "positive_id": "bai2_muc3_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Tính tuổi theo năm dùng khi nào?",
+    "positive_id": "bai2_muc3_2",
+    "negative_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "WHO có bao nhiêu phương pháp đánh giá dinh dưỡng?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chỉ số Z-score được tính như thế nào?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Cân nặng theo tuổi có hạn chế gì?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chiều cao theo tuổi phản ánh điều gì?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Thấp còi có thể do nguyên nhân nào?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Cân nặng theo chiều cao cho biết gì?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Suy dinh dưỡng cấp tính khác mãn tính như thế nào?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "0-5"
+  },
+  {
+    "question": "WHO anthro có thể dùng trên máy tính nào?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Biểu đồ tăng trưởng có mấy loại chính?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Sử dụng biểu đồ tăng trưởng có cần hướng dẫn không?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai3_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Thông tin cần điền vào biểu đồ tăng trưởng là gì?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Chấm biểu đồ có cần dụng cụ đặc biệt không?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Từ biểu đồ có thể dự đoán xu hướng phát triển không?",
+    "positive_id": "bai2_muc4_4",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "0-5"
+  },
+  {
+    "question": "WHO anthro plus dùng cho độ tuổi nào?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "5-19"
+  },
+  {
+    "question": "BMI theo tuổi có ưu điểm gì so với các chỉ số khác?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Phần mềm WHO anthro plus có miễn phí không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Bảng chuẩn phát triển WHO có cho trẻ Việt Nam không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con trai 4 tuổi nặng 12kg có bình thường không?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con gái 3 tuổi 6 tháng nặng 11kg có nhẹ cân không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Trẻ trai có nặng hơn trẻ gái cùng tuổi không?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi 5 tuổi cao 100cm nặng bao nhiêu là chuẩn?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Bé gái cao 90cm nặng 9,5kg có gầy không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Cân nặng theo chiều cao khác gì với cân nặng theo tuổi?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi 18 tháng cao 85cm nặng 10kg có đạt chuẩn không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Percentile P97 có nghĩa là gì trong bảng chuẩn WHO?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi nằm ở percentile P10 có cần lo lắng không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Percentile P50 tương ứng với trung bình phải không?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con cao 94cm có thể nặng từ bao nhiêu đến bao nhiêu?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Bé trai 48 tháng tuổi có cân nặng trung bình là bao nhiêu?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con gái 4 tuổi 3 tháng cân nặng lý tưởng là bao nhiêu?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Trẻ cao 88cm nặng 9,5kg có thuộc nhóm nào?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi nặng hơn P85 có phải béo phì không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Bảng chuẩn WHO áp dụng cho trẻ Việt có chính xác không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 2 tuổi nặng dưới P3 có nguy hiểm không?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Cần theo dõi cân nặng của con bao lâu một lần?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con cao nhảy vọt nhưng cân nặng không tăng theo có sao không?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Tại sao con tôi luôn nằm ở percentile thấp?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai3_bang3",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con vượt percentile P97 có cần hạn chế ăn không?",
+    "positive_id": "bai2_bang3",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Sự khác biệt cân nặng giữa trẻ trai và gái từ khi nào?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi cân nặng ở P25 có cần bổ sung dinh dưỡng không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "BMI cho trẻ nhỏ tính như thế nào?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Con tôi đang chậm tăng cân nên ăn gì?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tăng cân quá nhanh ở trẻ nhỏ có nguy hiểm không?",
+    "positive_id": "bai2_muc4_2",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi ăn nhiều mà không tăng cân tại sao?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần lo lắng khi con nằm giữa P15-P25 không?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Biết được con thuộc percentile nào có ích gì?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con từ percentile cao rơi xuống thấp có nghiêm trọng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bảng chuẩn WHO có cập nhật theo thời gian không?",
+    "positive_id": "bai2_muc4_3",
+    "negative_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi sổ sức khỏe ghi thiếu cân có đúng không?",
+    "positive_id": "bai2_bang1",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Y tế trường học đánh giá dinh dưỡng như thế nào?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Screening dinh dưỡng ở trường có cần thiết không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi bác sĩ bảo thừa cân nhẹ có đúng không?",
+    "positive_id": "bai2_bang4",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Chỉ số nào quan trọng nhất để đánh giá trẻ?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai3_bang1",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Con tôi Z-score âm có nghĩa con bị gì?",
+    "positive_id": "bai2_muc4_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "0-5"
+  },
+  {
+    "question": "Nhân trắc có thể thay thế khám sức khỏe được không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi tăng trưởng không đều có cần can thiệp không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn học đường có đủ dinh dưỡng cho trẻ thừa cân không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường có thể tư vấn dinh dưỡng cho phụ huynh không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Menu trường học có phù hợp với trẻ béo phì không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn ít ở trường có ảnh hưởng đến phát triển không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn bán trú có đảm bảo đủ chất không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách tính khẩu phần cho một lớp 30 học sinh như thế nào?",
+    "positive_id": "bai3_bang1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn tuần có cần thay đổi theo mùa không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi không thích ăn cơm trường có thể mang cơm không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Suất ăn bán trú giá bao nhiêu là hợp lý?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường có kiểm tra chất lượng suất ăn không?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đơn vị cung cấp suất ăn cần có điều kiện gì?",
+    "positive_id": "bai3_muc2_2",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn ở trường xong về nhà có cần ăn thêm không?",
+    "positive_id": "bai3_bang2",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa sáng ở nhà quan trọng hơn bữa trưa ở trường phải không?",
+    "positive_id": "bai3_muc1_1",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 4 tuổi cần bao nhiêu calo cho bữa trưa?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Bữa phụ chiều có thể thay bằng trái cây được không?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Cách xây dựng khẩu phần cân bằng cho trẻ mẫu giáo ra sao?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Trẻ 15kg cao 105cm có cần điều chỉnh khẩu phần không?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Năng lượng cho bữa trưa và bữa phụ tính theo tỉ lệ nào?",
+    "positive_id": "bai3_bang3",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "4-4"
+  },
+  {
+    "question": "Có những mối nguy nào với thực phẩm trong bếp trường?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Vi khuẩn E.coli có thể có trong thực phẩm nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Salmonella lây nhiễm qua đường nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Nấm mốc trong thực phẩm có thể nhìn thấy được không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thuốc kháng sinh trong thức ăn có hại như thế nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Phẩm màu thực phẩm có an toàn cho trẻ em không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Chất bảo quản trong thực phẩm có gây ung thư không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_2_4_1_3-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Aflatoxin là chất gì và có ở đâu?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Glycoalkaloids trong khoai tây có độc không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Solanine có thể gây ngộ độc như thế nào?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm hết hạn sử dụng có ăn được không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Mùi lạ của thực phẩm báo hiệu điều gì?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm đổi màu có còn ăn được không?",
+    "positive_id": "bai4_bang1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Lây nhiễm chéo trong bếp ăn xảy ra như thế nào?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Súc vật bị bệnh có thể lây sang người qua thức ăn không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Nước nhiễm bẩn có thể làm hỏng thực phẩm không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai3_bang3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Không khí ô nhiễm có ảnh hưởng đến an toàn thực phẩm không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Côn trùng có thể mang mầm bệnh vào thức ăn không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Chế biến thực phẩm sai cách có thể gây độc không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Bảo quản thực phẩm ở nhiệt độ nào để an toàn?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thời gian bảo quản thực phẩm có giới hạn không?",
+    "positive_id": "bai4_muc2_2_1",
+    "negative_id": "bai3_muc2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Cần kiểm soát những khâu nào trong bếp ăn trường?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Từ nguyên liệu đến thành phẩm có bao nhiêu bước kiểm soát?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Khâu nào dễ xảy ra sai sót nhất trong bếp ăn?",
+    "positive_id": "bai4_muc4_1_6",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Quy trình bếp một chiều có bắt buộc không?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "bai3_bang1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Lợi ích của quy trình một chiều là gì?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Nguyên liệu và thành phẩm có thể để chung không?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tiếp nhận nguyên liệu cần kiểm tra những gì?",
+    "positive_id": "bai4_muc4_1_1_a_2",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Ai có trách nhiệm kiểm tra an toàn thực phẩm ở trường?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai1_muc3_3_4_3_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thông tin gì cần có trong biên bản kiểm tra ATTP?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hồ sơ pháp lý của bếp ăn gồm những gì?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Điều kiện cơ sở vật chất bếp ăn như thế nào?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đánh giá an toàn thực phẩm dựa trên tiêu chí nào?",
+    "positive_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm thực 3 bước phải làm vào lúc nào?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra nguyên liệu trước chế biến có cần ghi chép không?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra trong quá trình nấu khác gì trước khi nấu?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai3_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra trước khi ăn cần quan sát những gì?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Biểu mẫu kiểm thực có bắt buộc phải có không?",
+    "positive_id": "phuluc4_mau_kiemthuc_babuoc",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao phải lưu mẫu thức ăn?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai1_muc3_2_3_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Mẫu thức ăn lưu trong bao lâu mới được hủy?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Lưu mẫu thức ăn ở nhiệt độ bao nhiêu?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai3_bang2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Theo dõi mẫu thức ăn lưu có cần sổ sách không?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hủy mẫu thức ăn lưu có cần báo cáo không?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quản lý mẫu thức ăn lưu thuộc trách nhiệm ai?",
+    "positive_id": "phuluc5_mau_luumau_thuc_an",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn cho trẻ 18-24 tháng có khác trẻ lớn hơn không?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 20 tháng có thể ăn cơm nát thay cháo được không?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ nhà trẻ cần ăn bao nhiêu gam rau mỗi ngày?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa ăn chính buổi trưa cho trẻ nhỏ nên có những món gì?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi chưa ăn được cơm có thể dùng cháo dự phòng không?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 2 tuổi có còn cần bú sữa mẹ không?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn tuần nào không lặp lại có tốt hơn không?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai1_muc3_5_1_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa phụ cho trẻ nhỏ nên cho ăn gì thay sữa?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ chưa quen ăn cơm có thể thay bằng món nào?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cháo cho trẻ nhỏ cần có đủ mấy nhóm chất dinh dưỡng?",
+    "positive_id": "bai3_muc3_3_4",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách thay thế rau lá khi thiếu nguyên liệu như thế nào?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Củ quả có thể thay thế cho nhau được không?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khoai lang có thể thay thế khoai tây không?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quả chín nào có thể thay thế cho nhau trong thực đơn?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thay thế nguyên liệu có ảnh hưởng đến năng lượng không?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai1_muc3_2_1_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nguyên liệu địa phương có thể thay thế thực phẩm nhập khẩu không?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách tính toán khi thay thế nguyên liệu ra sao?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thay thế thực phẩm có cần xin phụ huynh không?",
+    "positive_id": "bai3_muc3_2_5",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phương pháp tính định lượng thực phẩm như thế nào?",
+    "positive_id": "bai3_muc3_2_2",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tập cho trẻ ăn đa dạng thực phẩm có cần thiết không?",
+    "positive_id": "bai3_muc3_2_4",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tính toán thực phẩm đã sơ chế khác thế nào với tươi sống?",
+    "positive_id": "bai3_muc3_2_4",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khẩu phần ăn đạt tiêu chuẩn cần có những yếu tố gì?",
+    "positive_id": "bai3_muc3_2_3",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cân đối các chất dinh dưỡng trong khẩu phần như thế nào?",
+    "positive_id": "bai3_muc3_2_3",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bốn yếu tố đánh giá khẩu phần cân đối là gì?",
+    "positive_id": "bai3_muc3_2_3",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khẩu phần hợp lý khác gì với khẩu phần cân đối?",
+    "positive_id": "bai3_muc3_2_3",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn có cần tăng cường vi chất dinh dưỡng không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Ngũ cốc nguyên hạt có tốt hơn ngũ cốc chế biến không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn đa dạng rau quả màu sắc có cần thiết không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thực đơn có thể phù hợp với điều kiện từng trường không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nguyên liệu địa phương có ưu điểm gì trong thực đơn?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khẩu vị học sinh có ảnh hưởng đến thực đơn không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bữa phụ có cần phải là sữa không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nguồn gốc xuất xứ sữa có quan trọng không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ mầm non có thể ăn 15g đường mỗi ngày không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc3_3_4_2_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi cấp 3 có thể ăn 25g đường mỗi ngày không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ dưới 5 tuổi nên ăn bao nhiêu muối mỗi ngày?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Học sinh tiểu học có thể ăn 4g muối mỗi ngày không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi cấp 2 cấp 3 có thể ăn 5g muối không?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao nên sử dụng muối i-ốt trong chế biến?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hình tháp dinh dưỡng cho trẻ 3-5 tuổi như thế nào?",
+    "positive_id": "bai1_hinh9",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tháp dinh dưỡng trẻ tiểu học có gì khác mầm non?",
+    "positive_id": "bai1_hinh10",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hình tháp dinh dưỡng cho tuổi dậy thì có đặc biệt không?",
+    "positive_id": "bai1_hinh11",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi cấp 3 theo tháp dinh dưỡng nào?",
+    "positive_id": "bai1_hinh12",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tháp dinh dưỡng các độ tuổi có khác nhau nhiều không?",
+    "positive_id": "bai1_hinh9",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khẩu phần khuyến nghị trong hình có chính xác không?",
+    "positive_id": "bai1_hinh10",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Nhóm thực phẩm nào ở đáy tháp dinh dưỡng?",
+    "positive_id": "bai1_hinh11",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tầng cao nhất tháp dinh dưỡng có gì?",
+    "positive_id": "bai1_hinh12",
+    "negative_id": "bai3_bang1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Biểu mẫu kiểm tra nguyên liệu tươi cần ghi gì?",
+    "positive_id": "phuluc4_bang_kiemtra_tuoi",
+    "negative_id": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kiểm tra kho nguyên liệu khô cần chú ý điều gì?",
+    "positive_id": "phuluc4_bang_kiemtra_kho",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trong quá trình chế biến cần kiểm tra những gì?",
+    "positive_id": "phuluc4_bang_kiemtra_chebien",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trước khi ăn cần kiểm tra cảm quan như thế nào?",
+    "positive_id": "phuluc4_bang_kiemtra_truocan",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thời gian sơ chế và chế biến có cần ghi chép không?",
+    "positive_id": "phuluc4_bang_kiemtra_chebien",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Số lượng suất ăn có ảnh hưởng đến kiểm tra không?",
+    "positive_id": "phuluc4_bang_kiemtra_truocan",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Ca ăn và bữa ăn có cần phân biệt không?",
+    "positive_id": "phuluc4_bang_kiemtra_chebien",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thời gian chia món ăn khác thời gian bắt đầu ăn như thế nào?",
+    "positive_id": "phuluc4_bang_kiemtra_truocan",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nhiệt độ bảo quản mẫu thức ăn chuẩn là bao nhiêu?",
+    "positive_id": "phuluc5_bang_theodoi",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Khối lượng và thể tích mẫu lưu có quy định không?",
+    "positive_id": "phuluc5_bang_theodoi",
+    "negative_id": "phuluc4_mau_kiemthuc_babuoc",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thời gian lấy mẫu và hủy mẫu cách nhau bao lâu?",
+    "positive_id": "phuluc5_bang_theodoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tên mẫu thức ăn có cần ghi cụ thể không?",
+    "positive_id": "phuluc5_bang_theodoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Người chịu trách nhiệm mẫu thức ăn là ai?",
+    "positive_id": "phuluc5_bang_theodoi",
+    "negative_id": "bai1_muc3_4_2_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn theo tháp dinh dưỡng có cần điều chỉnh không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Giáo dục dinh dưỡng cho trẻ em có cần thiết không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ có thể nhận biết thực phẩm lành mạnh được không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Phối hợp bữa ăn trường - nhà có quan trọng không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Chế độ ăn có thể thừa năng lượng được không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Vai trò thực phẩm trẻ em có hiểu được không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Cần bảo đảm cung cấp đủ năng lượng như thế nào?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nguyên tắc tổ chức bữa ăn có những gì?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cân đối giữa các chất sinh năng lượng như thế nào?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "phuluc4_bang_kiemtra_tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đáp ứng nhu cầu vitamin và khoáng chất ra sao?",
+    "positive_id": "bai3_muc3_3_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi có thể ăn thực phẩm chế biến sẵn không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thiếu máu do thiếu sắt ở trẻ em nghiêm trọng không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khu vực miền núi có tỉ lệ suy dinh dưỡng cao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tốc độ tăng trưởng nhanh có ảnh hưởng đến nhu cầu sắt không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Người dân tộc thiểu số có nguy cơ thiếu dinh dưỡng cao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Răng hàm sữa có vai trò quan trọng không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Chăm sóc răng miệng trẻ em có cần thiết không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi bị khô lợi có ảnh hưởng lâu dài không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Răng mọc chèn lên nhau có do mất răng sữa sớm không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thực phẩm không tiếp xúc đa dạng có hại gì?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi chỉ ăn thực phẩm quen thuộc có sao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Từ chối thực phẩm mới ở trẻ có bình thường không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Ưa thích bánh kẹo có ảnh hưởng đến phát triển không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Hộ gia đình nghèo có con dễ còi cọc hơn không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ em từ gia đình khá giả có ưu thế gì?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "1,8 triệu trẻ em suy dinh dưỡng có nghiêm trọng không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_bang3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tỉ lệ thiếu máu 19,6% có cao không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Năm 2020 có phải thống kê mới nhất không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tây Nguyên có tỉ lệ suy dinh dưỡng cao nhất không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trung du miền núi phía Bắc có vấn đề gì?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Đau khi đi đại tiện có phải do táo bón không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Phân khô cứng có phải dấu hiệu táo bón không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thiếu chất xơ có phải nguyên nhân duy nhất gây táo bón không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Vấn đề tiêu hóa có liên quan đến chất xơ không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tiêu thụ thực phẩm không cân đối có hậu quả gì?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thiếu hụt chất dinh dưỡng quan trọng có nghiêm trọng không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thực phẩm chế biến công nghiệp có an toàn cho trẻ không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Giàu đường và chất béo có ảnh hưởng như thế nào?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Xu hướng kén chọn thực phẩm có phổ biến không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Không muốn thử thực phẩm mới có bình thường không?",
+    "positive_id": "bai1_muc3_2_2_3-5tuoi",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi mầm non cần ăn mấy đơn vị ngũ cốc mỗi ngày?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trong mỗi bữa ăn có nên phối hợp ngũ cốc và khoai củ không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 4 tuổi cần ăn bao nhiêu đơn vị rau mỗi ngày?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Bữa ăn trẻ mẫu giáo nên có mấy loại rau?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai3_muc3_2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Rau ngót và rau muống có thể phối hợp trong cùng bữa ăn không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Vitamin C có bị mất khi rau bị dập nát không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Cách nào tốt nhất để bảo toàn vitamin C trong rau?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Rau tươi có tốt hơn rau để lâu không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Nấu xong có nên ăn ngay hay để nguội?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi cần ăn mấy đơn vị trái cây mỗi ngày?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Mỗi loại trái cây có cung cấp vitamin khác nhau không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai3_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Có cần cho trẻ ăn nhiều loại trái cây khác nhau không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Khoáng chất từ trái cây có khác nhau không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Phối hợp trái cây có giúp bổ sung đa dạng vi chất không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Rửa rau có làm mất vitamin không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Sơ chế xong có nên nấu ngay lập tức không?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Con tôi không thích ăn bí đỏ có thể thay bằng gì?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Tầng thứ nhất và thứ hai tháp dinh dưỡng khác gì nhau?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Vì sao ngũ cốc lại ở tầng đáy tháp dinh dưỡng?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Đơn vị ăn trong tháp dinh dưỡng tính như thế nào?",
+    "positive_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ nhỏ có hiểu về nhóm thực phẩm không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tháp dinh dưỡng có giúp trẻ học về thực phẩm không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ tiểu học có thể phân biệt thực phẩm tốt xấu không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Cần dạy trẻ về vai trò của từng loại thực phẩm không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tại sao cần phối hợp bữa ăn trường và nhà?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Thiếu năng lượng có ảnh hưởng như thế nào?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Thừa chất dinh dưỡng có hại không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Làm sao để cân đối giữa các chất sinh năng lượng?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Vitamin và khoáng chất theo lứa tuổi có khác nhau không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ em có cần học về dinh dưỡng từ sớm không?",
+    "positive_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Hình minh họa có giúp trẻ hiểu dinh dưỡng hơn không?",
+    "positive_id": "bai1_hinh1",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Tại sao cần có hình ảnh trong giáo dục dinh dưỡng?",
+    "positive_id": "bai1_hinh2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Minh họa bằng hình có hiệu quả với trẻ em không?",
+    "positive_id": "bai1_hinh3",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Trẻ em học qua hình ảnh có tốt hơn chữ viết không?",
+    "positive_id": "bai1_hinh4",
+    "negative_id": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Hình minh họa có cần thiết trong sách giáo khoa không?",
+    "positive_id": "bai1_hinh5",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Giáo dục trực quan có phù hợp với trẻ em không?",
+    "positive_id": "bai1_hinh6",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Con tôi học tốt hơn qua hình ảnh hay văn bản?",
+    "positive_id": "bai1_hinh7",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Hình minh họa có cần màu sắc bắt mắt không?",
+    "positive_id": "bai1_hinh8",
+    "negative_id": "bai3_bang2",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Kỹ thuật đo chiều cao có phức tạp không?",
+    "positive_id": "bai2_hinh5",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hình minh họa đo chiều cao có cần thiết không?",
+    "positive_id": "bai2_hinh5",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đo chiều cao đúng cách có quan trọng không?",
+    "positive_id": "bai2_hinh5",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Người đo có cần được hướng dẫn không?",
+    "positive_id": "bai2_hinh5",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hình minh họa kỹ thuật có giúp ích không?",
+    "positive_id": "bai2_hinh5",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi 3 tuổi nặng 10kg có thuộc percentile nào?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Bé trai 4 tuổi 6 tháng cân nặng chuẩn là bao nhiêu?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Trẻ gái có xu hướng nhẹ cân hơn trẻ trai không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con tôi 2 tuổi cao 90cm nặng 11kg có bình thường không?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_tuoi",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Bé gái cao 95cm có thể nặng từ 10 đến 16kg không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai3_muc3_2_3",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Khoảng cân nặng bình thường cho trẻ rộng như thế nào?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Con cao nhưng nhẹ cân có nghiêm trọng không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai1_muc3_5_3_2_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ thấp nhưng nặng có sao không?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Bảng WHO có áp dụng được cho trẻ Việt Nam không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Chuẩn quốc tế có phù hợp với trẻ châu Á không?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Trẻ Việt Nam có đặc thù gì về cân nặng chiều cao không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi nằm ở P97 có cần lo lắng không?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "P3 có nghĩa là con tôi nhẹ cân nhất không?",
+    "positive_id": "phuluc1_cannang_gai_1-5tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Median tương ứng với percentile nào?",
+    "positive_id": "phuluc1_cannang_trai_1-5tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "P85 có phải béo phì không?",
+    "positive_id": "phuluc1_cannang_chieudai_gai_1-2tuoi",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con cao vượt chuẩn có tốt không?",
+    "positive_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-5"
+  },
+  {
+    "question": "Trẻ phát triển chậm có thể bù đắp được không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Xu hướng phát triển quan trọng hơn số liệu tuyệt đối không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Theo dõi lâu dài có cần thiết không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_4_1_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Can thiệp sớm có hiệu quả hơn không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Dữ liệu dinh dưỡng có giúp lập kế hoạch không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phát hiện sớm vấn đề dinh dưỡng có quan trọng không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đánh giá định kỳ có cần thiết không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Sức khỏe học sinh có ảnh hưởng đến học tập không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nhân trắc có thể thay thế xét nghiệm máu không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc1_cannang_trai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đo lường đơn giản có hiệu quả không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai3_bang3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phụ huynh có thể tự đánh giá con được không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường học có vai trò gì trong đánh giá dinh dưỡng?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Y tế học đường có cần chuyên gia dinh dưỡng không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Screening sức khỏe định kỳ có nên bao gồm dinh dưỡng không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Dữ liệu nhân trắc có giá trị dự báo không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Giáo dục dinh dưỡng có cần dựa trên dữ liệu không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Xu hướng dinh dưỡng trẻ em có thay đổi theo thời gian không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chính sách dinh dưỡng có cần cập nhật không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nghiên cứu dinh dưỡng có cần thiết không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Theo dõi quần thể có khác theo dõi cá nhân không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "An toàn thực phẩm có ảnh hưởng đến thế hệ tương lai không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Toàn xã hội có trách nhiệm với sức khỏe học sinh không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Ngộ độc thực phẩm ở trường có ảnh hưởng xã hội không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Vấn đề an toàn thực phẩm có cấp bách không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_muc3_2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tác động lâu dài của thực phẩm không an toàn là gì?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Phát triển thể chất có bị ảnh hưởng bởi thực phẩm không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_4_3_2_12-14tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Phát triển tinh thần có liên quan đến dinh dưỡng không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm không vệ sinh có thể gây thiếu dinh dưỡng không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Trẻ em có dễ bị ngộ độc hơn người lớn không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Tiêu chảy ở trẻ em có nguy hiểm không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_bang2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Đường tiêu hóa trẻ em có đặc điểm gì?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Chất độc có thể tích lũy ở cơ quan nào?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Ảnh hưởng tức thì khác ảnh hưởng lâu dài như thế nào?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Sức khỏe và giống nòi có liên quan đến thực phẩm không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "6-18"
+  },
+  {
+    "question": "An ninh thực phẩm có ảnh hưởng đến an ninh quốc gia không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Cơ sở giáo dục có trách nhiệm gì về an toàn thực phẩm?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Học sinh là tài sản của đất nước phải không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Đảm bảo an toàn thực phẩm có phải ưu tiên hàng đầu không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Thực phẩm an toàn có giúp chống bệnh tật không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Cơ thể khỏe mạnh có chống được nguy cơ bệnh tật không?",
+    "positive_id": "bai4_muc1_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "6-18"
+  },
+  {
+    "question": "Con tôi cấp 2 cần ăn mấy đơn vị ngũ cốc mỗi ngày?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc1_cannang_chieudai_trai_1-5tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ tuổi dậy thì có cần ăn nhiều hơn trẻ tiểu học không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 13 tuổi cần bao nhiêu đơn vị rau củ mỗi ngày?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Rau củ sẵn có địa phương có tốt hơn rau nhập khẩu không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ dậy thì cần ăn mấy đơn vị trái cây mỗi ngày?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi 14 tuổi cần bao nhiêu đơn vị protein mỗi ngày?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Protein động vật và thực vật có cần phối hợp không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Mỗi ngày nên có món ăn từ thủy sản không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tôm cua cá có bổ sung canxi tốt hơn sữa không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi tuổi dậy thì cần uống bao nhiêu đơn vị sữa?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai1_muc1_2_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Sữa dạng lỏng sữa chua phô mai có cần dùng cả 3 không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi béo phì có nên uống sữa ít chất béo không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ không dung nạp lactose có thể uống sữa không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Uống sữa dần dần có giúp tập dung nạp lactose không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Sữa chua và phô mai có thay thế được sữa tươi không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con tôi cấp 2 cần bao nhiêu đơn vị dầu mỡ mỗi ngày?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Dầu thực vật và mỡ động vật có cần phối hợp không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Acid béo khác nhau có lợi ích gì cho cơ thể?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ 13 tuổi có thể ăn 25g đường mỗi ngày không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "5 đơn vị ăn đường tương đương bao nhiêu gam?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Tháp dinh dưỡng tuổi dậy thì có đặc biệt gì không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ tuổi dậy thì có thể hạn chế thực phẩm không lành mạnh không?",
+    "positive_id": "bai1_muc3_4_4_12-14tuoi",
+    "negative_id": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Con gái 2 tuổi cao 100cm nặng bao nhiêu là bình thường?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Bé trai 3 tuổi cao 105cm có thể nặng 20kg được không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Con cao 95cm nặng 12kg có thuộc percentile nào?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Trẻ cao 98cm nặng dưới 11kg có gầy không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Con tôi cao 102cm nặng 15kg có quá nặng không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Bé trai cao 104cm có thể nặng tối đa bao nhiêu?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai1_muc3_5_3_1_15-19tuoi",
+    "age_group": "2-5"
+  },
+  {
+    "question": "P97 cho trẻ cao 106cm là bao nhiêu kg?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Con cao vượt 105cm có cần lo lắng không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Trẻ có thể cao hơn 106cm ở tuổi này không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Sự chênh lệch giữa P3 và P97 lớn như thế nào?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Median ở trẻ cao 100cm là bao nhiêu kg?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Cân nặng theo chiều cao có biến thiên nhiều không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Con cao nhảy vọt mà cân nặng không theo kịp có sao không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Trẻ thấp hơn chuẩn WHO có phải do di truyền không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Bảng chuẩn này có cập nhật theo thời gian không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai3_muc3_2_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Số liệu từ bao nhiêu trẻ em để tạo ra bảng chuẩn này?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Bảng WHO có phân biệt chủng tộc không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Độ chính xác của bảng chuẩn WHO như thế nào?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Có cần cập nhật bảng chuẩn cho trẻ Việt Nam không?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Sự khác biệt 0.5cm có ảnh hưởng đến đánh giá không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "bai3_bang3",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Con nằm giữa 2 mốc chiều cao thì tính như thế nào?",
+    "positive_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Đo chiều cao sai 1cm có ảnh hưởng lớn không?",
+    "positive_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "2-5"
+  },
+  {
+    "question": "Thời điểm trong ngày có ảnh hưởng đến đo chiều cao không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tư thế đứng có ảnh hưởng đến kết quả đo không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cân có cần hiệu chuẩn định kỳ không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quần áo có ảnh hưởng đến cân nặng không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đo trước hay sau khi ăn có khác biệt không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ không hợp tác khi đo có xử lý như thế nào?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đo nhiều lần có cần thiết để tăng độ chính xác không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Sai số đo lường có thể chấp nhận bao nhiêu?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Người đo có cần được đào tạo chuyên biệt không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_5_2_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Dụng cụ đo có chuẩn quốc tế nào không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Môi trường đo có ảnh hưởng đến kết quả không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ sợ hãi khi đo có làm sai lệch kết quả không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đo ở nhà và ở trường có khác biệt không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thiết bị đo có cần thay thế định kỳ không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kỹ thuật đo có thay đổi theo độ tuổi không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "An toàn cho trẻ khi đo có quan trọng không?",
+    "positive_id": "bai2_muc3_1",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tại sao WHO lại phân chia 2 nhóm tuổi khác nhau?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "5-19"
+  },
+  {
+    "question": "BMI theo tuổi có ưu điểm gì so với cân nặng theo tuổi?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Phần mềm WHO anthro plus có tính năng gì đặc biệt?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_muc3_2_3",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Giới tính có ảnh hưởng đến BMI ở trẻ em không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Trẻ 5 tuổi có thể dùng cả 2 phương pháp đánh giá không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Chuyển đổi từ đánh giá dưới 5 tuổi sang trên 5 tuổi như thế nào?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc1_2_5",
+    "age_group": "5-19"
+  },
+  {
+    "question": "BMI có phù hợp để đánh giá trẻ em không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Tại sao không dùng BMI cho trẻ dưới 5 tuổi?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_bang1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Tuổi dậy thì có làm thay đổi cách đánh giá không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai4_bang1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Phần mềm có cần cập nhật không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Có thể tự tính BMI thay vì dùng phần mềm không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Kết quả từ phần mềm có đáng tin cậy không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Phần mềm có thể dùng cho nghiên cứu không?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "5-19"
+  },
+  {
+    "question": "WHO có khuyến nghị gì về tần suất đánh giá?",
+    "positive_id": "bai2_muc5_1",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "5-19"
+  },
+  {
+    "question": "Đánh giá dinh dưỡng có cần sự đồng ý của phụ huynh không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kết quả đánh giá có cần bảo mật không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trường có thể chia sẻ thông tin với y tế địa phương không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phụ huynh có quyền từ chối đánh giá không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kết quả có ảnh hưởng đến việc học của trẻ không?",
+    "positive_id": "bai2_muc1_2_1",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ có vấn đề dinh dưỡng có cần can thiệp đặc biệt không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Can thiệp dinh dưỡng có cần chuyên gia không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Gia đình có vai trò gì trong can thiệp dinh dưỡng?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Can thiệp có cần theo dõi lâu dài không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hiệu quả can thiệp có thể đo lường được không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_2_4_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chính sách dinh dưỡng có cần dựa trên bằng chứng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai3_bang2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Dữ liệu quần thể có giúp cải thiện chương trình không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Xu hướng thay đổi có cần báo cáo định kỳ không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nghiên cứu dinh dưỡng có cần hội đồng đạo đức không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Kết quả nghiên cứu có cần công bố công khai không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hệ thống giám sát dinh dưỡng có cần thiết không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đào tạo nhân lực có quan trọng trong giám sát không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Công nghệ có thể hỗ trợ giám sát dinh dưỡng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chi phí cho giám sát dinh dưỡng có đáng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Quốc tế có chuẩn nào về giám sát dinh dưỡng không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Việt Nam có hệ thống giám sát dinh dưỡng chưa?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Liên kết giữa các cấp có quan trọng trong giám sát không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai1_muc3_3_4_1_6-11tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Báo cáo có cần chuẩn hóa không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chất lượng dữ liệu có ảnh hưởng đến quyết định không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phân tích dữ liệu có cần chuyên gia không?",
+    "positive_id": "bai2_muc2_2",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn ngũ cốc tương đương bao nhiêu gam cơm?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Con tôi ăn nửa chén cơm bằng mấy đơn vị ăn?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bánh mì sandwich có thể thay thế cơm được không?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một củ khoai lang to bằng mấy đơn vị ăn?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Ngũ cốc ăn sáng có tính là đơn vị ăn ngũ cốc không?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phở có tính là bao nhiêu đơn vị ăn ngũ cốc?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cách tính đơn vị ăn có chuẩn quốc tế không?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bún có khác phở về đơn vị ăn không?",
+    "positive_id": "bai1_muc2_1",
+    "negative_id": "bai1_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn rau lá tương đương bao nhiêu gam?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Rau củ sống và chín có đơn vị ăn khác nhau không?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một quả chuối to bằng bao nhiêu đơn vị ăn trái cây?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nước ép trái cây có tính là đơn vị ăn trái cây không?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Rau đông lạnh có giá trị dinh dưỡng như rau tươi không?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Salad trộn nhiều loại rau tính đơn vị ăn như thế nào?",
+    "positive_id": "bai1_muc2_2",
+    "negative_id": "bai3_bang3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một đơn vị ăn thịt bò tương đương bao nhiêu gam?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Thịt có xương và thịt không xương tính như thế nào?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một quả trứng gà to bằng mấy đơn vị ăn protein?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Đậu phụ và thịt có đơn vị ăn tương đương không?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Cá tươi và cá khô có cùng đơn vị ăn không?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Hạt điều có tính là đơn vị ăn protein không?",
+    "positive_id": "bai1_muc2_3",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một cốc sữa tươi bằng bao nhiêu đơn vị ăn sữa?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Sữa chua và sữa tươi có đơn vị ăn khác nhau không?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai1_muc3_2_2_3-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Phô mai có thể quy đổi thành đơn vị ăn sữa được không?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một thìa canh dầu ăn bằng mấy đơn vị ăn dầu?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai2_muc4_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Bơ và dầu có cùng đơn vị ăn chất béo không?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một thìa cà phê đường bằng mấy đơn vị ăn đường?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Mật ong có thể thay thế đường trắng được không?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Muối iod khác gì với muối thường về đơn vị ăn?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Một cốc nước lọc bằng mấy đơn vị ăn nước?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nước trong trái cây có tính vào nhu cầu nước không?",
+    "positive_id": "bai1_muc2_4",
+    "negative_id": "bai1_muc3_6_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Trẻ 1-2 tuổi có đặc điểm sinh lý gì nổi bật?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Sự phát triển tâm thần trẻ 18 tháng như thế nào?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Vận động của trẻ 2 tuổi có gì đặc biệt?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "bai2_muc3_1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ nhỏ có khả năng tự ăn được chưa?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "bai3_bang2",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Cơ thể trẻ 1-2 tuổi phát triển nhanh như thế nào?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Hệ thần kinh trẻ nhỏ có trưởng thành chưa?",
+    "positive_id": "bai1_muc3_1_1_1-2tuoi",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 18 tháng hay kén chọn thực phẩm có bình thường không?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ nhỏ có nguy cơ suy dinh dưỡng cao không?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi 2 tuổi có thể bị thừa cân không?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "bai1_muc1_2_4",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Vấn đề tiêu hóa ở trẻ nhỏ có phổ biến không?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "bai2_muc4_4",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ 1-2 tuổi có dễ bị dị ứng thực phẩm không?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Thói quen ăn uống hình thành từ khi nào?",
+    "positive_id": "bai1_muc3_1_2_1-2tuoi",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Con tôi cấp 3 cần ăn nhiều hơn cấp 2 bao nhiêu?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai1_muc1_1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ vị thành niên cần bao nhiêu đơn vị ngũ cốc mỗi ngày?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 17 tuổi có cần hạn chế đường nghiêm ngặt không?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Trẻ cấp 3 có thể ăn bánh kẹo mứt không?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Nước ngọt có hại với trẻ vị thành niên không?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Con tôi 16 tuổi cần bao nhiêu gam muối mỗi ngày?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai3_muc3_2_3",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Muối i-ốt có phòng được bệnh gì?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai1_muc2_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Rối loạn do thiếu i-ốt có nghiêm trọng không?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tháp dinh dưỡng có mấy tầng cho trẻ vị thành niên?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tầng 6 ở đỉnh tháp dinh dưỡng là gì?",
+    "positive_id": "bai1_muc3_5_4_15-19tuoi",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Dinh dưỡng có ảnh hưởng đến phát triển nhận thức không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Thể chất và tinh thần có liên quan đến dinh dưỡng không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "bai1_muc3_4_4_12-14tuoi",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Sự phát triển não bộ có cần dinh dưỡng đặc biệt không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Trẻ nhỏ thiếu dinh dưỡng có ảnh hưởng lâu dài không?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Giai đoạn vàng phát triển của trẻ là khi nào?",
+    "positive_id": "bai1_muc1_2_1",
+    "negative_id": "bai3_muc3_2_5",
+    "age_group": "1-2"
+  },
+  {
+    "question": "Hoạt động thể chất của trẻ mầm non như thế nào?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "bai2_muc2_2",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ 3-5 tuổi có năng động hơn trẻ nhỏ không?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Thể lực trẻ mẫu giáo cần được phát triển như thế nào?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "bai1_muc2_3",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Nhu cầu năng lượng tăng theo độ tuổi phải không?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Dinh dưỡng có ảnh hưởng đến khả năng vận động không?",
+    "positive_id": "bai1_muc1_2_2",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "3-5"
+  },
+  {
+    "question": "Trẻ tiểu học có giai đoạn tăng trưởng đặc biệt không?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "bai1_muc1_1_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Khả năng học tập có liên quan đến dinh dưỡng không?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "bai3_bang3",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Trẻ đi học có cần năng lượng nhiều hơn không?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "phuluc1_cannang_gai_1-5tuoi",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Sự phát triển ổn định có tốt hơn tăng trưởng nhanh không?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "bai4_muc4_1_1_a_2",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Nền tảng sức khỏe hình thành từ giai đoạn nào?",
+    "positive_id": "bai1_muc1_2_3",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "6-11"
+  },
+  {
+    "question": "Tuổi dậy thì bắt đầu từ độ tuổi nào?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "bai2_muc4_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Thay đổi hormone có ảnh hưởng đến nhu cầu dinh dưỡng không?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "bai1_muc2_4",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ dậy thì có những thay đổi gì về cơ thể?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Nhu cầu dinh dưỡng cao nhất ở độ tuổi nào?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "bai3_muc3_3_1",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Sự phát triển thể chất nhanh có cần dinh dưỡng đặc biệt không?",
+    "positive_id": "bai1_muc1_2_4",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "12-14"
+  },
+  {
+    "question": "Trẻ vị thành niên có vấn đề gì về hành vi ăn uống?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Áp lực xã hội có ảnh hưởng đến việc ăn uống không?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "bai2_muc3_2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Hình ảnh cơ thể có quan trọng với tuổi teen không?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Rối loạn ăn uống thường xuất hiện ở độ tuổi nào?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "bai1_muc3_1_1_1-2tuoi",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Tính độc lập có ảnh hưởng đến lựa chọn thực phẩm không?",
+    "positive_id": "bai1_muc1_2_5",
+    "negative_id": "bai3_bang2",
+    "age_group": "15-19"
+  },
+  {
+    "question": "Định nghĩa dinh dưỡng bao gồm những yếu tố gì?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "phuluc1_cannang_chieucao_gai_2-5tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chất dinh dưỡng có vai trò gì trong cơ thể?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chức năng sinh lý có phụ thuộc vào dinh dưỡng không?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "phuluc4_bang_kiemtra_truocan",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Duy trì sức khỏe cần những chất gì?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "bai1_muc3_5_4_15-19tuoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Dinh dưỡng khác gì với ăn uống?",
+    "positive_id": "bai1_muc1_1_1",
+    "negative_id": "bai2_muc4_3",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Chu kỳ vòng đời có mấy giai đoạn chính?",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Mỗi giai đoạn đời người có nhu cầu dinh dưỡng khác nhau không?",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "bai3_muc3_2_4",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Giai đoạn phát triển có ảnh hưởng đến khẩu phần ăn không?",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "bai4_bang1",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Vòng đời con người bắt đầu từ khi nào?",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "phuluc5_bang_theodoi",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Nhu cầu dinh dưỡng có thay đổi theo tuổi tác không?",
+    "positive_id": "bai1_muc1_1_2",
+    "negative_id": "bai1_muc2_2",
+    "age_group": "1-19"
+  },
+  {
+    "question": "Tổng hợp các nhóm tuổi có khẩu phần khác nhau như thế nào?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai4_muc1_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "So sánh khẩu phần giữa trẻ mầm non và tiểu học ra sao?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "phuluc4_bang_kiemtra_chebien",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Xu hướng tăng đơn vị ăn theo tuổi có đúng không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai2_muc1_2_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Tầng nào tăng nhiều nhất khi trẻ lớn lên?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai1_muc1_2_3",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Có tầng nào không thay đổi giữa các độ tuổi không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "phuluc1_cannang_chieucao_trai_2-5tuoi",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Bảng tổng hợp có giúp so sánh dễ dàng không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai3_muc3_3_4",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Sự khác biệt lớn nhất giữa độ tuổi nào?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai4_muc4_1_6",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Quy luật phát triển có thể thấy từ bảng tổng hợp không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "phuluc4_bang_kiemtra_kho",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Dữ liệu từ bảng có thể dùng lập kế hoạch không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai2_muc5_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Khuyến nghị dinh dưỡng có cần cập nhật không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "phuluc3_mau_bieuban_kiemtra_attp",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Gia đình có thể sử dụng bảng này không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai1_muc3_1_2_1-2tuoi",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Thực tế có trẻ nào ăn đúng khuyến nghị 100% không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai4_muc2_2_1",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Linh hoạt trong áp dụng khuyến nghị có cần thiết không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "phuluc5_mau_luumau_thuc_an",
+    "age_group": "3-19"
+  },
+  {
+    "question": "Cá thể hóa khẩu phần có quan trọng không?",
+    "positive_id": "bai1_muc3_6_1",
+    "negative_id": "bai3_bang1",
+    "age_group": "3-19"
   }
 ]

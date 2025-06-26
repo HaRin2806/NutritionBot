@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 import chromadb
 from chromadb.config import Settings
 import uuid
+import os
 from config import EMBEDDING_MODEL, CHROMA_PERSIST_DIRECTORY, COLLECTION_NAME
 
 # Cấu hình logging
@@ -28,19 +29,49 @@ class EmbeddingModel:
         """Khởi tạo embedding model và ChromaDB client"""
         logger.info(f"Đang khởi tạo embedding model: {EMBEDDING_MODEL}")
         
-        # Khởi tạo sentence transformer
-        self.model = SentenceTransformer(EMBEDDING_MODEL)
-        logger.info("Đã tải sentence transformer model")
+        try:
+            # Khởi tạo sentence transformer với trust_remote_code=True
+            self.model = SentenceTransformer(EMBEDDING_MODEL, trust_remote_code=True)
+            logger.info("Đã tải sentence transformer model")
+        except Exception as e:
+            logger.error(f"Lỗi khởi tạo model: {e}")
+            # Thử với cache_folder explicit
+            cache_dir = os.getenv('SENTENCE_TRANSFORMERS_HOME', '/app/.cache/sentence-transformers')
+            self.model = SentenceTransformer(EMBEDDING_MODEL, cache_folder=cache_dir, trust_remote_code=True)
+            logger.info("Đã tải sentence transformer model với cache folder explicit")
+        
+        # Đảm bảo thư mục ChromaDB tồn tại và có quyền ghi
+        try:
+            os.makedirs(CHROMA_PERSIST_DIRECTORY, exist_ok=True)
+            # Test ghi file để kiểm tra permission
+            test_file = os.path.join(CHROMA_PERSIST_DIRECTORY, 'test_permission.tmp')
+            with open(test_file, 'w') as f:
+                f.write('test')
+            os.remove(test_file)
+            logger.info(f"Thư mục ChromaDB đã sẵn sàng: {CHROMA_PERSIST_DIRECTORY}")
+        except Exception as e:
+            logger.error(f"Lỗi tạo/kiểm tra thư mục ChromaDB: {e}")
+            # Fallback to /tmp directory
+            import tempfile
+            CHROMA_PERSIST_DIRECTORY = os.path.join(tempfile.gettempdir(), 'chroma_db')
+            os.makedirs(CHROMA_PERSIST_DIRECTORY, exist_ok=True)
+            logger.warning(f"Sử dụng thư mục tạm thời: {CHROMA_PERSIST_DIRECTORY}")
         
         # Khởi tạo ChromaDB client với persistent storage
-        self.chroma_client = chromadb.PersistentClient(
-            path=CHROMA_PERSIST_DIRECTORY,
-            settings=Settings(
-                anonymized_telemetry=False,
-                allow_reset=True
+        try:
+            self.chroma_client = chromadb.PersistentClient(
+                path=CHROMA_PERSIST_DIRECTORY,
+                settings=Settings(
+                    anonymized_telemetry=False,
+                    allow_reset=True
+                )
             )
-        )
-        logger.info(f"Đã kết nối ChromaDB tại: {CHROMA_PERSIST_DIRECTORY}")
+            logger.info(f"Đã kết nối ChromaDB tại: {CHROMA_PERSIST_DIRECTORY}")
+        except Exception as e:
+            logger.error(f"Lỗi kết nối ChromaDB: {e}")
+            # Fallback to in-memory client
+            logger.warning("Fallback to in-memory ChromaDB client")
+            self.chroma_client = chromadb.Client()
         
         # Lấy hoặc tạo collection
         try:
@@ -51,12 +82,27 @@ class EmbeddingModel:
             self.collection = self.chroma_client.create_collection(name=COLLECTION_NAME)
             logger.info(f"Đã tạo collection mới: {COLLECTION_NAME}")
     
-    def encode(self, texts):
+    def _add_prefix_to_text(self, text, is_query=True):
+        """
+        Thêm prefix cho text theo yêu cầu của multilingual-e5-base
+        """
+        # Kiểm tra xem text đã có prefix chưa
+        if text.startswith(('query:', 'passage:')):
+            return text
+        
+        # Thêm prefix phù hợp
+        if is_query:
+            return f"query: {text}"
+        else:
+            return f"passage: {text}"
+    
+    def encode(self, texts, is_query=True):
         """
         Encode văn bản thành embeddings
         
         Args:
             texts (str or list): Văn bản hoặc danh sách văn bản cần encode
+            is_query (bool): True nếu là query, False nếu là passage
             
         Returns:
             list: Embeddings vector
@@ -65,8 +111,11 @@ class EmbeddingModel:
             if isinstance(texts, str):
                 texts = [texts]
             
-            logger.debug(f"Đang encode {len(texts)} văn bản")
-            embeddings = self.model.encode(texts, show_progress_bar=False)
+            # Thêm prefix cho texts
+            processed_texts = [self._add_prefix_to_text(text, is_query) for text in texts]
+            
+            logger.debug(f"Đang encode {len(processed_texts)} văn bản")
+            embeddings = self.model.encode(processed_texts, show_progress_bar=False, normalize_embeddings=True)
             
             return embeddings.tolist()
             
@@ -89,8 +138,8 @@ class EmbeddingModel:
         try:
             logger.debug(f"Dang tim kiem cho query: {query[:50]}...")
             
-            # Encode query thành embedding
-            query_embedding = self.encode(query)[0]
+            # Encode query thành embedding (với prefix query:)
+            query_embedding = self.encode(query, is_query=True)[0]
             
             # Tạo where clause cho age filter
             where_clause = None
@@ -163,8 +212,8 @@ class EmbeddingModel:
             
             logger.info(f"Đang thêm {len(documents)} documents vào ChromaDB")
             
-            # Encode documents thành embeddings
-            embeddings = self.encode(documents)
+            # Encode documents thành embeddings (với prefix passage:)
+            embeddings = self.encode(documents, is_query=False)
             
             # Thêm vào collection
             self.collection.add(
@@ -184,19 +233,6 @@ class EmbeddingModel:
     def index_chunks(self, chunks):
         """
         Index các chunks dữ liệu vào ChromaDB
-        
-        Args:
-            chunks (list): Danh sách chunks với format:
-                [
-                    {
-                        "content": "nội dung văn bản",
-                        "metadata": {"chapter": "bai1", "age_group": "1-3", ...},
-                        "id": "unique_id" (optional)
-                    }
-                ]
-        
-        Returns:
-            bool: True nếu thành công
         """
         try:
             if not chunks:
@@ -251,12 +287,7 @@ class EmbeddingModel:
             return False
     
     def count(self):
-        """
-        Đếm số lượng documents trong collection
-        
-        Returns:
-            int: Số lượng documents
-        """
+        """Đếm số lượng documents trong collection"""
         try:
             return self.collection.count()
         except Exception as e:
@@ -264,12 +295,7 @@ class EmbeddingModel:
             return 0
     
     def delete_collection(self):
-        """
-        Xóa collection hiện tại
-        
-        Returns:
-            bool: True nếu thành công
-        """
+        """Xóa collection hiện tại"""
         try:
             logger.warning(f"Đang xóa collection: {COLLECTION_NAME}")
             self.chroma_client.delete_collection(name=COLLECTION_NAME)
@@ -285,12 +311,7 @@ class EmbeddingModel:
             return False
     
     def get_stats(self):
-        """
-        Lấy thống kê về collection
-        
-        Returns:
-            dict: Thông tin thống kê
-        """
+        """Lấy thống kê về collection"""
         try:
             total_count = self.count()
             

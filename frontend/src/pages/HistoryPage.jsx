@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BiCalendar, BiSearch, BiTrash, BiChat, BiX, BiChevronDown, BiUser, BiArchive, BiEdit, BiRefresh, BiArrowBack } from 'react-icons/bi';
 import { useApp } from '../contexts/AppContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { Header } from '../components/layout';
 import { Loader } from '../components/common';
 import { Button, Input, Modal } from '../components/common';
@@ -10,6 +11,7 @@ import { chatService, adminService } from '../services';
 
 const HistoryPage = () => {
   const navigate = useNavigate();
+  const { darkMode, currentThemeConfig } = useTheme();
   const {
     userData, isLoading: isLoadingAuth, requireAuth,
     userAge, setUserAge,
@@ -227,8 +229,23 @@ const HistoryPage = () => {
 
   if (isLoadingAuth) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader type="spinner" color="mint" text="Đang tải..." />
+      <div className={`flex items-center justify-center h-screen transition-all duration-500 ${
+        darkMode 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50'
+      }`}>
+        <div className="text-center">
+          <div
+            className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4 shadow-lg"
+            style={{
+              borderColor: currentThemeConfig?.primary || '#36B37E',
+              borderTopColor: 'transparent'
+            }}
+          />
+          <p className={`text-lg font-medium ${darkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+            Đang tải...
+          </p>
+        </div>
       </div>
     );
   }
@@ -242,30 +259,64 @@ const HistoryPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header userData={userData} userAge={userAge} setUserAge={setUserAge} />
+    <div className={`min-h-screen transition-all duration-500 ${
+      darkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50'
+    }`}>
+      {/* Header với backdrop blur */}
+      <div className="relative z-10">
+        <Header userData={userData} userAge={userAge} setUserAge={setUserAge} />
+      </div>
 
       <div className="max-w-7xl mx-auto py-6 px-4">
-        {/* Back button */}
+        {/* Back button với glass effect */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center mb-6 px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-all"
+          className={`flex items-center mb-6 px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+            darkMode 
+              ? 'text-gray-300 hover:bg-white/10 backdrop-blur-sm border border-white/20' 
+              : 'text-gray-600 hover:bg-white/40 backdrop-blur-sm border border-white/50'
+          }`}
         >
           <BiArrowBack className="mr-2" />
           Quay lại
         </button>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          {/* Header với thiết kế đẹp hơn */}
-          <div className="bg-gradient-to-r from-mint-50 to-mint-100 p-6 border-b border-mint-200">
+
+        {/* Main container với glassmorphism */}
+        <div className={`${
+          darkMode 
+            ? 'bg-black/20 backdrop-blur-xl border-white/10' 
+            : 'bg-white/30 backdrop-blur-xl border-white/50'
+        } rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300`}>
+          
+          {/* Header với gradient glassmorphism */}
+          <div className={`p-6 border-b transition-all duration-300 ${
+            darkMode 
+              ? 'bg-gradient-to-r from-gray-800/50 to-gray-700/50 border-white/10' 
+              : 'bg-gradient-to-r from-white/60 to-blue-50/60 border-white/30'
+          }`}>
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Lịch sử trò chuyện</h1>
-                <p className="text-gray-600 mt-1">Quản lý và tìm kiếm các cuộc trò chuyện của bạn</p>
+                <h1 className={`text-3xl font-bold transition-colors duration-300 ${
+                  darkMode ? 'text-white' : 'text-gray-900'
+                }`}>
+                  Lịch sử trò chuyện
+                </h1>
+                <p className={`mt-1 transition-colors duration-300 ${
+                  darkMode ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  Quản lý và tìm kiếm các cuộc trò chuyện của bạn
+                </p>
               </div>
 
-              {/* Archive toggle với thiết kế đẹp */}
+              {/* Archive toggle với glass effect */}
               <div className="flex items-center space-x-4">
-                <div className="bg-white rounded-lg p-2 shadow-sm border">
+                <div className={`${
+                  darkMode 
+                    ? 'bg-white/10 backdrop-blur-sm border-white/20' 
+                    : 'bg-white/80 backdrop-blur-sm border-white/50'
+                } rounded-lg p-2 shadow-lg border transition-all duration-300`}>
                   <label className="flex items-center cursor-pointer">
                     <input
                       type="checkbox"
@@ -274,10 +325,16 @@ const HistoryPage = () => {
                         setShowArchived(e.target.checked);
                         setCurrentPage(1);
                       }}
-                      className="rounded border-gray-300 text-mint-600 focus:ring-mint-500 mr-3"
+                      className="rounded border-gray-300 focus:ring-2 mr-3 transition-all"
+                      style={{
+                        accentColor: currentThemeConfig?.primary,
+                        '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                      }}
                     />
-                    <BiArchive className="mr-2 text-mint-600" />
-                    <span className="text-sm font-medium text-gray-700">
+                    <BiArchive className="mr-2" style={{ color: currentThemeConfig?.primary }} />
+                    <span className={`text-sm font-medium transition-colors duration-300 ${
+                      darkMode ? 'text-gray-200' : 'text-gray-700'
+                    }`}>
                       {showArchived ? 'Đã lưu trữ' : 'Đang hoạt động'}
                     </span>
                   </label>
@@ -285,16 +342,25 @@ const HistoryPage = () => {
               </div>
             </div>
 
-            {/* Filters với thiết kế card */}
+            {/* Filters với glass effect */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {/* Search */}
               <div className="md:col-span-2">
                 <div className="relative">
-                  <BiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <BiSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 transition-colors duration-300 ${
+                    darkMode ? 'text-gray-400' : 'text-gray-500'
+                  }`} />
                   <input
                     type="text"
                     placeholder="Tìm kiếm theo tiêu đề..."
-                    className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 bg-white shadow-sm"
+                    className={`w-full pl-10 pr-10 py-3 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+                      darkMode 
+                        ? 'bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder-gray-400' 
+                        : 'bg-white/80 backdrop-blur-sm border-white/50 text-gray-900 placeholder-gray-500'
+                    } border shadow-lg`}
+                    style={{
+                      '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                    }}
                     value={searchTerm}
                     onChange={(e) => {
                       setSearchTerm(e.target.value);
@@ -307,7 +373,9 @@ const HistoryPage = () => {
                         setSearchTerm('');
                         setCurrentPage(1);
                       }}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 transition-colors duration-300 ${
+                        darkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
+                      }`}
                     >
                       <BiX />
                     </button>
@@ -317,9 +385,18 @@ const HistoryPage = () => {
 
               {/* Date filter */}
               <div className="relative">
-                <BiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <BiCalendar className={`absolute left-3 top-1/2 transform -translate-y-1/2 transition-colors duration-300 ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`} />
                 <select
-                  className="w-full pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 bg-white shadow-sm appearance-none"
+                  className={`w-full pl-10 pr-8 py-3 rounded-lg focus:outline-none focus:ring-2 appearance-none transition-all duration-300 ${
+                    darkMode 
+                      ? 'bg-white/10 backdrop-blur-sm border-white/20 text-white' 
+                      : 'bg-white/80 backdrop-blur-sm border-white/50 text-gray-900'
+                  } border shadow-lg`}
+                  style={{
+                    '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                  }}
                   value={dateFilter}
                   onChange={(e) => {
                     setDateFilter(e.target.value);
@@ -331,14 +408,25 @@ const HistoryPage = () => {
                   <option value="week">Tuần này</option>
                   <option value="month">Tháng này</option>
                 </select>
-                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <BiChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none transition-colors duration-300 ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`} />
               </div>
 
               {/* Age filter */}
               <div className="relative">
-                <BiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <BiUser className={`absolute left-3 top-1/2 transform -translate-y-1/2 transition-colors duration-300 ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`} />
                 <select
-                  className="w-full pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mint-500 focus:border-mint-500 bg-white shadow-sm appearance-none"
+                  className={`w-full pl-10 pr-8 py-3 rounded-lg focus:outline-none focus:ring-2 appearance-none transition-all duration-300 ${
+                    darkMode 
+                      ? 'bg-white/10 backdrop-blur-sm border-white/20 text-white' 
+                      : 'bg-white/80 backdrop-blur-sm border-white/50 text-gray-900'
+                  } border shadow-lg`}
+                  style={{
+                    '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                  }}
                   value={ageFilter}
                   onChange={(e) => {
                     setAgeFilter(e.target.value);
@@ -350,27 +438,38 @@ const HistoryPage = () => {
                     <option key={i + 1} value={i + 1}>{i + 1} tuổi</option>
                   ))}
                 </select>
-                <BiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <BiChevronDown className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none transition-colors duration-300 ${
+                  darkMode ? 'text-gray-400' : 'text-gray-500'
+                }`} />
               </div>
             </div>
 
-            {/* Bulk actions */}
+            {/* Bulk actions với glass effect */}
             {selectedConversations.length > 0 && (
-              <div className="mt-4 p-4 bg-white rounded-lg border border-mint-200 flex items-center justify-between">
-                <span className="text-mint-700 font-medium flex items-center">
+              <div className={`mt-4 p-4 rounded-lg border flex items-center justify-between transition-all duration-300 ${
+                darkMode 
+                  ? 'bg-white/10 backdrop-blur-sm border-white/20' 
+                  : 'bg-white/80 backdrop-blur-sm border-white/50'
+              } shadow-lg`}>
+                <span className="font-medium flex items-center" style={{ color: currentThemeConfig?.primary }}>
                   <BiChat className="mr-2" />
                   Đã chọn {selectedConversations.length} cuộc trò chuyện
                 </span>
                 <div className="flex space-x-3">
                   <Button
                     onClick={() => setSelectedConversations([])}
-                    color="gray"
-                    size="sm"
-                    outline
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 ${
+                      darkMode 
+                        ? 'bg-gray-600/50 text-gray-300 hover:bg-gray-500/50 border border-gray-500/50' 
+                        : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 border border-gray-300/50'
+                    }`}
                   >
                     Bỏ chọn
                   </Button>
-                  <Button onClick={handleBulkDelete} color="red" size="sm">
+                  <Button 
+                    onClick={handleBulkDelete}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg transition-all duration-300 hover:scale-105 hover:bg-red-600 shadow-lg"
+                  >
                     <BiTrash className="mr-1" />
                     Xóa đã chọn
                   </Button>
@@ -379,9 +478,15 @@ const HistoryPage = () => {
             )}
           </div>
 
-          {/* Stats */}
-          <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-            <div className="flex justify-between items-center text-sm text-gray-600">
+          {/* Stats với glass effect */}
+          <div className={`px-6 py-4 border-b transition-all duration-300 ${
+            darkMode 
+              ? 'bg-white/5 backdrop-blur-sm border-white/10' 
+              : 'bg-white/40 backdrop-blur-sm border-white/30'
+          }`}>
+            <div className={`flex justify-between items-center text-sm transition-colors duration-300 ${
+              darkMode ? 'text-gray-300' : 'text-gray-600'
+            }`}>
               <span>
                 Hiển thị {startIndex + 1} - {Math.min(endIndex, filteredConversations.length)} trong tổng số {filteredConversations.length} cuộc trò chuyện
               </span>
@@ -394,14 +499,22 @@ const HistoryPage = () => {
           {/* Content */}
           {localLoading ? (
             <div className="p-12 text-center">
-              <Loader type="spinner" color="mint" text="Đang tải dữ liệu..." />
+              <Loader 
+                type="dots" 
+                color={currentThemeConfig?.primary || '#36B37E'} 
+                text="Đang tải dữ liệu..." 
+              />
             </div>
           ) : currentItems.length > 0 ? (
             <>
-              {/* Table với thiết kế đẹp hơn */}
+              {/* Table với glass effect */}
               <div className="overflow-x-auto">
                 <table className="min-w-full">
-                  <thead className="bg-gray-50">
+                  <thead className={`transition-all duration-300 ${
+                    darkMode 
+                      ? 'bg-white/5 backdrop-blur-sm' 
+                      : 'bg-white/60 backdrop-blur-sm'
+                  }`}>
                     <tr>
                       <th className="w-12 px-4 py-4">
                         <input
@@ -414,19 +527,49 @@ const HistoryPage = () => {
                               setSelectedConversations(selectedConversations.filter(id => !currentItems.map(item => item.id).includes(id)));
                             }
                           }}
-                          className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
+                          className="rounded border-gray-300 focus:ring-2 transition-all"
+                          style={{
+                            accentColor: currentThemeConfig?.primary,
+                            '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                          }}
                         />
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Cuộc trò chuyện</th>
-                      <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Thời gian</th>
-                      <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Độ tuổi</th>
-                      <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Trạng thái</th>
-                      <th className="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Thao tác</th>
+                      <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        Cuộc trò chuyện
+                      </th>
+                      <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        Thời gian
+                      </th>
+                      <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        Độ tuổi
+                      </th>
+                      <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        Trạng thái
+                      </th>
+                      <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider transition-colors duration-300 ${
+                        darkMode ? 'text-gray-300' : 'text-gray-600'
+                      }`}>
+                        Thao tác
+                      </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className={`divide-y transition-all duration-300 ${
+                    darkMode ? 'divide-white/10' : 'divide-gray-200/50'
+                  }`}>
                     {currentItems.map((chat, index) => (
-                      <tr key={chat.id} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-25'}`}>
+                      <tr key={chat.id} className={`transition-all duration-300 hover:scale-[1.01] ${
+                        index % 2 === 0 
+                          ? (darkMode ? 'bg-white/5 hover:bg-white/10' : 'bg-white/60 hover:bg-white/80')
+                          : (darkMode ? 'bg-white/3 hover:bg-white/8' : 'bg-white/40 hover:bg-white/60')
+                      } backdrop-blur-sm`}>
                         <td className="px-4 py-4">
                           <input
                             type="checkbox"
@@ -438,7 +581,11 @@ const HistoryPage = () => {
                                 setSelectedConversations([...selectedConversations, chat.id]);
                               }
                             }}
-                            className="rounded border-gray-300 text-mint-600 focus:ring-mint-500"
+                            className="rounded border-gray-300 focus:ring-2 transition-all"
+                            style={{
+                              accentColor: currentThemeConfig?.primary,
+                              '--tw-ring-color': `${currentThemeConfig?.primary}40`
+                            }}
                           />
                         </td>
                         <td className="px-6 py-4">
@@ -446,32 +593,64 @@ const HistoryPage = () => {
                             className="cursor-pointer group"
                             onClick={() => navigate(`/chat/${chat.id}`)}
                           >
-                            <div className="font-medium text-gray-900 group-hover:text-mint-600 transition-colors">
+                            <div className={`font-medium transition-all duration-300 group-hover:scale-105 ${
+                              darkMode ? 'text-white group-hover:text-gray-200' : 'text-gray-900'
+                            }`}
+                            style={{
+                              color: darkMode ? undefined : 'inherit',
+                              '--hover-color': currentThemeConfig?.primary
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!darkMode) {
+                                e.target.style.color = currentThemeConfig?.primary;
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!darkMode) {
+                                e.target.style.color = 'inherit';
+                              }
+                            }}
+                            >
                               {chat.title}
                             </div>
-                            <div className="text-xs text-gray-500 mt-1 flex items-center">
+                            <div className={`text-xs mt-1 flex items-center transition-colors duration-300 ${
+                              darkMode ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
                               <BiChat className="mr-1" />
                               {chat.message_count || 0} tin nhắn • {getRelativeDate(chat.created_at)}
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="text-sm text-gray-900">{formatTime(chat.updated_at)}</div>
-                          <div className="text-xs text-gray-500">{formatDate(chat.updated_at)}</div>
+                          <div className={`text-sm transition-colors duration-300 ${
+                            darkMode ? 'text-gray-200' : 'text-gray-900'
+                          }`}>
+                            {formatTime(chat.updated_at)}
+                          </div>
+                          <div className={`text-xs transition-colors duration-300 ${
+                            darkMode ? 'text-gray-400' : 'text-gray-500'
+                          }`}>
+                            {formatDate(chat.updated_at)}
+                          </div>
                         </td>
                         <td className="px-6 py-4 text-center">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-mint-100 text-mint-800">
+                          <span 
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white shadow-lg"
+                            style={{ backgroundColor: currentThemeConfig?.primary }}
+                          >
                             {chat.age_context || 'N/A'} tuổi
                           </span>
                         </td>
                         <td className="px-6 py-4 text-center">
                           {chat.is_archived ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium shadow-lg ${
+                              darkMode ? 'bg-gray-600/80 text-gray-200' : 'bg-gray-100 text-gray-800'
+                            }`}>
                               <BiArchive className="mr-1" />
                               Đã lưu trữ
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 shadow-lg">
                               Hoạt động
                             </span>
                           )}
@@ -480,7 +659,12 @@ const HistoryPage = () => {
                           <div className="flex items-center justify-center space-x-2">
                             <button
                               onClick={() => navigate(`/chat/${chat.id}`)}
-                              className="p-2 text-mint-600 hover:text-mint-700 hover:bg-mint-50 rounded-lg transition-colors"
+                              className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 shadow-lg ${
+                                darkMode 
+                                  ? 'hover:bg-white/10 border border-white/20' 
+                                  : 'hover:bg-white/80 border border-white/50'
+                              } backdrop-blur-sm`}
+                              style={{ color: currentThemeConfig?.primary }}
                               title="Mở cuộc trò chuyện"
                             >
                               <BiChat className="w-4 h-4" />
@@ -488,7 +672,11 @@ const HistoryPage = () => {
 
                             <button
                               onClick={() => handleRenameConversation(chat.id, chat.title)}
-                              className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+                              className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 shadow-lg ${
+                                darkMode 
+                                  ? 'text-blue-400 hover:bg-blue-900/20 border border-blue-500/20' 
+                                  : 'text-blue-600 hover:bg-blue-50/80 border border-blue-200/50'
+                              } backdrop-blur-sm`}
                               title="Đổi tên"
                             >
                               <BiEdit className="w-4 h-4" />
@@ -496,7 +684,11 @@ const HistoryPage = () => {
 
                             <button
                               onClick={() => handleArchiveConversation(chat.id, chat.is_archived)}
-                              className="p-2 text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50 rounded-lg transition-colors"
+                              className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 shadow-lg ${
+                                darkMode 
+                                  ? 'text-yellow-400 hover:bg-yellow-900/20 border border-yellow-500/20' 
+                                  : 'text-yellow-600 hover:bg-yellow-50/80 border border-yellow-200/50'
+                              } backdrop-blur-sm`}
                               title={chat.is_archived ? 'Hủy lưu trữ' : 'Lưu trữ'}
                             >
                               {chat.is_archived ? <BiRefresh className="w-4 h-4" /> : <BiArchive className="w-4 h-4" />}
@@ -504,7 +696,11 @@ const HistoryPage = () => {
 
                             <button
                               onClick={() => handleDeleteConversation(chat.id)}
-                              className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                              className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 shadow-lg ${
+                                darkMode 
+                                  ? 'text-red-400 hover:bg-red-900/20 border border-red-500/20' 
+                                  : 'text-red-600 hover:bg-red-50/80 border border-red-200/50'
+                              } backdrop-blur-sm`}
                               title="Xóa vĩnh viễn"
                             >
                               <BiTrash className="w-4 h-4" />
@@ -517,23 +713,33 @@ const HistoryPage = () => {
                 </table>
               </div>
 
-              {/* Pagination đẹp hơn */}
+              {/* Pagination với glass effect */}
               {totalPages > 1 && (
-                <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                <div className={`px-6 py-4 border-t transition-all duration-300 ${
+                  darkMode 
+                    ? 'border-white/10 bg-white/5 backdrop-blur-sm' 
+                    : 'border-white/30 bg-white/40 backdrop-blur-sm'
+                }`}>
                   <div className="flex items-center justify-between">
-                    <div className="text-sm text-gray-700">
+                    <div className={`text-sm transition-colors duration-300 ${
+                      darkMode ? 'text-gray-300' : 'text-gray-700'
+                    }`}>
                       Trang {currentPage} / {totalPages}
                     </div>
                     <div className="flex space-x-2">
                       <button
                         onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                         disabled={currentPage <= 1}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-3 py-2 text-sm rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                          darkMode 
+                            ? 'border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 backdrop-blur-sm' 
+                            : 'border border-white/50 bg-white/80 text-gray-700 hover:bg-white/90 backdrop-blur-sm'
+                        } shadow-lg`}
                       >
                         Trước
                       </button>
 
-                      {/* Page numbers */}
+                      {/* Page numbers với glass effect */}
                       <div className="flex space-x-1">
                         {[...Array(Math.min(5, totalPages))].map((_, i) => {
                           let pageNumber;
@@ -550,10 +756,16 @@ const HistoryPage = () => {
                             <button
                               key={pageNumber}
                               onClick={() => setCurrentPage(pageNumber)}
-                              className={`px-3 py-2 text-sm rounded-lg transition-colors ${currentPage === pageNumber
-                                ? 'bg-mint-600 text-white'
-                                : 'border border-gray-300 hover:bg-gray-100 text-gray-700'
-                                }`}
+                              className={`px-3 py-2 text-sm rounded-lg transition-all duration-300 hover:scale-105 shadow-lg ${
+                                currentPage === pageNumber
+                                  ? 'text-white'
+                                  : darkMode 
+                                    ? 'border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 backdrop-blur-sm'
+                                    : 'border border-white/50 bg-white/80 text-gray-700 hover:bg-white/90 backdrop-blur-sm'
+                              }`}
+                              style={{
+                                backgroundColor: currentPage === pageNumber ? currentThemeConfig?.primary : undefined
+                              }}
                             >
                               {pageNumber}
                             </button>
@@ -564,7 +776,11 @@ const HistoryPage = () => {
                       <button
                         onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                         disabled={currentPage >= totalPages}
-                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className={`px-3 py-2 text-sm rounded-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed ${
+                          darkMode 
+                            ? 'border border-white/20 bg-white/10 text-gray-300 hover:bg-white/20 backdrop-blur-sm' 
+                            : 'border border-white/50 bg-white/80 text-gray-700 hover:bg-white/90 backdrop-blur-sm'
+                        } shadow-lg`}
                       >
                         Sau
                       </button>
@@ -574,17 +790,21 @@ const HistoryPage = () => {
               )}
             </>
           ) : (
-            // Empty state đẹp hơn
+            // Empty state với glass effect
             <div className="py-16 text-center">
-              <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+              <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center mb-6 shadow-lg ${
+                darkMode ? 'bg-white/10 backdrop-blur-sm' : 'bg-white/80 backdrop-blur-sm'
+              }`}>
                 {showArchived ? (
-                  <BiArchive className="w-12 h-12 text-gray-400" />
+                  <BiArchive className={`w-12 h-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                 ) : (
-                  <BiChat className="w-12 h-12 text-gray-400" />
+                  <BiChat className={`w-12 h-12 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                 )}
               </div>
 
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className={`text-lg font-medium mb-2 transition-colors duration-300 ${
+                darkMode ? 'text-white' : 'text-gray-900'
+              }`}>
                 {showArchived
                   ? 'Không có cuộc trò chuyện đã lưu trữ'
                   : searchTerm || dateFilter !== 'all' || ageFilter !== 'all'
@@ -593,7 +813,9 @@ const HistoryPage = () => {
                 }
               </h3>
 
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+              <p className={`mb-6 max-w-md mx-auto transition-colors duration-300 ${
+                darkMode ? 'text-gray-300' : 'text-gray-500'
+              }`}>
                 {showArchived
                   ? 'Bạn chưa lưu trữ cuộc trò chuyện nào. Hãy lưu trữ các cuộc trò chuyện quan trọng để dễ dàng quản lý.'
                   : searchTerm || dateFilter !== 'all' || ageFilter !== 'all'
@@ -611,8 +833,11 @@ const HistoryPage = () => {
                       setAgeFilter('all');
                       setCurrentPage(1);
                     }}
-                    color="gray"
-                    outline
+                    className={`px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105 shadow-lg ${
+                      darkMode 
+                        ? 'bg-gray-600/50 text-gray-300 hover:bg-gray-500/50 border border-gray-500/50 backdrop-blur-sm' 
+                        : 'bg-gray-200/80 text-gray-700 hover:bg-gray-300/80 border border-gray-300/50 backdrop-blur-sm'
+                    }`}
                   >
                     <BiX className="mr-1" />
                     Xóa bộ lọc
@@ -621,7 +846,10 @@ const HistoryPage = () => {
 
                 {!showArchived && (
                   <Link to="/chat">
-                    <Button color="mint">
+                    <Button 
+                      className="px-4 py-2 text-white rounded-lg transition-all duration-300 hover:scale-105 shadow-lg"
+                      style={{ backgroundColor: currentThemeConfig?.primary }}
+                    >
                       <BiChat className="mr-1" />
                       Bắt đầu trò chuyện
                     </Button>

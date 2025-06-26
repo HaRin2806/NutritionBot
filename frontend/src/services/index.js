@@ -149,6 +149,12 @@ export const adminService = {
   // ✅ THÊM: Conversations Management for Admin
   getAllConversations: (page = 1, perPage = 20, filters = {}) =>
     baseApi.get('/admin/conversations', { page, per_page: perPage, ...filters }),
+
+  getSystemConfig: () => baseApi.get('/admin/settings/system-config'),
+  getPerformanceMetrics: () => baseApi.get('/admin/settings/performance'),
+  getSystemLogs: () => baseApi.get('/admin/settings/logs'),
+  getSecuritySettings: () => baseApi.get('/admin/settings/security'),
+  createBackup: () => baseApi.post('/admin/settings/backup'),
   
   deleteConversation: (conversationId) => 
     baseApi.delete(`/admin/conversations/${conversationId}`)
