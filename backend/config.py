@@ -9,8 +9,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "YOUR_API_KEY_HERE")
 # Embedding model
 EMBEDDING_MODEL = "intfloat/multilingual-e5-base"
 
-# ChromaDB settings
-CHROMA_PERSIST_DIRECTORY = "chroma_db"
+# ChromaDB settings - sử dụng absolute path
+CHROMA_PERSIST_DIRECTORY = os.path.join(os.getcwd(), "chroma_db")
 COLLECTION_NAME = "nutrition_data"
 
 # RAG settings
